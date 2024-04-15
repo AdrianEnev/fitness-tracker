@@ -8,30 +8,44 @@ import { collection, doc, getDocs, onSnapshot } from 'firebase/firestore';
 import { FlatList } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import RenderGoalNutrients from '../components/RenderGoalNutrients';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Main = ({navigation}: any) => {
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
+    const foodDaysCollectionRef = collection(userDocRef, 'food_days');
 
-    const getCurrentDate = (): string => {
-        const date = new Date();
-        const year = date.getFullYear();
-        const month = String(date.getMonth() + 1).padStart(2, '0');
-        const day = String(date.getDate()).padStart(2, '0');
-        return `${day}-${month}-${year}`;
+    const getCurrentDate = (padStart: boolean): string => {
+
+        if (padStart) {
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const day = String(date.getDate()).padStart(2, '0');
+            return `${day}-${month}-${year}`;
+        }else{
+            const date = new Date();
+            const year = date.getFullYear();
+            const month = String(date.getMonth() + 1);
+            const day = String(date.getDate());
+            return `${day}-${month}-${year}`;
+        }
+
     };
 
-    let [nutrients, setNutrients] = useState<GoalNutrients[]>([]);
+    // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk
+    let [currentNutrients, setCurrentNutrients] = useState<GoalNutrients[]>([]);
+    let [goalNutrients, setGoalNutrients] = useState<GoalNutrients[]>([]);
 
-    const updateNutrients = async () => {
+    const updateGoalNutrients = async () => {
         try {
           const data = await getDocs(userInfoCollectionRef);
   
           const filteredData: GoalNutrients[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as GoalNutrients));
           
-          setNutrients(filteredData);
+          setGoalNutrients(filteredData);
           
         } catch (err) {
           console.error(err);
@@ -40,9 +54,38 @@ const Main = ({navigation}: any) => {
 
     useEffect(() => {
         onSnapshot(userInfoCollectionRef, (_snapshot) => {
-            updateNutrients();
+            updateGoalNutrients();
         });
     }, [])
+
+    // runs when the screen is opened
+    useFocusEffect(
+        React.useCallback(() => {
+            updateCurrentNutrients();
+    
+            return () => {
+                // Optional: You can do something when the screen is unfocused
+                // This function runs when the screen goes out of focus
+            };
+        }, [])
+    );
+
+    const updateCurrentNutrients = async () => {
+        try {
+            const data = await getDocs(foodDaysCollectionRef);
+            const ids = data.docs.map((doc) => doc.id);
+            
+            const matchingDoc = data.docs.find((doc) => doc.id === getCurrentDate(false));
+            if (matchingDoc) {
+                
+                setCurrentNutrients(matchingDoc.data() as GoalNutrients[]);
+
+            }
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     return (
         <View>
@@ -60,11 +103,11 @@ const Main = ({navigation}: any) => {
                 </View>
 
                 <Text style={tw`font-medium text-lg ml-4`}>Днес (
-                    <Text style={tw`text-blue-500`}>{getCurrentDate()}</Text>)
+                    <Text style={tw`text-blue-500`}>{getCurrentDate(true)}</Text>)
                 </Text>
 
                 <View style={tw`mb-2`}>
-                    <FlatList data={nutrients} renderItem={(item) => RenderGoalNutrients(item)} scrollEnabled={false}/>
+                    <FlatList data={goalNutrients} renderItem={({item}) => <RenderGoalNutrients item={item} currentNutrients={currentNutrients} />}  scrollEnabled={false}/>
                 </View>
 
                 <View style={tw`flex flex-row justify-between mx-2`}>

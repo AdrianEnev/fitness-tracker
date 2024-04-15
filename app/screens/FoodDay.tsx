@@ -106,9 +106,16 @@ const FoodDay = ({route, navigation}: any) => {
                     {date.day > 9 ? date.day : `0${date.day}`} - {date.month > 9 ? date.month : `0${date.month}`} - {date.year}
                 </Text>
 
-                <Pressable style={tw`bg-blue-500 w-12 h-12 rounded-full items-center justify-center self-center mr-3`} onPress={() => navigation.navigate("Храна-Добави", { date: date })}>
-                    <Ionicons name="add-outline" size={36} color="white"/>
-                </Pressable>
+                <View style={tw`flex flex-row justify-end`}>
+                    <Pressable style={tw`bg-blue-500 w-12 h-12 rounded-full items-center justify-center self-center mr-3`} onPress={() => navigation.navigate("Храна-Добави", { date: date })}>
+                        <Ionicons name="add-outline" size={36} color="white"/>
+                    </Pressable>
+
+                    <Pressable style={tw`bg-blue-500 w-12 h-12 rounded-full items-center justify-center self-center mr-3`} onPress={() => navigation.navigate("Храна-Потърси", { date: date })}>
+                        <Ionicons name="search-outline" size={28} color="white"/>
+                    </Pressable>
+                </View>
+                
 
             </View>
 

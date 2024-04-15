@@ -155,11 +155,13 @@ const MainPageComponent = () => {
                 headerShown: false,
             }}
           />
+          
           <Stack.Screen
-            name="Храна-Добави"
+            name="Храна-Потърси"
             component={AddFoodPage}
             options={{
                 headerShown: false,
+                animationTypeForReplace: 'pop'
             }}
           />
 
