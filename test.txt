@@ -1,0 +1,58 @@
+
+- apple face id (moje bi)
+
+- da napravq malka animaciika na vurtqshto se krugche ili neshto podobno dokato se zapazva trenirovka
+
+- loading screenove pri zarejdane na tekushta trenirovka i drugi podobni neshta
+
+- search bar kato buton na desniq ili leviq header i kato go cukna s animaciq da se razshirqva i da zaema celiq header 
+
+- buton za opciq unilateral
+
+- timer da ne moje da se spamqt novi neshta
+
+- kogato trenirovkata e zapazena da izpishe v ugula ili nqkude drugade (toq note nz dali veche sum go dobavil)
+
+- opciq da exportna vsichki zapazeni trenirovki kato pdf file ili neshto takova
+
+- pri gledane na zapazena trenirovka da se mahnat butonite za purvoto i poslednoto uprajenie
+
+
+
+- da napravq kogato e aktivna trenirovka da ne se vijda butona za nazad na purvoto uprajnenie i da ne se vijda butona za napred pri poslednoto uprajnenie
+
+
+- ne znam dali da dobavqm description kum uprajneniqta, zasega nqma
+- otdolu e koda za descriptiona koito se slaga pri ActiveWWorkoutExercises pod seriite
+<View>
+                {item.description ? (
+
+                    <View style={tw`mx-3 mb-2`}>
+                        <TextInput
+                        style={tw`text-white bg-blue-500 w-[100%] min-h-8 p-2`}
+                        maxLength={100}
+                        defaultValue={item.description}
+                        multiline={true}
+                        />
+                    </View>
+                    
+                ) : (
+                    <View></View>
+                )}
+                </View>
+
+
+
+
+
+- KeyboardAvoidingView
+
+
+
+- custom ui library
+
+
+
+
+
+Firebase ML Kit: If you're interested in detecting and recognizing food items from images, Firebase ML Kit offers an on-device image labeling feature that can identify a variety of objects, including food. Once you've identified the food items, you can then use other APIs or databases to fetch their nutritional information.

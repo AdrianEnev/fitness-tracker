@@ -1,0 +1,42 @@
+const addItem = async (item: any) => { 
+
+            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+            const foodDaysCollectionRef = collection(userDocRef, 'food_days');
+            const foodDayDocRef = doc(foodDaysCollectionRef, `${date.day}-${date.month}-${date.year}`);
+            const foodDayCollectionRef = collection(foodDayDocRef, 'foods');
+
+            const foodDayDocSnapshot = await getDoc(foodDayDocRef);
+
+            if (foodDayDocSnapshot.exists()) {
+
+            const foodDayData = foodDayDocSnapshot.data();
+            const currentNutrients = foodDayData?.nutrients || {};
+
+            // Add the new food data to the current nutrients
+            const updatedNutrients = {
+                calories: (currentNutrients.calories || 0) + (item.calories || 0),
+                protein: (currentNutrients.protein || 0) + (item.protein || 0),
+                carbs: (currentNutrients.carbs || 0) + (item.carbs || 0),
+                fat: (currentNutrients.fat || 0) + (item.fat || 0),
+            };
+
+            // Update the existing document with the updated nutrients
+            await updateDoc(foodDayDocRef, {
+                nutrients: updatedNutrients,
+            });
+
+            } else {
+
+            // Create a new document with the selected date as the title
+            await setDoc(foodDayDocRef, {
+                title: `${date.day}-${date.month}-${date.year}`,
+                nutrients: {
+                calories: item.calories || 0,
+                protein: item.protein || 0,
+                carbs: item.carbs || 0,
+                fat: item.fat || 0,
+                },
+            });
+            }
+        }

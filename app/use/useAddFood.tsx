@@ -1,0 +1,66 @@
+import Fuse from 'fuse.js';
+
+const USDA_API_KEY = '8t8MfPzP1u4o2spbV2e7v9kFa6bN4t9qk4wefk1i';
+const USDA_API_URL = 'https://api.nal.usda.gov/fdc/v1/foods/list';
+
+// gets all nutrients coresponding to the searched query and grams and displays them in order of closest to least close
+const getFoodNutrients = async (searchQuery: string, grams: string) => {
+    try {
+        const response = await fetch(`${USDA_API_URL}?api_key=${USDA_API_KEY}&query=${searchQuery}`);
+        const data = await response.json();
+
+        const formattedData = data.map((item: any) => {
+            const nutrients = item.foodNutrients.reduce((acc: any, nutrient: any) => {
+                if (nutrient.name === 'Energy') {
+                    acc.calories = nutrient.amount;
+                } else if (nutrient.name === 'Protein') {
+                    acc.protein = nutrient.amount;
+                } else if (nutrient.name === 'Carbohydrate, by difference') {
+                    acc.carbs = nutrient.amount;
+                } else if (nutrient.name === 'Total lipid (fat)') {
+                    acc.fat = nutrient.amount;
+                }
+                return acc;
+            }, {});
+
+            return {
+                brandOwner: item.brandOwner,
+                description: item.description,
+                nutrients
+            };
+        });
+
+        const options = {
+            includeScore: true,
+            keys: ['description'],
+            threshold: 0.2,
+            minMatchCharLength: 3,
+        };
+
+        const fuse = new Fuse(formattedData, options);
+        const results = fuse.search(searchQuery);
+
+        const inputedGrams = Number(grams);
+
+        const allNutrients = results.map((result: any) => {
+            const item = result.item;
+            const nutrientsPer100g = item.nutrients;
+
+            return {
+                title: item.description,
+                calories: typeof nutrientsPer100g.calories === 'number' ? nutrientsPer100g.calories * inputedGrams / 100 : undefined,
+                protein: typeof nutrientsPer100g.protein === 'number' ? nutrientsPer100g.protein * inputedGrams / 100 : undefined,
+                carbs: typeof nutrientsPer100g.carbs === 'number' ? nutrientsPer100g.carbs * inputedGrams / 100 : undefined,
+                fat: typeof nutrientsPer100g.fat === 'number' ? nutrientsPer100g.fat * inputedGrams / 100 : undefined,
+                grams: inputedGrams
+            };
+        });
+
+        return allNutrients;
+
+    } catch (error) {
+        console.error(error);
+    }
+}
+
+export { getFoodNutrients };
