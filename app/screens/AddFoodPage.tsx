@@ -95,11 +95,11 @@ const AddFoodPage = ({route, navigation}: any) => {
             
             const documentInfo = {
                 title: item.title,
-                calories: item.calories,
-                protein: item.protein,
-                carbs: item.carbs,
-                fat: item.fat,
-                grams: item.grams
+                calories: Math.round(item.calories),
+                protein: Math.round(item.protein),
+                carbs: Math.round(item.carbs),
+                fat: Math.round(item.fat),
+                grams: Math.round(item.grams)
             };
 
             await addDoc(foodDayCollectionRef, documentInfo);

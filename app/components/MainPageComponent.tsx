@@ -16,6 +16,7 @@ import Workouts from "../screens/Workouts";
 import ViewSavedWorkout from "../screens/ViewSavedWorkout";
 import FoodDay from "../screens/FoodDay";
 import AddFoodPage from "../screens/AddFoodPage";
+import AddCustomFoodPage from "../screens/AddCustomFoodPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -159,6 +160,15 @@ const MainPageComponent = () => {
           <Stack.Screen
             name="Храна-Потърси"
             component={AddFoodPage}
+            options={{
+                headerShown: false,
+                animationTypeForReplace: 'pop'
+            }}
+          />
+
+          <Stack.Screen
+            name="Храна-Добави"
+            component={AddCustomFoodPage}
             options={{
                 headerShown: false,
                 animationTypeForReplace: 'pop'
