@@ -1,4 +1,4 @@
-import { View, Text, TextInput, Pressable } from 'react-native'
+import { View, Text, TextInput, Pressable, ActivityIndicator } from 'react-native'
 import React, { useState } from 'react'
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -14,6 +14,7 @@ const AddFoodPage = ({route, navigation}: any) => {
 
     const [searchQuery, setSearchQuery] = useState('');
     const [grams, setGrams] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -32,9 +33,12 @@ const AddFoodPage = ({route, navigation}: any) => {
 
     const displayFoods = async () => {
 
+        setLoading(true);
+
         const results = await getFoodNutrients(searchQuery, grams);
         
         setFoods(results)
+        setLoading(false);
         
     }
 
@@ -168,6 +172,10 @@ const AddFoodPage = ({route, navigation}: any) => {
             <View style={tw`mt-2 mx-3 flex-1 mb-5`}>
                 <FlatList data={foods} renderItem={({item}) => renderSearchedFoods(item)} showsVerticalScrollIndicator={false}/>
             </View>
+
+            {loading && 
+                <ActivityIndicator size="large" color="blue" style={tw`flex items-center justify-center flex-1`}/>
+            }
 
            
         </View>
