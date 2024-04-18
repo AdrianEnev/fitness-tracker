@@ -56,88 +56,99 @@ const AuthenticatedTabNavigator = ({ setupRan }: any) => {
     
 };
 
-  const UnauthenticatedTabNavigator = () => (
-    <Tab.Navigator>
-      <Tab.Screen
-        name="Вход"
-        component={Login}
-        options={{
-          headerTitle: 'Вход',
-          tabBarIcon: ({ color }) => <Ionicons name="log-in-outline" color={color} size={32} />,
-          ...headerOptions,
-        }}
-      />
-      <Tab.Screen
-        name="Регистрация"
-        component={Register}
-        options={{
-          headerTitle: 'Регистрация',
-          tabBarIcon: ({ color }) => <Ionicons name="key-outline" color={color} size={32} />,
-          ...headerOptions,
-        }}
-      />
-    </Tab.Navigator>
-  );
+const UnauthenticatedTabNavigator = () => (
 
-  const App = () => {
+    <Tab.Navigator>
+
+        <Tab.Screen
+            name="Вход"
+            component={Login}
+            options={{
+                headerTitle: 'Вход',
+                tabBarIcon: ({ color }) => <Ionicons name="log-in-outline" color={color} size={32} />,
+                ...headerOptions,
+            }}
+        />
+        <Tab.Screen
+            name="Регистрация"
+            component={Register}
+            options={{
+                headerTitle: 'Регистрация',
+                tabBarIcon: ({ color }) => <Ionicons name="key-outline" color={color} size={32} />,
+                ...headerOptions,
+            }}
+        />
+
+    </Tab.Navigator>
+
+);
+
+const App = () => {
+
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [setupRan, setSetupRan] = useState(false);
 
     React.useEffect(() => {
-      const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
-        setUser(user);
-        
-        if (user) {
-            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-            const userDocRef = doc(usersCollectionRef, user.uid);
-            const userInfoCollectionRef = collection(userDocRef, 'user_info');
+        const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
+            setUser(user);
+            
+            if (user) {
+                const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+                const userDocRef = doc(usersCollectionRef, user.uid);
+                const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
-            const checkUserInfoCollection = async () => {
-                try {
-                    const snapshot = await getDocs(userInfoCollectionRef);
-                    if (snapshot.empty) {
-                        
-                        setSetupRan(false);
-                        setLoading(false);
-        
-                    }else{
-                        setSetupRan(true);
-                        setLoading(false);
+                const checkUserInfoCollection = async () => {
+                    try {
+                        const snapshot = await getDocs(userInfoCollectionRef);
+                        if (snapshot.empty) {
+                            
+                            setSetupRan(false);
+                            setLoading(false);
+
+                            console.log('No matching documents.');
+            
+                        }else{
+                            setSetupRan(true);
+                            setLoading(false);
+
+                            console.log('Document found');
+                        }
+                    } catch (err) {
+                        console.error(err);
                     }
-                } catch (err) {
-                    console.error(err);
                 }
+                checkUserInfoCollection();
+            }else{
+                // no user, set loading to false and automatically navigate to the unathenticated page
+                setLoading(false);
             }
-            checkUserInfoCollection();
-        }
+          
+        });
 
-        
-      });
-
-      return () => unsubscribe();
+        return () => unsubscribe();
     }, []);
 
     if (loading) {
-      return (
-        <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-          <ActivityIndicator size="large" color="#007AFF" />
-        </View>
-      );
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#007AFF" />
+            </View>
+        );
     }
 
     return (
-      <GestureHandlerRootView style={{flex: 1}}>
+        <GestureHandlerRootView style={{flex: 1}}>
 
-        <StatusBar barStyle='dark-content'/>
+            <StatusBar barStyle='dark-content'/>
 
-        <NavigationContainer>
+            <NavigationContainer>
 
-          {user ? <AuthenticatedTabNavigator setupRan = {setupRan}/> : <UnauthenticatedTabNavigator />}
+                {user ? <AuthenticatedTabNavigator setupRan = {setupRan}/> : <UnauthenticatedTabNavigator />}
 
-        </NavigationContainer>
-        
-      </GestureHandlerRootView>
+            </NavigationContainer>
+          
+        </GestureHandlerRootView>
     );
 };
 

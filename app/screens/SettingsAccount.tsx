@@ -4,19 +4,21 @@ import { FIREBASE_AUTH } from '../../firebaseConfig'
 import tw from 'twrnc'
 import { getAuth } from 'firebase/auth'
 import deleteAccount  from '../use/useDeleteAccount';
+import changePassword from '../use/useChangePassword'
 
 const SettingsAccount = () => {
 
     const auth = getAuth();
     const user = auth.currentUser;
-    const username = user?.email;
+    const email = user?.email;
 
     return (
         <View style={tw`mt-10`}>
-            <Text style={tw`m-3 font-medium text-base`}>Имейл: {username}</Text>
-            <Text style={tw`m-3 font-medium text-base`}>Смяна на парола TODO!</Text>
+            <Text style={tw`m-3 font-medium text-base`}>Имейл: {email}</Text>
+
+            <Button title='смяна на парола' onPress={() => changePassword(email, user, auth)}/>
             
-            <Button title='изтрий акаунт' onPress={() => deleteAccount(username, user)}/>
+            <Button title='изтрий акаунт' onPress={() => deleteAccount(email, user)}/>
 
             <Button title='излез от акаунт' onPress={() => FIREBASE_AUTH.signOut()}/>
         </View>

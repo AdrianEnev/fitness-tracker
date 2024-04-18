@@ -2,7 +2,7 @@ import { FIREBASE_AUTH } from '../../firebaseConfig'
 import { deleteUser, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
 import { Alert } from 'react-native';
 
-const deleteAccount = (username: any, user: any) => {
+const deleteAccount = (email: any, user: any) => {
         
         Alert.prompt(
             'Изтриване на акаунт',
@@ -26,9 +26,9 @@ const deleteAccount = (username: any, user: any) => {
 
         const reauthenticateAndDelete = (password: string | undefined) => {
 
-            if (username && password && user) {
+            if (email && password && user) {
 
-                const credentials = EmailAuthProvider.credential(username, password);
+                const credentials = EmailAuthProvider.credential(email, password);
                 
                  // reauthenticate (needed in order to delete account)
                  reauthenticateWithCredential(user, credentials).then(() => {
