@@ -1,8 +1,10 @@
 import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from "twrnc";
+
+import { useTranslation } from 'react-i18next';
 
 const Setup = ({navigation}: any) => {
 
@@ -10,6 +12,8 @@ const Setup = ({navigation}: any) => {
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
     const nutrientsDocRef = doc(userInfoCollectionRef, 'nutrients')
+
+    const { t } = useTranslation();
 
     const [calories, setCalories] = useState("");
     const [protein, setProtein] = useState("");
@@ -60,13 +64,12 @@ const Setup = ({navigation}: any) => {
 
                             <TextInput 
                                 style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                placeholder='Калории' 
                                 keyboardType='number-pad' 
                                 maxLength={4} 
                                 onChangeText={(text) => setCalories(text)} 
                             />
 
-                            <Text style={tw`font-medium text-xl mt-3`}>Калории</Text>
+                            <Text style={tw`font-medium text-xl mt-3`}>{t('calories')}</Text>
 
                         </View>
 
@@ -74,13 +77,12 @@ const Setup = ({navigation}: any) => {
 
                             <TextInput 
                                 style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                placeholder='Протеин' 
                                 keyboardType='number-pad' 
                                 maxLength={3} 
                                 onChangeText={(text) => setProtein(text)}
                             />
 
-                            <Text style={tw`font-medium text-xl mt-3`}>Протеин</Text>
+                            <Text style={tw`font-medium text-xl mt-3`}>{t('protein')}</Text>
 
                         </View>
 
@@ -88,13 +90,12 @@ const Setup = ({navigation}: any) => {
 
                             <TextInput 
                                 style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                placeholder='Въглехидрати' 
                                 keyboardType='number-pad' 
                                 maxLength={3} 
                                 onChangeText={(text) => setCarbs(text)}
                             />
 
-                            <Text style={tw`font-medium text-xl mt-3`}>Въглехидрати</Text>
+                            <Text style={tw`font-medium text-xl mt-3`}>{t('carbs')}</Text>
 
                         </View>
 
@@ -102,13 +103,12 @@ const Setup = ({navigation}: any) => {
 
                             <TextInput 
                                 style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                placeholder='Мазнини' 
                                 keyboardType='number-pad' 
                                 maxLength={3} 
                                 onChangeText={(text) => setFat(text)}
                             />
 
-                            <Text style={tw`font-medium text-xl mt-3`}>Мазнини</Text>
+                            <Text style={tw`font-medium text-xl mt-3`}>{t('fat')}</Text>
 
                         </View>
                     

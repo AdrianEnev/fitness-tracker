@@ -1,3 +1,8 @@
 {
-    "macronutrients": "Макронутриенти"
+    "macronutrients": "Макронутриенти",
+    "calories": "Калории",
+    "protein": "Протеин",
+    "carbs": "Въглехидрати",
+    "fat": "Мазнини",
+    "account": "Профил"
 }

@@ -1,3 +1,8 @@
 {
-    "macronutrients": "Macronutrients"
+    "macronutrients": "Macronutrients",
+    "calories": "Calories",
+    "protein": "Protein",
+    "carbs": "Carbs",
+    "fat": "Fat",
+    "account": "Account"
 }

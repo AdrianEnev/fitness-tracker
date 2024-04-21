@@ -3,7 +3,7 @@ import { initReactI18next } from "react-i18next";
 import en from "../locales/en.json";
 import bg from "../locales/bg.json";
 
-export const languageResources = {
+const languageResources = {
     en: {
         translation: en,
     },

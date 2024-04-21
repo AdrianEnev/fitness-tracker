@@ -54,14 +54,17 @@ const FoodDay = ({route, navigation}: any) => {
 
     const updateGoalNutrients = async () => {
         try {
-          const data = await getDocs(userInfoCollectionRef);
-  
-          const filteredData: GoalNutrients[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as GoalNutrients));
-          
-          setGoalNutrients(filteredData);
-          
+            const docRef = doc(userInfoCollectionRef, "nutrients");
+            const docSnap = await getDoc(docRef);
+    
+            if (docSnap.exists()) {
+                const data = docSnap.data() as GoalNutrients;
+                setGoalNutrients([{ ...data, id: docSnap.id }]);
+            } else {
+                console.log("No such document!");
+            }
         } catch (err) {
-          console.error(err);
+            console.error(err);
         }
     };
 

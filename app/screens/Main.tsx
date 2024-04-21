@@ -4,7 +4,7 @@ import tw from "twrnc";
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { GoalNutrients } from './SettingsMacros';
-import { collection, doc, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 import { FlatList } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import RenderGoalNutrients from '../components/RenderGoalNutrients';
@@ -41,14 +41,17 @@ const Main = ({navigation}: any) => {
 
     const updateGoalNutrients = async () => {
         try {
-          const data = await getDocs(userInfoCollectionRef);
-  
-          const filteredData: GoalNutrients[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as GoalNutrients));
-          
-          setGoalNutrients(filteredData);
-          
+            const docRef = doc(userInfoCollectionRef, "nutrients");
+            const docSnap = await getDoc(docRef);
+    
+            if (docSnap.exists()) {
+                const data = docSnap.data() as GoalNutrients;
+                setGoalNutrients([{ ...data, id: docSnap.id }]);
+            } else {
+                console.log("No such document!");
+            }
         } catch (err) {
-          console.error(err);
+            console.error(err);
         }
     };
 

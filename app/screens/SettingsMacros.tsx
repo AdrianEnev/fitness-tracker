@@ -22,7 +22,7 @@ const Settings = () => {
 
     let [nutrients, setNutrients] = useState<GoalNutrients[]>([]);
 
-    const updateNutrients = async () => {
+    /*const updateNutrients = async () => {
         try {
           const data = await getDocs(userInfoCollectionRef);
   
@@ -32,6 +32,22 @@ const Settings = () => {
           
         } catch (err) {
           console.error(err);
+        }
+    };*/
+
+    const updateNutrients = async () => {
+        try {
+            const docRef = doc(userInfoCollectionRef, "nutrients");
+            const docSnap = await getDoc(docRef);
+    
+            if (docSnap.exists()) {
+                const data = docSnap.data() as GoalNutrients;
+                setNutrients([{ ...data, id: docSnap.id }]);
+            } else {
+                console.log("No such document!");
+            }
+        } catch (err) {
+            console.error(err);
         }
     };
 

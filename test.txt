@@ -89,3 +89,5 @@ if (docSnap.exists()) {
 } else {
     console.log('No such document!');
 }
+
+// kogato hrana e dobavena da izpishe v kolko chasa e dobavena

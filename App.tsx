@@ -11,7 +11,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { ActivityIndicator, StatusBar, View } from 'react-native'
 import MainPageComponent from './app/components/MainPageComponent';
 import Setup from './app/screens/Setup';
-import { collection, doc, getDocs } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { createStackNavigator } from '@react-navigation/stack';
 
 const Tab = createBottomTabNavigator();
@@ -84,8 +84,6 @@ const UnauthenticatedTabNavigator = () => (
 
 const App = () => {
 
-    
-    
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [setupRan, setSetupRan] = useState(false);
@@ -98,6 +96,18 @@ const App = () => {
                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');
                 const userDocRef = doc(usersCollectionRef, user.uid);
                 const userInfoCollectionRef = collection(userDocRef, 'user_info');
+
+                const checkLanguageDocument = async () => {
+                    try {
+                        const languageDocRef = doc(userInfoCollectionRef, 'language');
+                        const languageDocSnapshot = await getDoc(languageDocRef);
+                        if (!languageDocSnapshot.exists()) {
+                            await setDoc(languageDocRef, { language: 'bg' });
+                        }
+                    } catch (err) {
+                        console.error(err);
+                    }
+                };
 
                 const checkUserInfoCollection = async () => {
                     try {
@@ -120,6 +130,7 @@ const App = () => {
                     }
                 }
                 checkUserInfoCollection();
+                checkLanguageDocument();
             }else{
                 // no user, set loading to false and automatically navigate to the unathenticated page
                 setLoading(false);
