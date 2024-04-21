@@ -57,7 +57,7 @@
 
 Firebase ML Kit: If you're interested in detecting and recognizing food items from images, Firebase ML Kit offers an on-device image labeling feature that can identify a variety of objects, including food. Once you've identified the food items, you can then use other APIs or databases to fetch their nutritional information.
 
-kogato za pruv put se registrira nqkoi ne mu izliza setup stranicata dokato ne e refreshnato prilojenieto
+kogato za pruv put se registrira nqkoi ne mu izliza setup stranicata dokato ne e refreshnato prilojenieto (mai e opraveno ama moje i da ne e)
 
 
 - kod za izprashtane na email pri 5 sgresheni paroli

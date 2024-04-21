@@ -1,17 +1,11 @@
 import { EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail, updatePassword } from "firebase/auth";
-import { collection, doc, getDoc, increment, setDoc, updateDoc } from "firebase/firestore";
 import { Alert } from "react-native";
-import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 
 const changePassword = (email: any, user: any, auth: any) => {
 
     // prompt the user to enter their old password
     // if the old password is correct, prompt the user to enter their new password
     // update the password with the new password
-
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
     Alert.prompt(
         'Смяна на парола',

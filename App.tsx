@@ -14,7 +14,6 @@ import Setup from './app/screens/Setup';
 import { collection, doc, getDocs } from 'firebase/firestore';
 import { createStackNavigator } from '@react-navigation/stack';
 
-
 const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
 
@@ -85,6 +84,8 @@ const UnauthenticatedTabNavigator = () => (
 
 const App = () => {
 
+    
+    
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [setupRan, setSetupRan] = useState(false);
