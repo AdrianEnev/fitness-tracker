@@ -4,9 +4,11 @@ import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { getFoodNutrients } from '../use/useAddFood';
 import { FlatList } from 'react-native-gesture-handler';
-import { addDoc, collection, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Food } from './FoodDay';
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 const AddFoodPage = ({route, navigation}: any) => {
 

@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TextInput, Pressable, Alert, FlatList, Button, TouchableWithoutFeedback, Keyboard } from 'react-native';
+import { View, Text, Pressable, Alert, FlatList, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import tw from "twrnc";
 import { FIREBASE_AUTH, FIRESTORE_DB, getCurrentDay, getCurrentSplit } from '../../firebaseConfig';
@@ -9,6 +9,8 @@ import ActiveWorkoutExercises from '../components/ActiveWorkoutExercises';
 import { endWorkout } from '../use/useEndWorkout';
 
 const ActiveWorkout = ({navigation}: any) => {
+
+
 
 	const currentSplit = getCurrentSplit();
 	const currentDay = getCurrentDay();

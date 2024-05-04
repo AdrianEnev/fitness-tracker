@@ -4,8 +4,12 @@ import { getCurrentDay, getCurrentExercise, getCurrentSplit, FIRESTORE_DB, FIREB
 import tw from "twrnc";
 import { collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 const EditExercise = ({navigation}: any) => {
+
+    const { t } = useTranslation();
 
     const currentExercise = getCurrentExercise();
     const currentDay = getCurrentDay();
@@ -68,7 +72,7 @@ const EditExercise = ({navigation}: any) => {
                         
                         <View style={tw`w-[49%] h-[150px] rounded-2xl bg-white shadow-sm p-3`}>
 
-                            <Text style={tw`text-2xl font-medium text-center`}>Серии</Text>
+                            <Text style={tw`text-2xl font-medium text-center`}>{t('sets')}</Text>
 
                             <View style={tw`flex flex-row justify-between my-5`}>
 
@@ -109,7 +113,7 @@ const EditExercise = ({navigation}: any) => {
 
                         <View style={tw`w-[49%] h-[150px] rounded-2xl bg-white shadow-sm p-3`}>
 
-                            <Text style={tw`text-2xl font-medium text-center`}>Повторения</Text>
+                            <Text style={tw`text-2xl font-medium text-center`}>{t('reps')}</Text>
 
                                 <View style={tw`flex flex-row justify-between my-5`}>
 
@@ -160,8 +164,8 @@ const EditExercise = ({navigation}: any) => {
 
                 </View>
 
-                <Button title="Запази промените" onPress={saveChanges}/>
-                <Button title="Изтрий упражнение" onPress={deleteExercise}/>
+                <Button title={t('save')} onPress={saveChanges}/>
+                <Button title={t('delete')} onPress={deleteExercise}/>
             </View>
 
         </TouchableWithoutFeedback>

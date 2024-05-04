@@ -1,7 +1,9 @@
-import { View, Button, Pressable, Text } from 'react-native'
+import { View, Button, Text } from 'react-native'
 import React from 'react'
 import tw from "twrnc";
 import { FIREBASE_AUTH } from '../../firebaseConfig';
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 const Info = ({navigation}: any) => {
 

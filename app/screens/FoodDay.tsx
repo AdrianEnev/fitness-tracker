@@ -1,13 +1,15 @@
-import { View, Text, FlatList, Button, Pressable } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import { View, Text, FlatList, Pressable } from 'react-native'
+import React, { useState } from 'react'
 import tw from "twrnc"
 import { GoalNutrients } from './SettingsMacros';
-import { collection, doc, getDoc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import RenderGoalNutrients from '../components/RenderGoalNutrients';
 import RenderCurrentNutrients from '../components/RenderCurrentNutrients';
 import { useFocusEffect } from '@react-navigation/native';
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 export interface Food {
     title: string;

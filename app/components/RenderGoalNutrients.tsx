@@ -2,8 +2,12 @@ import { View, Text } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from "twrnc"
 import { AnimatedCircularProgress } from 'react-native-circular-progress'
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 const RenderGoalNutrients = ({item, currentNutrients}: any) => {
+
+    const { t } = useTranslation();
 
     const caloriesGoal = item?.calories ?? 0;
     const currentCalories = currentNutrients?.calories ?? 0;
@@ -27,7 +31,7 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
             <View style={tw`w-[95%] h-54 bg-white shadow-md rounded-lg`}>
 
                 <View style={tw`flex flex-row justify-between mb-2`}>
-                    <Text style={tw`font-medium text-2xl m-2`}>Калории</Text>
+                    <Text style={tw`font-medium text-2xl m-2`}>{t('calories')}</Text>
                     <Text style={tw`font-medium text-2xl m-2`}>{currentCalories} / {caloriesGoal}</Text>
                 </View>
 
@@ -40,13 +44,13 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
                                         (fill: any) => (
                                             <View style={tw`flex flex-col items-center`}>
                                                 <Text>{ currentProtein } / { proteinGoal }</Text>
-                                                <Text>грама</Text>
+                                                <Text>{t('grams')}</Text>
                                             </View>
                                         )
                                     }
                                 </AnimatedCircularProgress>
 
-                                <Text style={tw`mt-2`}>Протеин</Text>
+                                <Text style={tw`mt-2`}>{t('protein')}</Text>
                             </View>
                         </View>
 
@@ -57,13 +61,13 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
                                         (fill: any) => (
                                             <View style={tw`flex flex-col items-center`}>
                                                 <Text>{ currentCarbs } / { carbsGoal }</Text>
-                                                <Text>грама</Text>
+                                                <Text>{t('grams')}</Text>
                                             </View>
                                         )
                                     }
                                 </AnimatedCircularProgress>
 
-                                <Text style={tw`mt-2`}>Въглехидрати</Text>
+                                <Text style={tw`mt-2`}>{t('carbs')}</Text>
                             </View>
                         </View>
 
@@ -74,13 +78,13 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
                                         (fill: any) => (
                                             <View style={tw`flex flex-col items-center`}>
                                                 <Text>{ currentFat } / { fatGoal }</Text>
-                                                <Text>грама</Text>
+                                                <Text>{t('grams')}</Text>
                                             </View>
                                         )
                                     }
                                 </AnimatedCircularProgress>
 
-                                <Text style={tw`mt-2`}>Мазнини</Text>
+                                <Text style={tw`mt-2`}>{t('fat')}</Text>
                             </View>
                         </View>
                 </View>

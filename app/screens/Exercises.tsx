@@ -1,7 +1,9 @@
 import { View, Text, FlatList, Pressable, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { collection, deleteDoc, doc, onSnapshot, getDocs, updateDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB, getCurrentDay, getCurrentExercise, getCurrentSplit, setCurrentExercise } from '../../firebaseConfig';
+import { collection, doc, onSnapshot, getDocs, updateDoc } from 'firebase/firestore';
+import { FIREBASE_AUTH, FIRESTORE_DB, getCurrentDay, getCurrentSplit, setCurrentExercise } from '../../firebaseConfig';
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
 

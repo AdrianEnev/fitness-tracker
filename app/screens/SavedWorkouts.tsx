@@ -5,6 +5,8 @@ import { FIRESTORE_DB, FIREBASE_AUTH, setCurrentSavedWorkout } from '../../fireb
 import Ionicons from '@expo/vector-icons/Ionicons';
 import tw from "twrnc";
 import moment from 'moment';
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 export interface SavedWorkout {
   title: string;

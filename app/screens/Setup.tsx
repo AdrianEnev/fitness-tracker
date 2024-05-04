@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react'
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from "twrnc";
-
+import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 
 const Setup = ({navigation}: any) => {

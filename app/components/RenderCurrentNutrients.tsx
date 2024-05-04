@@ -2,7 +2,10 @@ import { View, Text } from 'react-native'
 import React from 'react'
 import tw from "twrnc";
 
+
 const RenderCurrentNutrients = (item: any) => {
+
+    
 
     const calories = item?.calories ?? 0;
     const protein = Number(item?.protein ?? 0).toFixed(0);

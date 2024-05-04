@@ -4,5 +4,18 @@
     "protein": "Protein",
     "carbs": "Carbs",
     "fat": "Fat",
-    "account": "Account"
+    "account": "Account",
+    "set": "Set",
+    "sets": "Sets",
+    "reps": "Reps",
+    "grams": "Grams",
+    "weight": "Weight",
+    "save": "Save",
+    "delete": "Delete",
+    "workouts": "Workouts",
+    "food-log": "Food log",
+    "today": "Today",
+    "saved-workouts": "Saved workouts",
+    "workout-splits": "Workout splits"
+
 }

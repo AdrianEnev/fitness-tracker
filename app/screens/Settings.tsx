@@ -89,6 +89,8 @@ const Settings = ({navigation}: any) => {
                 </TouchableOpacity>
 
             </View>
+
+            
             
 
 

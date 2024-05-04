@@ -5,6 +5,8 @@ import { FIRESTORE_DB, FIREBASE_AUTH, setCurrentSplit } from '../../firebaseConf
 import Ionicons from '@expo/vector-icons/Ionicons';
 import tw from "twrnc";
 import AddSplit from '../components/AddSplit';
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 export interface Split {
   title: string;

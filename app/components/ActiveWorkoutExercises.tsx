@@ -1,8 +1,12 @@
 import { View, Text, TextInput } from 'react-native'
 import React from 'react'
 import tw from "twrnc";
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 const ActiveWorkoutExercises = ({item, updateInputValue, inputValue}: any) => {
+
+    const { t } = useTranslation();
 
     return (
        
@@ -12,12 +16,12 @@ const ActiveWorkoutExercises = ({item, updateInputValue, inputValue}: any) => {
 
             <View style={tw`mx-3 mt-4`}>
 
-                <Text style={tw`font-medium text-lg absolute ml-1`}>Серия</Text>
+                <Text style={tw`font-medium text-lg absolute ml-1`}>{t('set')}</Text>
 
                 <View style={tw`flex flex-row justify-end gap-x-1 mt-1`}>
 
-                    <Text style={tw`text-sm mr-2`}>Повторения</Text>
-                    <Text style={tw`text-sm mr-2`}>Килограми</Text>
+                    <Text style={tw`text-sm mr-2`}>{t('reps')}</Text>
+                    <Text style={tw`text-sm mr-2`}>{t('weight')}</Text>
                     <Text style={tw`text-sm mr-8`}>RPE</Text>
 
                 </View>

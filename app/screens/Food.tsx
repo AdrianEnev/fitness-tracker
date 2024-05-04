@@ -1,8 +1,10 @@
-import { View, Text, TouchableOpacity } from 'react-native'
+import { View, Text } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
 import { bgLocaleConfig } from "../../CalendarConfig";
-import { Calendar, CalendarList, LocaleConfig } from 'react-native-calendars';
+import { CalendarList, LocaleConfig } from 'react-native-calendars';
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 LocaleConfig.locales['bg'] = bgLocaleConfig;
 

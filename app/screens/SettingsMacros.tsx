@@ -4,6 +4,8 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 import tw from "twrnc";
 import { TextInput } from 'react-native-gesture-handler';
 import { setDoc, collection, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 export interface GoalNutrients {
     calories: string,

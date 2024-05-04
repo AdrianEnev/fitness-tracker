@@ -4,6 +4,8 @@ import tw from "twrnc"
 import { addDoc, collection, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Food } from './FoodDay';
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 const AddCustomFoodPage = ({navigation, route}: any) => {
 

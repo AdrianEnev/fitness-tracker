@@ -6,6 +6,8 @@ import tw from "twrnc";
 import { ExerciseInterface } from './Exercises';
 import { renderDays } from '../components/renderDays';
 import { AddDay } from '../components/AddDay';
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 export interface Day {
     title: string;

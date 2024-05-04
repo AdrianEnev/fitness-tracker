@@ -1,4 +1,4 @@
-import { View, Text, Image, ScrollView, Pressable } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from "twrnc";
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
@@ -9,8 +9,12 @@ import { FlatList } from 'react-native-gesture-handler';
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import RenderGoalNutrients from '../components/RenderGoalNutrients';
 import { useFocusEffect } from '@react-navigation/native';
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 const Main = ({navigation}: any) => {
+
+    const { t } = useTranslation();
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -105,7 +109,7 @@ const Main = ({navigation}: any) => {
 
                 </View>
 
-                <Text style={tw`font-medium text-lg ml-4`}>Днес (
+                <Text style={tw`font-medium text-lg ml-4`}>{t('today')} (
                     <Text style={tw`text-blue-500`}>{getCurrentDate(true)}</Text>)
                 </Text>
 
@@ -117,7 +121,7 @@ const Main = ({navigation}: any) => {
 
                     <Pressable style={tw`w-[49%] h-32 bg-white shadow-md rounded-lg`} onPress={() => navigation.navigate("Тренировки")}>
                         <View style={tw`flex flex-row justify-between`}>
-                            <Text style={tw`font-medium text-base ml-2 mt-1`}>Тренировки</Text>
+                            <Text style={tw`font-medium text-base ml-2 mt-1`}>{t('workouts')}</Text>
                             <MaterialCommunityIcons name='human-handsup' size={26} color='#2AAA8A' style={tw`m-2`}/>
                         </View>
                         
@@ -125,7 +129,7 @@ const Main = ({navigation}: any) => {
 
                     <Pressable style={tw`w-[49%] h-32 bg-white shadow-md rounded-lg`} onPress={() => navigation.navigate("Хранене")}>
                         <View style={tw`flex flex-row justify-between`}>
-                            <Text style={tw`font-medium text-base ml-2 mt-1`}>Хранене</Text>
+                            <Text style={tw`font-medium text-base ml-2 mt-1`}>{t('food-log')}</Text>
                             <MaterialCommunityIcons name='food-apple' size={26} color='#ff474c' style={tw`m-2`}/>
                         </View>
                         

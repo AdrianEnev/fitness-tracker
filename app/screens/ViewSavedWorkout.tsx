@@ -6,6 +6,8 @@ import { SavedWorkout } from './SavedWorkouts';
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
 

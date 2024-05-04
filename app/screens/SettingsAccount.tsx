@@ -5,6 +5,8 @@ import tw from 'twrnc'
 import { getAuth } from 'firebase/auth'
 import deleteAccount  from '../use/useDeleteAccount';
 import changePassword from '../use/useChangePassword'
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 const SettingsAccount = () => {
 

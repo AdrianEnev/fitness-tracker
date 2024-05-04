@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../../firebaseConfig';
 import tw from "twrnc";
+import i18next from '../../services/i18next';
+import { useTranslation } from 'react-i18next';
 
 const Login = () => {
 
