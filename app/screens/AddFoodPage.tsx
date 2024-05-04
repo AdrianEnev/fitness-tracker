@@ -1,12 +1,12 @@
-import { View, Text, TextInput, Pressable, ActivityIndicator } from 'react-native'
+import { View, Text, TextInput, Pressable, ActivityIndicator, Button } from 'react-native'
 import React, { useState } from 'react'
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { getFoodNutrients } from '../use/useAddFood';
 import { FlatList } from 'react-native-gesture-handler';
 import { addDoc, collection, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Food } from './FoodDay';
+import getNutrients from '../use/useGetNutrients';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 
@@ -37,7 +37,7 @@ const AddFoodPage = ({route, navigation}: any) => {
 
         setLoading(true);
 
-        const results = await getFoodNutrients(searchQuery, grams);
+        const results = await getNutrients(searchQuery, grams);
         
         setFoods(results)
         setLoading(false);
