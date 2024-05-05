@@ -21,7 +21,28 @@ export const bgLocaleConfig = {
     today: "Днес"
 };
 
-LocaleConfig.locales['bg'] = bgLocaleConfig;
-LocaleConfig.defaultLocale = 'bg';
+export const enLocaleConfig = {
+    monthNames: [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+    ],
+    monthNamesShort: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    dayNames: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
+    dayNamesShort: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+    today: "Today"
+};
 
-export default bgLocaleConfig;
+LocaleConfig.locales['bg'] = bgLocaleConfig;
+LocaleConfig.locales['en'] = enLocaleConfig;
+
+export default { bgLocaleConfig, enLocaleConfig };

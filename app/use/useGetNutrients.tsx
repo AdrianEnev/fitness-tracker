@@ -1,12 +1,12 @@
 import axios from "axios";
 
-const APP_ID = '90e2036b';
-const APP_KEY = 'b1e82289782395cb48b50b4b11520754';
+const EDAMAM_APP_ID = '90e2036b';
+const EDAMAM_APP_KEY = 'b1e82289782395cb48b50b4b11520754';
 
 const fetchFoodData = async (search: any) => {
   try {
     const response = await axios.get(
-      `https://api.edamam.com/api/food-database/v2/parser?ingr=${search}&app_id=${APP_ID}&app_key=${APP_KEY}`
+      `https://api.edamam.com/api/food-database/v2/parser?ingr=${search}&app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}`
     );
     return response.data.hints; // Return array of food items
   } catch (error) {

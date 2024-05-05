@@ -1,13 +1,16 @@
 import { View, Text, TouchableWithoutFeedback, Button, Keyboard, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import tw from "twrnc"
-import { addDoc, collection, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Food } from './FoodDay';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 
 const AddCustomFoodPage = ({navigation, route}: any) => {
+
+    
+    const { t } = useTranslation();
 
     const { date } = route.params;
 
@@ -74,6 +77,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
             
             const documentInfo = {
                 title: name,
+                date: serverTimestamp(),
                 calories: Math.round(calories),
                 protein: Math.round(protein),
                 carbs: Math.round(carbs),
@@ -97,13 +101,12 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
                         <View style={tw`flex flex-row justify-between`}>
 
                             <TextInput 
-                                style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                placeholder='име' 
+                                style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`}  
                                 maxLength={20} 
                                 onChangeText={(text) => setName(text)} 
                             />
 
-                            <Text style={tw`font-medium text-xl mt-3`}>Име</Text>
+                            <Text style={tw`font-medium text-xl mt-3`}>{t('food')}</Text>
 
                         </View>
 
@@ -111,13 +114,12 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
 
                             <TextInput 
                                 style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                placeholder='Калории' 
                                 keyboardType='number-pad' 
                                 maxLength={4} 
                                 onChangeText={(text) => setCalories(Number(text))} 
                             />
 
-                            <Text style={tw`font-medium text-xl mt-3`}>Калории</Text>
+                            <Text style={tw`font-medium text-xl mt-3`}>{t('calories')}</Text>
 
                         </View>
 
@@ -125,41 +127,38 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
 
                             <TextInput 
                                 style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                placeholder='Протеин' 
                                 keyboardType='number-pad' 
                                 maxLength={3} 
                                 onChangeText={(text) => setProtein(Number(text))}
                             />
 
-                            <Text style={tw`font-medium text-xl mt-3`}>Протеин</Text>
+                            <Text style={tw`font-medium text-xl mt-3`}>{t('protein')}</Text>
 
                         </View>
 
                         <View style={tw`flex flex-row justify-between`}>
 
                             <TextInput 
-                                style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                placeholder='Въглехидрати' 
+                                style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`}  
                                 keyboardType='number-pad' 
                                 maxLength={3} 
                                 onChangeText={(text) => setCarbs(Number(text))}
                             />
 
-                            <Text style={tw`font-medium text-xl mt-3`}>Въглехидрати</Text>
+                            <Text style={tw`font-medium text-xl mt-3`}>{t('carbs')}</Text>
 
                         </View>
 
                         <View style={tw`flex flex-row justify-between`}>
 
                             <TextInput 
-                                style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                placeholder='Мазнини' 
+                                style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`}  
                                 keyboardType='number-pad' 
                                 maxLength={3} 
                                 onChangeText={(text) => setFat(Number(text))}
                             />
 
-                            <Text style={tw`font-medium text-xl mt-3`}>Мазнини</Text>
+                            <Text style={tw`font-medium text-xl mt-3`}>{t('fat')}</Text>
 
                         </View>
 
@@ -167,13 +166,12 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
 
                             <TextInput 
                                 style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                placeholder='грамове' 
                                 keyboardType='number-pad' 
                                 maxLength={5} 
                                 onChangeText={(text) => setGrams(Number(text))}
                             />
 
-                            <Text style={tw`font-medium text-xl mt-3`}>Грамове</Text>
+                            <Text style={tw`font-medium text-xl mt-3`}>{t('grams')}</Text>
 
                         </View>
                     

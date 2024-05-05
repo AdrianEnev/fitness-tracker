@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlatList } from 'react-native-gesture-handler';
-import { addDoc, collection, doc, getDocs, setDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Food } from './FoodDay';
 import getNutrients from '../use/useGetNutrients';
@@ -11,6 +11,8 @@ import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 
 const AddFoodPage = ({route, navigation}: any) => {
+    
+    const {t} = useTranslation();
 
     const { date } = route.params;
 
@@ -81,8 +83,6 @@ const AddFoodPage = ({route, navigation}: any) => {
 
     const renderSearchedFoods = (item: any) => {
 
-        // da moje choveka da si izbira makronutrientite na ruka ako ne e dovolen s rezultatite
-        // otdelno da preimenuvam "nutrients" na "goalNutrients" i da opravq flatlista 
         // da izlizat nai-chesto izpolzvanite hrani predi tursene
         // moga da translate-na rezultata
 
@@ -101,6 +101,7 @@ const AddFoodPage = ({route, navigation}: any) => {
             
             const documentInfo = {
                 title: item.title,
+                date: serverTimestamp(),
                 calories: Math.round(item.calories),
                 protein: Math.round(item.protein),
                 carbs: Math.round(item.carbs),
@@ -156,14 +157,14 @@ const AddFoodPage = ({route, navigation}: any) => {
                 <TextInput
                     style={tw`text-2xl w-[200px] h-16 bg-blue-500 text-white rounded-lg p-3`}
                     maxLength={20}
-                    placeholder='Apple'
+                    placeholder={t('food')}
                     value={searchQuery}
                     onChangeText={setSearchQuery}
                 />
                 <TextInput
                     style={tw`text-2xl w-[100px] h-16 bg-blue-500 text-white rounded-lg p-3 ml-2`}
                     keyboardType='number-pad'
-                    placeholder='200'
+                    placeholder={t('grams')}
                     maxLength={4}
                     value={grams}
                     onChangeText={setGrams}

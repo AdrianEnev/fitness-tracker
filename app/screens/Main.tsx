@@ -21,6 +21,36 @@ const Main = ({navigation}: any) => {
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
     const foodDaysCollectionRef = collection(userDocRef, 'food_days');
 
+    const getLanguage = async () => {
+        try {
+            const docSnapshot = await getDoc(doc(userInfoCollectionRef, 'language'));
+            if (docSnapshot.exists()) {
+                const language = docSnapshot.data().language;
+                await i18next.changeLanguage(language);
+               
+            } else {
+
+                // moje bi da napravq da izchaka 2 sek da probva pak ili neshto takova che ponqkoga ne go udpateva na vreme
+                console.log('Language document does not exist');
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    useFocusEffect(
+        React.useCallback(() => {
+            (async () => {
+                await getLanguage();
+            })();
+
+            return () => {
+                // Optional: You can do something when the screen is unfocused
+                // This function runs when the screen goes out of focus
+            };
+        }, [])
+    );
+
     const getCurrentDate = (padStart: boolean): string => {
 
         if (padStart) {
