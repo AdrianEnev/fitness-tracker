@@ -28,7 +28,7 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
     
     return (
         <View style={tw`flex items-center mt-2 mb-2`}>
-            <View style={tw`w-[95%] h-54 bg-white shadow-md rounded-lg`}>
+            <View style={tw`w-[95%] h-52 bg-white shadow-md rounded-lg`}>
 
                 <View style={tw`flex flex-row justify-between mb-2`}>
                     <Text style={tw`font-medium text-2xl m-2`}>{t('calories')}</Text>

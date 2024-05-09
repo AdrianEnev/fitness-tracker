@@ -13,6 +13,7 @@ import { useTranslation } from 'react-i18next';
 
 export interface Food {
     title: string;
+    date?: any;
     calories?: number;
     protein?: number;
     carbs?: number;
@@ -28,7 +29,10 @@ const FoodDay = ({route, navigation}: any) => {
     let [goalNutrients, setGoalNutrients] = useState<GoalNutrients[]>([]);
     let [currentFoods, setCurrentFoods] = useState<Food[]>([]);
 
-    // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk
+    //let [filteredCurrentFoods, setFilteredCurrentFoods] = useState<Food[]>([])
+
+    // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk 
+    // object
     let [currentNutrients, setCurrentNutrients] = useState<GoalNutrients[]>([]);
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -40,17 +44,19 @@ const FoodDay = ({route, navigation}: any) => {
 
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
-    // gets all foods inside the fooDayCollectionRef
+    // vzima vsichki hrani ot foodDayCollectionRef i gi podrejda spored data
     const updateCurrentFoods = async () => {
         try {
             const data = await getDocs(foodDayCollectionRef);
-    
-            const filteredData: Food[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Food));
-            
+
+            let filteredData: Food[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Food));
+
+            // ako ima pone 2 hrani togava sortira, inache nqma kakvo da se sortira zashtoto e samo 1
+            if (filteredData.length > 1) {
+                filteredData = filteredData.sort((a, b) => b.date - a.date);
+            }
+
             setCurrentFoods(filteredData);
-            
-            //console.log("currentFoods")
-            //console.log(currentFoods)
             
         } catch (err) {
             console.error(err);
@@ -67,9 +73,6 @@ const FoodDay = ({route, navigation}: any) => {
 
                 const data = docSnap.data() as GoalNutrients;
                 setGoalNutrients([{ ...data, id: docSnap.id }]);
-                
-                //console.log("goalNutrients")
-                //console.log(goalNutrients)
 
             } else {
                 console.log("No such document!");
@@ -88,8 +91,6 @@ const FoodDay = ({route, navigation}: any) => {
             const matchingDoc = data.docs.find((doc) => doc.id === `${date.day}-${date.month}-${date.year}`);
             if (matchingDoc) {
                 setCurrentNutrients(matchingDoc.data() as GoalNutrients[]);
-                //console.log("currentNutrients")
-                //console.log(currentNutrients)
             }
 
         } catch (err) {
@@ -97,17 +98,34 @@ const FoodDay = ({route, navigation}: any) => {
         }
     }
 
+    const calculateNutrientsOnDeletion = (item: Food) => {
+
+        // ot testvane razbrah che {"calories": 1778, "carbs": 456, "fat": 6, "protein": 22} se vodi object a ne array ili obratnoto
+        // moga da suzdam vtori state za currentNutrients koito se zadava pri updateCurrentNutrients samo che raboti specialno za funkciqta tuk
+
+        let object = currentNutrients;
+        let array = Object.entries(object)
+        console.log(array)
+        console.log(currentNutrients)
+
+    }
+
+    //handleDeleteFood is currently not being used for testing purposes
     const handleDeleteFood = async (item: any) => {
 
+        const updatedNutrients = calculateNutrientsOnDeletion(item)
+        console.log(updatedNutrients);
+        
+
         try {
-            // Delete food with the given id
+            // Iztriva natisnatata hrana
             const foodDocRef = doc(foodDayCollectionRef, item.id);
             await deleteDoc(foodDocRef);
     
-            // Update currentFoods state after deletion
+            // aktualizira lista s hrani sled iztrivane na 1 ot tqh
             await updateCurrentFoods();
 
-            // update the properties for the thing
+            // aktualizira dannite za makronutrienti
             const data = await getDocs(foodDaysCollectionRef);
             const matchingDoc = data.docs.find((doc) => doc.id === `${date.day}-${date.month}-${date.year}`);
             if (matchingDoc) {
@@ -151,9 +169,6 @@ const FoodDay = ({route, navigation}: any) => {
                 } catch (err) {
                     console.error(err);
                 }
-
-
-
             }
             
         } catch (err) {
@@ -164,10 +179,15 @@ const FoodDay = ({route, navigation}: any) => {
     // runs when the screen is opened
     useFocusEffect(
         React.useCallback(() => {
-            updateCurrentFoods();
-            updateCurrentNutrients();
-            updateGoalNutrients();
 
+            const fetchData = async () => {
+                await updateCurrentFoods();
+                await updateGoalNutrients();
+                await updateCurrentNutrients();
+            };
+    
+            fetchData();
+            
             return () => {
                 // Optional: You can do something when the screen is unfocused
                 // This function runs when the screen goes out of focus
@@ -207,7 +227,7 @@ const FoodDay = ({route, navigation}: any) => {
 
                 <FlatList 
                     data={currentFoods}
-                    renderItem={({ item }) => <RenderAddedFood item={item} onDelete={() => handleDeleteFood(item)} />} 
+                    renderItem={({ item }) => <RenderAddedFood item={item} onDelete={() => calculateNutrientsOnDeletion(item)} />} 
                     showsVerticalScrollIndicator={false} 
                 />
 

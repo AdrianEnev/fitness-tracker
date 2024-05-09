@@ -15,10 +15,7 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true,
-      "infoPlist": {
-        "NSFaceIDUsageDescription": "Това приложение се нуждае от права към Face ID."
-      }
+      "supportsTablet": true
     },
     "android": {
       "adaptiveIcon": {

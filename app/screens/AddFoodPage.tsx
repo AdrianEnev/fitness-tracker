@@ -9,6 +9,9 @@ import { Food } from './FoodDay';
 import getNutrients from '../use/useGetNutrients';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
+import axios from 'axios';
+
+// da sortiram hranite spored koga sa dobaveni
 
 const AddFoodPage = ({route, navigation}: any) => {
     
@@ -41,7 +44,7 @@ const AddFoodPage = ({route, navigation}: any) => {
 
         const results = await getNutrients(searchQuery, grams);
         
-        setFoods(results)
+        setFoods(results);
         setLoading(false);
         
     }
@@ -132,13 +135,13 @@ const AddFoodPage = ({route, navigation}: any) => {
 
                 <View style={tw`flex flex-row justify-between`}>
                     <Text style={tw`text-white text-lg`}>{foodTitle}</Text>
-                    <Text style={tw`text-white text-lg pr-3`}>{foodGrams || 0} грама</Text>
+                    <Text style={tw`text-white text-lg pr-3`}>{foodGrams || 0} {t('grams')}</Text>
                 </View>
                 
-                <Text style={tw`text-white text-lg`}>{foodCalories} калории</Text>
-                <Text style={tw`text-white text-lg`}>{foodProtein}г. протеин</Text>
-                <Text style={tw`text-white text-lg`}>{foodCarbs}г. въглехидрати</Text>
-                <Text style={tw`text-white text-lg`}>{foodFat}г. мазнини</Text>
+                <Text style={tw`text-white text-lg`}>{foodCalories} {t('calories')}</Text>
+                <Text style={tw`text-white text-lg`}>{foodProtein}г. {t('protein')}</Text>
+                <Text style={tw`text-white text-lg`}>{foodCarbs}г. {t('carbs')}</Text>
+                <Text style={tw`text-white text-lg`}>{foodFat}г. {t('fat')}</Text>
 
             </Pressable>
         )

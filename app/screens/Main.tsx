@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from 'react-native'
+import { View, Text, Pressable, ScrollView } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from "twrnc";
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
@@ -11,8 +11,11 @@ import RenderGoalNutrients from '../components/RenderGoalNutrients';
 import { useFocusEffect } from '@react-navigation/native';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
+import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 const Main = ({navigation}: any) => {
+
+    const [steps, setSteps] = useState(0);
 
     const { t } = useTranslation();
 
@@ -40,9 +43,14 @@ const Main = ({navigation}: any) => {
 
     useFocusEffect(
         React.useCallback(() => {
+            updateCurrentNutrients();
+
             (async () => {
                 await getLanguage();
+
             })();
+
+            
 
             return () => {
                 // Optional: You can do something when the screen is unfocused
@@ -95,18 +103,6 @@ const Main = ({navigation}: any) => {
         });
     }, [])
 
-    // runs when the screen is opened
-    useFocusEffect(
-        React.useCallback(() => {
-            updateCurrentNutrients();
-    
-            return () => {
-                // Optional: You can do something when the screen is unfocused
-                // This function runs when the screen goes out of focus
-            };
-        }, [])
-    );
-
     const updateCurrentNutrients = async () => {
         try {
             const data = await getDocs(foodDaysCollectionRef);
@@ -126,9 +122,9 @@ const Main = ({navigation}: any) => {
 
     return (
         <View>
-            <View style={tw`w-full h-10 bg-white`}></View>
+            <View style={tw`w-full h-10 bg-[#FAFAFA]`}></View>
 
-            <View style={tw`h-full w-full bg-white`}>
+            <ScrollView style={tw`h-full w-full bg-[#FAFAFA]`}>
 
                 <View style={tw`flex flex-row justify-between`}>
 
@@ -143,11 +139,13 @@ const Main = ({navigation}: any) => {
                     <Text style={tw`text-blue-500`}>{getCurrentDate(true)}</Text>)
                 </Text>
 
-                <View style={tw`mb-2`}>
-                    <FlatList data={goalNutrients} renderItem={({item}) => <RenderGoalNutrients item={item} currentNutrients={currentNutrients} />}  scrollEnabled={false}/>
-                </View>
+                <FlatList 
+                    data={goalNutrients} 
+                    renderItem={({item}) => <RenderGoalNutrients item={item} currentNutrients={currentNutrients} />}  
+                    scrollEnabled={false}
+                />
 
-                <View style={tw`flex flex-row justify-between mx-2`}>
+                <View style={tw`flex flex-row justify-between mx-2 mt-1`}>
 
                     <Pressable style={tw`w-[49%] h-32 bg-white shadow-md rounded-lg`} onPress={() => navigation.navigate("Тренировки")}>
                         <View style={tw`flex flex-row justify-between`}>
@@ -167,7 +165,7 @@ const Main = ({navigation}: any) => {
 
                 </View>
                 
-            </View>
+            </ScrollView>
             
         </View>
         
