@@ -98,25 +98,8 @@ const FoodDay = ({route, navigation}: any) => {
         }
     }
 
-    const calculateNutrientsOnDeletion = (item: Food) => {
-
-        // ot testvane razbrah che {"calories": 1778, "carbs": 456, "fat": 6, "protein": 22} se vodi object a ne array ili obratnoto
-        // moga da suzdam vtori state za currentNutrients koito se zadava pri updateCurrentNutrients samo che raboti specialno za funkciqta tuk
-
-        let object = currentNutrients;
-        let array = Object.entries(object)
-        console.log(array)
-        console.log(currentNutrients)
-
-    }
-
-    //handleDeleteFood is currently not being used for testing purposes
     const handleDeleteFood = async (item: any) => {
-
-        const updatedNutrients = calculateNutrientsOnDeletion(item)
-        console.log(updatedNutrients);
         
-
         try {
             // Iztriva natisnatata hrana
             const foodDocRef = doc(foodDayCollectionRef, item.id);
@@ -227,7 +210,7 @@ const FoodDay = ({route, navigation}: any) => {
 
                 <FlatList 
                     data={currentFoods}
-                    renderItem={({ item }) => <RenderAddedFood item={item} onDelete={() => calculateNutrientsOnDeletion(item)} />} 
+                    renderItem={({ item }) => <RenderAddedFood item={item} onDelete={() => handleDeleteFood(item)} />} 
                     showsVerticalScrollIndicator={false} 
                 />
 

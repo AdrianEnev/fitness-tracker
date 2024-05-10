@@ -7,11 +7,7 @@ import { addDoc, collection, doc, getDocs, serverTimestamp, setDoc, updateDoc } 
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Food } from './FoodDay';
 import getNutrients from '../use/useGetNutrients';
-import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
-import axios from 'axios';
-
-// da sortiram hranite spored koga sa dobaveni
 
 const AddFoodPage = ({route, navigation}: any) => {
     
@@ -22,6 +18,9 @@ const AddFoodPage = ({route, navigation}: any) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [grams, setGrams] = useState('');
     const [loading, setLoading] = useState(false);
+
+    // izpolzva se za da predodvrati spamene pri dobavqne na hrana
+    const [itemAdded, setItemAdded] = useState(false);
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -54,7 +53,6 @@ const AddFoodPage = ({route, navigation}: any) => {
             const data = await getDocs(foodDayCollectionRef);
 
             if (data.empty) {
-                // foodDayCollectionRef is empty
                 return;
             }
 
@@ -86,10 +84,13 @@ const AddFoodPage = ({route, navigation}: any) => {
 
     const renderSearchedFoods = (item: any) => {
 
-        // da izlizat nai-chesto izpolzvanite hrani predi tursene
-        // moga da translate-na rezultata
-
         const addItem = async (item: any) => { 
+
+            if (itemAdded) {
+                return;
+            }
+
+            setItemAdded(true);
 
             const foodDayDocRef = doc(foodDaysCollectionRef, `${date.day}-${date.month}-${date.year}`);
             

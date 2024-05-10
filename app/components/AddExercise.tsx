@@ -46,8 +46,6 @@ export const AddExercise = () => {
             console.log(err);
         }
     }
-    
-    
 
     return (
         <Pressable style={tw`w-10 h-[44px] flex items-center justify-center`} onPress={addExercise}>

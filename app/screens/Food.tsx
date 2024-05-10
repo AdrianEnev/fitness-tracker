@@ -26,15 +26,17 @@ const Food = ({navigation}: any) => {
     }, []);
 
     const currentDate = new Date().toISOString().split('T')[0].split('-').join('-');
+
+    //<View style={tw`mt-8`}>
+        //<Text style={tw`text-xl font-bold text-center mt-5`}>Хранителен режим</Text>
+   // </View>
    
     return (
         <View style={tw`bg-white`}>
 
-            <View style={tw`mt-8`}>
-                <Text style={tw`text-xl font-bold text-center mt-5`}>Хранителен режим</Text>
-            </View>
+           
             
-            <View style={tw`m-3 bg-white`}>
+            <View style={tw`m-3 mt-10 bg-white`}>
 
                 <CalendarList 
                     key={key}
