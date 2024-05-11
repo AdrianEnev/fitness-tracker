@@ -115,7 +115,7 @@ const Splits = ({navigation}: any) => {
     return (
       <View style={tw``}>
 
-          <View style={tw`w-full h-12 bg-blue-500 mb-2`}></View> 
+          <View style={tw`w-full h-10 bg-[#FAFAFA]`}></View>
 
           <AddSplit />
 

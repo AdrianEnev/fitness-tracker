@@ -129,14 +129,8 @@ const MainPageComponent = () => {
             component={ActiveWorkout}
             options={() => ({
               title:currentDayTitle,
-              headerShown: true,
-              headerTintColor: '#fff',
-              headerStyle: {
-                backgroundColor: '#007AFF',
-              },
-              headerBackVisible: false,
+              headerShown: false,
               gestureEnabled: false,
-              tabBarStyle: {display:"none"}
             })}
           />
 

@@ -80,3 +80,9 @@ if (docSnap.exists()) {
 } else {
     console.log('No such document!');
 }
+
+
+
+- https://www.npmjs.com/package/react-native-toast-message
+- da dobavq predishni kilogrami kum aktivna trenirovka
+- da moje na momenta da se dobavq extra seriq koqto ne promenq napraveniq split no dobavq 1 seriq kum segashnoto uprajenie i se zapazva pri krai na trenirovka

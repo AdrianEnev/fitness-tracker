@@ -1,14 +1,15 @@
 import { Alert } from "react-native";
 import { View, Text } from 'react-native'
+import { saveWorkoutToDB } from "./useSaveWorkoutDB";
 
-export const endWorkout = (navigation: any, stopTimer: () => void, saveWorkoutToDB: () => void, saveToDatabase: boolean) => {
+export const endWorkout = (navigation: any, stopTimer: () => void, exercisesInfoArrays: any, saveToDatabase: boolean, currentDay: any, time: any) => {
 
     const handleOk = async (saveToDatabase: boolean) => {
 
         stopTimer();
 
         if (saveToDatabase) {
-          saveWorkoutToDB();
+          saveWorkoutToDB(currentDay, exercisesInfoArrays, time);
         }
 
         navigation.navigate("Тренировки");

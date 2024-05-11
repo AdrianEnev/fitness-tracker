@@ -7,13 +7,19 @@ import { addDoc, collection, doc, getDocs, serverTimestamp } from 'firebase/fire
 import { ExerciseInterface } from './Exercises';
 import ActiveWorkoutExercises from '../components/ActiveWorkoutExercises';
 import { endWorkout } from '../use/useEndWorkout';
+import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const ActiveWorkout = ({navigation}: any) => {
 
-
-
 	const currentSplit = getCurrentSplit();
 	const currentDay = getCurrentDay();
+
+	const {t} = useTranslation();
+
+	// vzima razmerite na iphone notcha i go razdelq na 4 che razmera da pasva na tailwind versiqta za razmeri
+	const insets = useSafeAreaInsets();
+	const notchSizeTailwind = Math.round(insets.top / 4);
 
 	const usersCollectionRef = collection(FIRESTORE_DB, 'users');
 	const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -90,25 +96,8 @@ const ActiveWorkout = ({navigation}: any) => {
 		};
 	}, []);
 
-	useEffect(() => {
-		const headerOptions = {
-			headerLeft: () => (
-				<Text style={tw`font-medium mr-3 text-white text-base`}>
-					{
-						formatTime(time)
-					}
-				</Text>
-			),
-			headerRight: () => (
-				<Pressable onPress={() => endWorkout(navigation, stopTimer, saveWorkoutToDB, true)} style={tw`mr-[-18px] mt-[-1px]`}>
-					<Ionicons name='stop-circle-outline' size={44} color='#FF0000'/>
-				</Pressable>
-			)
-		};
-
-		navigation.setOptions(headerOptions);
-	}, [navigation, time]);
-
+	// vzima stoinosttite za opredeleno oprajnenie a getExercisesInfo izpolzva getRowValuesForExercise da vzeme dannite za absolutno vsichko
+	// narochno sum go razdelil na 2 funkcii da se chete po lesno
 	const getRowValuesForExercise = (
 		inputValues: { [key: string]: string },
 		exerciseId: string,
@@ -152,79 +141,6 @@ const ActiveWorkout = ({navigation}: any) => {
 			return [];
 		}
 	};
-	
-	const saveWorkoutToDB = async () => {
-		try {
-			const currentDayTitle = currentDay?.title;
-	
-			if (currentDayTitle) {
-				const exercisesInfoArrays = getExercisesInfo();
-	
-				if (exercisesInfoArrays.length === 0) {
-					console.log('No exercises to save. Workout not saved.');
-					return;
-				}
-
-				// format the current duration of the workout
-				const minutes = Math.floor(time / 60);
-                const hours = Math.floor(minutes / 60);
-                const remainingMinutes = minutes % 60;
-                const remainingSeconds = time % 60;
-                let timeString: string;
-
-                if (hours == 1) {
-                    timeString = `${String(hours)} час и ${String(remainingMinutes)} минути`;
-                }  
-                else if (hours > 1) {
-                    timeString = `${String(hours)} часа и ${String(remainingMinutes)} минути`;
-                } else if (minutes > 0) {
-                    timeString = `${String(minutes)} минути`;
-                } else {
-                    timeString = `${String(remainingSeconds)} секунди`;
-                }
-					
-				const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-				const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-				const savedWorkoutsCollectionRef = collection(userDocRef, 'saved_workouts');
-				const savedWorkoutDocRef = await addDoc(savedWorkoutsCollectionRef, {
-					saved: serverTimestamp(),
-					title: currentDayTitle,
-				});
-				const exerciseInfoCollectionRef = collection(savedWorkoutDocRef, 'info');
-	
-				const savePromises = exercisesInfoArrays.map(async (exerciseInfo, index) => {
-					const exerciseDocRef = await addDoc(exerciseInfoCollectionRef, {
-						title: exerciseInfo[1].exerciseTitle,
-						exerciseIndex: exerciseInfo[1].exerciseIndex,
-						saved: serverTimestamp(),
-						workoutDuration: timeString,
-					});
-	
-					for (const rowNumber in exerciseInfo) {
-						const rowInfo = exerciseInfo[rowNumber];
-						const setCollectionRef = collection(exerciseDocRef, 'sets');
-	
-						const repsValue = rowInfo.reps !== undefined ? rowInfo.reps : 'N/A';
-						const weightValue = rowInfo.weight !== undefined ? rowInfo.weight : 'N/A';
-						const rpeValue = rowInfo.rpe !== undefined ? rowInfo.rpe : 'N/A';
-	
-						await addDoc(setCollectionRef, {
-							reps: repsValue,
-							weight: weightValue,
-							rpe: rpeValue,
-						});
-					}
-				});
-	
-				await Promise.all(savePromises);
-	
-				console.log('Workout saved successfully!');
-			}
-		} catch (error) {
-			console.error('Error saving workout:', error);
-		}
-		
-	};
 
 	const nextExercise = () => {
 		setExerciseNumber((prevIndex) => Math.min(exercises.length, prevIndex + 1));
@@ -242,7 +158,8 @@ const ActiveWorkout = ({navigation}: any) => {
 
 			if (exercises.length === 1) {
 				// ends the workout without saving anything to the database if the last exercise is skipped
-				endWorkout(navigation, stopTimer, saveWorkoutToDB, false);
+				const exercisesInfoArrays = getExercisesInfo();
+				endWorkout(navigation, stopTimer, exercisesInfoArrays, false, currentDay, time);
 				return;
 			}
 
@@ -272,37 +189,59 @@ const ActiveWorkout = ({navigation}: any) => {
 	};
 	
 	return (
-		<View style={tw`w-full h-full bg-white`}>
-		
-				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-						<FlatList
-						data={exerciseNumber <= exercises.length ? [exercises[exerciseNumber - 1]] : []}
-						renderItem={({ item }: any) => (
-							<ActiveWorkoutExercises
+		<View style={tw.style(`w-full h-full bg-white pt-${notchSizeTailwind}`)}>
+
+			<View style={tw`flex flex-row justify-between mx-3`}>
+				<Text style={tw`font-medium text-black text-lg`}>
+					{
+						formatTime(time)
+					}
+				</Text>
+
+				<Pressable 
+					style={tw`w-20 h-10 bg-green-500 rounded-md items-center justify-center rounded-lg`}
+					onPress={() => 
+						{
+							const exercisesInfoArrays = getExercisesInfo();
+							endWorkout(navigation, stopTimer, exercisesInfoArrays, true, currentDay, time)
+						}
+					}
+				>
+					<Text style={tw`text-white text-lg font-medium`}>{t('end-workout')}</Text>
+				</Pressable>
+
+			</View>
+	
+			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+					<FlatList
+					data={exerciseNumber <= exercises.length ? [exercises[exerciseNumber - 1]] : []}
+					renderItem={({ item }: any) => (
+						<ActiveWorkoutExercises
 							item={item}
 							updateInputValue={(key: string, value: string) => updateInputValue(item.id, key, value)}
 							inputValue={inputValues[item.id] || {}}
-							/>
-						)}
-						keyExtractor={(exercise: ExerciseInterface) => exercise.id}
+							currentDay={currentDay}
 						/>
-				</TouchableWithoutFeedback>
+					)}
+					keyExtractor={(exercise: ExerciseInterface) => exercise.id}
+					/>
+			</TouchableWithoutFeedback>
 
-				<View style={tw`flex flex-row justify-between mx-3 mt-[-10px]`}>
+			<View style={tw`flex flex-row justify-between mx-3 mt-[-10px]`}>
 
-					<Pressable onPress={previousExercise} disabled={exerciseNumber === 1}>
-						<Ionicons name='arrow-back-circle-outline' size={77} color='#3B82F6'/>
-					</Pressable>
-					
-					<Pressable style={tw`flex items-center justify-center`} onPress={skipExercise}>
-						<Ionicons name='close-circle-outline' size={77} color='#FF0000'/>
-					</Pressable>
+				<Pressable onPress={previousExercise} disabled={exerciseNumber === 1}>
+					<Ionicons name='arrow-back-circle-outline' size={77} color='#3B82F6'/>
+				</Pressable>
+				
+				<Pressable style={tw`flex items-center justify-center`} onPress={skipExercise}>
+					<Ionicons name='close-circle-outline' size={77} color='#FF0000'/>
+				</Pressable>
 
-					<Pressable  onPress={nextExercise} disabled={exerciseNumber === exercises.length}>
-						<Ionicons name='arrow-forward-circle-outline' size={77} color='#3B82F6'/>
-					</Pressable>
-            
-				</View>
+				<Pressable  onPress={nextExercise} disabled={exerciseNumber === exercises.length}>
+					<Ionicons name='arrow-forward-circle-outline' size={77} color='#3B82F6'/>
+				</Pressable>
+		
+			</View>
 
 		</View>
 	);
