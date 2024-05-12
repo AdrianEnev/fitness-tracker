@@ -8,6 +8,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { ScrollView } from 'react-native-gesture-handler';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 interface Set {
     id: string,
@@ -18,6 +19,9 @@ interface Set {
 }
 
 const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
+
+    const insets = useSafeAreaInsets();
+	const notchSizeTailwind = Math.round(insets.top / 4);
 
     const {workoutID} = route.params;
 
@@ -77,26 +81,6 @@ const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
         setCurrentIndex((prevIndex) => Math.max(0, prevIndex - 1));
     };
 
-    useEffect(() => {
-        if (savedWorkoutInfo[currentIndex]) {
-        navigation.setOptions({
-            headerRight: () => 
-
-            <Pressable style={tw`w-12 h-32 mr-[-15px] flex items-center`} onPress={deleteItem}>
-
-                <Ionicons
-                name='close-circle-outline'
-                size={43}
-                color="#FF0000"
-                
-                style={tw`ml-[3px]`}
-                />
-
-            </Pressable>
-
-        });
-        }
-    }, [currentIndex, savedWorkoutInfo]);
 
     const deleteItem = () => {
 
@@ -142,11 +126,18 @@ const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
 
             {savedWorkoutInfo.length > 0 && (
 
-                <View>
+                <View style={tw.style(`w-full h-full bg-white pt-${notchSizeTailwind}`)}>
 
-                    <Text style={tw`text-base`} numberOfLines={1} ellipsizeMode='tail'>
-                        {savedWorkoutInfo[currentIndex].title}
-                    </Text>
+                    <View style={tw`flex flex-row justify-between`}>
+                        <Text style={tw`text-base`} numberOfLines={1} ellipsizeMode='tail'>
+                            {savedWorkoutInfo[currentIndex].title}
+                        </Text>
+
+                        <Pressable style={tw`w-12 h-12`} onPress={deleteItem}>
+                            <Ionicons name='close-circle-outline' size={43} color="#FF0000" />
+                        </Pressable>
+                    </View>
+                    
 
                     <View style={tw`m-2 mb-4 flex flex-col justify-between`}>
 

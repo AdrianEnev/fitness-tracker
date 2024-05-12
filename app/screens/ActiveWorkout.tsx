@@ -199,7 +199,7 @@ const ActiveWorkout = ({navigation}: any) => {
 				</Text>
 
 				<Pressable 
-					style={tw`w-20 h-10 bg-green-500 rounded-md items-center justify-center rounded-lg`}
+					style={tw`w-20 h-10 bg-blue-500 rounded-md items-center justify-center rounded-lg`}
 					onPress={() => 
 						{
 							const exercisesInfoArrays = getExercisesInfo();
@@ -223,20 +223,17 @@ const ActiveWorkout = ({navigation}: any) => {
 							updateInputValue={(key: string, value: string) => updateInputValue(item.id, key, value)}
 							inputValue={inputValues[item.id] || {}}
 							currentDay={currentDay}
+							skipExercise={skipExercise}
 						/>
 					)}
 					keyExtractor={(exercise: ExerciseInterface) => exercise.id}
 					/>
 			</TouchableWithoutFeedback>
 
-			<View style={tw`flex flex-row justify-between mx-3 mt-[-10px]`}>
+			<View style={tw`flex flex-row justify-between mx-3`}>
 
 				<Pressable onPress={previousExercise} disabled={exerciseNumber === 1}>
 					<Ionicons name='arrow-back-circle-outline' size={77} color='#3B82F6'/>
-				</Pressable>
-				
-				<Pressable style={tw`flex items-center justify-center`} onPress={skipExercise}>
-					<Ionicons name='close-circle-outline' size={77} color='#FF0000'/>
 				</Pressable>
 
 				<Pressable  onPress={nextExercise} disabled={exerciseNumber === exercises.length}>

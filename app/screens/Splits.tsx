@@ -1,4 +1,4 @@
-import { View, Text, FlatList, Pressable, Alert, Button} from 'react-native'
+import { View, Text, FlatList, Pressable, Alert, Button, TouchableOpacity, TextInput} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Timestamp, collection, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, orderBy } from 'firebase/firestore';
 import { FIRESTORE_DB, FIREBASE_AUTH, setCurrentSplit } from '../../firebaseConfig';
@@ -7,6 +7,7 @@ import tw from "twrnc";
 import AddSplit from '../components/AddSplit';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export interface Split {
   title: string;
@@ -20,12 +21,21 @@ const Splits = ({navigation}: any) => {
       console.error('User is not authenticated.');
       return;
     }
+    
+    const insets = useSafeAreaInsets();
+	  const notchSizeTailwind = Math.round(insets.top / 4);
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userCollectionRef = collection(userDocRef, 'user_splits');
       
     const [splits, setSplits] = useState<Split[]>([]);
+
+    const [search, setSearch] = useState('');
+
+    const updateSearch: (search: string) => void = (search) => {
+        setSearch(search);
+    };
 
     const updateSplits = async () => {
       try {
@@ -96,7 +106,7 @@ const Splits = ({navigation}: any) => {
       return (
         <View style={tw`mx-3`}>
 
-            <Pressable style={tw`flex flex-row items-center w-full h-24 my-1 rounded-lg bg-white shadow-sm`} onPress={pressedWorkout} onLongPress={changeWorkoutName}>
+            <Pressable style={tw`flex flex-row items-center w-full h-24 my-1 rounded-lg bg-white shadow-md`} onPress={pressedWorkout} onLongPress={changeWorkoutName}>
                 <Text style={tw`flex-1 ml-5 text-base`} numberOfLines={1} ellipsizeMode='tail'>{item.title}</Text>
                 <Ionicons name='trash-bin-outline' size={24} color="red" onPress={deleteItem} style={tw`mr-3`}/>
             </Pressable>
@@ -113,27 +123,33 @@ const Splits = ({navigation}: any) => {
     }, [])
 
     return (
-      <View style={tw``}>
+        <View style={tw.style(`w-full h-full bg-[#F2F2F2] pt-${notchSizeTailwind}`)}>
 
-          <View style={tw`w-full h-10 bg-[#FAFAFA]`}></View>
+            <View style={tw`flex flex-row justify-between`}>
 
-          <AddSplit />
+                <Text>Search bar</Text>
 
-          {splits.length > 0 ? (
+                <AddSplit />
 
-          <View>
-
-              <FlatList data={splits} renderItem={(item) => renderSplit(item)} keyExtractor={(split: Split) => split.id}/>
-
-          </View>
-
-          ) : (
-            <View style={tw`flex items-center justify-center h-full`}>
-              <Text style={tw`text-lg text-blue-500`}>Цъкни плюса горе, за да добавиш програма.</Text>
             </View>
-          )}
 
-      </View>
+                
+
+                {splits.length > 0 ? (
+
+                <View>
+
+                        <FlatList data={splits} renderItem={(item) => renderSplit(item)} keyExtractor={(split: Split) => split.id}/>
+
+                </View>
+
+                ) : (
+                    <View style={tw`flex items-center justify-center h-full`}>
+                        <Text style={tw`text-lg text-blue-500`}>Цъкни плюса, за да добавиш програма.</Text>
+                    </View>
+                )}
+
+        </View>
     )
 
 }

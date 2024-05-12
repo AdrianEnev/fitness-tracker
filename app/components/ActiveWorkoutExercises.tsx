@@ -5,7 +5,7 @@ import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const ActiveWorkoutExercises = ({item, updateInputValue, inputValue, currentDay}: any) => {
+const ActiveWorkoutExercises = ({item, updateInputValue, inputValue, currentDay, skipExercise}: any) => {
 
     const { t } = useTranslation();
 
@@ -18,21 +18,6 @@ const ActiveWorkoutExercises = ({item, updateInputValue, inputValue, currentDay}
             <View style={tw`flex flex-row justify-between mx-4`}>
                 <Text style={tw`text-lg font-medium`}>{currentDayTitle}</Text>
                 <Text style={tw`text-lg font-medium`} numberOfLines={1} ellipsizeMode='tail'>{item.title}</Text>
-            </View>
-           
-
-            <View style={tw`mx-3 mt-4`}>
-
-                <Text style={tw`font-medium text-lg absolute ml-1`}>{t('set')}</Text>
-
-                <View style={tw`flex flex-row gap-x-10 mt-1 ml-15`}>
-
-                    <Text style={tw`text-sm`}>{t('reps')}</Text>
-                    <Text style={tw`text-sm`}>KG</Text>
-                    <Text style={tw`text-sm`}>RPE</Text>
-
-                </View>
-
             </View>
 
             <View style={tw`mt-3 ml-5`}>
@@ -55,7 +40,7 @@ const ActiveWorkoutExercises = ({item, updateInputValue, inputValue, currentDay}
                                     onChangeText={(text) => {
                                         updateInputValue(`${item.id}-${index + 1}-reps`, text);
                                     }}
-                                    placeholder={item.reps === "0" ? '' : item.reps.toString()}
+                                    placeholder={item.reps === "0" ? t('reps') : item.reps.toString()}
                                 />
 
                                 <TextInput
@@ -66,6 +51,7 @@ const ActiveWorkoutExercises = ({item, updateInputValue, inputValue, currentDay}
                                     onChangeText={(text) => {
                                         updateInputValue(`${item.id}-${index + 1}-weight`, text)
                                     }}
+                                    placeholder='KG'
                                 />
 
                                 <TextInput
@@ -76,6 +62,7 @@ const ActiveWorkoutExercises = ({item, updateInputValue, inputValue, currentDay}
                                     onChangeText={(text) => {
                                         updateInputValue(`${item.id}-${index + 1}-rpe`, text)
                                     }}
+                                    placeholder='RPE'
                                 />
                             </View>
                         </View>
@@ -84,8 +71,14 @@ const ActiveWorkoutExercises = ({item, updateInputValue, inputValue, currentDay}
             </View>
             
             <View style={tw`mx-3`}>
-                <TouchableOpacity style={tw`w-full h-12 bg-[#F2F2F2] rounded-xl flex justify-center items-center`}>
-                    <Text style={tw`text-lg`}>+ Добави сет</Text>
+                <TouchableOpacity style={tw`w-full h-12 bg-green-500 rounded-xl flex justify-center items-center`}>
+                    <Text style={tw`text-lg text-white`}>+ Добави серия</Text>
+                </TouchableOpacity>
+            </View>
+
+            <View style={tw`mx-3 mt-2`}>
+                <TouchableOpacity style={tw`w-full h-12 bg-red-500 rounded-xl flex justify-center items-center`} onPress={skipExercise}>
+                    <Text style={tw`text-lg text-white`}>Пропусни упражнение</Text>
                 </TouchableOpacity>
             </View>
             

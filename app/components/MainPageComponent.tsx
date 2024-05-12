@@ -55,11 +55,7 @@ const MainPageComponent = () => {
             component={SavedWorkouts}
             options={{
               title: "Запазени тренировки",
-              headerShown: true,
-              headerTintColor: '#fff',
-              headerStyle: {
-                backgroundColor: '#007AFF',
-              },
+              headerShown: false,
             }}
           />
 
@@ -68,11 +64,7 @@ const MainPageComponent = () => {
             component={ViewSavedWorkout}
             options={{
               title: "Запазенa тренировкa",
-              headerShown: true,
-              headerTintColor: '#fff',
-              headerStyle: {
-                backgroundColor: '#007AFF',
-              },
+              headerShown: false,
             }}
           />
 

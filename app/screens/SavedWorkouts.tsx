@@ -7,6 +7,7 @@ import tw from "twrnc";
 import moment from 'moment';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export interface SavedWorkout {
   title: string;
@@ -18,10 +19,14 @@ export interface SavedWorkout {
 
 const SavedWorkouts = ({navigation}: any) => {
 
+    // tva nz dali oshte ima smisul da sedi tuka
     if (!FIREBASE_AUTH.currentUser) {
       console.error('User is not authenticated.');
       return;
     }
+
+    const insets = useSafeAreaInsets();
+	const notchSizeTailwind = Math.round(insets.top / 4);
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -77,7 +82,7 @@ const SavedWorkouts = ({navigation}: any) => {
           <View style={tw`mx-3`}>
 
               <Pressable
-              style={tw`flex flex-row items-center w-full h-24 my-1 rounded-lg bg-white shadow-sm`}
+              style={tw`flex flex-row items-center w-full h-24 my-1 rounded-lg bg-white shadow-md`}
               onPress={pressedSavedWorkout}
               onLongPress={changeSavedWorkoutName}
               >
@@ -109,7 +114,7 @@ const SavedWorkouts = ({navigation}: any) => {
     }, [])
 
     return (
-      <View style={tw``}>
+        <View style={tw.style(`w-full h-full bg-[#F2F2F2] pt-${notchSizeTailwind}`)}>
 
           {savedWorkouts.length > 0 ? (
 

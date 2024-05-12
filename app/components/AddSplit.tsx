@@ -14,7 +14,6 @@ const AddSplit = () => {
     const addSplit = async () => {
         
         try{
-
             const newDocumentData = {
                 title: "Нова Програма",
                 created: serverTimestamp()
@@ -29,7 +28,7 @@ const AddSplit = () => {
     }
 
     return (
-        <View style={tw`flex items-center mb-1`}>
+        <View style={tw`flex items-center`}>
             <Pressable style={tw`w-10 h-[44px] flex items-center justify-center`} onPress={addSplit}>
                 <Ionicons name='add-outline' size={44} color='black' style={tw`mr-[-15px]`}/>
             </Pressable>
