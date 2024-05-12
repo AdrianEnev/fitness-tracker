@@ -25,7 +25,6 @@ const headerOptions = {
   },
 };
 
-
 const AuthenticatedTabNavigator = ({ setupRan }: any) => {
     
     return (
@@ -152,14 +151,14 @@ const App = () => {
     return (
         <GestureHandlerRootView style={{flex: 1}}>
 
-            <StatusBar barStyle='dark-content'/>
+                <StatusBar barStyle='dark-content'/>
 
-            <NavigationContainer>
+                <NavigationContainer>
 
-                {user ? <AuthenticatedTabNavigator setupRan = {setupRan}/> : <UnauthenticatedTabNavigator />}
+                    {user ? <AuthenticatedTabNavigator setupRan = {setupRan}/> : <UnauthenticatedTabNavigator />}
 
-            </NavigationContainer>
-          
+                </NavigationContainer>
+        
         </GestureHandlerRootView>
     );
 };

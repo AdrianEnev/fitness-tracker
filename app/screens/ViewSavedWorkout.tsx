@@ -9,6 +9,14 @@ import { ScrollView } from 'react-native-gesture-handler';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 
+interface Set {
+    id: string,
+    reps: string,
+    rpe: string,
+    weight: string,
+    setIndex: number,
+}
+
 const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
 
     const {workoutID} = route.params;
@@ -24,40 +32,43 @@ const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
     const savedWorkoutDocRef = doc(savedWorkoutsCollectionRef, currentSavedWorkout?.id);
     const savedWorkoutInfoCollectionRef = collection(savedWorkoutDocRef, 'info');
 
+    // In ViewSavedWorkout.tsx
+
     useEffect(() => {
         const fetchData = async () => {
-            
             try {
                 const data = await getDocs(savedWorkoutInfoCollectionRef);
-                const infoArray: SavedWorkout[] = data.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as SavedWorkout);
-
+                let infoArray: SavedWorkout[] = data.docs.map((doc) => ({ id: doc.id, ...doc.data() }) as SavedWorkout);
+    
+                // Sort the exercises based on their index
+                infoArray = infoArray.sort((a, b) => a.exerciseIndex - b.exerciseIndex);
+    
+                // Set the sorted exercises to the savedWorkoutInfo state
                 setSavedWorkoutInfo(infoArray);
-
-                // Fetch sets for each exercise
-                const setsDataPromises = infoArray.map(async (exercise) => {
-                const setsCollectionRef = collection(savedWorkoutInfoCollectionRef, exercise.id, 'sets');
-                const setsData = await getDocs(setsCollectionRef);
-
-                // Convert the setsData to an array of sets
-                const setsArray = setsData.docs.map(setDoc => ({ id: setDoc.id, ...setDoc.data() }));
-                return { exerciseId: exercise.id, sets: setsArray };
-
-                });
-
-                const setsDataArray = await Promise.all(setsDataPromises);
-                setSets(setsDataArray);
-
+    
+                // Fetch sets for all exercises
+                const allSets = await Promise.all(infoArray.map(async (exercise) => {
+                    const setsCollectionRef = collection(savedWorkoutInfoCollectionRef, exercise.id, 'sets');
+                    const setsData = await getDocs(setsCollectionRef);
+    
+                    // Convert the setsData to an array of sets and sort them based on their setIndex
+                    let setsArray = setsData.docs.map(setDoc => ({ id: setDoc.id, ...setDoc.data() }) as Set);
+                    setsArray = setsArray.sort((a, b) => a.setIndex - b.setIndex);
+    
+                    return { exerciseId: exercise.id, sets: setsArray };
+                }));
+    
+                setSets(allSets);
+    
             } catch (error) {
                 console.error('Error fetching saved workout info:', error);
             }
-
         };
-
+    
         fetchData();
     }, []);
 
     
-
     const nextExercise = () => {
         setCurrentIndex((prevIndex) => Math.min(savedWorkoutInfo.length - 1, prevIndex + 1));
     };

@@ -13,7 +13,7 @@ export interface SavedWorkout {
   saved: Timestamp;
   id: string;
   exerciseIndex: number,
-  workoutDuration: string
+  workoutDuration: string,
 }
 
 const SavedWorkouts = ({navigation}: any) => {

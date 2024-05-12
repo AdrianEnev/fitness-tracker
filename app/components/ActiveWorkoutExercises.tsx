@@ -25,9 +25,8 @@ const ActiveWorkoutExercises = ({item, updateInputValue, inputValue, currentDay}
 
                 <Text style={tw`font-medium text-lg absolute ml-1`}>{t('set')}</Text>
 
-                <View style={tw`flex flex-row justify-end gap-x-10 mt-1`}>
+                <View style={tw`flex flex-row gap-x-10 mt-1 ml-15`}>
 
-                    <Text style={tw`text-sm`}>Предишно</Text>
                     <Text style={tw`text-sm`}>{t('reps')}</Text>
                     <Text style={tw`text-sm`}>KG</Text>
                     <Text style={tw`text-sm`}>RPE</Text>
@@ -47,8 +46,6 @@ const ActiveWorkoutExercises = ({item, updateInputValue, inputValue, currentDay}
                             </View>
 
                             <View style={tw`flex flex-row gap-x-2`} key={`set-${item.id}-${index}`}>
-
-                                <View style={tw`w-20 h-10 bg-[#F2F2F2] rounded-2xl`}></View>
                                 
                                 <TextInput
                                     style={tw`bg-[#F2F2F2] rounded-2xl p-2 w-20 h-10 mb-5`}

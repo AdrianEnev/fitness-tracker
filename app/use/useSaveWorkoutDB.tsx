@@ -1,9 +1,14 @@
-import { addDoc, collection, doc, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, serverTimestamp } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import { ExerciseInterface } from "../screens/Exercises";
+import { useState } from "react";
 
 export const saveWorkoutToDB = async (currentDay: any, exercisesInfoArrays: any, time: any) => {
+
     try {
+
+        console.log('Saving workout to database...');
+
         const currentDayTitle = currentDay?.title;
 
         if (currentDayTitle) {
@@ -41,12 +46,15 @@ export const saveWorkoutToDB = async (currentDay: any, exercisesInfoArrays: any,
             const exerciseInfoCollectionRef = collection(savedWorkoutDocRef, 'info');
 
             const savePromises = exercisesInfoArrays.map(async (exerciseInfo: any, index: any) => {
+
                 const exerciseDocRef = await addDoc(exerciseInfoCollectionRef, {
                     title: exerciseInfo[1].exerciseTitle,
                     exerciseIndex: exerciseInfo[1].exerciseIndex,
                     saved: serverTimestamp(),
                     workoutDuration: timeString,
                 });
+              
+                let setIndex = 0; // Initialize set index counter
 
                 for (const rowNumber in exerciseInfo) {
                     const rowInfo = exerciseInfo[rowNumber];
@@ -57,10 +65,13 @@ export const saveWorkoutToDB = async (currentDay: any, exercisesInfoArrays: any,
                     const rpeValue = rowInfo.rpe !== undefined ? rowInfo.rpe : 'N/A';
 
                     await addDoc(setCollectionRef, {
+                        setIndex: setIndex, // Add set index to the document
                         reps: repsValue,
                         weight: weightValue,
                         rpe: rpeValue,
                     });
+
+                    setIndex++;
                 }
             });
 

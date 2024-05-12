@@ -132,7 +132,7 @@ const ActiveWorkout = ({navigation}: any) => {
 					const rowValues = getRowValuesForExercise(inputValues[exerciseId], exerciseId, exercise.title, index + 1);
 					exerciseInfoArrays.push(rowValues);
 				} else {
-					console.log(`No input values available for exercise ${index + 1}`);
+					//console.log(`No input values available for exercise ${index + 1}`);
 				}
 			});
 	
@@ -203,7 +203,9 @@ const ActiveWorkout = ({navigation}: any) => {
 					onPress={() => 
 						{
 							const exercisesInfoArrays = getExercisesInfo();
+					
 							endWorkout(navigation, stopTimer, exercisesInfoArrays, true, currentDay, time)
+
 						}
 					}
 				>

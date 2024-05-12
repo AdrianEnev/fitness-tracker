@@ -81,7 +81,8 @@ if (docSnap.exists()) {
     console.log('No such document!');
 }
 
-
+- notifications
+- notch size
 
 - https://www.npmjs.com/package/react-native-toast-message
 - da dobavq predishni kilogrami kum aktivna trenirovka
