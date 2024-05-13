@@ -21,6 +21,8 @@ export interface ExerciseInterface {
 
 const Exercises = ({navigation}: any) => {
 
+    const {t} = useTranslation();
+
     const currentDay = getCurrentDay();
     const currentSplit = getCurrentSplit();
 
@@ -80,7 +82,7 @@ const Exercises = ({navigation}: any) => {
 
         const changeExerciseName = () => {
           Alert.prompt(
-            'Моля въведи ново име!',
+            t('new-name-alert'),
             '',
             (newName) => {
               if (newName && newName.length <= 40) {
@@ -89,9 +91,9 @@ const Exercises = ({navigation}: any) => {
                 });
                 setCurrentExercise(item);
               }else{
-                Alert.alert('Името на определено упражнение не може да надвиши 40 букви или да е празно!', '', [
+                Alert.alert(t('35-characters-alert'), '', [
                   {
-                    text: 'Ок',
+                    text: 'OK',
                     style: 'cancel',
                   }
                 ]);
@@ -107,8 +109,8 @@ const Exercises = ({navigation}: any) => {
             <View style={tw``}>
               <Pressable style={tw`flex flex-col w-[84%] h-36 mt-3 rounded-xl bg-white pt-3 z-10`} onPress={pressedExercise} onLongPress={changeExerciseName}>
                 <Text style={tw`flex-1 ml-5 text-2xl font-medium`} numberOfLines={1} ellipsizeMode='tail'>{item.title}</Text>
-                <Text style={tw`flex-1 ml-5 text-lg`}>Серии: {item.sets !== "" ? item.sets : "0"}</Text>
-                <Text style={tw`flex-1 ml-5 text-lg`}>Повторения: {item.reps !== "" ? item.reps: "0"}</Text>
+                <Text style={tw`flex-1 ml-5 text-lg`}>{t('sets')}: {item.sets !== "" ? item.sets : "0"}</Text>
+                <Text style={tw`flex-1 ml-5 text-lg`}>{t('reps')}: {item.reps !== "" ? item.reps: "0"}</Text>
               </Pressable>
 
               <View style={tw`bg-white w-full h-36 absolute mt-3 rounded-xl`}>

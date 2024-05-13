@@ -30,8 +30,6 @@ const Food = ({navigation}: any) => {
     return (
         <View style={tw`bg-white`}>
 
-           
-            
             <View style={tw`m-3 mt-10 bg-white`}>
 
                 <CalendarList 

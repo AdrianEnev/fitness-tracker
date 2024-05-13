@@ -5,7 +5,25 @@ import tw from "twrnc";
 import { collection, addDoc, doc, serverTimestamp } from 'firebase/firestore';
 import { FIRESTORE_DB, FIREBASE_AUTH } from "../../firebaseConfig";
 
+import i18next from 'i18next';
+import { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+
 const AddSplit = () => {
+
+    const [splitTitle, setSplitTitle] = useState<string>("New Split");
+
+    useFocusEffect(() => {
+
+        const currentLanguage = i18next.language;
+
+        if (currentLanguage == "bg") {
+            setSplitTitle("Нова Програма");
+        } else {    
+            setSplitTitle("New Split");
+        }
+
+    });
 
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -15,7 +33,7 @@ const AddSplit = () => {
         
         try{
             const newDocumentData = {
-                title: "Нова Програма",
+                title: splitTitle,
                 created: serverTimestamp()
             };
         

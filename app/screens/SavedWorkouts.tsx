@@ -25,8 +25,10 @@ const SavedWorkouts = ({navigation}: any) => {
       return;
     }
 
+    const {t} = useTranslation();
+
     const insets = useSafeAreaInsets();
-	const notchSizeTailwind = Math.round(insets.top / 4);
+	  const notchSizeTailwind = Math.round(insets.top / 4);
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -57,7 +59,7 @@ const SavedWorkouts = ({navigation}: any) => {
 
         const changeSavedWorkoutName = () => {
           Alert.prompt(
-            'Моля въведи ново име!',
+            t('new-name-alert'),
             '',
             (newName) => {
               if (newName && newName.length <= 50) {
@@ -65,9 +67,9 @@ const SavedWorkouts = ({navigation}: any) => {
                   title: newName
                 });
               }else{
-                Alert.alert('Името на определена тренировка не може да надвиши 50 букви!', '', [
+                Alert.alert(t('workout-characters-alert'), '', [
                   {
-                    text: 'Ок',
+                    text: 'ОK',
                     style: 'cancel',
                   }
                 ]);

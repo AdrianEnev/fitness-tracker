@@ -15,10 +15,24 @@
     "workouts": "Workouts",
     "food-log": "Food log",
     "today": "Today",
-    "saved-workouts": "Saved workouts",
-    "workout-splits": "Workout splits",
+    "saved-workouts": "Saved Workouts",
+    "workout-splits": "Workout Splits",
     "food": "Food",
     "steps": "Steps",
-    "end-workout": "Finish"
+    "end-workout": "Finish",
+    "add-set": "Add a Set",
+    "skip-exercise": "Skip Exercise",
+    "skip-exercise-alert": "Are you sure you want to skip this exercise?",
+    "cancel": "Cancel",
+    "yes": "Yes",
+    "finish-workout-alert": "Are you sure you want to end this workout?",
+    "new-name-alert": "Please enter a new name",
+    "delete-workout-alert": "Are you sure you want to delete this workout?",
+    "delete-day-alert": "Are you sure you want to delete this day?",
+    "workout-characters-alert": "Name must be between 1 and 50 characters!",
+    "35-characters-alert": "Name must be between 1 and 35 characters!",
+    "exercises-number-alert": "Make sure each exercise has at least one set!",
+    "start-workout-alert": "Are you sure you want to start this workout?"
+    
 
 }

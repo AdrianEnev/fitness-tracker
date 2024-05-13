@@ -10,7 +10,10 @@ export const endWorkout = (
     saveToDatabase: boolean, 
     currentDay: any, 
     time: any,
-    ) => {
+    t: any
+) => {
+
+    // t -> useTranslation
 
     const handleOk = async (saveToDatabase: boolean) => {
 
@@ -32,13 +35,14 @@ export const endWorkout = (
     };
 
     if (saveToDatabase) {
-        Alert.alert('Сигурен ли си, че искаш да прекъснеш тази тренировка?', '', [
+
+        Alert.alert(t('finish-workout-alert'), '', [
           {
-            text: 'Отказ',
+            text: t('cancel'),
             onPress: handleCancel,
             style: 'cancel',
           },
-          { text: 'Да', onPress: () => handleOk(saveToDatabase) },
+          { text: t('yes'), onPress: () => handleOk(saveToDatabase) },
         ]);
     }else{
         navigation.navigate("Тренировки");

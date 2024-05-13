@@ -8,6 +8,7 @@ import { renderDays } from '../components/renderDays';
 import { AddDay } from '../components/AddDay';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
+import { use } from 'i18next';
 
 export interface Day {
     title: string;
@@ -16,6 +17,8 @@ export interface Day {
 }
 
 const Days = ({navigation}: any) => {
+
+  const {t} = useTranslation();
 
   const [exercises, setExercises] = useState<ExerciseInterface[]>([]);
   const [days, setDays] = useState<Day[]>([]);
@@ -66,7 +69,7 @@ const Days = ({navigation}: any) => {
           <View style={tw`mx-3`}>
             <FlatList
               data={days}
-              renderItem={({item}: any) => renderDays({ item, navigation, daysCollectionRef, setExercises })}
+              renderItem={({item}: any) => renderDays({ item, navigation, daysCollectionRef, setExercises, t })}
               keyExtractor={(day: Day) => day.id}
             />
           </View>

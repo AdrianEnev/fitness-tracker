@@ -4,8 +4,25 @@ import { Pressable } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FIREBASE_AUTH, FIRESTORE_DB, getCurrentDay, getCurrentSplit } from '../../firebaseConfig';
 import { ExerciseInterface } from '../screens/Exercises';
+import { useFocusEffect } from '@react-navigation/native';
+import { useState } from 'react';
+import i18next from 'i18next';
 
 export const AddExercise = () => {
+
+    const [exerciseTitle, setExerciseTitle] = useState<string>("New Exercise");
+
+    useFocusEffect(() => {
+
+        const currentLanguage = i18next.language;
+
+        if (currentLanguage == "bg") {
+            setExerciseTitle("Ново Упражнение");
+        } else {    
+            setExerciseTitle("New Exercise");
+        }
+
+    });
 
     const currentSplit = getCurrentSplit();
     const currentDay = getCurrentDay();
@@ -32,7 +49,7 @@ export const AddExercise = () => {
     
             // Add the new exercise with the correct index
             const newDocumentData = {
-                title: "Ново Упражнение",
+                title: exerciseTitle,
                 sets: '0',
                 reps: '0',
                 exerciseIndex: newIndex,

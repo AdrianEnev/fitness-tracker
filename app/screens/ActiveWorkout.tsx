@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Pressable, Alert, FlatList, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import Ionicons from '@expo/vector-icons/Ionicons';
 import tw from "twrnc";
 import { FIREBASE_AUTH, FIRESTORE_DB, getCurrentDay, getCurrentSplit } from '../../firebaseConfig';
 import { addDoc, collection, doc, getDocs, serverTimestamp } from 'firebase/firestore';
@@ -159,7 +158,7 @@ const ActiveWorkout = ({navigation}: any) => {
 			if (exercises.length === 1) {
 				// ends the workout without saving anything to the database if the last exercise is skipped
 				const exercisesInfoArrays = getExercisesInfo();
-				endWorkout(navigation, stopTimer, exercisesInfoArrays, false, currentDay, time);
+				endWorkout(navigation, stopTimer, exercisesInfoArrays, false, currentDay, time, t);
 				return;
 			}
 
@@ -178,15 +177,19 @@ const ActiveWorkout = ({navigation}: any) => {
 	const skipExercise = () => {
 
 		// add an alert with an ok and cancel button
-		Alert.alert('Сигурен ли си, че искаш да пропуснеш това упражнение?', '', [
+		Alert.alert(t('skip-exercise-alert'), '', [
 			{
-				text: 'Отказ',		
+				text: t('cancel'),		
 				style: 'cancel',
 			},
-			{ text: 'Да', onPress: () => handleSkipExercise() },
+			{ text: t('yes'), onPress: () => handleSkipExercise() },
 		]);
 		
 	};
+
+	const addSet = () => {
+		console.log('Adding a set');
+	}
 	
 	return (
 		<View style={tw.style(`w-full h-full bg-white pt-${notchSizeTailwind}`)}>
@@ -204,7 +207,7 @@ const ActiveWorkout = ({navigation}: any) => {
 						{
 							const exercisesInfoArrays = getExercisesInfo();
 					
-							endWorkout(navigation, stopTimer, exercisesInfoArrays, true, currentDay, time)
+							endWorkout(navigation, stopTimer, exercisesInfoArrays, true, currentDay, time, t)
 
 						}
 					}
@@ -224,23 +227,16 @@ const ActiveWorkout = ({navigation}: any) => {
 							inputValue={inputValues[item.id] || {}}
 							currentDay={currentDay}
 							skipExercise={skipExercise}
+							addSet={addSet}
+							previousExercise={previousExercise}
+							exerciseNumber={exerciseNumber}
+							nextExercise={nextExercise}
+							exercises={exercises}
 						/>
 					)}
 					keyExtractor={(exercise: ExerciseInterface) => exercise.id}
 					/>
 			</TouchableWithoutFeedback>
-
-			<View style={tw`flex flex-row justify-between mx-3`}>
-
-				<Pressable onPress={previousExercise} disabled={exerciseNumber === 1}>
-					<Ionicons name='arrow-back-circle-outline' size={77} color='#3B82F6'/>
-				</Pressable>
-
-				<Pressable  onPress={nextExercise} disabled={exerciseNumber === exercises.length}>
-					<Ionicons name='arrow-forward-circle-outline' size={77} color='#3B82F6'/>
-				</Pressable>
-		
-			</View>
 
 		</View>
 	);

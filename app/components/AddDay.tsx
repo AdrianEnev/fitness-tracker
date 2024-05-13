@@ -3,8 +3,25 @@ import tw from "twrnc";
 import { Pressable, View } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FIREBASE_AUTH, FIRESTORE_DB, getCurrentSplit } from '../../firebaseConfig';
+import i18next from 'i18next';
+import { useFocusEffect } from '@react-navigation/native';
+import { useState } from 'react';
 
 export const AddDay = () => {
+
+    const [dayTitle, setAddDayTitle] = useState<string>("New Day");
+
+    useFocusEffect(() => {
+
+        const currentLanguage = i18next.language;
+
+        if (currentLanguage == "bg") {
+            setAddDayTitle("Нов Ден");
+        } else {    
+            setAddDayTitle("New Day");
+        }
+
+    });
 
     const currentSplit = getCurrentSplit();
 
@@ -18,7 +35,7 @@ export const AddDay = () => {
         try{
 
             const newDocumentData = {
-                title: "Нов Ден",
+                title: dayTitle,
                 created: serverTimestamp(),
             };
         

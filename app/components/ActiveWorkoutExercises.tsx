@@ -1,11 +1,24 @@
 import { View, Text, TextInput, Pressable } from 'react-native'
 import React from 'react'
 import tw from "twrnc";
-import i18next from '../../services/i18next';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
-const ActiveWorkoutExercises = ({item, updateInputValue, inputValue, currentDay, skipExercise}: any) => {
+const ActiveWorkoutExercises = (
+    {
+        item, 
+        updateInputValue, 
+        inputValue, 
+        currentDay, 
+        skipExercise, 
+        addSet,
+        previousExercise,
+        exerciseNumber,
+        nextExercise,
+        exercises
+
+    }: any) => {
 
     const { t } = useTranslation();
 
@@ -71,17 +84,55 @@ const ActiveWorkoutExercises = ({item, updateInputValue, inputValue, currentDay,
             </View>
             
             <View style={tw`mx-3`}>
-                <TouchableOpacity style={tw`w-full h-12 bg-green-500 rounded-xl flex justify-center items-center`}>
-                    <Text style={tw`text-lg text-white`}>+ Добави серия</Text>
+                <TouchableOpacity style={tw`w-full h-12 bg-green-500 rounded-xl flex justify-center items-center`} onPress={addSet}>
+                    <Text style={tw`text-lg text-white`}>+ {t('add-set')}</Text>
                 </TouchableOpacity>
             </View>
 
             <View style={tw`mx-3 mt-2`}>
                 <TouchableOpacity style={tw`w-full h-12 bg-red-500 rounded-xl flex justify-center items-center`} onPress={skipExercise}>
-                    <Text style={tw`text-lg text-white`}>Пропусни упражнение</Text>
+                    <Text style={tw`text-lg text-white`}>{t('skip-exercise')}</Text>
                 </TouchableOpacity>
             </View>
-            
+
+            {/* ako e izbrano purvoto uprajennie se pokazva samo strelka napred zashtoto nqma drugo predi nego*/}
+            {/* ako e izbrano poslednoto uprajennie se pokazva samo strelka nazad zashtoto nqma drugo sled nego*/}
+            {/* v drugite sluchai se pokazvat i dvete strelki za nazad i za napred*/}
+            {exerciseNumber == 1 ? (
+                <View style={tw`flex flex-row justify-between mx-3`}>
+                    <Pressable onPress={previousExercise}>
+                        <Ionicons name='arrow-back-circle-outline' size={77} color='#3B82F6' style={tw`hidden`}/>
+                    </Pressable>
+
+                    <Pressable  onPress={nextExercise} disabled={exerciseNumber === exercises.length}>
+                        <Ionicons name='arrow-forward-circle-outline' size={77} color='#3B82F6'/>
+                    </Pressable>
+                </View>
+            ) : exerciseNumber > 1 && exerciseNumber < exercises.length ? (
+                <View style={tw`flex flex-row justify-between mx-3`}>
+                    
+                    <Pressable onPress={previousExercise}>
+                        <Ionicons name='arrow-back-circle-outline' size={77} color='#3B82F6'/>
+                    </Pressable>
+
+                    <Pressable  onPress={nextExercise}>
+                        <Ionicons name='arrow-forward-circle-outline' size={77} color='#3B82F6'/>
+                    </Pressable>
+
+                </View>
+            ) : exerciseNumber == exercises.length ? (
+                <View style={tw`flex flex-row justify-between mx-3`}>
+                    
+                    <Pressable onPress={previousExercise}>
+                        <Ionicons name='arrow-back-circle-outline' size={77} color='#3B82F6'/>
+                    </Pressable>
+
+                    <Pressable  onPress={nextExercise}>
+                        <Ionicons name='arrow-forward-circle-outline' size={77} color='#3B82F6' style={tw`hidden`}/>
+                    </Pressable>
+
+                </View>
+            ) : null}
 
         </View>
           

@@ -87,3 +87,14 @@ if (docSnap.exists()) {
 - https://www.npmjs.com/package/react-native-toast-message
 - da dobavq predishni kilogrami kum aktivna trenirovka
 - da moje na momenta da se dobavq extra seriq koqto ne promenq napraveniq split no dobavq 1 seriq kum segashnoto uprajenie i se zapazva pri krai na trenirovka
+
+- da moje na momenta da se dobavi uprajnenie
+
+- ako ezikut e slojen na angliiski da se dobavq na angliiski trenirovka, den, programa...
+- da preveda alertovete
+
+
+
+- da se uverq che nqma nikude text koito moje da e prekaleno dulug
+
+- pri prikluchvane na trenirovka, tq se zapazva dori i vsichko da e prazno ako edno ot kvadratchetata e bilo promeneno i posle iztrito napulno

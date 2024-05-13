@@ -11,9 +11,12 @@ interface RenderDaysProps {
   navigation: any;
   daysCollectionRef: any;
   setExercises: React.Dispatch<React.SetStateAction<ExerciseInterface[]>>;
+  t: any
 }
 
-export const renderDays = ({ item, navigation, daysCollectionRef, setExercises }: RenderDaysProps) => {
+// nikva ideq shto setExercises e s takuv slojen type ama raboti
+
+export const renderDays = ({ item, navigation, daysCollectionRef, setExercises, t }: RenderDaysProps) => {
     
     const getExercises = async (exercisesCollectionRef: any, setExercises: any) => {
         try {
@@ -33,13 +36,13 @@ export const renderDays = ({ item, navigation, daysCollectionRef, setExercises }
     }
 
   const deleteItem = () => {
-    Alert.alert('Сигурен ли си, че искаш да изтриеш този ден?', '', [
+    Alert.alert(t('delete-day-alert'), '', [
       {
-        text: 'Отказ',
+        text: t('cancel'),
         onPress: () => handleCancel,
         style: 'cancel',
       },
-      { text: 'Да', onPress: () => handleOk() },
+      { text: t('yes'), onPress: () => handleOk() },
     ]);
 
     const handleOk = async () => {
@@ -47,7 +50,7 @@ export const renderDays = ({ item, navigation, daysCollectionRef, setExercises }
     };
 
     const handleCancel = () => {
-      console.log("cancel");
+      return;
     };
   };
 
@@ -61,9 +64,9 @@ export const renderDays = ({ item, navigation, daysCollectionRef, setExercises }
       const updatedExercises = await getExercises(exercisesCollectionRef, setExercises);
 
       if (updatedExercises?.some((exercise) => exercise.sets === "0" || exercise.sets === "" || exercise.sets === null)) {
-        Alert.alert('Увери се, че всяко упражнение съдъжра поне 1 серия!', '', [
+        Alert.alert(t('exercises-number-alert'), '', [
           {
-            text: 'Ок',
+            text: 'OK',
             style: 'cancel',
           },
         ]);
@@ -75,13 +78,13 @@ export const renderDays = ({ item, navigation, daysCollectionRef, setExercises }
     const handleCancel = () => {
     };
 
-    Alert.alert('Сигурен ли си, че искаш да започнеш тази тренировка?', '' + item.title, [
+    Alert.alert(t('start-workout-alert'), '' + item.title, [
       {
-        text: 'Отказ',
+        text: t('cancel'),
         onPress: handleCancel,
         style: 'cancel',
       },
-      { text: 'Да', onPress: handleOk },
+      { text: t('yes'), onPress: handleOk },
     ]);
   };
 
@@ -92,7 +95,7 @@ export const renderDays = ({ item, navigation, daysCollectionRef, setExercises }
 
   const changeDayName = () => {
     Alert.prompt(
-      'Моля въведи ново име!',
+      t('new-name-alert'),
       '',
       (newName) => {
         if (newName && newName.length <= 35) {
@@ -101,9 +104,9 @@ export const renderDays = ({ item, navigation, daysCollectionRef, setExercises }
           });
           setCurrentDay(item);
         } else {
-          Alert.alert('Името на определен ден не може да надвиши 35 букви!', '', [
+          Alert.alert(t('35-characters-alert'), '', [
             {
-              text: 'Ок',
+              text: 'OK',
               style: 'cancel',
             },
           ]);

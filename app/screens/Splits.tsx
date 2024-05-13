@@ -21,6 +21,8 @@ const Splits = ({navigation}: any) => {
       console.error('User is not authenticated.');
       return;
     }
+
+    const {t} = useTranslation();
     
     const insets = useSafeAreaInsets();
 	  const notchSizeTailwind = Math.round(insets.top / 4);
@@ -53,13 +55,13 @@ const Splits = ({navigation}: any) => {
     const renderSplit = ({item}: any) => {
 
         const deleteItem = () => {
-          Alert.alert('Сигурен ли си, че искаш да изтриеш тази тренировка?', '', [
+          Alert.alert(t('delete-workout-alert'), '', [
             {
-              text: 'Отказ',
+              text: t('cancel'),
               onPress: () => handleCancel,
               style: 'cancel',
             },
-            {text: 'Да', onPress: () => handleOk()},
+            {text: t('yes'), onPress: () => handleOk()},
           ]);
 
           const handleOk = async () => {
@@ -67,7 +69,7 @@ const Splits = ({navigation}: any) => {
           }
 
           const handleCancel = () => {
-            console.log("cancel");
+            return;
           }
             
         }
@@ -81,7 +83,7 @@ const Splits = ({navigation}: any) => {
 
       const changeWorkoutName = () => {
         Alert.prompt(
-          'Моля въведи ново име!',
+          t('new-name-alert'),
           '',
           (newName) => {
             if (newName && newName.length <= 50) {
@@ -90,9 +92,9 @@ const Splits = ({navigation}: any) => {
               });
               setCurrentSplit(item);
             }else{
-              Alert.alert('Името на определена тренировка не може да надвиши 50 букви!', '', [
+              Alert.alert(t('workout-characters-alert'), '', [
                 {
-                  text: 'Ок',
+                  text: 'OK',
                   style: 'cancel',
                 }
               ]);
@@ -133,14 +135,10 @@ const Splits = ({navigation}: any) => {
 
             </View>
 
-                
-
                 {splits.length > 0 ? (
 
                 <View>
-
                         <FlatList data={splits} renderItem={(item) => renderSplit(item)} keyExtractor={(split: Split) => split.id}/>
-
                 </View>
 
                 ) : (
