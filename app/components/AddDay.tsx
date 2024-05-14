@@ -49,7 +49,7 @@ export const AddDay = () => {
     return (
         <View style={tw`flex items-center`}>
             <Pressable style={tw`w-10 h-[44px] flex items-center justify-center`} onPress={addDay}>
-                <Ionicons name='add-outline' size={44} color='black' style={tw`mr-[-15px]`}/>
+                <Ionicons name='add-outline' size={44} color='white' style={tw`mr-[-15px]`}/>
             </Pressable>
         </View>
     )

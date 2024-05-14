@@ -11,6 +11,32 @@ export const saveWorkoutToDB = async (currentDay: any, exercisesInfoArrays: any,
 
         const currentDayTitle = currentDay?.title;
 
+        let allEmpty = true;
+
+        // Loop through each object in the array
+        for (const exerciseInfo of exercisesInfoArrays) {
+            // Loop through each row in the object
+            for (const rowNumber in exerciseInfo) {
+                const rowInfo = exerciseInfo[rowNumber];
+                // Check if reps, rpe, and weight are all empty strings
+                if (rowInfo.hasOwnProperty('reps') && rowInfo.reps !== "" || 
+                    rowInfo.hasOwnProperty('rpe') && rowInfo.rpe !== "" || 
+                    rowInfo.hasOwnProperty('weight') && rowInfo.weight !== "") {
+                    allEmpty = false;
+                    break;
+                }
+            }
+            // If we found a non-empty field, break out of the outer loop as well
+            if (!allEmpty) {
+                break;
+            }
+        }
+
+        if (allEmpty) {
+            console.log('No exercises to save. Workout not saved.');
+            return;
+        }
+
         if (currentDayTitle) {
 
             if (exercisesInfoArrays.length === 0) {

@@ -98,3 +98,9 @@ if (docSnap.exists()) {
 - da se uverq che nqma nikude text koito moje da e prekaleno dulug
 
 - pri prikluchvane na trenirovka, tq se zapazva dori i vsichko da e prazno ako edno ot kvadratchetata e bilo promeneno i posle iztrito napulno
+
+- da premahna ideqta za search bar ot stranicata sus splitove i za sega da napravq stranicite za split i den da izglejdat kato stranicite s new exercise (s header)
+
+- pri zapochvane na trenirovka ako sa vuvedeni goal povtoreniq za uprajennie na placeholdera izlizat samo chislo kato "13" i ne e qsno dali tazi kutiq e za povtoreniq
+
+- kogato zapochne da se iztriva zapazena trenirovka da se deaktivira butona (pri vrushtane nazad toi shte se aktivira avtomatichno)

@@ -124,18 +124,12 @@ const Splits = ({navigation}: any) => {
         })
     }, [])
 
+    // pt-${notchSizeTailwind}
+
     return (
-        <View style={tw.style(`w-full h-full bg-[#F2F2F2] pt-${notchSizeTailwind}`)}>
+        <View style={tw`pt-2`}>
 
-            <View style={tw`flex flex-row justify-between`}>
-
-                <Text>Search bar</Text>
-
-                <AddSplit />
-
-            </View>
-
-                {splits.length > 0 ? (
+            {splits.length > 0 ? (
 
                 <View>
                         <FlatList data={splits} renderItem={(item) => renderSplit(item)} keyExtractor={(split: Split) => split.id}/>
@@ -145,7 +139,7 @@ const Splits = ({navigation}: any) => {
                     <View style={tw`flex items-center justify-center h-full`}>
                         <Text style={tw`text-lg text-blue-500`}>Цъкни плюса, за да добавиш програма.</Text>
                     </View>
-                )}
+            )}
 
         </View>
     )

@@ -54,10 +54,13 @@ const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
                 const allSets = await Promise.all(infoArray.map(async (exercise) => {
                     const setsCollectionRef = collection(savedWorkoutInfoCollectionRef, exercise.id, 'sets');
                     const setsData = await getDocs(setsCollectionRef);
-    
+
                     // Convert the setsData to an array of sets and sort them based on their setIndex
                     let setsArray = setsData.docs.map(setDoc => ({ id: setDoc.id, ...setDoc.data() }) as Set);
                     setsArray = setsArray.sort((a, b) => a.setIndex - b.setIndex);
+
+                    // Skriva setovete koito imat empty stringove i na 3te mesta
+                    setsArray = setsArray.filter(set => !(set.reps === '' || set.weight === '' || set.rpe === ''));
     
                     return { exerciseId: exercise.id, sets: setsArray };
                 }));
@@ -155,9 +158,9 @@ const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
                                     {`Серия ${index + 1}`}
                                 </Text>
 
-                                <Text style={tw`text-base text-white`}>{`Повторения: ${set.reps !== 'N/A' ? set.reps : 'X'}`}</Text>
-                                <Text style={tw`text-base text-white`}>{`Тежест: ${set.weight !== 'N/A' ? set.weight : 'X'}`}</Text>
-                                <Text style={tw`text-base text-white`}>{`RPE: ${set.rpe !== 'N/A' ? set.rpe : 'X'}`}</Text>
+                                <Text style={tw`text-base text-white`}>{`Повторения: ${set.reps !== 'N/A' && set.reps !== '' ? set.reps : 'X'}`}</Text>
+                                <Text style={tw`text-base text-white`}>{`Тежест: ${set.weight !== 'N/A' && set.weight !== '' ? set.weight : 'X'}`}</Text>
+                                <Text style={tw`text-base text-white`}>{`RPE: ${set.rpe !== 'N/A' && set.rpe !== '' ? set.rpe : 'X'}`}</Text>
 
                                 </View>
                             </View>

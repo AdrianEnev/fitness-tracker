@@ -119,7 +119,7 @@ export const renderDays = ({ item, navigation, daysCollectionRef, setExercises, 
 
   return (
     <View key={item.id}>
-      <Pressable style={tw`flex flex-row items-center justify-between w-full h-24 my-1 rounded-lg bg-white shadow-sm`} onPress={pressedDay} onLongPress={changeDayName}>
+      <Pressable style={tw`flex flex-row items-center justify-between w-full h-24 my-1 rounded-lg bg-white shadow-md`} onPress={pressedDay} onLongPress={changeDayName}>
         
         <Text style={tw`flex-1 ml-5 text-base max-w-[75%]`} numberOfLines={1} ellipsizeMode='tail'>
           {item.title}

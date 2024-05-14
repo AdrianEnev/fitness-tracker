@@ -59,11 +59,7 @@ const Days = ({navigation}: any) => {
   }, [])
 
   return (
-      <View>
-
-        <View style={tw`w-full h-12 bg-blue-500 mb-2`}></View> 
-
-        <AddDay />
+      <View style={tw`pt-2`}>
 
         {days.length > 0 ? (
           <View style={tw`mx-3`}>

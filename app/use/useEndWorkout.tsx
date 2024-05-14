@@ -21,8 +21,6 @@ export const endWorkout = (
 
         if (saveToDatabase) {
 
-           
-
             saveWorkoutToDB(currentDay, exercisesInfoArrays, time);
         }
 

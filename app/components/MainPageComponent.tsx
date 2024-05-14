@@ -17,6 +17,8 @@ import ViewSavedWorkout from "../screens/ViewSavedWorkout";
 import FoodDay from "../screens/FoodDay";
 import AddFoodPage from "../screens/AddFoodPage";
 import AddCustomFoodPage from "../screens/AddCustomFoodPage";
+import AddSplit from "./AddSplit";
+import { AddDay } from "./AddDay";
 
 const Stack = createNativeStackNavigator();
 
@@ -73,7 +75,15 @@ const MainPageComponent = () => {
             component={Splits}
             options={{
               title: "Тренировъчни Програми",
-              headerShown: false,
+              headerShown: true,
+              headerTintColor: '#fff',
+              headerStyle: {
+                backgroundColor: '#007AFF',
+              },
+              headerBackTitleVisible: false,
+              headerRight: () => (
+                <AddSplit/>
+            )
             }}
           />
 
@@ -98,7 +108,16 @@ const MainPageComponent = () => {
             name="Дни"
             component={Days}
             options={() => ({
-              headerShown: false,
+              title: 'Дни',
+              headerShown: true,
+              headerTintColor: '#fff',
+              headerStyle: {
+                backgroundColor: '#007AFF',
+              },
+              headerBackTitleVisible: false,
+              headerRight: () => (
+                <AddDay/>
+            )
             })}
           />
 

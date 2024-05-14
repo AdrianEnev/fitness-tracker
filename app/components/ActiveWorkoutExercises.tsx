@@ -53,7 +53,7 @@ const ActiveWorkoutExercises = (
                                     onChangeText={(text) => {
                                         updateInputValue(`${item.id}-${index + 1}-reps`, text);
                                     }}
-                                    placeholder={item.reps === "0" ? t('reps') : item.reps.toString()}
+                                    placeholder={item.reps === "0" ? t('reps') : item.reps.toString() + " " + t('reps-short')}
                                 />
 
                                 <TextInput
