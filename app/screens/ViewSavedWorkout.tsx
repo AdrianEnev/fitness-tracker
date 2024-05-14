@@ -30,6 +30,9 @@ const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
     const [sets, setSets] = useState<any[]>([]); // State to store sets
     const [currentIndex, setCurrentIndex] = useState(0);
 
+    // izpolzvam go za da ne moje da se natiska butona za iztrivane poveche ot 1 put
+    const [deleteItemRan, setDeleteItemRan] = useState(false);
+
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const savedWorkoutsCollectionRef = collection(userDocRef, 'saved_workouts');
@@ -87,9 +90,14 @@ const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
 
     const deleteItem = () => {
 
+        if (deleteItemRan) {    
+            return;
+        }
+
         const handleOk = async () => {
 
             try{
+                setDeleteItemRan(true);
 
                 await deleteDoc(doc(savedWorkoutsCollectionRef, workoutID));
 
