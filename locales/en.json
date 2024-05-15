@@ -30,6 +30,7 @@
     "new-name-alert": "Please enter a new name",
     "delete-workout-alert": "Are you sure you want to delete this workout?",
     "delete-day-alert": "Are you sure you want to delete this day?",
+    "delete-exercise-alert": "Are you sure you want to delete this exercise?",
     "workout-characters-alert": "Name must be between 1 and 50 characters!",
     "35-characters-alert": "Name must be between 1 and 35 characters!",
     "exercises-number-alert": "Make sure each exercise has at least one set!",
@@ -37,6 +38,7 @@
     "new-split-name-alert": "Please enter a name for this split",
     "new-day-name-alert": "Please enter a name for this day",
     "new-exercise-name-alert": "Please enter a name for this exercise"
+    
     
     
 

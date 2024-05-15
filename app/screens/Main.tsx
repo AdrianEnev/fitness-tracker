@@ -15,7 +15,7 @@ import { AnimatedCircularProgress } from 'react-native-circular-progress';
 
 const Main = ({navigation}: any) => {
 
-    const [steps, setSteps] = useState(0);
+    //const [steps, setSteps] = useState(0);
 
     const { t } = useTranslation();
 

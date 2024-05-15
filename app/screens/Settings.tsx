@@ -10,8 +10,6 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 
 const Settings = ({navigation}: any) => {
 
-    // da probvam kak shte izglejda ako sloja loading screen dokato language se vzeme ot bazata danni
-
     // opciq za smenq na ezika koqto zadava neshto v bazata danni i ot tam se izvlicha ezikut za cqlata aplikaciq
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);

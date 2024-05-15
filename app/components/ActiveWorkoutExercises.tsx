@@ -13,6 +13,7 @@ const ActiveWorkoutExercises = (
         currentDay, 
         skipExercise, 
         addSet,
+        deleteSet,
         previousExercise,
         exerciseNumber,
         nextExercise,
@@ -68,7 +69,7 @@ const ActiveWorkoutExercises = (
                                 />
 
                                 <TextInput
-                                    style={tw`bg-[#F2F2F2] rounded-2xl p-2 w-20 h-10 mb-5 mr-4`}
+                                    style={tw`bg-[#F2F2F2] rounded-2xl p-2 w-20 h-10 mb-5 `}
                                     keyboardType='number-pad'
                                     maxLength={2}
                                     value={inputValue && inputValue[`${item.id}-${index + 1}-rpe`]}
@@ -77,6 +78,13 @@ const ActiveWorkoutExercises = (
                                     }}
                                     placeholder='RPE'
                                 />
+
+                                {/** <Ionicons name='close-circle-outline' size={48} color='red'/>  */}
+
+                                <TouchableOpacity style={tw`bg-red-500 rounded-2xl w-20 h-10 flex items-center justify-center`} onPress={deleteSet}>
+                                    <Text style={tw`text-white`}>{t('delete')}</Text>
+                                </TouchableOpacity>
+            
                             </View>
                         </View>
                     </View>

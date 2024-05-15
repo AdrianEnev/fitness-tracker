@@ -187,9 +187,49 @@ const ActiveWorkout = ({navigation}: any) => {
 		
 	};
 
-	const addSet = () => {
-		console.log('Adding a set');
-	}
+	const addSet = (exerciseId: string) => {
+		// Find the exercise in the exercises array
+		const exerciseIndex = exercises.findIndex(exercise => exercise.id === exerciseId);
+	
+		// If the exercise was found
+		if (exerciseIndex !== -1) {
+			// Create a copy of the exercises array
+			const newExercises = [...exercises];
+
+			const currentSets = Number(newExercises[exerciseIndex].sets);
+
+			// If the current number of sets is less than 9
+			if (currentSets < 15) {
+				// Convert the sets property to a number, increment it, and then convert it back to a string
+				newExercises[exerciseIndex].sets = (currentSets + 1).toString();
+
+				// Update the exercises state
+				setExercises(newExercises);
+			}
+		}
+	};
+	const deleteSet = (exerciseId: string) => {
+		// Find the exercise in the exercises array
+		const exerciseIndex = exercises.findIndex((exercise) => exercise.id === exerciseId);
+
+		// If the exercise was found
+		if (exerciseIndex !== -1) {
+			// Create a copy of the exercises array
+			const newExercises = [...exercises];
+
+			// Convert the sets property to a number
+			let currentSets = Number(newExercises[exerciseIndex].sets);
+
+			// Check if there is more than 1 set
+			if (currentSets > 1) {
+				// Decrement the sets property and convert it back to a string
+				newExercises[exerciseIndex].sets = (currentSets - 1).toString();
+			}
+
+			// Update the exercises state
+			setExercises(newExercises);
+		}
+	};
 	
 	return (
 		<View style={tw.style(`w-full h-full bg-white pt-${notchSizeTailwind}`)}>
@@ -227,7 +267,8 @@ const ActiveWorkout = ({navigation}: any) => {
 							inputValue={inputValues[item.id] || {}}
 							currentDay={currentDay}
 							skipExercise={skipExercise}
-							addSet={addSet}
+							addSet={() => addSet(item.id)}
+							deleteSet={() => deleteSet(item.id)}
 							previousExercise={previousExercise}
 							exerciseNumber={exerciseNumber}
 							nextExercise={nextExercise}

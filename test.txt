@@ -91,4 +91,4 @@ if (docSnap.exists()) {
 
 - da se uverq che nqma nikude text koito moje da e prekaleno dulug
 
-- mai ne e prevedeno iztrivaneto na nqkoi neshta
+- da moje da se trie set i pri 0 seta da se skipva uprajnenie

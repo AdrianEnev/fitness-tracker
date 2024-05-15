@@ -48,13 +48,13 @@ const EditExercise = ({navigation}: any) => {
             
         }
 
-        Alert.alert('Сигурен ли си, че искаш да изтриеш това упражнение?', '' + currentExercise?.title, [
+        Alert.alert(t('delete-exercise-alert'), '' + currentExercise?.title, [
             {
-              text: 'Отказ',
+              text: t('cancel'),
               onPress: handleCancel,
               style: 'cancel',
             },
-            { text: 'Да', onPress: handleOk },
+            { text: t('yes'), onPress: handleOk },
           ]);
 
     }
