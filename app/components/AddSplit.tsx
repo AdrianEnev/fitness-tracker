@@ -41,7 +41,7 @@ const AddSplit = () => {
             };
         
             const newDoc = await addDoc(userCollectionRef, newDocumentData);
-            changeWorkoutName(newDoc);
+            changeSplitName(newDoc);
             
         }catch (err) {
             console.log(err);
@@ -49,9 +49,9 @@ const AddSplit = () => {
 
     }
 
-    const changeWorkoutName = (document: any) => {
+    const changeSplitName = (document: any) => {
         Alert.prompt(
-          t('new-name-alert'),
+          t('new-split-name-alert'),
           '',
           (newName) => {
             if (newName && newName.length <= 50) {

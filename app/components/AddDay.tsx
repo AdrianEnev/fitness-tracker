@@ -1,13 +1,16 @@
-import { Timestamp, addDoc, collection, doc, serverTimestamp } from 'firebase/firestore';
+import { Timestamp, addDoc, collection, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import tw from "twrnc";
-import { Pressable, View } from 'react-native'
+import { Alert, Pressable, View } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FIREBASE_AUTH, FIRESTORE_DB, getCurrentSplit } from '../../firebaseConfig';
 import i18next from 'i18next';
 import { useFocusEffect } from '@react-navigation/native';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export const AddDay = () => {
+
+    const {t} = useTranslation();
 
     const [dayTitle, setAddDayTitle] = useState<string>("New Day");
 
@@ -39,11 +42,35 @@ export const AddDay = () => {
                 created: serverTimestamp(),
             };
         
-            await addDoc(daysCollectionRef, newDocumentData);
+            const newDoc = await addDoc(daysCollectionRef, newDocumentData);
+            changeDayName(newDoc);
             
         }catch (err) {
             console.log(err);
         }
+    }
+
+    const changeDayName = (document: any) => {
+      Alert.prompt(
+        t('new-day-name-alert'),
+        '',
+        (newName) => {
+          if (newName && newName.length <= 50) {
+            updateDoc(doc(daysCollectionRef, document.id), {
+              title: newName
+            });
+          }else{
+            Alert.alert(t('workout-characters-alert'), '', [
+              {
+                text: 'OK',
+                style: 'cancel',
+              }
+            ]);
+          }
+        },
+        'plain-text',
+        ""
+      );
     }
 
     return (
