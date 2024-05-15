@@ -1,15 +1,18 @@
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { Pressable, View } from 'react-native'
+import { Alert, Pressable, View } from 'react-native'
 import tw from "twrnc";
 
-import { collection, addDoc, doc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, doc, serverTimestamp, updateDoc } from 'firebase/firestore';
 import { FIRESTORE_DB, FIREBASE_AUTH } from "../../firebaseConfig";
 
 import i18next from 'i18next';
 import { useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTranslation } from 'react-i18next';
 
 const AddSplit = () => {
+
+    const {t} = useTranslation();
 
     const [splitTitle, setSplitTitle] = useState<string>("New Split");
 
@@ -37,13 +40,37 @@ const AddSplit = () => {
                 created: serverTimestamp()
             };
         
-            await addDoc(userCollectionRef, newDocumentData);
+            const newDoc = await addDoc(userCollectionRef, newDocumentData);
+            changeWorkoutName(newDoc);
             
         }catch (err) {
             console.log(err);
         }
 
     }
+
+    const changeWorkoutName = (document: any) => {
+        Alert.prompt(
+          t('new-name-alert'),
+          '',
+          (newName) => {
+            if (newName && newName.length <= 50) {
+              updateDoc(doc(userCollectionRef, document.id), {
+                title: newName
+              });
+            }else{
+              Alert.alert(t('workout-characters-alert'), '', [
+                {
+                  text: 'OK',
+                  style: 'cancel',
+                }
+              ]);
+            }
+          },
+          'plain-text',
+          ""
+        );
+      }
 
     return (
         <View style={tw`flex items-center`}>

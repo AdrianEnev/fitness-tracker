@@ -90,7 +90,7 @@ const Splits = ({navigation}: any) => {
               updateDoc(doc(userCollectionRef, item.id), {
                 title: newName
               });
-              setCurrentSplit(item);
+              //setCurrentSplit(item);
             }else{
               Alert.alert(t('workout-characters-alert'), '', [
                 {
