@@ -13,6 +13,7 @@ export const AddDay = () => {
     const {t} = useTranslation();
 
     const [dayTitle, setAddDayTitle] = useState<string>("New Day");
+	const [isDisabled, setIsDisabled] = useState(false);
 
     useFocusEffect(() => {
 
@@ -37,6 +38,8 @@ export const AddDay = () => {
     const addDay = async () => {
         try{
 
+			setIsDisabled(true);
+
             const newDocumentData = {
                 title: dayTitle,
                 created: serverTimestamp(),
@@ -44,6 +47,7 @@ export const AddDay = () => {
         
             const newDoc = await addDoc(daysCollectionRef, newDocumentData);
             changeDayName(newDoc);
+			setIsDisabled(false);
             
         }catch (err) {
             console.log(err);
@@ -75,7 +79,7 @@ export const AddDay = () => {
 
     return (
         <View style={tw`flex items-center`}>
-            <Pressable style={tw`w-10 h-[44px] flex items-center justify-center`} onPress={addDay}>
+            <Pressable style={tw`w-10 h-[44px] flex items-center justify-center`} onPress={addDay} disabled={isDisabled}>
                 <Ionicons name='add-outline' size={44} color='white' style={tw`mr-[-15px]`}/>
             </Pressable>
         </View>

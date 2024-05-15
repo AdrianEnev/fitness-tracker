@@ -15,6 +15,7 @@ const AddSplit = () => {
     const {t} = useTranslation();
 
     const [splitTitle, setSplitTitle] = useState<string>("New Split");
+    const [isDisabled, setIsDisabled] = useState(false);
 
     useFocusEffect(() => {
 
@@ -35,6 +36,8 @@ const AddSplit = () => {
     const addSplit = async () => {
         
         try{
+            setIsDisabled(true);
+
             const newDocumentData = {
                 title: splitTitle,
                 created: serverTimestamp()
@@ -42,6 +45,7 @@ const AddSplit = () => {
         
             const newDoc = await addDoc(userCollectionRef, newDocumentData);
             changeSplitName(newDoc);
+            setIsDisabled(false);
             
         }catch (err) {
             console.log(err);
@@ -74,7 +78,7 @@ const AddSplit = () => {
 
     return (
         <View style={tw`flex items-center`}>
-            <Pressable style={tw`w-10 h-[44px] flex items-center justify-center`} onPress={addSplit}>
+            <Pressable style={tw`w-10 h-[44px] flex items-center justify-center`} onPress={addSplit} disabled={isDisabled}>
                 <Ionicons name='add-outline' size={44} color='white' style={tw`mr-[-15px]`}/>
             </Pressable>
         </View>

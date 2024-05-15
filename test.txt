@@ -90,3 +90,5 @@ if (docSnap.exists()) {
 - da moje na momenta da se dobavi uprajnenie (moje bi)
 
 - da se uverq che nqma nikude text koito moje da e prekaleno dulug
+
+- mai ne e prevedeno iztrivaneto na nqkoi neshta

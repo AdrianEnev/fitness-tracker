@@ -14,6 +14,7 @@ export const AddExercise = () => {
     const {t} = useTranslation();
 
     const [exerciseTitle, setExerciseTitle] = useState<string>("New Exercise");
+    const [isDisabled, setIsDisabled] = useState(false);
 
     useFocusEffect(() => {
 
@@ -40,6 +41,9 @@ export const AddExercise = () => {
 
     const addExercise = async () => {
         try {
+
+            setIsDisabled(true);
+
             // Fetch the latest exercises
             const data = await getDocs(exercisesCollectionRef);
             const filteredData: ExerciseInterface[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as ExerciseInterface));
@@ -62,6 +66,7 @@ export const AddExercise = () => {
             // Add the new exercise to the collection
             const newDoc = await addDoc(exercisesCollectionRef, newDocumentData);
             changeExerciseName(newDoc);
+            setIsDisabled(false);
     
         } catch (err) {
             console.log(err);
@@ -92,7 +97,7 @@ export const AddExercise = () => {
     }
 
     return (
-        <Pressable style={tw`w-10 h-[44px] flex items-center justify-center`} onPress={addExercise}>
+        <Pressable style={tw`w-10 h-[44px] flex items-center justify-center`} onPress={addExercise} disabled={isDisabled}>
             <Ionicons name='add-outline' size={44} color='white' style={tw`mr-[-15px]`}/>
          </Pressable>
     )
