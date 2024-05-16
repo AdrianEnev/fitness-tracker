@@ -157,10 +157,11 @@ const EditExercise = ({navigation}: any) => {
                 
                     <TextInput style={tw`w-full h-64 rounded-lg bg-white shadow-md px-3 py-2 text-base mt-1`}
                         multiline={true}
-                        maxLength={1000}
+                        maxLength={500}
                         placeholder={t('exercise-description')}
                         onChangeText={(value) => setDescription(value)}
                         defaultValue={description}
+                        textAlignVertical='top'
                     />
 
                     <View style={tw`mt-3`}>

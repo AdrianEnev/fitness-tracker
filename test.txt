@@ -99,3 +99,5 @@ drugiqt buton otvarq box koito pozvolqva da se pishe informaciq za segashnoto up
 - ako e selectnato uprajennie sled 1voto i se skipnat vsichki uprajneniq, purvoto ostava neskipnato no i ne moje da se vidi i pokazva bql ekran 
 
 - da proverq na koi iphone raboti prilojenieto i taka da opredelq razmerite na nqkoi neshta
+
+- buton za iztrivane/resetvane na opisanie

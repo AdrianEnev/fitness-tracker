@@ -24,7 +24,10 @@ const ActiveWorkoutExercises = (
     }: any) => {
 
     // izpolzva se za pokazvane na letqshtata kutiq
-    const [modalVisible, setModalVisible] = useState(false);
+    const [descriptionModalVisible, setDescriptionModalVisible] = useState(false);
+    const [noteModalVisible, setNoteModalVisible] = useState(false);
+
+    const [note, setNote] = useState('');
 
     const { t } = useTranslation();
 
@@ -34,12 +37,13 @@ const ActiveWorkoutExercises = (
        
         <View style={tw`w-full h-auto bg-white pt-3`}>
 
+             {/**Description modal */}
             <Modal
                 animationType="fade"
                 transparent={true}
-                visible={modalVisible}
+                visible={descriptionModalVisible}
                 onRequestClose={() => {
-                    setModalVisible(!modalVisible);
+                    setDescriptionModalVisible(!descriptionModalVisible);
             }}>
                 <BlurView style={tw`flex-1`}>
                     <View style={tw`flex-1 justify-center items-center mx-2`}>
@@ -49,7 +53,7 @@ const ActiveWorkoutExercises = (
 
                                 <Text style={tw`text-xl font-medium`}>{t('exercise-description')}</Text>
 
-                                <Pressable style={tw`w-8 h-8 flex items-center justify-center`} onPress={() => setModalVisible(!modalVisible)}>
+                                <Pressable style={tw`w-8 h-8 flex items-center justify-center`} onPress={() => setDescriptionModalVisible(!descriptionModalVisible)}>
                                     <Ionicons name='close-outline' size={24} color='red'/>
                                 </Pressable>
                             </View>
@@ -63,13 +67,66 @@ const ActiveWorkoutExercises = (
                 </BlurView>
             </Modal>
 
-            <View style={tw`flex flex-col mx-3`}>
-                <View style={tw`flex flex-row`}>
-                    <Text style={tw`text-2xl font-medium`}>{currentDayTitle}</Text>
-                    <Ionicons name='help-circle-outline' size={24} color='green' style={tw`mt-2`} onPress={() => setModalVisible(true)}/>
+            {/**Details modal */}
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={noteModalVisible}
+                onRequestClose={() => {
+                    setNoteModalVisible(!noteModalVisible);
+            }}>
+                <BlurView style={tw`flex-1`}>
+                    <View style={tw`flex-1 justify-center items-center mx-2`}>
+                        <View style={tw`w-full bg-white rounded-2xl shadow-lg p-3 px-3`}>
+
+                            <View style={tw`flex flex-row justify-between mb-3`}>
+
+                                <Text style={tw`text-xl font-medium`}>{t('exercise-note')}</Text>
+
+                                <Pressable style={tw`w-8 h-8 flex items-center justify-center`} onPress={() => setNoteModalVisible(!setNoteModalVisible)}>
+                                    <Ionicons name='close-outline' size={24} color='red'/>
+                                </Pressable>
+                            </View>
+
+                            <View style={tw`border-b-2 border-gray-200`} />
+
+                            <TextInput style={tw`w-full h-64 bg-white shadow-md px-3 py-2 text-base mt-3`}
+                                multiline={true}
+                                maxLength={500}
+                                onChangeText={(value) => setNote(value)}
+                                defaultValue={note}
+                                textAlignVertical='top'
+                            />
+
+                            <View style={tw`mt-3`}>
+                                <TouchableOpacity style={tw`flex justify-center items-center w-[50%] h-12 bg-green-500 rounded-xl mx-auto`}>
+                                    <Text style={tw`text-lg text-white`}>{t('save')}</Text>
+                                </TouchableOpacity>
+                            </View>
+
+                        </View>
+                    </View>
+                </BlurView>
+            </Modal>
+
+            <View style={tw`flex flex-col mx-3 gap-y-1`}>
+ 
+                <Text style={tw`text-2xl font-medium`}>{currentDayTitle}</Text>
+
+                <View style={tw`flex flex-row justify-between`}>
+                    <Text style={tw`text-lg`} numberOfLines={2}>{item.title}</Text>
+
+                    <View style={tw`flex flex-row gap-x-2`}>
+                        <View style={tw`flex items-center justify-center bg-blue-200 w-10 h-8 rounded-lg`}>
+                            <Ionicons name='ellipsis-horizontal' size={28} color='#3B82F6' onPress={() => setDescriptionModalVisible(true)}/>
+                        </View>
+                            
+                        <View style={tw`flex items-center justify-center bg-blue-200 w-10 h-8 rounded-lg`}>
+                            <Ionicons name='add-outline' size={30} color='#3B82F6' onPress={() => setNoteModalVisible(true)}/>
+                        </View>
+                    </View>
                 </View>
-                
-                <Text style={tw`text-lg`} numberOfLines={2}>{item.title}</Text>
+            
             </View>
 
             <View style={tw`mt-3 ml-5`}>

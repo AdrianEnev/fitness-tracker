@@ -38,7 +38,8 @@
     "new-split-name-alert": "Please enter a name for this split",
     "new-day-name-alert": "Please enter a name for this day",
     "new-exercise-name-alert": "Please enter a name for this exercise",
-    "exercise-description": "Exercise Description"
+    "exercise-description": "Exercise Description",
+    "exercise-note": "Add Note"
     
     
     
