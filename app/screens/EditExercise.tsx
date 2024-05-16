@@ -1,4 +1,4 @@
-import { View, TextInput, Text, Keyboard, TouchableWithoutFeedback, Button, Pressable, Alert } from 'react-native'
+import { View, TextInput, Text, Keyboard, TouchableWithoutFeedback, Button, Pressable, Alert, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import { getCurrentDay, getCurrentExercise, getCurrentSplit, FIRESTORE_DB, FIREBASE_AUTH } from '../../firebaseConfig'
 import tw from "twrnc";
@@ -84,7 +84,7 @@ const EditExercise = ({navigation}: any) => {
                                         }
                                     }
                                 }}>
-                                    <Ionicons name='remove-circle-outline' size={44} color='#3B82F6'/>
+                                    <Ionicons name='remove-circle-outline' size={44} color='#EF4444'/>
                                 </Pressable>
 
 
@@ -104,7 +104,7 @@ const EditExercise = ({navigation}: any) => {
                                         }
                                     }
                                 }}>
-                                        <Ionicons name='add-circle-outline' size={44} color='#3B82F6'/>
+                                        <Ionicons name='add-circle-outline' size={44} color='#22C55E'/>
                                 </Pressable>
 
                             </View>
@@ -126,7 +126,7 @@ const EditExercise = ({navigation}: any) => {
                                             }
                                         }
                                     }}>
-                                        <Ionicons name='remove-circle-outline' size={44} color='#3B82F6'/>
+                                        <Ionicons name='remove-circle-outline' size={44} color='#EF4444'/>
                                     </Pressable>
 
                                     <TextInput 
@@ -145,7 +145,7 @@ const EditExercise = ({navigation}: any) => {
                                             }
                                         }
                                     }}>
-                                            <Ionicons name='add-circle-outline' size={44} color='#3B82F6'/>
+                                        <Ionicons name='add-circle-outline' size={44} color='#22C55E'/>
                                     </Pressable>
                                     
                                 </View>
@@ -154,18 +154,28 @@ const EditExercise = ({navigation}: any) => {
                         </View>
                         
                     </View>
+                
+                    <TextInput style={tw`w-full h-64 rounded-lg bg-white shadow-md px-3 py-2 text-base mt-1`}
+                        multiline={true}
+                        maxLength={1000}
+                        placeholder={t('exercise-description')}
+                        onChangeText={(value) => setDescription(value)}
+                        defaultValue={description}
+                    />
 
-                    {/* <TextInput style={tw`w-full h-64 rounded-lg bg-white shadow-sm px-3 py-2 text-base mt-1`}
-                    multiline={true}
-                    maxLength={1000}
-                    onChangeText={(value) => setDescription(value)}
-                    defaultValue={description}
-                    />*/}
+                    <View style={tw`mt-3`}>
+                        <TouchableOpacity style={tw`w-full h-12 bg-green-500 rounded-xl flex justify-center items-center`} onPress={saveChanges}>
+                            <Text style={tw`text-lg text-white`}>{t('save')}</Text>
+                        </TouchableOpacity>
+                    </View>
+
+                    <View style={tw`mt-2`}>
+                        <TouchableOpacity style={tw`w-full h-12 bg-red-500 rounded-xl flex justify-center items-center`} onPress={deleteExercise}>
+                            <Text style={tw`text-lg text-white`}>{t('delete')}</Text>
+                        </TouchableOpacity>
+                    </View>
 
                 </View>
-
-                <Button title={t('save')} onPress={saveChanges}/>
-                <Button title={t('delete')} onPress={deleteExercise}/>
             </View>
 
         </TouchableWithoutFeedback>

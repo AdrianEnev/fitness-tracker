@@ -170,6 +170,15 @@ const ActiveWorkout = ({navigation}: any) => {
 
 			// move to the next exercise
 			setExerciseNumber((prevIndex) => Math.min(exercises.length, prevIndex));
+
+			// If the current exercise number is greater than the length of the updated exercises array
+			if (exerciseNumber > updatedExercises.length) {
+				// Set the exercise number to the last exercise in the updated list
+				setExerciseNumber(updatedExercises.length);
+			} else {
+				// move to the next exercise
+				setExerciseNumber((prevIndex) => Math.min(updatedExercises.length, prevIndex));
+			}
 		 
 		}
 	};
@@ -234,8 +243,8 @@ const ActiveWorkout = ({navigation}: any) => {
 	return (
 		<View style={tw.style(`w-full h-full bg-white pt-${notchSizeTailwind}`)}>
 
-			<View style={tw`flex flex-row justify-between mx-3`}>
-				<Text style={tw`font-medium text-black text-lg`}>
+			<View style={tw`flex flex-row justify-between mx-4`}>
+				<Text style={tw`font-medium text-black text-xl`}>
 					{
 						formatTime(time)
 					}

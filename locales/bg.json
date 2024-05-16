@@ -37,6 +37,7 @@
     "start-workout-alert": "Сигурен ли си, че искаш да започнеш тази тренировка?",
     "new-split-name-alert": "Моля въведи име за тази програма",
     "new-day-name-alert": "Моля въведи име за този ден",
-    "new-exercise-name-alert": "Моля въведи име за това упражнение"
+    "new-exercise-name-alert": "Моля въведи име за това упражнение",
+    "exercise-description": "Описание на Упражнение"
 
 }

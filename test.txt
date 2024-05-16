@@ -85,10 +85,17 @@ if (docSnap.exists()) {
 - notch size
 
 - toast message
-- da moje na momenta da se dobavq extra seriq koqto ne promenq napraveniq split no dobavq 1 seriq kum segashnoto uprajenie i se zapazva pri krai na trenirovka
-
-- da moje na momenta da se dobavi uprajnenie (moje bi)
 
 - da se uverq che nqma nikude text koito moje da e prekaleno dulug
 
-- da moje da se trie set i pri 0 seta da se skipva uprajnenie
+- moje bi da markiram warm up setove s drug cvqt ili neshto takova nz
+- da napravq po malki kutiite za reps, weight, rpe, delete pri po maluk razmer na telefona
+
+- pri suzdavane na akaunt da izliza opciq za presmqtane na dnevni kalorii
+
+- moga da dobavq 2 malki butona pri aktivna trenirovka -> 1niqt otvarq nqkakuv letqsht box koito pokazva informaciq zapisana za trenirovkata,
+drugiqt buton otvarq box koito pozvolqva da se pishe informaciq za segashnoto uprajnenie
+
+- ako e selectnato uprajennie sled 1voto i se skipnat vsichki uprajneniq, purvoto ostava neskipnato no i ne moje da se vidi i pokazva bql ekran 
+
+- da proverq na koi iphone raboti prilojenieto i taka da opredelq razmerite na nqkoi neshta

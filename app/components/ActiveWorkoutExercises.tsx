@@ -1,9 +1,11 @@
-import { View, Text, TextInput, Pressable } from 'react-native'
-import React from 'react'
+import { View, Text, TextInput, Pressable, Modal } from 'react-native'
+import React, { useState } from 'react'
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import { BlurView } from 'expo-blur';
+import GestureRecognizer from 'react-native-swipe-gestures';
 
 const ActiveWorkoutExercises = (
     {
@@ -21,6 +23,9 @@ const ActiveWorkoutExercises = (
 
     }: any) => {
 
+    // izpolzva se za pokazvane na letqshtata kutiq
+    const [modalVisible, setModalVisible] = useState(false);
+
     const { t } = useTranslation();
 
     const currentDayTitle = currentDay?.title;
@@ -29,9 +34,42 @@ const ActiveWorkoutExercises = (
        
         <View style={tw`w-full h-auto bg-white pt-3`}>
 
-            <View style={tw`flex flex-row justify-between mx-4`}>
-                <Text style={tw`text-lg font-medium`}>{currentDayTitle}</Text>
-                <Text style={tw`text-lg font-medium`} numberOfLines={1} ellipsizeMode='tail'>{item.title}</Text>
+            <Modal
+                animationType="fade"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                    setModalVisible(!modalVisible);
+            }}>
+                <BlurView style={tw`flex-1`}>
+                    <View style={tw`flex-1 justify-center items-center mx-2`}>
+                        <View style={tw`w-full bg-white rounded-2xl shadow-lg p-3 px-4`}>
+
+                            <View style={tw`flex flex-row justify-between mb-3`}>
+
+                                <Text style={tw`text-xl font-medium`}>{t('exercise-description')}</Text>
+
+                                <Pressable style={tw`w-8 h-8 flex items-center justify-center`} onPress={() => setModalVisible(!modalVisible)}>
+                                    <Ionicons name='close-outline' size={24} color='red'/>
+                                </Pressable>
+                            </View>
+
+                            <View style={tw`flex items-start`}>
+                                 <Text style={tw`mb-4 text-center`}>{item.description}</Text>
+                            </View>
+                           
+                        </View>
+                    </View>
+                </BlurView>
+            </Modal>
+
+            <View style={tw`flex flex-col mx-3`}>
+                <View style={tw`flex flex-row`}>
+                    <Text style={tw`text-2xl font-medium`}>{currentDayTitle}</Text>
+                    <Ionicons name='help-circle-outline' size={24} color='green' style={tw`mt-2`} onPress={() => setModalVisible(true)}/>
+                </View>
+                
+                <Text style={tw`text-lg`} numberOfLines={2}>{item.title}</Text>
             </View>
 
             <View style={tw`mt-3 ml-5`}>
@@ -103,16 +141,17 @@ const ActiveWorkoutExercises = (
                 </TouchableOpacity>
             </View>
 
+            {/* Ako ima samo 1 uprajnenie ne se pokazva nishto*/}
             {/* ako e izbrano purvoto uprajennie se pokazva samo strelka napred zashtoto nqma drugo predi nego*/}
             {/* ako e izbrano poslednoto uprajennie se pokazva samo strelka nazad zashtoto nqma drugo sled nego*/}
             {/* v drugite sluchai se pokazvat i dvete strelki za nazad i za napred*/}
-            {exerciseNumber == 1 ? (
+            {exerciseNumber == 1 && exercises.length > 1 ? (
                 <View style={tw`flex flex-row justify-between mx-3`}>
                     <Pressable onPress={previousExercise}>
                         <Ionicons name='arrow-back-circle-outline' size={77} color='#3B82F6' style={tw`hidden`}/>
                     </Pressable>
 
-                    <Pressable  onPress={nextExercise} disabled={exerciseNumber === exercises.length}>
+                    <Pressable  onPress={nextExercise}>
                         <Ionicons name='arrow-forward-circle-outline' size={77} color='#3B82F6'/>
                     </Pressable>
                 </View>
@@ -128,7 +167,7 @@ const ActiveWorkoutExercises = (
                     </Pressable>
 
                 </View>
-            ) : exerciseNumber == exercises.length ? (
+            ) : exerciseNumber == exercises.length && exercises.length != 1? (
                 <View style={tw`flex flex-row justify-between mx-3`}>
                     
                     <Pressable onPress={previousExercise}>
