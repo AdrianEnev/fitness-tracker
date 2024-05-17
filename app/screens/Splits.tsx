@@ -109,7 +109,7 @@ const Splits = ({navigation}: any) => {
         <View style={tw`mx-3`}>
 
             <Pressable style={tw`flex flex-row items-center w-full h-24 my-1 rounded-lg bg-white shadow-md`} onPress={pressedWorkout} onLongPress={changeWorkoutName}>
-                <Text style={tw`flex-1 ml-5 text-base`} numberOfLines={1} ellipsizeMode='tail'>{item.title}</Text>
+                <Text style={tw`flex-1 ml-5 text-base`} numberOfLines={2}>{item.title}</Text>
                 <Ionicons name='trash-bin-outline' size={24} color="red" onPress={deleteItem} style={tw`mr-3`}/>
             </Pressable>
 
@@ -131,8 +131,14 @@ const Splits = ({navigation}: any) => {
 
             {splits.length > 0 ? (
 
-                <View>
-                        <FlatList data={splits} renderItem={(item) => renderSplit(item)} keyExtractor={(split: Split) => split.id}/>
+                <View style={tw`w-full h-full pb-6`}>
+
+                    <FlatList
+                        data={splits} 
+                        renderItem={(item) => renderSplit(item)} 
+                        keyExtractor={(split: Split) => split.id}
+                    />
+
                 </View>
 
                 ) : (

@@ -27,11 +27,20 @@ const Setup = ({navigation}: any) => {
     const checkUserInfoCollection = async () => {
         try {
             const snapshot = await getDocs(userInfoCollectionRef);
-            if (snapshot.empty) {
-                
-                console.log("userInfoCollectionRef e prazno. Suzdava se dokument...");
-
-            } 
+            let documentFound = false;
+    
+            snapshot.forEach((doc) => {
+                if (doc.id === "nutrients") {
+                    documentFound = true;
+                }
+            });
+    
+            if (documentFound) {
+                console.log('Document with id "nutrients" found');
+            } else {
+                console.log('Setup file is being run for the first time');
+                // You can add code here to create the document if it doesn't exist
+            }
         } catch (err) {
             console.error(err);
         }

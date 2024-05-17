@@ -260,15 +260,19 @@ const ActiveWorkout = ({navigation}: any) => {
 	return (
 		<View style={tw.style(`w-full h-full bg-white pt-${notchSizeTailwind}`)}>
 
-			<View style={tw`flex flex-row justify-between mx-4`}>
-				<Text style={tw`font-medium text-black text-xl`}>
-					{
-						formatTime(time)
-					}
-				</Text>
+			<View style={tw`flex flex-row justify-between mx-4 mb-3`}>
+
+				<View style={tw`w-20 h-10 bg-white shadow-lg rounded-lg flex justify-center items-center`}>
+					<Text style={tw`font-medium text-black text-xl`}>
+						{
+							formatTime(time)
+						}
+					</Text>
+				</View>
+				
 
 				<Pressable 
-					style={tw`w-20 h-10 bg-blue-500 rounded-md items-center justify-center rounded-lg`}
+					style={tw`w-20 h-10 bg-white rounded-lg shadow-lg items-center justify-center`}
 					onPress={() => 
 						{
 							const exercisesInfoArrays = getExercisesInfo();
@@ -278,34 +282,39 @@ const ActiveWorkout = ({navigation}: any) => {
 						}
 					}
 				>
-					<Text style={tw`text-white text-lg font-medium`}>{t('end-workout')}</Text>
+					<Text style={tw`text-black text-lg font-medium`}>{t('end-workout')}</Text>
 				</Pressable>
 
 			</View>
-	
-			<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-					<FlatList
-					data={exerciseNumber <= exercises.length ? [exercises[exerciseNumber - 1]] : []}
-					renderItem={({ item }: any) => (
-						<ActiveWorkoutExercises
-							item={item}
-							updateInputValue={(key: string, value: string) => updateInputValue(item.id, key, value)}
-							inputValue={inputValues[item.id] || {}}
-							currentDay={currentDay}
-							skipExercise={skipExercise}
-							addSet={() => addSet(item.id)}
-							deleteSet={() => deleteSet(item.id)}
-							previousExercise={previousExercise}
-							exerciseNumber={exerciseNumber}
-							nextExercise={nextExercise}
-							exercises={exercises}
-							notes={notes}
-							updateNote={updateNote}
+
+
+			<View>
+				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+						<FlatList
+						bounces={true}
+						data={exerciseNumber <= exercises.length ? [exercises[exerciseNumber - 1]] : []}
+						renderItem={({ item }: any) => (
+							<ActiveWorkoutExercises
+								item={item}
+								updateInputValue={(key: string, value: string) => updateInputValue(item.id, key, value)}
+								inputValue={inputValues[item.id] || {}}
+								currentDay={currentDay}
+								skipExercise={skipExercise}
+								addSet={() => addSet(item.id)}
+								deleteSet={() => deleteSet(item.id)}
+								previousExercise={previousExercise}
+								exerciseNumber={exerciseNumber}
+								nextExercise={nextExercise}
+								exercises={exercises}
+								notes={notes}
+								updateNote={updateNote}
+							/>
+						)}
+						keyExtractor={(exercise: ExerciseInterface) => exercise.id}
 						/>
-					)}
-					keyExtractor={(exercise: ExerciseInterface) => exercise.id}
-					/>
-			</TouchableWithoutFeedback>
+				</TouchableWithoutFeedback>
+			</View>			
+			
 
 		</View>
 	);

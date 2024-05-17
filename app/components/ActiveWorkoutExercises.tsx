@@ -34,7 +34,7 @@ const ActiveWorkoutExercises = (
 
     return (
        
-        <View style={tw`w-full h-auto bg-white pt-3`}>
+        <View style={tw`w-full h-auto bg-white pt-3 pb-15`}>
 
             <ActiveWorkoutModals 
                 descriptionModalVisible={descriptionModalVisible}
@@ -49,17 +49,24 @@ const ActiveWorkoutExercises = (
             />
 
             <View style={tw`flex flex-col mx-3 gap-y-1`}>
- 
+        
                 <Text style={tw`text-2xl font-medium`}>{currentDayTitle}</Text>
 
                 <View style={tw`flex flex-row justify-between`}>
-                    <Text style={tw`text-lg`} numberOfLines={2}>{item.title}</Text>
+
+                    <View style={tw`w-[86%]`}>
+                        <Text style={tw`text-lg`} numberOfLines={1}>{item.title}</Text>
+                    </View>
+                    
 
                     <View style={tw`flex flex-row gap-x-2`}>
-                        <View style={tw`flex items-center justify-center bg-blue-200 w-10 h-8 rounded-lg`}>
-                            <Ionicons name='ellipsis-horizontal' size={28} color='#3B82F6' onPress={() => setDescriptionModalVisible(true)}/>
-                        </View>
-                            
+
+                        {item.description !== '' ? (
+                            <View style={tw`flex items-center justify-center bg-blue-200 w-10 h-8 rounded-lg`}>
+                                <Ionicons name='ellipsis-horizontal' size={28} color='#3B82F6' onPress={() => setDescriptionModalVisible(true)}/>
+                            </View>
+                        ): null}
+                    
                         <View style={tw`flex items-center justify-center bg-blue-200 w-10 h-8 rounded-lg`}>
                             <Ionicons name='add-outline' size={30} color='#3B82F6' onPress={() => setNoteModalVisible(true)}/>
                         </View>

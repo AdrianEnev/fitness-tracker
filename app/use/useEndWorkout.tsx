@@ -1,7 +1,5 @@
 import { Alert } from "react-native";
-import { View, Text } from 'react-native'
 import { saveWorkoutToDB } from "./useSaveWorkoutDB";
-import { ExerciseInterface } from "../screens/Exercises";
 
 export const endWorkout = (
     navigation: any, 
@@ -14,19 +12,15 @@ export const endWorkout = (
     notes: any
 ) => {
 
-    // t -> useTranslation
-
     const handleOk = async (saveToDatabase: boolean) => {
 
         stopTimer();
 
         if (saveToDatabase) {
-
             saveWorkoutToDB(currentDay, exercisesInfoArrays, time, notes);
         }
 
         navigation.navigate("Тренировки");
-
     };
     
     const handleCancel = () => {

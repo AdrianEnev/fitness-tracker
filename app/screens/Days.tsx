@@ -62,7 +62,7 @@ const Days = ({navigation}: any) => {
       <View style={tw`pt-2`}>
 
         {days.length > 0 ? (
-          <View style={tw`mx-3`}>
+          <View style={tw`w-full h-full pb-6`}>
             <FlatList
               data={days}
               renderItem={({item}: any) => renderDays({ item, navigation, daysCollectionRef, setExercises, t })}

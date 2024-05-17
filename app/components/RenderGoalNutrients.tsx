@@ -24,18 +24,20 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
     const currentFat = Number(currentNutrients?.fat ?? 0).toFixed(0);
     const fatFillPercentage = (Number(currentFat) / fatGoal) * 100;
 
-    // da probvam da promenq cveta na currentCalories ako sa poveche ot caloriesGoal
+    /*
+
+    <View style={tw`flex flex-row justify-between mb-2`}>
+        <Text style={tw`font-medium text-2xl m-2`}>{t('calories')}</Text>
+        <Text style={tw`font-medium text-2xl m-2`}>{currentCalories} / {caloriesGoal}</Text>
+    </View>
+    
+    */
     
     return (
         <View style={tw`flex items-center mt-2 mb-2`}>
-            <View style={tw`w-[95%] h-52 bg-white shadow-md rounded-lg`}>
+            <View style={tw`w-full h-40 bg-white shadow-md rounded-lg`}>
 
-                <View style={tw`flex flex-row justify-between mb-2`}>
-                    <Text style={tw`font-medium text-2xl m-2`}>{t('calories')}</Text>
-                    <Text style={tw`font-medium text-2xl m-2`}>{currentCalories} / {caloriesGoal}</Text>
-                </View>
-
-                <View style={tw`flex flex-row justify-between`}>
+                <View style={tw`flex flex-row justify-between mt-2`}>
 
                         <View style={tw`flex flex-col items-start ml-2`}>
                             <View style={tw`flex items-center justify-center`}>

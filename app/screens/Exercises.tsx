@@ -207,23 +207,21 @@ const Exercises = ({navigation}: any) => {
 
     return (
         <View>
-
-          {exercises.length > 0 ? (
-            <View>
-              <FlatList
-                data={exercises}
-                renderItem={renderExercises}
-                keyExtractor={(exercise: ExerciseInterface) => exercise.id}
-              />
-            </View>
-          ) : (
-            <View style={tw`flex items-center justify-center h-full`}>
-              <Text style={tw`text-xl text-blue-500`}>Цъкни плюса горе, за да добавиш упражнение.</Text>
-            </View>
-          )}
+            {exercises.length > 0 ? (
+                <View style={tw`w-full h-full pb-6`}>
+                    <FlatList
+                        data={exercises}
+                        renderItem={renderExercises}
+                        keyExtractor={(exercise: ExerciseInterface) => exercise.id}
+                    />
+                </View>
+                ) : (
+                <View style={tw`flex items-center justify-center h-full`}>
+                    <Text style={tw`text-xl text-blue-500`}>Цъкни плюса горе, за да добавиш упражнение.</Text>
+                </View>
+            )}
         </View>
-
-      );
+    );
 }
 
 export default Exercises;

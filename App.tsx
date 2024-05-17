@@ -111,25 +111,33 @@ const App = () => {
                 const checkUserInfoCollection = async () => {
                     try {
                         const snapshot = await getDocs(userInfoCollectionRef);
-                        if (snapshot.empty) {
-                            
-                            setSetupRan(false);
-                            setLoading(false);
-
-                            console.log('No matching documents.');
-            
-                        }else{
+                        let documentFound = false;
+                
+                        snapshot.forEach((doc) => {
+                            if (doc.id === "nutrients") {
+                                documentFound = true;
+                            }
+                        });
+                
+                        if (documentFound) {
                             setSetupRan(true);
-                            setLoading(false);
-
-                            console.log('Document found');
+                            //console.log('Document with title "nutrients" found');
+                        } else {
+                            setSetupRan(false);
+                            //console.log('No document with title "nutrients" found');
                         }
+                
+                        setLoading(false);
                     } catch (err) {
                         console.error(err);
                     }
                 }
-                checkUserInfoCollection();
-                checkLanguageDocument();
+                const fetchData = async () => {
+                    await checkUserInfoCollection();
+                    checkLanguageDocument();
+                };
+
+                fetchData();
             }else{
                 // no user, set loading to false and automatically navigate to the unathenticated page
                 setLoading(false);

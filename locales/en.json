@@ -39,9 +39,10 @@
     "new-day-name-alert": "Please enter a name for this day",
     "new-exercise-name-alert": "Please enter a name for this exercise",
     "exercise-description": "Exercise Description",
-    "exercise-note": "Add Note"
-    
-    
-    
+    "exercise-note": "Add Note",
+    "no-exercises-alert": "Тhis day does not contain any exercises!",
+    "good-morning": "Good Morning",
+    "good-afternoon": "Good Afternoon",
+    "good-evening": "Good Evening"
 
 }

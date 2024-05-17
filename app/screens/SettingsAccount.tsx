@@ -23,6 +23,8 @@ const SettingsAccount = () => {
             <Button title='изтрий акаунт' onPress={() => deleteAccount(email, user)}/>
 
             <Button title='излез от акаунт' onPress={() => FIREBASE_AUTH.signOut()}/>
+
+            <Button title='смени профилна снимка'/>
         </View>
     )
 }

@@ -39,6 +39,10 @@
     "new-day-name-alert": "Моля въведи име за този ден",
     "new-exercise-name-alert": "Моля въведи име за това упражнение",
     "exercise-description": "Описание",
-    "exercise-note": "Добави записка"
+    "exercise-note": "Добави записка",
+    "no-exercises-alert": "Този ден не съдържа нито едно упражнение!",
+    "good-morning": "Добро Утро",
+    "good-afternoon": "Здравей",
+    "good-evening": "Добър Вечер"
 
 }

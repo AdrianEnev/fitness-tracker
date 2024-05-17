@@ -93,10 +93,7 @@ if (docSnap.exists()) {
 
 - pri suzdavane na akaunt da izliza opciq za presmqtane na dnevni kalorii
 
-- moga da dobavq 2 malki butona pri aktivna trenirovka -> 1niqt otvarq nqkakuv letqsht box koito pokazva informaciq zapisana za trenirovkata,
-drugiqt buton otvarq box koito pozvolqva da se pishe informaciq za segashnoto uprajnenie
 
-- ako e selectnato uprajennie sled 1voto i se skipnat vsichki uprajneniq, purvoto ostava neskipnato no i ne moje da se vidi i pokazva bql ekran 
 
 - da proverq na koi iphone raboti prilojenieto i taka da opredelq razmerite na nqkoi neshta
 
@@ -105,3 +102,9 @@ drugiqt buton otvarq box koito pozvolqva da se pishe informaciq za segashnoto up
 - ako ima opisanie slojeno na uprajnenie da izliza v drug cvqt ot tova ako nqma ili neshto takova
 
 - kato dobavq 10 v boxa s povtoreniqta da pishe "10 povt." ili nshto takova a ne prosto "10"
+
+- da mojesh da dobavqsh priqteli i da gledash kolko trenirovki imat priklucheni
+
+- autoCapitalize start
+
+- smqna na parola pri akaunt v koito ne e lognat choveka

@@ -5,13 +5,13 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { GoalNutrients } from './SettingsMacros';
 import { collection, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
-import { FlatList } from 'react-native-gesture-handler';
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import RenderGoalNutrients from '../components/RenderGoalNutrients';
 import { useFocusEffect } from '@react-navigation/native';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import HorizontalCalendar from '../components/HorizontalCalendar';
+import CustomNavigationBar from '../components/CustomNavigationBar';
+import RenderGoals from '../components/RenderGoals';
 
 const Main = ({navigation}: any) => {
 
@@ -23,6 +23,21 @@ const Main = ({navigation}: any) => {
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
     const foodDaysCollectionRef = collection(userDocRef, 'food_days');
+
+    const [username, setUsername] = useState('');
+
+    const getUsername = async () => {
+        try {
+            const docSnapshot = await getDoc(doc(userInfoCollectionRef, 'username'));
+            if (docSnapshot.exists()) {
+                setUsername(docSnapshot.data().username);
+            } else {
+                console.log('Username document does not exist');
+            }
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     const getLanguage = async () => {
         try {
@@ -43,14 +58,13 @@ const Main = ({navigation}: any) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            updateCurrentNutrients();
-
             (async () => {
                 await getLanguage();
 
             })();
 
-            
+            updateCurrentNutrients();
+            getUsername();
 
             return () => {
                 // Optional: You can do something when the screen is unfocused
@@ -66,7 +80,7 @@ const Main = ({navigation}: any) => {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
-            return `${day}-${month}-${year}`;
+            return `${day}/${month}/${year}`;
         }else{
             const date = new Date();
             const year = date.getFullYear();
@@ -120,54 +134,70 @@ const Main = ({navigation}: any) => {
         }
     }
 
+    const getHelloText = (): string => {
+        const date = new Date();
+        const hours = date.getHours();
+
+        if (hours >= 0 && hours < 12) {
+            return t('good-morning');
+        } else if (hours >= 12 && hours < 18) {
+            return t('good-afternoon');
+        } else {
+            return t('good-evening');
+        }
+    }
+
     return (
-        <View>
-            <View style={tw`w-full h-10 bg-[#FAFAFA]`}></View>
+        <SafeAreaView style={tw``}>
 
-            <ScrollView style={tw`h-full w-full bg-[#FAFAFA]`}>
+            <ScrollView style={tw`h-full w-full`}>
 
-                <View style={tw`flex flex-row justify-between`}>
+                <View style={tw`flex flex-row justify-between mt-2 mx-1`}>
 
-                    <Ionicons name='person-circle-outline' size={64} color='#3b82f6' style={tw`m-2 mb-3`}/>
+                    <View style={tw`flex flex-row`}>
 
-                    <Ionicons name='settings-outline' size={48} color='#000000' style={tw`m-2 mb-3`}
-                    onPress={() => navigation.navigate("Настройки-Страница")}/>
+                        {/* Profil ikona */}
+                        <View style={tw`bg-white w-16 h-16 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
+                            <Ionicons name='person-outline' 
+                                size={40}
+                                color='#000000' 
+                                style={tw``} 
+                                onPress={() => navigation.navigate("Настройки-Страница")}
+                            />
+                        </View>
 
-                </View>
-
-                <Text style={tw`font-medium text-lg ml-4`}>{t('today')} (
-                    <Text style={tw`text-blue-500`}>{getCurrentDate(true)}</Text>)
-                </Text>
-
-                <FlatList 
-                    data={goalNutrients} 
-                    renderItem={({item}) => <RenderGoalNutrients item={item} currentNutrients={currentNutrients} />}  
-                    scrollEnabled={false}
-                />
-
-                <View style={tw`flex flex-row justify-between mx-2 mt-1`}>
-
-                    <Pressable style={tw`w-[49%] h-32 bg-white shadow-md rounded-lg`} onPress={() => navigation.navigate("Тренировки")}>
-                        <View style={tw`flex flex-row justify-between`}>
-                            <Text style={tw`font-medium text-base ml-2 mt-1`}>{t('workouts')}</Text>
-                            <MaterialCommunityIcons name='human-handsup' size={26} color='#2AAA8A' style={tw`m-2`}/>
+                        {/* Zdravei User */}
+                        <View style={tw`flex flex-col ml-3`}>
+                            <Text style={tw`text-lg text-gray-500`}>{getHelloText()} 👋</Text>
+                            <Text style={tw`text-xl font-medium`}>{username}</Text>
                         </View>
                         
-                    </Pressable>
+                    </View>
 
-                    <Pressable style={tw`w-[49%] h-32 bg-white shadow-md rounded-lg`} onPress={() => navigation.navigate("Хранене")}>
-                        <View style={tw`flex flex-row justify-between`}>
-                            <Text style={tw`font-medium text-base ml-2 mt-1`}>{t('food-log')}</Text>
-                            <MaterialCommunityIcons name='food-apple' size={26} color='#ff474c' style={tw`m-2`}/>
-                        </View>
-                        
-                    </Pressable>
-
+                    
                 </View>
-                
+
+                <View style={tw`mt-4 mx-1`}>
+
+                    <View style={tw`mx-1`}>
+
+                        <HorizontalCalendar />
+
+                    </View>
+                    
+                    <RenderGoals 
+                    goalNutrients={goalNutrients}
+                    currentNutrients={currentNutrients}
+                    />
+                    
+                </View>
+
             </ScrollView>
+
+            {/* Footer */}
+            <CustomNavigationBar navigation={navigation}/>
             
-        </View>
+        </SafeAreaView>
         
     )
 }
