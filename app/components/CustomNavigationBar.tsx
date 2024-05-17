@@ -14,11 +14,11 @@ const CustomNavigationBar = ({navigation}: any) => {
                     <Ionicons name='home' size={28} color='black'/>
                 </Pressable>
 
-                <Pressable style={tw`w-1/5 h-16 flex items-center justify-center`} onPress={() => navigation.navigate("Главна-Страница")}>
+                <Pressable style={tw`w-1/5 h-16 flex items-center justify-center`} onPress={() => navigation.navigate("Запазени-Тренировки")}>
                     <Ionicons name='bookmark' size={28} color='gray'/>
                 </Pressable>
 
-                <Pressable style={tw`w-1/5 h-16 flex items-center justify-center`} onPress={() => navigation.navigate("Тренировки")}>
+                <Pressable style={tw`w-1/5 h-16 flex items-center justify-center`} onPress={() => navigation.navigate("Програми")}>
                     <MaterialCommunityIcons name='human-handsup' size={28} color='gray'/>
                 </Pressable>
 

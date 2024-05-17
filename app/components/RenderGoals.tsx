@@ -6,7 +6,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import RenderGoalNutrients from './RenderGoalNutrients';
 
 const RenderGoals = (
-    {goalNutrients, currentNutrients}: any
+    {goalNutrients, currentNutrients, navigation}: any
 ) => {
 
     const {t} = useTranslation();
@@ -24,7 +24,11 @@ const RenderGoals = (
     return (
         <View>
 
-            <Text style={tw`font-medium text-lg mt-3 ml-3 mb-1`}>{t('today')}</Text>
+            <View style={tw`flex flex-row justify-between mt-3 mb-1`}>
+                <Text style={tw`font-medium text-lg ml-3`}>{t('today')}</Text>
+                <Text style={tw`font-medium text-base text-gray-500 mr-3 mt-1`} onPress={() => navigation.navigate('Настройки-Макронутриенти')}>Настройки {'>'}</Text>
+            </View>
+            
                 
             <View style={tw`flex flex-row flex-wrap mx-1 gap-x-2 gap-y-2`}>
 
@@ -42,14 +46,13 @@ const RenderGoals = (
                     </View>
                     
                     <View style={tw`flex-1 flex-row items-end ml-2 mb-1`}>
-                        <Text style={tw`text-2xl`}>1400</Text>
-                        <Text style={tw`text-sm`}>/1400kcal</Text>
+                        <Text style={tw`text-2xl`}>2000</Text>
+                        <Text style={tw`text-sm`}>/3000kcal</Text>
                     </View>
                     
 
                 </View>
 
-                {/* Protein */}
                 <View style={tw`w-[49%] h-28 bg-[#f7feee] shadow-md rounded-lg`}>
 
                     <View style={tw`flex flex-row gap-x-1 ml-1 mt-2`}>
@@ -68,14 +71,13 @@ const RenderGoals = (
                         </View>
 
                 </View>
-                
+
+                {/* Makronutrienti */}
                 <FlatList 
                     data={goalNutrients} 
                     renderItem={({item}) => <RenderGoalNutrients item={item} currentNutrients={currentNutrients} />}  
                     scrollEnabled={false}
                 />
-
-                
 
             </View>
 

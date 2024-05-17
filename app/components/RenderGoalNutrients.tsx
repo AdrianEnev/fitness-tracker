@@ -41,7 +41,7 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
 
                         <View style={tw`flex flex-col items-start ml-2`}>
                             <View style={tw`flex items-center justify-center`}>
-                                <AnimatedCircularProgress size={110} width={11} fill={proteinFillPercentage} tintColor="#ff474c" backgroundColor="#D3D3D3">
+                                <AnimatedCircularProgress size={110} width={8} fill={proteinFillPercentage} tintColor="#ff474c" backgroundColor="#D3D3D3">
                                     {
                                         (fill: any) => (
                                             <View style={tw`flex flex-col items-center`}>
@@ -58,7 +58,7 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
 
                         <View style={tw`flex flex-col`}>
                             <View style={tw`flex items-center justify-center`}>
-                                <AnimatedCircularProgress size={110} width={11} fill={carbsFillPercentage} tintColor="#fcc729" backgroundColor="#D3D3D3">
+                                <AnimatedCircularProgress size={110} width={8} fill={carbsFillPercentage} tintColor="#fcc729" backgroundColor="#D3D3D3">
                                     {
                                         (fill: any) => (
                                             <View style={tw`flex flex-col items-center`}>
@@ -75,7 +75,7 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
 
                         <View style={tw`flex flex-col`}>
                             <View style={tw`flex items-center justify-center mr-2`}>
-                                <AnimatedCircularProgress size={110} width={11} fill={fatFillPercentage} tintColor="#337def" backgroundColor="#D3D3D3">
+                                <AnimatedCircularProgress size={110} width={8} fill={fatFillPercentage} tintColor="#337def" backgroundColor="#D3D3D3">
                                     {
                                         (fill: any) => (
                                             <View style={tw`flex flex-col items-center`}>

@@ -9,7 +9,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import HorizontalCalendar from '../components/HorizontalCalendar';
 import CustomNavigationBar from '../components/CustomNavigationBar';
 import RenderGoals from '../components/RenderGoals';
 
@@ -162,7 +161,7 @@ const Main = ({navigation}: any) => {
                                 size={40}
                                 color='#000000' 
                                 style={tw``} 
-                                onPress={() => navigation.navigate("Настройки-Страница")}
+                                onPress={() => navigation.navigate("Настройки-Акаунт")}
                             />
                         </View>
 
@@ -177,17 +176,13 @@ const Main = ({navigation}: any) => {
                     
                 </View>
 
-                <View style={tw`mt-4 mx-1`}>
-
-                    <View style={tw`mx-1`}>
-
-                        <HorizontalCalendar />
-
-                    </View>
+                {/* Celi */}
+                <View style={tw` mx-1`}>
                     
                     <RenderGoals 
-                    goalNutrients={goalNutrients}
-                    currentNutrients={currentNutrients}
+                        goalNutrients={goalNutrients}
+                        currentNutrients={currentNutrients}
+                        navigation={navigation}
                     />
                     
                 </View>
