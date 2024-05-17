@@ -91,14 +91,17 @@ const SavedWorkouts = ({navigation}: any) => {
 
                   <View style={tw`flex flex-col flex-grow ml-3`}>
 
-                    <Text style={tw`text-lg font-medium max-w-[95%]`} numberOfLines={1} ellipsizeMode='tail'>
-                      {item.title}
-                    </Text>
+                      <Text style={tw`text-lg font-medium max-w-[95%]`} numberOfLines={1} ellipsizeMode='tail'>
+                          {item.title}
+                      </Text>
+
                       {item.saved && (
                         <Text style={tw`text-base`} numberOfLines={1} ellipsizeMode='tail'>
-                          {moment(item.saved.toDate()).format('YYYY-MM-DD HH:mm:ss')}
+                          {moment(item.saved.toDate()).format('DD/MM/YYYY, HH:mm ч.')}
                         </Text>
                       )}
+
+                      <Text style={tw`text-base`}>{item.duration}</Text>
 
                   </View>
 

@@ -10,7 +10,8 @@ export const endWorkout = (
     saveToDatabase: boolean, 
     currentDay: any, 
     time: any,
-    t: any
+    t: any,
+    notes: any
 ) => {
 
     // t -> useTranslation
@@ -21,7 +22,7 @@ export const endWorkout = (
 
         if (saveToDatabase) {
 
-            saveWorkoutToDB(currentDay, exercisesInfoArrays, time);
+            saveWorkoutToDB(currentDay, exercisesInfoArrays, time, notes);
         }
 
         navigation.navigate("Тренировки");

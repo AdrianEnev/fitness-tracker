@@ -1,11 +1,10 @@
 import { View, Text, TextInput, Pressable, Modal } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { BlurView } from 'expo-blur';
-import GestureRecognizer from 'react-native-swipe-gestures';
+import ActiveWorkoutModals from './ActiveWorkoutModals';
 
 const ActiveWorkoutExercises = (
     {
@@ -19,16 +18,16 @@ const ActiveWorkoutExercises = (
         previousExercise,
         exerciseNumber,
         nextExercise,
-        exercises
+        exercises,
+        notes,
+        updateNote
 
     }: any) => {
 
     // izpolzva se za pokazvane na letqshtata kutiq
     const [descriptionModalVisible, setDescriptionModalVisible] = useState(false);
     const [noteModalVisible, setNoteModalVisible] = useState(false);
-
-    const [note, setNote] = useState('');
-
+    
     const { t } = useTranslation();
 
     const currentDayTitle = currentDay?.title;
@@ -37,77 +36,17 @@ const ActiveWorkoutExercises = (
        
         <View style={tw`w-full h-auto bg-white pt-3`}>
 
-             {/**Description modal */}
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={descriptionModalVisible}
-                onRequestClose={() => {
-                    setDescriptionModalVisible(!descriptionModalVisible);
-            }}>
-                <BlurView style={tw`flex-1`}>
-                    <View style={tw`flex-1 justify-center items-center mx-2`}>
-                        <View style={tw`w-full bg-white rounded-2xl shadow-lg p-3 px-4`}>
-
-                            <View style={tw`flex flex-row justify-between mb-3`}>
-
-                                <Text style={tw`text-xl font-medium`}>{t('exercise-description')}</Text>
-
-                                <Pressable style={tw`w-8 h-8 flex items-center justify-center`} onPress={() => setDescriptionModalVisible(!descriptionModalVisible)}>
-                                    <Ionicons name='close-outline' size={24} color='red'/>
-                                </Pressable>
-                            </View>
-
-                            <View style={tw`flex items-start`}>
-                                 <Text style={tw`mb-4 text-center`}>{item.description}</Text>
-                            </View>
-                           
-                        </View>
-                    </View>
-                </BlurView>
-            </Modal>
-
-            {/**Details modal */}
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={noteModalVisible}
-                onRequestClose={() => {
-                    setNoteModalVisible(!noteModalVisible);
-            }}>
-                <BlurView style={tw`flex-1`}>
-                    <View style={tw`flex-1 justify-center items-center mx-2`}>
-                        <View style={tw`w-full bg-white rounded-2xl shadow-lg p-3 px-3`}>
-
-                            <View style={tw`flex flex-row justify-between mb-3`}>
-
-                                <Text style={tw`text-xl font-medium`}>{t('exercise-note')}</Text>
-
-                                <Pressable style={tw`w-8 h-8 flex items-center justify-center`} onPress={() => setNoteModalVisible(!setNoteModalVisible)}>
-                                    <Ionicons name='close-outline' size={24} color='red'/>
-                                </Pressable>
-                            </View>
-
-                            <View style={tw`border-b-2 border-gray-200`} />
-
-                            <TextInput style={tw`w-full h-64 bg-white shadow-md px-3 py-2 text-base mt-3`}
-                                multiline={true}
-                                maxLength={500}
-                                onChangeText={(value) => setNote(value)}
-                                defaultValue={note}
-                                textAlignVertical='top'
-                            />
-
-                            <View style={tw`mt-3`}>
-                                <TouchableOpacity style={tw`flex justify-center items-center w-[50%] h-12 bg-green-500 rounded-xl mx-auto`}>
-                                    <Text style={tw`text-lg text-white`}>{t('save')}</Text>
-                                </TouchableOpacity>
-                            </View>
-
-                        </View>
-                    </View>
-                </BlurView>
-            </Modal>
+            <ActiveWorkoutModals 
+                descriptionModalVisible={descriptionModalVisible}
+                setDescriptionModalVisible={setDescriptionModalVisible}
+                noteModalVisible={noteModalVisible}
+                setNoteModalVisible={setNoteModalVisible}
+                notes={notes}
+                updateNote={updateNote}
+                item={item}
+                t={t}
+                exerciseNumber={exerciseNumber}
+            />
 
             <View style={tw`flex flex-col mx-3 gap-y-1`}>
  

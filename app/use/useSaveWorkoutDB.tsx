@@ -1,9 +1,14 @@
-import { addDoc, collection, doc, getDocs, serverTimestamp } from "firebase/firestore";
+import { addDoc, collection, doc, getDocs, serverTimestamp, updateDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import { ExerciseInterface } from "../screens/Exercises";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-export const saveWorkoutToDB = async (currentDay: any, exercisesInfoArrays: any, time: any) => {
+export const saveWorkoutToDB = async (
+    currentDay: any, 
+    exercisesInfoArrays: any, 
+    time: any, 
+    notes: any
+) => {
 
     try {
 
@@ -68,6 +73,7 @@ export const saveWorkoutToDB = async (currentDay: any, exercisesInfoArrays: any,
             const savedWorkoutDocRef = await addDoc(savedWorkoutsCollectionRef, {
                 saved: serverTimestamp(),
                 title: currentDayTitle,
+                duration: timeString,
             });
             const exerciseInfoCollectionRef = collection(savedWorkoutDocRef, 'info');
 
@@ -76,9 +82,17 @@ export const saveWorkoutToDB = async (currentDay: any, exercisesInfoArrays: any,
                 const exerciseDocRef = await addDoc(exerciseInfoCollectionRef, {
                     title: exerciseInfo[1].exerciseTitle,
                     exerciseIndex: exerciseInfo[1].exerciseIndex,
-                    saved: serverTimestamp(),
-                    workoutDuration: timeString,
                 });
+
+                  // Find the corresponding note for the current exercise
+                const note = notes.find((note: any) => note.index === index + 1);
+
+                // If a note exists, add it to the exercise document
+                if (note) {
+                    await updateDoc(exerciseDocRef, {
+                        note: note.note,
+                    });
+                }
               
                 let setIndex = 0; // Initialize set index counter
 
@@ -86,6 +100,8 @@ export const saveWorkoutToDB = async (currentDay: any, exercisesInfoArrays: any,
                     const rowInfo = exerciseInfo[rowNumber];
                     const setCollectionRef = collection(exerciseDocRef, 'sets');
 
+                    // ako nishto ne e vuvedeno go zapisva kato not a number (N/A)
+                    // ako neshto e vuvedeno i posle iztrito ostava kato prazen string
                     const repsValue = rowInfo.reps !== undefined ? rowInfo.reps : 'N/A';
                     const weightValue = rowInfo.weight !== undefined ? rowInfo.weight : 'N/A';
                     const rpeValue = rowInfo.rpe !== undefined ? rowInfo.rpe : 'N/A';

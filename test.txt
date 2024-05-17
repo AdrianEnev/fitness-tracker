@@ -101,3 +101,7 @@ drugiqt buton otvarq box koito pozvolqva da se pishe informaciq za segashnoto up
 - da proverq na koi iphone raboti prilojenieto i taka da opredelq razmerite na nqkoi neshta
 
 - buton za iztrivane/resetvane na opisanie
+
+- ako ima opisanie slojeno na uprajnenie da izliza v drug cvqt ot tova ako nqma ili neshto takova
+
+- kato dobavq 10 v boxa s povtoreniqta da pishe "10 povt." ili nshto takova a ne prosto "10"

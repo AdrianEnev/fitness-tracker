@@ -148,14 +148,6 @@ const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
                             <Ionicons name='close-circle-outline' size={43} color="#FF0000" />
                         </Pressable>
                     </View>
-                    
-
-                    <View style={tw`m-2 mb-4 flex flex-col justify-between`}>
-
-                        <Text style={tw`text-base font-medium`}>Времетраене: {workoutDuration}</Text>  
-                        <Text style={tw`text-base font-medium`}>Край: {savedWorkoutInfo[currentIndex].saved.toDate().toLocaleString()}</Text>
-                    
-                    </View>
 
                     <View style={tw`flex flex-row flex-wrap gap-2 justify-center`}>
                         {sets.length > 0 && sets[currentIndex]?.sets.map((set: any, index: number) => (
@@ -166,9 +158,9 @@ const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
                                     {`Серия ${index + 1}`}
                                 </Text>
 
-                                <Text style={tw`text-base text-white`}>{`Повторения: ${set.reps !== 'N/A' && set.reps !== '' ? set.reps : 'X'}`}</Text>
-                                <Text style={tw`text-base text-white`}>{`Тежест: ${set.weight !== 'N/A' && set.weight !== '' ? set.weight : 'X'}`}</Text>
-                                <Text style={tw`text-base text-white`}>{`RPE: ${set.rpe !== 'N/A' && set.rpe !== '' ? set.rpe : 'X'}`}</Text>
+                                <Text style={tw`text-base text-white`}>{`Повторения: ${set.reps !== 'N/A' && set.reps !== '' ? set.reps : '0'}`}</Text>
+                                <Text style={tw`text-base text-white`}>{`Тежест: ${set.weight !== 'N/A' && set.weight !== '' ? set.weight : '0'}`}</Text>
+                                <Text style={tw`text-base text-white`}>{`RPE: ${set.rpe !== 'N/A' && set.rpe !== '' ? set.rpe : '0'}`}</Text>
 
                                 </View>
                             </View>

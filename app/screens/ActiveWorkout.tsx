@@ -36,6 +36,23 @@ const ActiveWorkout = ({navigation}: any) => {
 
 	const [inputValues, setInputValues] = useState<{ [key: string]: { [key: string]: string } }>({});
 
+	const [notes, setNotes] = useState<{index: number, note: string}[]>([]);
+
+	let updateNote = (index: number, newNote: string) => {
+		setNotes(prevNotes => {
+			let newNotes = [...prevNotes];
+			let noteObject = newNotes.find(note => note.index === index);
+	
+			if (noteObject) {
+				noteObject.note = newNote;
+			} else {
+				newNotes.push({index: index, note: newNote});
+			}
+	
+			return newNotes;
+		});
+	};
+
 	const updateInputValue = (exerciseId: string, key: string, value: string) => {
 		setInputValues((prevValues) => ({
 			...prevValues,
@@ -158,7 +175,7 @@ const ActiveWorkout = ({navigation}: any) => {
 			if (exercises.length === 1) {
 				// ends the workout without saving anything to the database if the last exercise is skipped
 				const exercisesInfoArrays = getExercisesInfo();
-				endWorkout(navigation, stopTimer, exercisesInfoArrays, false, currentDay, time, t);
+				endWorkout(navigation, stopTimer, exercisesInfoArrays, false, currentDay, time, t, notes);
 				return;
 			}
 
@@ -256,7 +273,7 @@ const ActiveWorkout = ({navigation}: any) => {
 						{
 							const exercisesInfoArrays = getExercisesInfo();
 					
-							endWorkout(navigation, stopTimer, exercisesInfoArrays, true, currentDay, time, t)
+							endWorkout(navigation, stopTimer, exercisesInfoArrays, true, currentDay, time, t, notes)
 
 						}
 					}
@@ -282,6 +299,8 @@ const ActiveWorkout = ({navigation}: any) => {
 							exerciseNumber={exerciseNumber}
 							nextExercise={nextExercise}
 							exercises={exercises}
+							notes={notes}
+							updateNote={updateNote}
 						/>
 					)}
 					keyExtractor={(exercise: ExerciseInterface) => exercise.id}
