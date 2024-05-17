@@ -9,9 +9,6 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
 
     const { t } = useTranslation();
 
-    const caloriesGoal = item?.calories ?? 0;
-    const currentCalories = currentNutrients?.calories ?? 0;
-
     const proteinGoal = Number(item?.protein ?? 0);
     const currentProtein = Number(currentNutrients?.protein ?? 0).toFixed(0);
     const proteinFillPercentage = (Number(currentProtein) / proteinGoal) * 100;
@@ -35,13 +32,13 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
     
     return (
         <View style={tw`flex items-center mt-2 mb-2`}>
-            <View style={tw`w-full h-40 bg-white shadow-md rounded-lg`}>
+            <View style={tw`w-full h-40 bg-[#f7f7f7] shadow-md rounded-lg`}>
 
                 <View style={tw`flex flex-row justify-between mt-2`}>
 
                         <View style={tw`flex flex-col items-start ml-2`}>
                             <View style={tw`flex items-center justify-center`}>
-                                <AnimatedCircularProgress size={110} width={8} fill={proteinFillPercentage} tintColor="#ff474c" backgroundColor="#D3D3D3">
+                                <AnimatedCircularProgress size={110} width={8} fill={proteinFillPercentage} tintColor="#ff474c" backgroundColor="white">
                                     {
                                         (fill: any) => (
                                             <View style={tw`flex flex-col items-center`}>
