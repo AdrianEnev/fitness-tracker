@@ -15,6 +15,7 @@ export interface SavedWorkout {
   id: string;
   exerciseIndex: number,
   workoutDuration: string,
+  note: string
 }
 
 const SavedWorkouts = ({navigation}: any) => {
@@ -28,7 +29,7 @@ const SavedWorkouts = ({navigation}: any) => {
     const {t} = useTranslation();
 
     const insets = useSafeAreaInsets();
-	  const notchSizeTailwind = Math.round(insets.top / 4);
+	const notchSizeTailwind = Math.round(insets.top / 4);
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -48,6 +49,31 @@ const SavedWorkouts = ({navigation}: any) => {
       }
     };
 
+    const deleteItem = (workoutID: any) => {
+
+        const handleOk = async () => {
+            try{
+                await deleteDoc(doc(savedWorkoutsCollectionRef, workoutID));
+            }catch (err) {
+                console.error(err);
+            }
+        }
+
+        const handleCancel = () => {
+            return;
+        }
+
+        Alert.alert('Сигурен ли си, че искаш да изтриеш тази тренировка?', '', [
+            {
+            text: 'Отказ',
+            onPress: handleCancel,
+            style: 'cancel',
+            },
+            {text: 'Да', onPress: handleOk},
+        ]);
+
+    };
+        
     const renderSavedWorkout = ({item}: any) => {
 
         const pressedSavedWorkout = () => {
@@ -86,25 +112,30 @@ const SavedWorkouts = ({navigation}: any) => {
               <Pressable
               style={tw`flex flex-row items-center w-full h-24 my-1 rounded-lg bg-white shadow-md`}
               onPress={pressedSavedWorkout}
-              onLongPress={changeSavedWorkoutName}
-              >
+              onLongPress={changeSavedWorkoutName}> 
+                <View style={tw`flex flex-row justify-between`}>
 
-                  <View style={tw`flex flex-col flex-grow ml-3`}>
+                    <View style={tw`flex flex-col flex-grow ml-3`}>
 
-                      <Text style={tw`text-lg font-medium max-w-[95%]`} numberOfLines={1} ellipsizeMode='tail'>
-                          {item.title}
-                      </Text>
-
-                      {item.saved && (
-                        <Text style={tw`text-base`} numberOfLines={1} ellipsizeMode='tail'>
-                          {moment(item.saved.toDate()).format('DD/MM/YYYY, HH:mm ч.')}
+                        <Text style={tw`text-lg font-medium max-w-[95%]`} numberOfLines={1} ellipsizeMode='tail'>
+                            {item.title}
                         </Text>
-                      )}
 
-                      <Text style={tw`text-base`}>{item.duration}</Text>
+                        {item.saved && (
+                        <Text style={tw`text-base`} numberOfLines={1} ellipsizeMode='tail'>
+                            {moment(item.saved.toDate()).format('DD/MM/YYYY, HH:mm ч.')}
+                        </Text>
+                        )}
 
-                  </View>
+                        <Text style={tw`text-base`}>{item.duration}</Text>
 
+                    </View>
+
+                    <Pressable style={tw`w-12 h-12`} onPress={() => deleteItem(item.id)}>
+                        <Ionicons name='close-circle-outline' size={43} color="#FF0000" />
+                    </Pressable>
+
+                </View>
               </Pressable>
 
           </View>
@@ -117,6 +148,8 @@ const SavedWorkouts = ({navigation}: any) => {
           updateSavedWorkouts();
         })
     }, [])
+
+    
 
     return (
         <View style={tw.style(`w-full h-full bg-[#F2F2F2] pt-${notchSizeTailwind}`)}>

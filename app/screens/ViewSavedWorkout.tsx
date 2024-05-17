@@ -30,9 +30,6 @@ const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
     const [sets, setSets] = useState<any[]>([]); // State to store sets
     const [currentIndex, setCurrentIndex] = useState(0);
 
-    // izpolzvam go za da ne moje da se natiska butona za iztrivane poveche ot 1 put
-    const [deleteItemRan, setDeleteItemRan] = useState(false);
-
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const savedWorkoutsCollectionRef = collection(userDocRef, 'saved_workouts');
@@ -87,45 +84,6 @@ const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
         setCurrentIndex((prevIndex) => Math.max(0, prevIndex - 1));
     };
 
-
-    const deleteItem = () => {
-
-        if (deleteItemRan) {    
-            return;
-        }
-
-        const handleOk = async () => {
-
-            try{
-                setDeleteItemRan(true);
-
-                await deleteDoc(doc(savedWorkoutsCollectionRef, workoutID));
-
-                navigation.navigate('Запазени-Тренировки');
-                
-            }catch (err) {
-
-                console.error(err);
-
-            }
-            
-        }
-
-        const handleCancel = () => {
-            return;
-        }
-
-        Alert.alert('Сигурен ли си, че искаш да изтриеш тази тренировка?', '', [
-            {
-            text: 'Отказ',
-            onPress: handleCancel,
-            style: 'cancel',
-            },
-            {text: 'Да', onPress: handleOk},
-        ]);
-
-    };
-
     let workoutDuration = savedWorkoutInfo[currentIndex]?.workoutDuration;
     
     if (workoutDuration === '1 минути') {
@@ -133,38 +91,41 @@ const ViewSavedWorkout: React.FC = ({route, navigation}: any) => {
     }
 
     return (
-        <ScrollView style={tw`bg-white`}>
+        <ScrollView style={tw``}>
 
             {savedWorkoutInfo.length > 0 && (
 
-                <View style={tw.style(`w-full h-full bg-white pt-${notchSizeTailwind}`)}>
+                <View style={tw.style(`w-full h-full pt-${notchSizeTailwind}`)}>
 
                     <View style={tw`flex flex-row justify-between`}>
                         <Text style={tw`text-base`} numberOfLines={1} ellipsizeMode='tail'>
                             {savedWorkoutInfo[currentIndex].title}
+                            
                         </Text>
 
-                        <Pressable style={tw`w-12 h-12`} onPress={deleteItem}>
-                            <Ionicons name='close-circle-outline' size={43} color="#FF0000" />
-                        </Pressable>
                     </View>
 
-                    <View style={tw`flex flex-row flex-wrap gap-2 justify-center`}>
+                    <View>
+                        <Text>{savedWorkoutInfo[currentIndex].note}</Text>
+                    </View>
+
+                    <View style={tw`flex-1 flex-row flex-wrap gap-2 justify-center mx-2`}>
                         {sets.length > 0 && sets[currentIndex]?.sets.map((set: any, index: number) => (
-                            <View key={index}>
-                                <View style={tw`flex flex-col bg-blue-500 h-48 py-1 px-2`}>
+                            <View key={index} style={tw`bg-white shadow-md rounded-xl w-[49%] h-32`}>
+                                <View style={tw`flex flex-col bg-white shadow-md h-48 w-full py-1 px-2 rounded-lg`}>
 
-                                <Text style={tw`text-base mb-5 text-white text-center`}>
-                                    {`Серия ${index + 1}`}
-                                </Text>
+                                    <Text style={tw`text-base mb-5 text-black`}>
+                                        {`Серия ${index + 1}`}
+                                    </Text>
 
-                                <Text style={tw`text-base text-white`}>{`Повторения: ${set.reps !== 'N/A' && set.reps !== '' ? set.reps : '0'}`}</Text>
-                                <Text style={tw`text-base text-white`}>{`Тежест: ${set.weight !== 'N/A' && set.weight !== '' ? set.weight : '0'}`}</Text>
-                                <Text style={tw`text-base text-white`}>{`RPE: ${set.rpe !== 'N/A' && set.rpe !== '' ? set.rpe : '0'}`}</Text>
+                                    <Text style={tw`text-base text-black`}>{`Повторения: ${set.reps !== 'N/A' && set.reps !== '' ? set.reps : '0'}`}</Text>
+                                    <Text style={tw`text-base text-black`}>{`Тежест: ${set.weight !== 'N/A' && set.weight !== '' ? set.weight : '0'}`}</Text>
+                                    <Text style={tw`text-base text-black`}>{`RPE: ${set.rpe !== 'N/A' && set.rpe !== '' ? set.rpe : '0'}`}</Text>
 
                                 </View>
                             </View>
                         ))}
+
                     </View>
                     
                     <View style={tw`flex flex-row justify-between mx-2`}>
