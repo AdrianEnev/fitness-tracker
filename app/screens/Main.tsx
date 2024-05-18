@@ -11,6 +11,9 @@ import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomNavigationBar from '../components/CustomNavigationBar';
 import RenderGoals from '../components/RenderGoals';
+import getLanguage from '../use/useGetLanguage';
+import getUsername from '../use/useGetUsername';
+import getCurrentDate from '../use/useGetCurrentDate';
 
 const Main = ({navigation}: any) => {
 
@@ -25,45 +28,18 @@ const Main = ({navigation}: any) => {
 
     const [username, setUsername] = useState('');
 
-    const getUsername = async () => {
-        try {
-            const docSnapshot = await getDoc(doc(userInfoCollectionRef, 'username'));
-            if (docSnapshot.exists()) {
-                setUsername(docSnapshot.data().username);
-            } else {
-                console.log('Username document does not exist');
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    const getLanguage = async () => {
-        try {
-            const docSnapshot = await getDoc(doc(userInfoCollectionRef, 'language'));
-            if (docSnapshot.exists()) {
-                const language = docSnapshot.data().language;
-                await i18next.changeLanguage(language);
-               
-            } else {
-
-                // moje bi da napravq da izchaka 2 sek da probva pak ili neshto takova che ponqkoga ne go udpateva na vreme
-                console.log('Language document does not exist');
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
     useFocusEffect(
         React.useCallback(() => {
             (async () => {
-                await getLanguage();
+                await getLanguage(userInfoCollectionRef);
+
+                const username = await getUsername(userInfoCollectionRef);
+                setUsername(username);
 
             })();
 
             updateCurrentNutrients();
-            getUsername();
+            
 
             return () => {
                 // Optional: You can do something when the screen is unfocused
@@ -71,24 +47,6 @@ const Main = ({navigation}: any) => {
             };
         }, [])
     );
-
-    const getCurrentDate = (padStart: boolean): string => {
-
-        if (padStart) {
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${day}/${month}/${year}`;
-        }else{
-            const date = new Date();
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1);
-            const day = String(date.getDate());
-            return `${day}-${month}-${year}`;
-        }
-
-    };
 
     // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk
     let [currentNutrients, setCurrentNutrients] = useState<GoalNutrients[]>([]);
@@ -173,7 +131,6 @@ const Main = ({navigation}: any) => {
                         
                     </View>
 
-                    
                 </View>
 
                 {/* Celi */}
@@ -189,8 +146,7 @@ const Main = ({navigation}: any) => {
 
             </ScrollView>
 
-            {/* Footer */}
-            <CustomNavigationBar navigation={navigation}/>
+            {/* Footer <CustomNavigationBar navigation={navigation}/>*/}
             
         </SafeAreaView>
         

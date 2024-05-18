@@ -37,8 +37,6 @@ const Register = () => {
 
             // add a document inside userInfoCollectionRef and call that document "username"
             await setDoc(doc(userInfoCollectionRef, 'username'), { username });
-
-            alert("Успешно бяхте регистрирани!");
         }catch(err: any){
             alert(err);
         }

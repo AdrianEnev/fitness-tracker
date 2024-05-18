@@ -13,17 +13,9 @@ import MainPageComponent from './app/components/MainPageComponent';
 import Setup from './app/screens/Setup';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { createStackNavigator } from '@react-navigation/stack';
+import Welcome from './app/screens/Welcome';
 
-const Tab = createBottomTabNavigator();
 const Stack = createStackNavigator();
-
-const headerOptions = {
-  tabBarHideOnKeyboard: true,
-  headerTintColor: '#fff',
-  headerStyle: {
-    backgroundColor: '#007AFF',
-  },
-};
 
 const AuthenticatedTabNavigator = ({ setupRan }: any) => {
     
@@ -56,28 +48,33 @@ const AuthenticatedTabNavigator = ({ setupRan }: any) => {
 
 const UnauthenticatedTabNavigator = () => (
 
-    <Tab.Navigator>
+    <Stack.Navigator>
 
-        <Tab.Screen
-            name="Вход"
-            component={Login}
+        <Stack.Screen
+            name="Добре-Дошъл"
+            component={Welcome}
             options={{
-                headerTitle: 'Вход',
-                tabBarIcon: ({ color }) => <Ionicons name="log-in-outline" color={color} size={32} />,
-                ...headerOptions,
+                headerShown: false,
             }}
         />
-        <Tab.Screen
+
+        <Stack.Screen
             name="Регистрация"
             component={Register}
             options={{
-                headerTitle: 'Регистрация',
-                tabBarIcon: ({ color }) => <Ionicons name="key-outline" color={color} size={32} />,
-                ...headerOptions,
+                headerShown: false,
             }}
         />
 
-    </Tab.Navigator>
+        <Stack.Screen
+            name="Вход"
+            component={Login}
+            options={{
+                headerShown: false,
+            }}
+        />
+
+    </Stack.Navigator>
 
 );
 

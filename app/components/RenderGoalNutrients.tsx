@@ -32,13 +32,13 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
     
     return (
         <View style={tw`flex items-center mt-2 mb-2`}>
-            <View style={tw`w-full h-40 bg-[#f7f7f7] shadow-md rounded-lg`}>
+            <View style={tw`w-full h-40 bg-[#f7f7f7] shadow-md rounded-2xl`}>
 
                 <View style={tw`flex flex-row justify-between mt-2`}>
 
                         <View style={tw`flex flex-col items-start ml-2`}>
                             <View style={tw`flex items-center justify-center`}>
-                                <AnimatedCircularProgress size={110} width={8} fill={proteinFillPercentage} tintColor="#ff474c" backgroundColor="white">
+                                <AnimatedCircularProgress size={110} width={9} fill={proteinFillPercentage} lineCap='round' tintColor="#ff474c" backgroundColor="white">
                                     {
                                         (fill: any) => (
                                             <View style={tw`flex flex-col items-center`}>
@@ -55,7 +55,7 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
 
                         <View style={tw`flex flex-col`}>
                             <View style={tw`flex items-center justify-center`}>
-                                <AnimatedCircularProgress size={110} width={8} fill={carbsFillPercentage} tintColor="#fcc729" backgroundColor="#D3D3D3">
+                                <AnimatedCircularProgress size={110} width={9} fill={carbsFillPercentage} lineCap='round' tintColor="#fcc729" backgroundColor="#D3D3D3">
                                     {
                                         (fill: any) => (
                                             <View style={tw`flex flex-col items-center`}>
@@ -72,7 +72,7 @@ const RenderGoalNutrients = ({item, currentNutrients}: any) => {
 
                         <View style={tw`flex flex-col`}>
                             <View style={tw`flex items-center justify-center mr-2`}>
-                                <AnimatedCircularProgress size={110} width={8} fill={fatFillPercentage} tintColor="#337def" backgroundColor="#D3D3D3">
+                                <AnimatedCircularProgress size={110} width={9} fill={fatFillPercentage} lineCap='round' tintColor="#337def" backgroundColor="#D3D3D3">
                                     {
                                         (fill: any) => (
                                             <View style={tw`flex flex-col items-center`}>

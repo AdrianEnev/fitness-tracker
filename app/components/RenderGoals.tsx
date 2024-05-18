@@ -6,34 +6,11 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import RenderGoalNutrients from './RenderGoalNutrients';
 import RenderNutrients from './RenderNutrients';
 //import { MaterialCommunityIcons } from '@expo/vector-icons';
+import boxElement from './GoalsBoxElement';
 
 const RenderGoals = (
     {goalNutrients, currentNutrients, navigation}: any
 ) => {
-
-    
-    const boxElement = (icon: any, title: string, currentValue: string, goalValue: string, background: string) => {
-        return (
-            <View style={tw`w-[49%] h-28 bg-${background} shadow-md rounded-xl`}>
-
-                <View style={tw`flex flex-row gap-x-1 ml-1 mt-2`}>
-
-                    <Ionicons name={icon} size={24} color='black' />
-
-                    <View style={tw`mt-[-3px]`}>
-                        <Text style={tw`text-lg`}>{title}</Text>
-                    </View>
-
-                </View>
-
-                <View style={tw`flex-1 flex-row items-end ml-2 mb-1`}>
-                    <Text style={tw`text-2xl`}>{currentValue}</Text>
-                    <Text style={tw`text-sm`}>/{goalValue}</Text>
-                </View>
-
-            </View>
-        );
-    };
 
 
     const {t} = useTranslation();
@@ -49,22 +26,39 @@ const RenderGoals = (
                 <Text style={tw`font-medium text-lg ml-3`}>{t('today')}</Text>
                 <Text style={tw`font-medium text-base text-gray-500 mr-3 mt-1`} onPress={() => navigation.navigate('Настройки-Макронутриенти')}>Настройки {'>'}</Text>
             </View>
-            
+
+
+            <View style={tw`flex flex-row mx-1 gap-x-2`}>
+
+                {boxElement('accessibility-outline', 'Тренировки', '', '', "[#ff6b6b]", () => navigation.navigate('Тренировки'))} 
+
+                {boxElement('egg-outline', 'Хранене', '', '', "[#ffffff]", () => navigation.navigate('Хранене'))} 
+
+            </View>
                 
-            <View style={tw`flex flex-row flex-wrap mx-1 gap-x-2 gap-y-2`}>
+            <View style={tw`flex flex-row mx-1 gap-x-2 mt-3`}>
 
-                {boxElement('flame-outline', t('calories'), currentCalories, caloriesGoal.toString() + " kcal", '[#cce5e2]')}
+                {/* Kalorii */}
+                {boxElement('flame-outline', t('calories'), currentCalories, "/" + caloriesGoal.toString() + " kcal", '[#4ecdc4]', () => {})} 
 
-                {boxElement('footsteps-outline', t('steps'), '100', '2100 крачки', "[#fcebdb]")}
+                 {/* Krachki */}
+                {boxElement('footsteps-outline', t('steps'), '100', '/2100 крачки', "[#ffd166]", () => {})}
 
-                {/* Makronutrienti */}
+                
+            </View>
+
+            {/* Makronutrienti */}
+            <View style={tw`mt-3 mx-1 shadow-md`}>
                 <FlatList 
                     data={goalNutrients} 
                     renderItem={({item}) => <RenderNutrients item={item} currentNutrients={currentNutrients} />}  
                     scrollEnabled={false}
                 />
-
             </View>
+
+            
+
+                
 
         </View>
     )
