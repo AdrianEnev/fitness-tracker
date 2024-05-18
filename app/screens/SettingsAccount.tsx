@@ -10,6 +10,7 @@ import { useTranslation } from 'react-i18next';
 import getUsername from '../use/useGetUsername'
 import { collection, doc } from 'firebase/firestore'
 import { useFocusEffect } from '@react-navigation/native'
+import * as ImagePicker from 'expo-image-picker';
 
 const SettingsAccount = () => {
 
@@ -30,10 +31,14 @@ const SettingsAccount = () => {
         fetch();
     });
 
+    const uploadProfilePicture = async () => {
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+        });
     
-
-    const uploadProfilePicture = () => {
-       
     }
 
     return (
