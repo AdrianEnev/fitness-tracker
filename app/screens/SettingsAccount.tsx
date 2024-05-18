@@ -1,12 +1,15 @@
 import { View, Text, Button } from 'react-native'
-import React from 'react'
-import { FIREBASE_AUTH } from '../../firebaseConfig'
+import React, { useState } from 'react'
+import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 import tw from 'twrnc'
 import { getAuth } from 'firebase/auth'
 import deleteAccount  from '../use/useDeleteAccount';
 import changePassword from '../use/useChangePassword'
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
+import getUsername from '../use/useGetUsername'
+import { collection, doc } from 'firebase/firestore'
+import { useFocusEffect } from '@react-navigation/native'
 
 const SettingsAccount = () => {
 
@@ -14,9 +17,29 @@ const SettingsAccount = () => {
     const user = auth.currentUser;
     const email = user?.email;
 
+    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+    const userInfoCollectionRef = collection(userDocRef, 'user_info');
+
+    const [username, setUsername] = useState('');
+
+    useFocusEffect(() => {
+        const fetch = async () => {
+            setUsername(await getUsername(userInfoCollectionRef));
+        }
+        fetch();
+    });
+
+    
+
+    const uploadProfilePicture = () => {
+       
+    }
+
     return (
         <View style={tw`mt-10`}>
             <Text style={tw`m-3 font-medium text-base`}>Имейл: {email}</Text>
+            <Text style={tw`m-3 font-medium text-base`}>Име: {username}</Text>
 
             <Button title='смяна на парола' onPress={() => changePassword(email, user, auth)}/>
             
@@ -24,7 +47,7 @@ const SettingsAccount = () => {
 
             <Button title='излез от акаунт' onPress={() => FIREBASE_AUTH.signOut()}/>
 
-            <Button title='смени профилна снимка'/>
+            <Button title='смени профилна снимка' onPress={uploadProfilePicture}/>
         </View>
     )
 }

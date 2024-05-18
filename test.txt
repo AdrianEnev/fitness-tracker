@@ -93,18 +93,17 @@ if (docSnap.exists()) {
 
 - pri suzdavane na akaunt da izliza opciq za presmqtane na dnevni kalorii
 
-
-
 - da proverq na koi iphone raboti prilojenieto i taka da opredelq razmerite na nqkoi neshta
 
 - buton za iztrivane/resetvane na opisanie
 
-- ako ima opisanie slojeno na uprajnenie da izliza v drug cvqt ot tova ako nqma ili neshto takova
-
-- kato dobavq 10 v boxa s povtoreniqta da pishe "10 povt." ili nshto takova a ne prosto "10"
 
 - da mojesh da dobavqsh priqteli i da gledash kolko trenirovki imat priklucheni
 
 - autoCapitalize start
 
 - smqna na parola pri akaunt v koito ne e lognat choveka
+
+- trenirovkite da izlizat kato krugli boxove koito zaemat polovinata width na ekrana i da moje usera da zadava cvqt i ime i da izglejdat mn qko s ikonki koito moje da se izberat
+
+- custom trenirovki s izkustven intelekt 

@@ -30,7 +30,7 @@ const Food = ({navigation}: any) => {
     return (
         <View style={tw`bg-white`}>
 
-            <View style={tw`m-3 mt-10 bg-white`}>
+            <View style={tw`bg-white`}>
 
                 <CalendarList 
                     key={key}
@@ -43,7 +43,7 @@ const Food = ({navigation}: any) => {
                         navigation.navigate("Хранене-Ден", {date: day});
                     }}
                     markedDates={{
-                        [currentDate]: {selected: true, selectedColor: '#3b82f6', textColor: 'white'},
+                        [currentDate]: {selected: true, selectedColor: '#ff6b6b', textColor: 'white'},
                     }}
                     
                 />
