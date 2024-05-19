@@ -48,17 +48,13 @@ const RenderGoals = (
             </View>
 
             {/* Makronutrienti */}
-            <View style={tw`mt-3 mx-1 shadow-md`}>
+            <View style={tw`w-[98%] h-62 bg-white mt-3 mx-1 shadow-md rounded-2xl`}>
                 <FlatList 
                     data={goalNutrients} 
                     renderItem={({item}) => <RenderNutrients item={item} currentNutrients={currentNutrients} />}  
                     scrollEnabled={false}
                 />
             </View>
-
-            
-
-                
 
         </View>
     )

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import tw from "twrnc"
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
+import getCurrentDate from '../use/useGetCurrentDate';
 
 // react.memo se izpolzva za da ne se rendervat komponenti osven ako neshto ne se e promenilo
 const RenderNutrients = React.memo(({item, currentNutrients}: any) => {
@@ -48,18 +49,26 @@ const RenderNutrients = React.memo(({item, currentNutrients}: any) => {
     }
     
     return (
-        <View style={tw`flex items-center mt-2`}>
-
-            <View style={tw`flex flex-row gap-x-[25px]`}>
-
-                {nutrientBox(caloriesProgress, 'Кал.', currentCalories)}
-                {nutrientBox(proteinProgress, 'Прот.', currentProtein)}
-                {nutrientBox(carbsProgress, 'Въг.', currentCarbs)}
-                {nutrientBox(fatProgress, 'Мазн.', currentFat)}
-                {nutrientBox(stepsProgress, 'Крач.', currentSteps)}
-                    
+        <View>
+            
+            <View style={tw`flex flex-row justify-between`}>
+                <Text style={tw`text-lg font-medium m-2 ml-3`}>{t('today')}</Text>
+                <Text style={tw`text-lg font-medium m-2 mr-3`}>{getCurrentDate(true)}</Text>
             </View>
             
+
+            <View style={tw`flex items-center`}>
+                <View style={tw`flex flex-row gap-x-[24px] ml-1`}>
+
+                    {nutrientBox(caloriesProgress, 'Кал.', currentCalories)}
+                    {nutrientBox(proteinProgress, 'Прот.', currentProtein)}
+                    {nutrientBox(carbsProgress, 'Въг.', currentCarbs)}
+                    {nutrientBox(fatProgress, 'Мазн.', currentFat)}
+                    {nutrientBox(stepsProgress, 'Крач.', currentSteps)}
+                        
+                </View>
+            </View>
+
         </View>
     )
 });

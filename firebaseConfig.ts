@@ -3,6 +3,7 @@ import { getAuth  } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import * as firebaseAuth from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { getStorage } from 'firebase/storage';
 
 import { Split } from './app/screens/Splits';
 import { Day } from './app/screens/Days';
@@ -29,6 +30,7 @@ const auth = firebaseAuth.initializeAuth(FIREBASE_APP, {
     persistence: reactNativePersistence(AsyncStorage),
 });
 export const FIREBASE_AUTH = auth;
+export const FIREBASE_STORAGE = getStorage(FIREBASE_APP);
 
 // keep track of IDs
 let currentSplit: Split | null = null;

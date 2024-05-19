@@ -11,6 +11,8 @@ import getUsername from '../use/useGetUsername'
 import { collection, doc } from 'firebase/firestore'
 import { useFocusEffect } from '@react-navigation/native'
 import * as ImagePicker from 'expo-image-picker';
+import uploadFile from '../use/useUploadFile'
+import * as FileSystem from 'expo-file-system';
 
 const SettingsAccount = () => {
 
@@ -24,6 +26,8 @@ const SettingsAccount = () => {
 
     const [username, setUsername] = useState('');
 
+    const [image, setImage] = useState(null);
+
     useFocusEffect(() => {
         const fetch = async () => {
             setUsername(await getUsername(userInfoCollectionRef));
@@ -31,15 +35,25 @@ const SettingsAccount = () => {
         fetch();
     });
 
+    const uriToBlob = async (uri: string): Promise<Blob> => {
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        return blob;
+      };
+      
     const uploadProfilePicture = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
+          mediaTypes: ImagePicker.MediaTypeOptions.Images,
+          allowsEditing: true,
+          aspect: [1, 1],
+          quality: 1,
         });
-    
-    }
+      
+        if (!result.canceled) {
+          const blob = await uriToBlob(result.assets[0].uri);
+          uploadFile(blob, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
+        }
+    };
 
     return (
         <View style={tw`mt-10`}>
