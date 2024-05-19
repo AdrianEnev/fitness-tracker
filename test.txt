@@ -107,3 +107,5 @@ if (docSnap.exists()) {
 - trenirovkite da izlizat kato krugli boxove koito zaemat polovinata width na ekrana i da moje usera da zadava cvqt i ime i da izglejdat mn qko s ikonki koito moje da se izberat
 
 - custom trenirovki s izkustven intelekt 
+
+- animaciq za makronutrientite

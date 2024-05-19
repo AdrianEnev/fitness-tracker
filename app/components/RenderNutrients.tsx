@@ -5,8 +5,14 @@ import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import getCurrentDate from '../use/useGetCurrentDate';
 
+type RenderNutrientsProps = {
+    item: any; // replace any with the actual type
+    currentNutrients: any; // replace any with the actual type
+    date: string;
+  };
+
 // react.memo se izpolzva za da ne se rendervat komponenti osven ako neshto ne se e promenilo
-const RenderNutrients = React.memo(({item, currentNutrients}: any) => {
+const RenderNutrients = React.memo(({item, currentNutrients, date}: RenderNutrientsProps) => {
 
     const { t } = useTranslation();
 
@@ -43,7 +49,7 @@ const RenderNutrients = React.memo(({item, currentNutrients}: any) => {
                         </View>
                     </View>
                 </View>
-                <Text style={tw`text-lg ml-3`}>{title}</Text>
+                <Text style={tw`text-lg ml-1`}>{title}</Text>
             </View>
         );
     }
@@ -51,14 +57,14 @@ const RenderNutrients = React.memo(({item, currentNutrients}: any) => {
     return (
         <View>
             
-            <View style={tw`flex flex-row justify-between`}>
-                <Text style={tw`text-lg font-medium m-2 ml-3`}>{t('today')}</Text>
-                <Text style={tw`text-lg font-medium m-2 mr-3`}>{getCurrentDate(true)}</Text>
+            <View style={tw`flex flex-row justify-between mx-1`}>
+                <Text style={tw`text-lg font-medium m-2`}>{t('today')}</Text>
+                <Text style={tw`text-lg font-medium m-2`}>{date}</Text>
             </View>
             
 
             <View style={tw`flex items-center`}>
-                <View style={tw`flex flex-row gap-x-[24px] ml-1`}>
+                <View style={tw`flex flex-row gap-x-[27px]`}>
 
                     {nutrientBox(caloriesProgress, 'Кал.', currentCalories)}
                     {nutrientBox(proteinProgress, 'Прот.', currentProtein)}

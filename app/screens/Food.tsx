@@ -14,16 +14,27 @@ const Food = ({navigation}: any) => {
     const [key, setKey] = useState(i18next.language);
 
     useEffect(() => {
-        LocaleConfig.defaultLocale = i18next.language;
-        setKey(i18next.language);
-    }, []);
-
-    useEffect(() => {
-        i18next.on('languageChanged', (lng) => {
+        const setLocale = (lng: any) => {
             LocaleConfig.defaultLocale = lng;
             setKey(lng);
-        });
+        };
+        setLocale(i18next.language);
+    
+        i18next.on('languageChanged', setLocale);
+    
+        return () => {
+            i18next.off('languageChanged', setLocale);
+        };
     }, []);
+
+    const generateColor = () => {
+        
+        // zelenoto izglejda nai dobre no zasega shte go ostavq na sluchaen princip
+
+        // cherveno, zeleno, julto
+        const colours = ["#ff6b6b", "#4ecdc4", "#ffd166"];
+        return colours[Math.floor(Math.random() * colours.length)];
+    }
 
     const currentDate = new Date().toISOString().split('T')[0].split('-').join('-');
    
@@ -43,9 +54,8 @@ const Food = ({navigation}: any) => {
                         navigation.navigate("Хранене-Ден", {date: day});
                     }}
                     markedDates={{
-                        [currentDate]: {selected: true, selectedColor: '#ff6b6b', textColor: 'white'},
+                        [currentDate]: {selected: true, selectedColor: generateColor(), textColor: 'white'},
                     }}
-                    
                 />
 
             </View>

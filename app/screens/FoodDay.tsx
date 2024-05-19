@@ -10,6 +10,8 @@ import RenderAddedFood from '../components/RenderAddedFood';
 import { useFocusEffect } from '@react-navigation/native';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
+import RenderNutrients from '../components/RenderNutrients';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export interface Food {
     title: string;
@@ -25,6 +27,10 @@ export interface Food {
 const FoodDay = ({route, navigation}: any) => {
 
     const { date } = route.params;
+
+    const getDate = () => {
+        return `${date.day}/${date.month}/${date.year}`;
+    }
 
     let [goalNutrients, setGoalNutrients] = useState<GoalNutrients[]>([]);
     let [currentFoods, setCurrentFoods] = useState<Food[]>([]);
@@ -179,34 +185,31 @@ const FoodDay = ({route, navigation}: any) => {
     );
     
     return (
-        <View style={tw`bg-white h-full`}>
+        <SafeAreaView style={tw`h-full`}>
 
-            <View style={tw`bg-white w-full h-12`}></View> 
+            <View style={tw`flex flex-row justify-between mt-2 ml-2`}>
+               
+                <Pressable style={tw`bg-blue-500 w-12 h-12 rounded-full items-center justify-center self-center mr-3`} onPress={() => navigation.navigate("Храна-Добави", { date: date })}>
+                    <Ionicons name="add-outline" size={36} color="white"/>
+                </Pressable>
 
-            <View style={tw`flex flex-row justify-between mt-2`}>
-
-                <Text style={tw`font-bold text-xl ml-3 mt-3`}>
-                    {date.day > 9 ? date.day : `0${date.day}`} - {date.month > 9 ? date.month : `0${date.month}`} - {date.year}
-                </Text>
-
-                <View style={tw`flex flex-row justify-end`}>
-                    <Pressable style={tw`bg-blue-500 w-12 h-12 rounded-full items-center justify-center self-center mr-3`} onPress={() => navigation.navigate("Храна-Добави", { date: date })}>
-                        <Ionicons name="add-outline" size={36} color="white"/>
-                    </Pressable>
-
-                    <Pressable style={tw`bg-blue-500 w-12 h-12 rounded-full items-center justify-center self-center mr-3`} onPress={() => navigation.navigate("Храна-Потърси", { date: date })}>
-                        <Ionicons name="search-outline" size={28} color="white"/>
-                    </Pressable>
-                </View>
+                <Pressable style={tw`bg-blue-500 w-12 h-12 rounded-full items-center justify-center self-center mr-3`} onPress={() => navigation.navigate("Храна-Потърси", { date: date })}>
+                    <Ionicons name="search-outline" size={28} color="white"/>
+                </Pressable>
                 
+            </View>
+
+            <View style={tw`w-[96%] h-62 bg-white mt-3 mx-2 shadow-md rounded-2xl`}>
+
+                <FlatList 
+                    data={goalNutrients} 
+                    renderItem={({item}) => <RenderNutrients item={item} currentNutrients={currentNutrients} date={getDate()} />}  
+                    scrollEnabled={false}
+                />
 
             </View>
 
-            <View style={tw`mb-2`}>
-                <FlatList data={goalNutrients} renderItem={({item}) => <RenderGoalNutrients item={item} currentNutrients={currentNutrients} />}  scrollEnabled={false}/>
-            </View>
-
-            <View style={tw`mx-3 flex-1 mb-5`}>
+            <View style={tw`flex-1 mt-2 mx-2 shadow-md rounded-2xl`}>
 
                 <FlatList 
                     data={currentFoods}
@@ -216,7 +219,7 @@ const FoodDay = ({route, navigation}: any) => {
 
             </View>
 
-        </View>
+        </SafeAreaView>
     )
 }
 

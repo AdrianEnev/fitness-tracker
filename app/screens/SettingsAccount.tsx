@@ -14,7 +14,7 @@ import * as ImagePicker from 'expo-image-picker';
 import uploadFile from '../use/useUploadFile'
 import * as FileSystem from 'expo-file-system';
 
-const SettingsAccount = () => {
+const SettingsAccount = ({navigation}: any) => {
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -50,9 +50,11 @@ const SettingsAccount = () => {
         });
       
         if (!result.canceled) {
+
             const blob = await uriToBlob(result.assets[0].uri);
             await uploadFile(blob, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
-            console.log('Snimkata be kachena uspeshno!')
+            alert('Snimkata be kachena uspeshno!')
+
         }
     };
 

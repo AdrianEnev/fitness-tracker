@@ -7,6 +7,7 @@ import RenderGoalNutrients from './RenderGoalNutrients';
 import RenderNutrients from './RenderNutrients';
 //import { MaterialCommunityIcons } from '@expo/vector-icons';
 import boxElement from './GoalsBoxElement';
+import getCurrentDate from '../use/useGetCurrentDate';
 
 const RenderGoals = (
     {goalNutrients, currentNutrients, navigation}: any
@@ -22,13 +23,7 @@ const RenderGoals = (
     return (
         <View>
 
-            <View style={tw`flex flex-row justify-between mt-3 mb-1`}>
-                <Text style={tw`font-medium text-lg ml-3`}>{t('today')}</Text>
-                <Text style={tw`font-medium text-base text-gray-500 mr-3 mt-1`} onPress={() => navigation.navigate('Настройки-Макронутриенти')}>Настройки {'>'}</Text>
-            </View>
-
-
-            <View style={tw`flex flex-row mx-1 gap-x-2`}>
+            <View style={tw`flex flex-row mx-1 gap-x-2 mt-7`}>
 
                 {boxElement('accessibility-outline', 'Тренировки', '', '', "[#ff6b6b]", () => navigation.navigate('Тренировки'))} 
 
@@ -51,7 +46,7 @@ const RenderGoals = (
             <View style={tw`w-[98%] h-62 bg-white mt-3 mx-1 shadow-md rounded-2xl`}>
                 <FlatList 
                     data={goalNutrients} 
-                    renderItem={({item}) => <RenderNutrients item={item} currentNutrients={currentNutrients} />}  
+                    renderItem={({item}) => <RenderNutrients item={item} currentNutrients={currentNutrients} date={getCurrentDate(true)}/>}  
                     scrollEnabled={false}
                 />
             </View>

@@ -15,6 +15,7 @@ import getLanguage from '../use/useGetLanguage';
 import getUsername from '../use/useGetUsername';
 import getCurrentDate from '../use/useGetCurrentDate';
 import getProfilePicture from '../use/useGetProfilePicture';
+import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 
 const Main = ({navigation}: any) => {
 
@@ -32,26 +33,21 @@ const Main = ({navigation}: any) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            (async () => {
+
+            const fetch = async () => {
                 await getLanguage(userInfoCollectionRef);
 
                 const username = await getUsername(userInfoCollectionRef);
                 setUsername(username);
 
                 const profilePictureData = await getProfilePicture();
-                if (profilePictureData) {
+                if (profilePictureData && profilePictureData !== profilePicture) {
                     setProfilePicture(profilePictureData);
                 }
-
-            })();
-
+            }
+            fetch();
             updateCurrentNutrients();
             
-
-            return () => {
-                // Optional: You can do something when the screen is unfocused
-                // This function runs when the screen goes out of focus
-            };
         }, [])
     );
 
@@ -119,22 +115,22 @@ const Main = ({navigation}: any) => {
                 <View style={tw`flex flex-row justify-between mt-2 mx-1`}>
 
                     <View style={tw`flex flex-row`}>
-
                         {/* Profil ikona */}
                         {profilePicture === '' ? (
                             <View style={tw`bg-white w-16 h-16 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
                                 <Ionicons name='person-outline' 
                                     size={40}
-                                    color='#000000' 
-                                    style={tw``} 
+                                    color='#000000'  
                                     onPress={() => navigation.navigate("Настройки-Акаунт")}
                                 />
                             </View>
                         ) : (
-                            <Image
-                                source={{ uri: profilePicture }}
-                                style={tw`w-16 h-16 rounded-full ml-2`}
-                            />
+                            <Pressable onPress={() => navigation.navigate("Настройки-Акаунт")}>
+                                <Image
+                                    source={{ uri: profilePicture }}
+                                    style={tw`w-16 h-16 rounded-full ml-2`}
+                                />
+                            </Pressable>
                         )}
 
                         {/* Zdravei User */}
@@ -142,13 +138,23 @@ const Main = ({navigation}: any) => {
                             <Text style={tw`text-lg text-gray-500`}>{getHelloText()} 👋</Text>
                             <Text style={tw`text-xl font-medium`}>{username}</Text>
                         </View>
-                        
+                            
+                    </View>
+
+                    <View>
+                        <TouchableWithoutFeedback onPress={() => navigation.navigate("Настройки-Страница")} 
+                            style={tw`bg-white w-16 h-16 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
+                            <Ionicons name='settings-outline' 
+                                size={40}
+                                color='#000000'
+                            />
+                        </TouchableWithoutFeedback>
                     </View>
 
                 </View>
 
                 {/* Celi */}
-                <View style={tw` mx-1`}>
+                <View style={tw`mx-1`}>
                     
                     <RenderGoals 
                         goalNutrients={goalNutrients}

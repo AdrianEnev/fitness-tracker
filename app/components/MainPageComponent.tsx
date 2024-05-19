@@ -204,6 +204,7 @@ const MainPageComponent = () => {
             options={{
                 title: "Акаунт",
                 headerShown: false,
+                
             }}
           />
 
