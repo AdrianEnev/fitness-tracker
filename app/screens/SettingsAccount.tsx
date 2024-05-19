@@ -43,15 +43,16 @@ const SettingsAccount = () => {
       
     const uploadProfilePicture = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
-          mediaTypes: ImagePicker.MediaTypeOptions.Images,
-          allowsEditing: true,
-          aspect: [1, 1],
-          quality: 1,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
         });
       
         if (!result.canceled) {
-          const blob = await uriToBlob(result.assets[0].uri);
-          uploadFile(blob, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
+            const blob = await uriToBlob(result.assets[0].uri);
+            await uploadFile(blob, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
+            console.log('Snimkata be kachena uspeshno!')
         }
     };
 
