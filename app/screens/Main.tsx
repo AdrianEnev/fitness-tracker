@@ -1,4 +1,4 @@
-import { View, Text, Pressable, ScrollView } from 'react-native'
+import { View, Text, Pressable, ScrollView, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from "twrnc";
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
@@ -14,6 +14,7 @@ import RenderGoals from '../components/RenderGoals';
 import getLanguage from '../use/useGetLanguage';
 import getUsername from '../use/useGetUsername';
 import getCurrentDate from '../use/useGetCurrentDate';
+import getProfilePicture from '../use/useGetProfilePicture';
 
 const Main = ({navigation}: any) => {
 
@@ -27,6 +28,7 @@ const Main = ({navigation}: any) => {
     const foodDaysCollectionRef = collection(userDocRef, 'food_days');
 
     const [username, setUsername] = useState('');
+    const [profilePicture, setProfilePicture] = useState('');
 
     useFocusEffect(
         React.useCallback(() => {
@@ -35,6 +37,11 @@ const Main = ({navigation}: any) => {
 
                 const username = await getUsername(userInfoCollectionRef);
                 setUsername(username);
+
+                const profilePictureData = await getProfilePicture();
+                if (profilePictureData) {
+                    setProfilePicture(profilePictureData);
+                }
 
             })();
 
@@ -114,14 +121,21 @@ const Main = ({navigation}: any) => {
                     <View style={tw`flex flex-row`}>
 
                         {/* Profil ikona */}
-                        <View style={tw`bg-white w-16 h-16 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
-                            <Ionicons name='person-outline' 
-                                size={40}
-                                color='#000000' 
-                                style={tw``} 
-                                onPress={() => navigation.navigate("Настройки-Акаунт")}
+                        {profilePicture === '' ? (
+                            <View style={tw`bg-white w-16 h-16 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
+                                <Ionicons name='person-outline' 
+                                    size={40}
+                                    color='#000000' 
+                                    style={tw``} 
+                                    onPress={() => navigation.navigate("Настройки-Акаунт")}
+                                />
+                            </View>
+                        ) : (
+                            <Image
+                                source={{ uri: profilePicture }}
+                                style={tw`w-16 h-16 rounded-full ml-2`}
                             />
-                        </View>
+                        )}
 
                         {/* Zdravei User */}
                         <View style={tw`flex flex-col ml-3`}>

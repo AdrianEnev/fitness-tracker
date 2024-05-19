@@ -15,3 +15,5 @@ const getProfilePicture = async () => {
         console.error("Error getting document:", error);
   }
 };
+
+export default getProfilePicture;
