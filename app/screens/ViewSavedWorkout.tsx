@@ -1,6 +1,7 @@
 import { View, Text, Button, Pressable, Alert } from 'react-native';
 import React, { useState, useEffect } from 'react';
-import { FIREBASE_AUTH, FIRESTORE_DB, getCurrentSavedWorkout } from '../../firebaseConfig';
+import { FIREBASE_AUTH, FIRESTORE_DB,  } from '../../firebaseConfig';
+import { getCurrentSavedWorkout } from '../../globals';
 import { doc, collection, getDocs, deleteDoc } from 'firebase/firestore';
 import { SavedWorkout } from './SavedWorkouts';
 import tw from "twrnc";

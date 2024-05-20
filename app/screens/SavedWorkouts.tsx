@@ -1,7 +1,8 @@
 import { View, Text, FlatList, Pressable, Alert} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Timestamp, collection, deleteDoc, doc, getDocs, onSnapshot, updateDoc, query, orderBy } from 'firebase/firestore';
-import { FIRESTORE_DB, FIREBASE_AUTH, setCurrentSavedWorkout } from '../../firebaseConfig';
+import { FIRESTORE_DB, FIREBASE_AUTH } from '../../firebaseConfig';
+import { setCurrentSavedWorkout } from '../../globals';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import tw from "twrnc";
 import moment from 'moment';

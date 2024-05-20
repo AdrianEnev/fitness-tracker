@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Main from "../screens/Main";
 import { AddExercise } from "./AddExercise";
-import { getCurrentDay, getCurrentExercise } from "../../firebaseConfig";
+import { getCurrentDay, getCurrentExercise } from "../../globals";
 import Days from "../screens/Days";
 import Exercises from "../screens/Exercises";
 import EditExercise from "../screens/EditExercise";
@@ -28,7 +28,11 @@ const MainPageComponent = () => {
   let currentDayTitle = getCurrentDay()?.title;
 
     return (
-      <Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          animation: 'slide_from_right',
+        }}
+      >
 
           <Stack.Screen
             name='Главна Страница'
@@ -167,7 +171,6 @@ const MainPageComponent = () => {
             component={AddFoodPage}
             options={{
                 headerShown: false,
-                animationTypeForReplace: 'pop'
             }}
           />
 
@@ -176,7 +179,6 @@ const MainPageComponent = () => {
             component={AddCustomFoodPage}
             options={{
                 headerShown: false,
-                animationTypeForReplace: 'pop'
             }}
           />
 

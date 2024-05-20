@@ -2,7 +2,8 @@ import { addDoc, collection, doc, getDocs, updateDoc } from 'firebase/firestore'
 import tw from "twrnc";
 import { Alert, Pressable } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { FIREBASE_AUTH, FIRESTORE_DB, getCurrentDay, getCurrentSplit } from '../../firebaseConfig';
+import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { getCurrentDay, getCurrentSplit } from '../../globals';
 import { ExerciseInterface } from '../screens/Exercises';
 import { useFocusEffect } from '@react-navigation/native';
 import { useState } from 'react';

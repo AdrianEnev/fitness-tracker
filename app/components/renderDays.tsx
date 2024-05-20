@@ -1,7 +1,7 @@
 import { View, Text, Pressable, Alert } from 'react-native';
 import React from 'react';
 import { deleteDoc, doc, getDocs, updateDoc, collection } from 'firebase/firestore';
-import { getCurrentDay, setCurrentDay } from '../../firebaseConfig';
+import { getCurrentDay, setCurrentDay } from '../../globals';
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ExerciseInterface } from '../screens/Exercises';

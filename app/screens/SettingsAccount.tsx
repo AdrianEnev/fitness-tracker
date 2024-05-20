@@ -1,20 +1,21 @@
-import { View, Text, Button } from 'react-native'
+import { View, Text, Button, Pressable, Image } from 'react-native'
 import React, { useState } from 'react'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 import tw from 'twrnc'
 import { getAuth } from 'firebase/auth'
 import deleteAccount  from '../use/useDeleteAccount';
 import changePassword from '../use/useChangePassword'
-import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import getUsername from '../use/useGetUsername'
 import { collection, doc } from 'firebase/firestore'
 import { useFocusEffect } from '@react-navigation/native'
 import * as ImagePicker from 'expo-image-picker';
 import uploadFile from '../use/useUploadFile'
-import * as FileSystem from 'expo-file-system';
+import { SafeAreaView } from 'react-native-safe-area-context'
+import getProfilePicture from '../use/useGetProfilePicture'
+import Ionicons from '@expo/vector-icons/Ionicons';
 
-const SettingsAccount = ({navigation}: any) => {
+const SettingsAccount = ({navigation, route}: any) => {
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -25,12 +26,15 @@ const SettingsAccount = ({navigation}: any) => {
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
     const [username, setUsername] = useState('');
+    const [profilePicture, setProfilePicture] = useState('');
 
     const [image, setImage] = useState(null);
 
     useFocusEffect(() => {
         const fetch = async () => {
             setUsername(await getUsername(userInfoCollectionRef));
+
+            setProfilePicture(route.params.profilePicture);
         }
         fetch();
     });
@@ -41,6 +45,7 @@ const SettingsAccount = ({navigation}: any) => {
         return blob;
       };
       
+    // okazva se che ima po lesen nachin za updatevane na profilna direktno ot firebase akaunta na usera ama veche napravih toq nachin tui che taka shte sedi  
     const uploadProfilePicture = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -59,7 +64,39 @@ const SettingsAccount = ({navigation}: any) => {
     };
 
     return (
-        <View style={tw`mt-10`}>
+        <SafeAreaView style={tw``}>
+            
+            {/* Profil ikona */}
+            <View style={tw`flex flex-col items-start ml-3`}>
+
+                <View>
+                    {profilePicture === '' ? (
+                        <Pressable 
+                            style={tw`bg-white w-28 h-28 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}
+                            onPress={uploadProfilePicture}
+                        >
+                            <Ionicons name='person-outline' 
+                                size={40}
+                                color='#000000'  
+                            />
+
+                        </Pressable>
+                    ) : (
+                        <Pressable onPress={uploadProfilePicture}>
+                            <Image
+                                source={{ uri: profilePicture }}
+                                style={tw`w-28 h-28 rounded-full ml-2`}
+                            />
+                        </Pressable>
+                    )}
+                </View>
+
+                <View>
+                    <Text style={tw`text-xl `}>{username}</Text>
+                </View>
+            </View>
+
+
             <Text style={tw`m-3 font-medium text-base`}>Имейл: {email}</Text>
             <Text style={tw`m-3 font-medium text-base`}>Име: {username}</Text>
 
@@ -69,8 +106,11 @@ const SettingsAccount = ({navigation}: any) => {
 
             <Button title='излез от акаунт' onPress={() => FIREBASE_AUTH.signOut()}/>
 
-            <Button title='смени профилна снимка' onPress={uploadProfilePicture}/>
-        </View>
+            <Button title='променя на потребителско име'/>
+
+           
+
+        </SafeAreaView>
     )
 }
 

@@ -7,8 +7,12 @@ import { useTranslation } from 'react-i18next';
 import { useFocusEffect } from '@react-navigation/native';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import CustomTabBar from '../components/CustomTabBar';
 
-const Settings = ({navigation}: any) => {
+const Settings = ({navigation, route}: any) => {
+
+    const profilePicture = route.params.profilePicture;
 
     // opciq za smenq na ezika koqto zadava neshto v bazata danni i ot tam se izvlicha ezikut za cqlata aplikaciq
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -53,6 +57,7 @@ const Settings = ({navigation}: any) => {
                 const language = await getLanguage();
                 await i18next.changeLanguage(language);
                 setSelectedLanguage(language);
+                
             })();
     
             return () => {
@@ -66,49 +71,59 @@ const Settings = ({navigation}: any) => {
     const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
     return (
-        <View style={tw`mt-10`}>
+        <SafeAreaView style={tw`h-full`}>
 
-            <Button title={t('account')} onPress={() => navigation.navigate('Настройки-Акаунт')}/>
+            <View style={tw`mx-3`}>
 
-            <Button title={t('macronutrients')} onPress={() => navigation.navigate('Настройки-Макронутриенти')}/>
+                <Text style={tw`text-2xl font-medium mt-2`}>Настройки</Text>
 
-            <View style={tw`flex flex-row justify-center`}>
+                <Button title={t('account')} onPress={() => navigation.navigate('Настройки-Акаунт', { profilePicture: profilePicture })}/>
 
-                <TouchableOpacity 
-                    style={selectedLanguage === 'en' ? tw`px-3 py-2 bg-blue-500 w-14` : tw`px-3 py-2 bg-gray-300 w-14`} 
-                    onPress={() => changeLanguage('en')}
-                >
-                    <Text style={tw`text-white text-lg`}>EN</Text>
-                </TouchableOpacity>
+                <Button title={t('macronutrients')} onPress={() => navigation.navigate('Настройки-Макронутриенти')}/>
 
-                <TouchableOpacity 
-                    style={selectedLanguage === 'bg' ? tw`px-3 py-2 bg-blue-500 w-14` : tw`px-3 py-2 bg-gray-300 w-14`} 
-                    onPress={() => changeLanguage('bg')}
-                >
-                    <Text style={tw`text-white text-lg`}>BG</Text>
-                </TouchableOpacity>
+                <View style={tw`flex flex-row justify-center`}>
+
+                    <TouchableOpacity 
+                        style={selectedLanguage === 'en' ? tw`px-3 py-2 bg-blue-500 w-14` : tw`px-3 py-2 bg-gray-300 w-14`} 
+                        onPress={() => changeLanguage('en')}
+                    >
+                        <Text style={tw`text-white text-lg`}>EN</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        style={selectedLanguage === 'bg' ? tw`px-3 py-2 bg-blue-500 w-14` : tw`px-3 py-2 bg-gray-300 w-14`} 
+                        onPress={() => changeLanguage('bg')}
+                    >
+                        <Text style={tw`text-white text-lg`}>BG</Text>
+                    </TouchableOpacity>
+
+                </View>
+
+                <View style={tw`flex flex-row justify-between mx-32 mt-5`}>
+
+                    <Text>FACEID todo!</Text>
+
+                    <Switch
+                        trackColor={{true: '#ffffff'}}
+                        ios_backgroundColor="#3e3e3e"
+                        thumbColor={isEnabled ? '#50C878' : '#FF5733'}
+                        onValueChange={toggleSwitch}
+                        value={isEnabled}
+                    />
+
+                </View>
+
+                <Button title='export saved workouts' />
 
             </View>
 
-            
-            
+            <CustomTabBar 
+                navigation={navigation} 
+                currentPage="Настройки-Страница"
+                profilePicture={profilePicture}
+            />
 
-
-            <View style={tw`flex flex-row justify-between mx-32 mt-5`}>
-
-                <Text>FACEID todo!</Text>
-
-                <Switch
-                    trackColor={{true: '#ffffff'}}
-                    ios_backgroundColor="#3e3e3e"
-                    thumbColor={isEnabled ? '#50C878' : '#FF5733'}
-                    onValueChange={toggleSwitch}
-                    value={isEnabled}
-                />
-
-            </View>
-
-        </View>
+        </SafeAreaView>
     )
 }
 

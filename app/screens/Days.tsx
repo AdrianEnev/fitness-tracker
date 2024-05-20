@@ -1,7 +1,8 @@
 import { View, Text, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { doc, onSnapshot, getDocs, collection, Timestamp, query, orderBy } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB, getCurrentSplit } from '../../firebaseConfig';
+import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { getCurrentSplit } from '../../globals';
 import tw from "twrnc";
 import { ExerciseInterface } from './Exercises';
 import { renderDays } from '../components/renderDays';

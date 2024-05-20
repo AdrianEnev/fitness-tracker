@@ -1,7 +1,8 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { View, Text, Pressable, Alert, FlatList, TouchableWithoutFeedback, Keyboard } from 'react-native';
 import tw from "twrnc";
-import { FIREBASE_AUTH, FIRESTORE_DB, getCurrentDay, getCurrentSplit } from '../../firebaseConfig';
+import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import {getCurrentDay, getCurrentSplit}	from '../../globals';
 import { addDoc, collection, doc, getDocs, serverTimestamp } from 'firebase/firestore';
 import { ExerciseInterface } from './Exercises';
 import ActiveWorkoutExercises from '../components/ActiveWorkoutExercises';

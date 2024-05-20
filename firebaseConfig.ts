@@ -5,11 +5,6 @@ import * as firebaseAuth from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { getStorage } from 'firebase/storage';
 
-import { Split } from './app/screens/Splits';
-import { Day } from './app/screens/Days';
-import { ExerciseInterface } from './app/screens/Exercises';
-import { SavedWorkout } from './app/screens/SavedWorkouts';
-
 const firebaseConfig = {
   apiKey: "AIzaSyCU2y_-Elwo74ZyKy8CjQytK-BedpsX-o0",
   authDomain: "todo-mobile-app-3dcbc.firebaseapp.com",
@@ -31,45 +26,3 @@ const auth = firebaseAuth.initializeAuth(FIREBASE_APP, {
 });
 export const FIREBASE_AUTH = auth;
 export const FIREBASE_STORAGE = getStorage(FIREBASE_APP);
-
-// keep track of IDs
-let currentSplit: Split | null = null;
-
-export const setCurrentSplit = (newSplit: Split) => {
-  currentSplit = newSplit;
-};
-export const getCurrentSplit = () => {
-  return (currentSplit);
-}
-
-//--------------------------------------
-
-let currentDay: Day | null = null;
-
-export const setCurrentDay = (newDay: Day) => {
-  currentDay = newDay;
-};
-export const getCurrentDay = () => {
-  return (currentDay);
-}
-
-//--------------------------------------
-
-let currentExercise: ExerciseInterface | null = null;
-
-export const setCurrentExercise = (newExercise: ExerciseInterface) => {
-  currentExercise = newExercise;
-};
-export const getCurrentExercise = () => {
-  return (currentExercise);
-}
-//--------------------------------------
-
-let currentSavedWorkout: SavedWorkout | null = null;
-
-export const setCurrentSavedWorkout = (newSavedWorkout: SavedWorkout) => {
-  currentSavedWorkout = newSavedWorkout;
-};
-export const getCurrentSavedWorkout = () => {
-  return (currentSavedWorkout);
-}

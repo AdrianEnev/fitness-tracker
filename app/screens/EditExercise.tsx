@@ -1,6 +1,7 @@
 import { View, TextInput, Text, Keyboard, TouchableWithoutFeedback, Button, Pressable, Alert, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
-import { getCurrentDay, getCurrentExercise, getCurrentSplit, FIRESTORE_DB, FIREBASE_AUTH } from '../../firebaseConfig'
+import {FIRESTORE_DB, FIREBASE_AUTH } from '../../firebaseConfig'
+import { getCurrentDay, getCurrentExercise, getCurrentSplit} from '../../globals'
 import tw from "twrnc";
 import { collection, deleteDoc, doc, updateDoc } from 'firebase/firestore';
 import Ionicons from '@expo/vector-icons/Ionicons';

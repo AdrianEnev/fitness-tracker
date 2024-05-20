@@ -1,7 +1,8 @@
 import { View, Text, FlatList, Pressable, Alert, Button, TouchableOpacity, TextInput} from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Timestamp, collection, deleteDoc, doc, getDocs, onSnapshot, query, updateDoc, orderBy } from 'firebase/firestore';
-import { FIRESTORE_DB, FIREBASE_AUTH, setCurrentSplit } from '../../firebaseConfig';
+import { FIRESTORE_DB, FIREBASE_AUTH } from '../../firebaseConfig';
+import { setCurrentSplit } from '../../globals';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import tw from "twrnc";
 import AddSplit from '../components/AddSplit';
@@ -108,7 +109,7 @@ const Splits = ({navigation}: any) => {
       return (
         <View style={tw`mx-3`}>
 
-            <Pressable style={tw`flex flex-row items-center w-full h-24 my-1 rounded-lg bg-white shadow-md`} onPress={pressedWorkout} onLongPress={changeWorkoutName}>
+            <Pressable style={tw`flex flex-row items-center w-full h-24 my-1 rounded-2xl bg-white shadow-md`} onPress={pressedWorkout} onLongPress={changeWorkoutName}>
                 <Text style={tw`flex-1 ml-5 text-base`} numberOfLines={2}>{item.title}</Text>
                 <Ionicons name='trash-bin-outline' size={24} color="red" onPress={deleteItem} style={tw`mr-3`}/>
             </Pressable>

@@ -2,7 +2,8 @@ import { Timestamp, addDoc, collection, doc, serverTimestamp, updateDoc } from '
 import tw from "twrnc";
 import { Alert, Pressable, View } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { FIREBASE_AUTH, FIRESTORE_DB, getCurrentSplit } from '../../firebaseConfig';
+import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { getCurrentSplit } from '../../globals';
 import i18next from 'i18next';
 import { useFocusEffect } from '@react-navigation/native';
 import { useState } from 'react';

@@ -9,13 +9,13 @@ import { useFocusEffect } from '@react-navigation/native';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomNavigationBar from '../components/CustomNavigationBar';
 import RenderGoals from '../components/RenderGoals';
 import getLanguage from '../use/useGetLanguage';
 import getUsername from '../use/useGetUsername';
 import getCurrentDate from '../use/useGetCurrentDate';
 import getProfilePicture from '../use/useGetProfilePicture';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
+import CustomTabBar from '../components/CustomTabBar';
 
 const Main = ({navigation}: any) => {
 
@@ -121,11 +121,11 @@ const Main = ({navigation}: any) => {
                                 <Ionicons name='person-outline' 
                                     size={40}
                                     color='#000000'  
-                                    onPress={() => navigation.navigate("Настройки-Акаунт")}
+                                    onPress={() => navigation.navigate("Настройки-Акаунт", { profilePicture: profilePicture })}
                                 />
                             </View>
                         ) : (
-                            <Pressable onPress={() => navigation.navigate("Настройки-Акаунт")}>
+                            <Pressable onPress={() => navigation.navigate("Настройки-Акаунт", { profilePicture: profilePicture })}>
                                 <Image
                                     source={{ uri: profilePicture }}
                                     style={tw`w-16 h-16 rounded-full ml-2`}
@@ -142,7 +142,7 @@ const Main = ({navigation}: any) => {
                     </View>
 
                     <View>
-                        <TouchableWithoutFeedback onPress={() => navigation.navigate("Настройки-Страница")} 
+                        <TouchableWithoutFeedback onPress={() => navigation.navigate("Настройки-Страница", { profilePicture: profilePicture })} 
                             style={tw`bg-white w-16 h-16 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
                             <Ionicons name='settings-outline' 
                                 size={40}
@@ -166,8 +166,13 @@ const Main = ({navigation}: any) => {
 
             </ScrollView>
 
-            {/* Footer <CustomNavigationBar navigation={navigation}/>*/}
-            
+            {/* Footer */}
+            <CustomTabBar 
+                navigation={navigation} 
+                currentPage="Главна Страница"
+                profilePicture={profilePicture}
+            />
+
         </SafeAreaView>
         
     )

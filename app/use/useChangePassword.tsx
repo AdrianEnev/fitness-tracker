@@ -39,7 +39,7 @@ const changePassword = (email: any, user: any, auth: any) => {
                                         style: 'default',
                                         onPress: (newPassword: string | undefined) => {
                                             
-                                            if (newPassword) {
+                                            if (newPassword && oldPassword != newPassword) {
         
                                                 updatePassword(user, newPassword).then(() => {
                             
@@ -49,6 +49,8 @@ const changePassword = (email: any, user: any, auth: any) => {
                                                     console.log(error);
                                                 });
         
+                                            }else if (oldPassword == newPassword) {
+                                                alert('Новата парола не може да бъде същата като старата!');
                                             }
                                             
         

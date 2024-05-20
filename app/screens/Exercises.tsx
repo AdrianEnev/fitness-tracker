@@ -1,7 +1,8 @@
 import { View, Text, FlatList, Pressable, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { collection, doc, onSnapshot, getDocs, updateDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB, getCurrentDay, getCurrentSplit, setCurrentExercise } from '../../firebaseConfig';
+import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { getCurrentDay, getCurrentSplit, setCurrentExercise } from '../../globals';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import tw from "twrnc";

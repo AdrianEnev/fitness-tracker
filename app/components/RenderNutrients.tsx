@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import tw from "twrnc"
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
-import getCurrentDate from '../use/useGetCurrentDate';
 
 type RenderNutrientsProps = {
     item: any; // replace any with the actual type
