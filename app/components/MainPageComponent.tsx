@@ -1,24 +1,17 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Main from "../screens/Main";
-import { AddExercise } from "./AddExercise";
 import { getCurrentDay, getCurrentExercise } from "../../globals";
-import Days from "../Temporary/Days";
-import Exercises from "../Temporary/Exercises";
-import EditExercise from "../Temporary/EditExercise";
 import ActiveWorkout from "../screens/ActiveWorkout";
 import Food from "../screens/Food";
 import Settings from "../screens/Settings";
 import SettingsMacros from "../screens/SettingsMacros";
 import SettingsAccount from "../screens/SettingsAccount";
-import Splits from "../Temporary/Splits";
 import SavedWorkouts from "../screens/SavedWorkouts";
 import Workouts from "../screens/Workouts";
 import ViewSavedWorkout from "../screens/ViewSavedWorkout";
 import FoodDay from "../screens/FoodDay";
 import AddFoodPage from "../screens/AddFoodPage";
 import AddCustomFoodPage from "../screens/AddCustomFoodPage";
-import AddSplit from "./AddSplit";
-import { AddDay } from "./AddDay";
 import AddWorkoutPage from "../screens/AddWorkoutPage";
 
 const Stack = createNativeStackNavigator();

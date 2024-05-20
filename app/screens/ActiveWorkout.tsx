@@ -4,7 +4,7 @@ import tw from "twrnc";
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import {getCurrentDay, getCurrentSplit}	from '../../globals';
 import { addDoc, collection, doc, getDocs, serverTimestamp } from 'firebase/firestore';
-import { ExerciseInterface } from '../Temporary/Exercises';
+import { Exercise } from '../../interfaces';
 import ActiveWorkoutExercises from '../components/ActiveWorkoutExercises';
 import { endWorkout } from '../use/useEndWorkout';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +33,7 @@ const ActiveWorkout = ({navigation}: any) => {
 
 	const [exerciseNumber, setExerciseNumber] = useState(1);
 
-	const [exercises, setExercises] = useState<ExerciseInterface[]>([]);
+	const [exercises, setExercises] = useState<Exercise[]>([]);
 
 	const [inputValues, setInputValues] = useState<{ [key: string]: { [key: string]: string } }>({});
 
@@ -68,7 +68,7 @@ const ActiveWorkout = ({navigation}: any) => {
 		try {
 				const data = await getDocs(exercisesCollectionRef);
 	
-				const filteredData: ExerciseInterface[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as ExerciseInterface));
+				const filteredData: Exercise[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Exercise));
 				filteredData.sort((a, b) => a.exerciseIndex - b.exerciseIndex);
 	
 				setExercises(filteredData);
@@ -311,7 +311,7 @@ const ActiveWorkout = ({navigation}: any) => {
 								updateNote={updateNote}
 							/>
 						)}
-						keyExtractor={(exercise: ExerciseInterface) => exercise.id}
+						keyExtractor={(exercise: Exercise) => exercise.id}
 						/>
 				</TouchableWithoutFeedback>
 			</View>			
