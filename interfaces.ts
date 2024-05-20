@@ -1,16 +1,14 @@
 import { Timestamp } from "firebase/firestore";
 
 export interface Set {
-    reps: number;
-    weight: number;
+    reps: string;
+    weight: string;
     id: string;
 }
 
 export interface Exercise {
     title: string;
     sets: Set[];
-    reps: number;
-    weight: number;
     description: string;
     exerciseIndex: number;
     id: string;
