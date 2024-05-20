@@ -28,7 +28,7 @@ const CustomTabBar = ({navigation, currentPage, profilePicture}: any) => {
                     </Pressable>
 
                     <Pressable onPress={() => changePage('Тренировки')}>
-                        <Ionicons name='accessibility-outline' size={32} color={currentPage === 'accessibility' ? '#ff6b6b' : '#000'}/>
+                        <Ionicons name='accessibility-outline' size={32} color={currentPage === 'Тренировки' ? '#ff6b6b' : '#000'}/>
                     </Pressable>    
                     
                     

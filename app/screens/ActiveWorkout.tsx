@@ -4,7 +4,7 @@ import tw from "twrnc";
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import {getCurrentDay, getCurrentSplit}	from '../../globals';
 import { addDoc, collection, doc, getDocs, serverTimestamp } from 'firebase/firestore';
-import { ExerciseInterface } from './Exercises';
+import { ExerciseInterface } from '../Temporary/Exercises';
 import ActiveWorkoutExercises from '../components/ActiveWorkoutExercises';
 import { endWorkout } from '../use/useEndWorkout';
 import { useTranslation } from 'react-i18next';

@@ -4,7 +4,7 @@ import { Alert, Pressable } from 'react-native'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { getCurrentDay, getCurrentSplit } from '../../globals';
-import { ExerciseInterface } from '../screens/Exercises';
+import { ExerciseInterface } from '../Temporary/Exercises';
 import { useFocusEffect } from '@react-navigation/native';
 import { useState } from 'react';
 import i18next from 'i18next';

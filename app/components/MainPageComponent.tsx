@@ -2,15 +2,15 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Main from "../screens/Main";
 import { AddExercise } from "./AddExercise";
 import { getCurrentDay, getCurrentExercise } from "../../globals";
-import Days from "../screens/Days";
-import Exercises from "../screens/Exercises";
-import EditExercise from "../screens/EditExercise";
+import Days from "../Temporary/Days";
+import Exercises from "../Temporary/Exercises";
+import EditExercise from "../Temporary/EditExercise";
 import ActiveWorkout from "../screens/ActiveWorkout";
 import Food from "../screens/Food";
 import Settings from "../screens/Settings";
 import SettingsMacros from "../screens/SettingsMacros";
 import SettingsAccount from "../screens/SettingsAccount";
-import Splits from "../screens/Splits";
+import Splits from "../Temporary/Splits";
 import SavedWorkouts from "../screens/SavedWorkouts";
 import Workouts from "../screens/Workouts";
 import ViewSavedWorkout from "../screens/ViewSavedWorkout";
@@ -19,6 +19,7 @@ import AddFoodPage from "../screens/AddFoodPage";
 import AddCustomFoodPage from "../screens/AddCustomFoodPage";
 import AddSplit from "./AddSplit";
 import { AddDay } from "./AddDay";
+import AddWorkoutPage from "../screens/AddWorkoutPage";
 
 const Stack = createNativeStackNavigator();
 
@@ -38,7 +39,6 @@ const MainPageComponent = () => {
             name='Главна Страница'
             component={Main}
             options={() => ({
-              title:'Главна Страница',
               headerShown: false,
               headerTintColor: '#fff',
               headerStyle: {
@@ -52,6 +52,14 @@ const MainPageComponent = () => {
             component={Workouts}
             options={{
               title: "Тренировки",
+              headerShown: false,
+            }}
+          />
+
+          <Stack.Screen
+            name="Тренировка-Добави"
+            component={AddWorkoutPage}
+            options={{
               headerShown: false,
             }}
           />
@@ -72,71 +80,6 @@ const MainPageComponent = () => {
               title: "Запазенa тренировкa",
               headerShown: false,
             }}
-          />
-
-          <Stack.Screen
-            name="Програми"
-            component={Splits}
-            options={{
-              title: "Тренировъчни Програми",
-              headerShown: true,
-              headerTintColor: '#fff',
-              headerStyle: {
-                backgroundColor: '#007AFF',
-              },
-              headerBackTitleVisible: false,
-              headerRight: () => (
-                <AddSplit/>
-            )
-            }}
-          />
-
-          <Stack.Screen
-            name="Упражнения"
-            component={Exercises}
-            options={() => ({
-              title: 'Упражнения',
-              headerShown: true,
-              headerTintColor: '#fff',
-              headerStyle: {
-                backgroundColor: '#007AFF',
-              },
-              headerBackTitleVisible: false,
-              headerRight: () => (
-                  <AddExercise/>
-              )
-            })}
-          />
-
-          <Stack.Screen
-            name="Дни"
-            component={Days}
-            options={() => ({
-              title: 'Дни',
-              headerShown: true,
-              headerTintColor: '#fff',
-              headerStyle: {
-                backgroundColor: '#007AFF',
-              },
-              headerBackTitleVisible: false,
-              headerRight: () => (
-                <AddDay/>
-            )
-            })}
-          />
-
-          <Stack.Screen
-            name='Упражнение'
-            component={EditExercise}
-            options={() => ({
-              title:currentExerciseTitle,
-              headerShown: true,
-              headerTintColor: '#fff',
-              headerStyle: {
-                backgroundColor: '#007AFF',
-              },
-              headerBackTitleVisible: false,
-            })}
           />
 
           <Stack.Screen

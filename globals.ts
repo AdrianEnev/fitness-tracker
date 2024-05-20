@@ -1,6 +1,6 @@
-import { Split } from './app/screens/Splits';
-import { Day } from './app/screens/Days';
-import { ExerciseInterface } from './app/screens/Exercises';
+import { Split } from './app/Temporary/Splits';
+import { Day } from './app/Temporary/Days';
+import { ExerciseInterface } from './app/Temporary/Exercises';
 import { SavedWorkout } from './app/screens/SavedWorkouts';
 
 let currentSplit: Split | null = null;

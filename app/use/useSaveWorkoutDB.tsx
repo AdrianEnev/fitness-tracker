@@ -1,6 +1,6 @@
 import { addDoc, collection, doc, getDocs, serverTimestamp, updateDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
-import { ExerciseInterface } from "../screens/Exercises";
+import { ExerciseInterface } from "../Temporary/Exercises";
 import { useEffect, useState } from "react";
 
 export const saveWorkoutToDB = async (

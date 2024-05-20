@@ -4,7 +4,7 @@ import { deleteDoc, doc, getDocs, updateDoc, collection } from 'firebase/firesto
 import { getCurrentDay, setCurrentDay } from '../../globals';
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { ExerciseInterface } from '../screens/Exercises';
+import { ExerciseInterface } from '../Temporary/Exercises';
 
 interface RenderDaysProps {
   item: any;
