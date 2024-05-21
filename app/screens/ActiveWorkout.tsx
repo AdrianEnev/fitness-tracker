@@ -1,324 +1,109 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { View, Text, Pressable, Alert, FlatList, TouchableWithoutFeedback, Keyboard } from 'react-native';
-import tw from "twrnc";
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
-import {getCurrentDay, getCurrentSplit}	from '../../globals';
-import { addDoc, collection, doc, getDocs, serverTimestamp } from 'firebase/firestore';
-import { Exercise } from '../../interfaces';
-import ActiveWorkoutExercises from '../components/ActiveWorkoutExercises';
-import { endWorkout } from '../use/useEndWorkout';
-import { useTranslation } from 'react-i18next';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { View, Text, SafeAreaView, TextInput, TouchableWithoutFeedback, Pressable, TouchableOpacity, ScrollView, Keyboard } from 'react-native'
+import { Ionicons } from '@expo/vector-icons';
+import React, { useEffect, useState } from 'react'
+import tw from 'twrnc'
 
-const ActiveWorkout = ({navigation}: any) => {
+const ActiveWorkout = ({route}: any) => {
 
-	const currentSplit = getCurrentSplit();
-	const currentDay = getCurrentDay();
+    const { exercises } = route.params;
 
-	const {t} = useTranslation();
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-	// vzima razmerite na iphone notcha i go razdelq na 4 che razmera da pasva na tailwind versiqta za razmeri
-	const insets = useSafeAreaInsets();
-	const notchSizeTailwind = Math.round(insets.top / 4);
+    return (
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <SafeAreaView style={tw`w-full h-full`}>
 
-	const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-	const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+                <View style={tw`flex flex-col gap-y-1 mb-15`}>
+                    {exercises.map((exercise: any, index: any) => {
+                        if (exercise.exerciseIndex === currentIndex + 1) {
+                            return (
+                                <View key={exercise.id} style={tw`w-full`}>
 
-	const userCollectionRef = collection(userDocRef, 'user_splits');
+                                    <View style={tw`flex flex-row justify-between mb-6 mx-3`}>
+                                        <Text style={tw`text-2xl font-medium text-center`} numberOfLines={1}>{exercise.title}</Text>
+                                        
+                                               
+                                        <View style={tw`flex flex-col h-full gap-y-2`}>
+                                            <TouchableOpacity style={tw`w-12 h-12 bg-green-500 rounded-full flex justify-center items-center`}>
+                                               <Ionicons name='save' size={24} color='#fff'/>
+                                            </TouchableOpacity>
+                                        </View>
+                                        
+                                    </View>
+                                   
+                                    <ScrollView style={tw`mb-10`}>
+                                        {exercise.sets.map((set: any, setIndex: any) => (
+                                            <View key={set.id} style={tw`ml-3`}>
+                                                <View style={tw`flex flex-row gap-x-2`}>
+                                                    <View style={tw`w-10 h-10 bg-white rounded-xl flex items-center justify-center`}>
+                                                        <Text style={tw`text-base ml-5 absolute font-medium`}>{setIndex + 1}</Text>
+                                                    </View>
 
-	const splitDocRef = doc(userCollectionRef, currentSplit?.id);
-	const daysCollectionRef = collection(splitDocRef, 'days');
-	const exerciseDocRef = doc(daysCollectionRef, currentDay?.id);
-	const exercisesCollectionRef = collection(exerciseDocRef, 'exercises');
+                                                    <View style={tw`flex flex-row gap-x-2 mb-3`}>
+                                                        <TextInput
+                                                            style={tw`bg-white rounded-2xl p-2 w-32 h-10`}
+                                                            keyboardType='number-pad'
+                                                            maxLength={4}
+                                                            placeholder='Повторения'
+                                                            value={set.reps.toString()}
+                                                           
+                                                        />
 
-	const [exerciseNumber, setExerciseNumber] = useState(1);
-
-	const [exercises, setExercises] = useState<Exercise[]>([]);
-
-	const [inputValues, setInputValues] = useState<{ [key: string]: { [key: string]: string } }>({});
-
-	const [notes, setNotes] = useState<{index: number, note: string}[]>([]);
-
-	let updateNote = (index: number, newNote: string) => {
-		setNotes(prevNotes => {
-			let newNotes = [...prevNotes];
-			let noteObject = newNotes.find(note => note.index === index);
-	
-			if (noteObject) {
-				noteObject.note = newNote;
-			} else {
-				newNotes.push({index: index, note: newNote});
-			}
-	
-			return newNotes;
-		});
-	};
-
-	const updateInputValue = (exerciseId: string, key: string, value: string) => {
-		setInputValues((prevValues) => ({
-			...prevValues,
-			[exerciseId]: {
-				...prevValues[exerciseId],
-				[key]: value,
-			},
-		}));
-	};
-
-	const getExercises = async () => {
-		try {
-				const data = await getDocs(exercisesCollectionRef);
-	
-				const filteredData: Exercise[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Exercise));
-				filteredData.sort((a, b) => a.exerciseIndex - b.exerciseIndex);
-	
-				setExercises(filteredData);
-				
-		} catch (err) {
-				console.error(err);
-		}
-	}
-	useEffect(() => {
-		getExercises();
-	}, []);
-
-	const [time, setTime] = useState(0);
-	const intervalRef = useRef<NodeJS.Timeout | null>(null);
-	const startTimeRef = useRef<number>(0);
-
-	const startTimer = () => {
-		startTimeRef.current = Date.now() - time * 1000;
-		intervalRef.current = setInterval(() => {
-			setTime(Math.floor((Date.now() - startTimeRef.current) / 1000));
-		}, 1000);
-	};
-
-	const formatTime = (seconds: number): string => {
-		const minutes = Math.floor(seconds / 60);
-		const remainingSeconds = seconds % 60;
-		const timeString = `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-		return timeString;
-	};
-
-	const stopTimer = () => {
-		if (intervalRef.current !== null) {
-			clearInterval(intervalRef.current);
-		}
-	};
-
-	useEffect(() => {
-		startTimer();
-
-		return () => {
-			stopTimer();
-		};
-	}, []);
-
-	// vzima stoinosttite za opredeleno oprajnenie a getExercisesInfo izpolzva getRowValuesForExercise da vzeme dannite za absolutno vsichko
-	// narochno sum go razdelil na 2 funkcii da se chete po lesno
-	const getRowValuesForExercise = (
-		inputValues: { [key: string]: string },
-		exerciseId: string,
-		exerciseTitle: string,
-		exerciseIndex: number
-	): { [rowNumber: number]: { [key: string]: string | number; exerciseTitle: string; exerciseIndex: number } } => {
-		const rowValues: { [rowNumber: number]: { [key: string]: string | number; exerciseTitle: string; exerciseIndex: number } } = Object.keys(inputValues)
-			.filter((key) => key.startsWith(`${exerciseId}-`)) // Filter by exerciseId
-			.reduce<{ [rowNumber: number]: { [key: string]: string | number; exerciseTitle: string; exerciseIndex: number } }>((acc, key) => {
-				const [, rowNumberStr, inputType] = key.split('-');
-				const rowNumber = parseInt(rowNumberStr, 10);
-	
-				if (!acc[rowNumber]) {
-					acc[rowNumber] = { exerciseTitle, exerciseIndex };
-				}
-	
-				acc[rowNumber][inputType] = inputValues[key];
-				return acc;
-			}, {});
-	
-		return rowValues;
-	};
-	
-	const getExercisesInfo = () => {
-		if (exercises.length > 0) {
-			const exerciseInfoArrays: any[] = [];
-	
-			exercises.forEach((exercise, index) => {
-				const exerciseId = exercise.id;
-	
-				if (inputValues[exerciseId]) {
-					const rowValues = getRowValuesForExercise(inputValues[exerciseId], exerciseId, exercise.title, index + 1);
-					exerciseInfoArrays.push(rowValues);
-				} else {
-					//console.log(`No input values available for exercise ${index + 1}`);
-				}
-			});
-	
-			return exerciseInfoArrays;
-		} else {
-			return [];
-		}
-	};
-
-	const nextExercise = () => {
-		setExerciseNumber((prevIndex) => Math.min(exercises.length, prevIndex + 1));
-	};
-	
-	const previousExercise = () => {
-		setExerciseNumber((prevIndex) => Math.max(0, prevIndex - 1));
-	};
-
-	const handleSkipExercise = () => {
-		// Get the ID of the current exercise
-		const currentExerciseId = exercises[exerciseNumber - 1]?.id;
-
-		if (currentExerciseId) {
-
-			if (exercises.length === 1) {
-				// ends the workout without saving anything to the database if the last exercise is skipped
-				const exercisesInfoArrays = getExercisesInfo();
-				endWorkout(navigation, stopTimer, exercisesInfoArrays, false, currentDay, time, t, notes);
-				return;
-			}
-
-			// Create a new array without the current exercise
-			const updatedExercises = exercises.filter((exercise) => exercise.id !== currentExerciseId);
-
-			// Update the exercises state
-			setExercises(updatedExercises);
-
-			// move to the next exercise
-			setExerciseNumber((prevIndex) => Math.min(exercises.length, prevIndex));
-
-			// If the current exercise number is greater than the length of the updated exercises array
-			if (exerciseNumber > updatedExercises.length) {
-				// Set the exercise number to the last exercise in the updated list
-				setExerciseNumber(updatedExercises.length);
-			} else {
-				// move to the next exercise
-				setExerciseNumber((prevIndex) => Math.min(updatedExercises.length, prevIndex));
-			}
-		 
-		}
-	};
-
-	const skipExercise = () => {
-
-		// add an alert with an ok and cancel button
-		Alert.alert(t('skip-exercise-alert'), '', [
-			{
-				text: t('cancel'),		
-				style: 'cancel',
-			},
-			{ text: t('yes'), onPress: () => handleSkipExercise() },
-		]);
-		
-	};
-
-	const addSet = (exerciseId: string) => {
-		// Find the exercise in the exercises array
-		const exerciseIndex = exercises.findIndex(exercise => exercise.id === exerciseId);
-	
-		// If the exercise was found
-		if (exerciseIndex !== -1) {
-			// Create a copy of the exercises array
-			const newExercises = [...exercises];
-
-			const currentSets = Number(newExercises[exerciseIndex].sets);
-
-			// If the current number of sets is less than 9
-			if (currentSets < 15) {
-				// Convert the sets property to a number, increment it, and then convert it back to a string
-				newExercises[exerciseIndex].sets = (currentSets + 1).toString();
-
-				// Update the exercises state
-				setExercises(newExercises);
-			}
-		}
-	};
-	const deleteSet = (exerciseId: string) => {
-		// Find the exercise in the exercises array
-		const exerciseIndex = exercises.findIndex((exercise) => exercise.id === exerciseId);
-
-		// If the exercise was found
-		if (exerciseIndex !== -1) {
-			// Create a copy of the exercises array
-			const newExercises = [...exercises];
-
-			// Convert the sets property to a number
-			let currentSets = Number(newExercises[exerciseIndex].sets);
-
-			// Check if there is more than 1 set
-			if (currentSets > 1) {
-				// Decrement the sets property and convert it back to a string
-				newExercises[exerciseIndex].sets = (currentSets - 1).toString();
-			}
-
-			// Update the exercises state
-			setExercises(newExercises);
-		}
-	};
-	
-	return (
-		<View style={tw.style(`w-full h-full bg-white pt-${notchSizeTailwind}`)}>
-
-			<View style={tw`flex flex-row justify-between mx-4 mb-3`}>
-
-				<View style={tw`w-20 h-10 bg-white shadow-lg rounded-lg flex justify-center items-center`}>
-					<Text style={tw`font-medium text-black text-xl`}>
-						{
-							formatTime(time)
-						}
-					</Text>
-				</View>
-				
-
-				<Pressable 
-					style={tw`w-20 h-10 bg-white rounded-lg shadow-lg items-center justify-center`}
-					onPress={() => 
-						{
-							const exercisesInfoArrays = getExercisesInfo();
-					
-							endWorkout(navigation, stopTimer, exercisesInfoArrays, true, currentDay, time, t, notes)
-
-						}
-					}
-				>
-					<Text style={tw`text-black text-lg font-medium`}>{t('end-workout')}</Text>
-				</Pressable>
-
-			</View>
+                                                        <TextInput
+                                                            style={tw`bg-white rounded-2xl p-2 w-32 h-10`}
+                                                            keyboardType='number-pad'
+                                                            maxLength={4}
+                                                            placeholder='KG'
+                                                            value={set.weight.toString()}
+                                                            
+                                                        />
 
 
-			<View>
-				<TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-						<FlatList
-						bounces={true}
-						data={exerciseNumber <= exercises.length ? [exercises[exerciseNumber - 1]] : []}
-						renderItem={({ item }: any) => (
-							<ActiveWorkoutExercises
-								item={item}
-								updateInputValue={(key: string, value: string) => updateInputValue(item.id, key, value)}
-								inputValue={inputValues[item.id] || {}}
-								currentDay={currentDay}
-								skipExercise={skipExercise}
-								addSet={() => addSet(item.id)}
-								deleteSet={() => deleteSet(item.id)}
-								previousExercise={previousExercise}
-								exerciseNumber={exerciseNumber}
-								nextExercise={nextExercise}
-								exercises={exercises}
-								notes={notes}
-								updateNote={updateNote}
-							/>
-						)}
-						keyExtractor={(exercise: Exercise) => exercise.id}
-						/>
-				</TouchableWithoutFeedback>
-			</View>			
-			
+                                                        <TouchableOpacity style={tw`bg-red-500 rounded-2xl w-20 h-10 flex items-center justify-center`}>
+                                                            <Text style={tw`text-white`}>Изтрий</Text>
+                                                        </TouchableOpacity>
 
-		</View>
-	);
-};
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        ))}
+
+                                        <View style={tw`mx-3`}>
+                                            <TouchableOpacity style={tw`w-full h-12 bg-green-500 rounded-xl flex justify-center items-center`}>
+                                                <Text style={tw`text-lg text-white`}>+ Добави Серия</Text>
+                                            </TouchableOpacity>
+                                        </View>
+
+                                    </ScrollView>
+
+                                    
+
+                                </View>
+                            );
+                        }
+                    })}
+                </View>
+
+                <View style={tw`flex flex-row justify-between p-4`}>
+                    <TouchableOpacity 
+                        style={tw`w-24 h-12 bg-green-500 rounded-full flex justify-center items-center`}
+                        onPress={() => setCurrentIndex((currentIndex - 1 + exercises.length) % exercises.length)} // Switch to previous exercise
+                    >
+                        <Text style={tw`text-lg text-white`}>Previous</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        style={tw`w-24 h-12 bg-green-500 rounded-full flex justify-center items-center`}
+                        onPress={() => setCurrentIndex((currentIndex + 1) % exercises.length)} // Switch to next exercise
+                    >
+                        <Text style={tw`text-lg text-white`}>Next</Text>
+                    </TouchableOpacity>
+                </View>
+
+                
+            </SafeAreaView>
+        </TouchableWithoutFeedback>
+    );
+}
 
 export default ActiveWorkout

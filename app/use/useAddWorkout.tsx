@@ -1,5 +1,5 @@
 
-import { addDoc, collection, doc, serverTimestamp } from 'firebase/firestore';
+import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { Exercise } from '../../interfaces';
 import { useState } from 'react';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
@@ -11,23 +11,36 @@ const addWorkout = async (exercises: any) => {
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
     const workoutDocRef = await addDoc(userWorkoutsCollectionRef, {
         title: "Workout",
-        createdAt: serverTimestamp()
+        created: serverTimestamp()
     });
     const workoutInfoCollectionRef = collection(workoutDocRef, "info");
 
-    try{
-        exercises.forEach(async (exercise: Exercise) => {
-            await addDoc(workoutInfoCollectionRef, {
-                title: exercise.title,
-                sets: exercise.sets,
-                reps: exercise.reps,
-                weight: exercise.weight,
-                description: exercise.description,
-                exerciseIndex: 0,
-            });
+    try {
+        exercises.forEach((exercise: any) => {
+            exercise.sets.forEach(async (set: any, index: any) => {
 
+                // set a document with the name equal to the index of the exercise
+                // inside that create a collection called "sets" and documents, each with a name equal to the set index
+
+                const exerciseDocRef = doc(workoutInfoCollectionRef, (exercise.exerciseIndex + 1).toString());
+                setDoc(exerciseDocRef, {
+                    title: exercise.title,
+                    description: exercise.description,
+                    exerciseIndex: exercise.exerciseIndex + 1,
+                })
+
+                const exerciseSets = collection(exerciseDocRef, "sets");
+                const setDocRef = await addDoc(exerciseSets, {
+                    reps: set.reps,
+                    weight: set.weight,
+                });
+                
+            });
+            
         });
 
+
+        
     }catch (err) {
         console.error(err);
     }

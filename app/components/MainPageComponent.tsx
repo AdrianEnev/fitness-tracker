@@ -1,7 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Main from "../screens/Main";
 import { getCurrentDay, getCurrentExercise } from "../../globals";
-import ActiveWorkout from "../screens/ActiveWorkout";
 import Food from "../screens/Food";
 import Settings from "../screens/Settings";
 import SettingsMacros from "../screens/SettingsMacros";
@@ -13,6 +12,7 @@ import FoodDay from "../screens/FoodDay";
 import AddFoodPage from "../screens/AddFoodPage";
 import AddCustomFoodPage from "../screens/AddCustomFoodPage";
 import AddWorkoutPage from "../screens/AddWorkoutPage";
+import ActiveWorkout from "../screens/ActiveWorkout";
 
 const Stack = createNativeStackNavigator();
 
@@ -41,12 +41,21 @@ const MainPageComponent = () => {
           />
 
           <Stack.Screen
-            name="Тренировки"
-            component={Workouts}
-            options={{
-              title: "Тренировки",
-              headerShown: false,
-            }}
+              name="Тренировки"
+              component={Workouts}
+              options={{
+                  title: "Тренировки",
+                  headerShown: false,
+              }}
+          />
+
+          <Stack.Screen
+              name="Активна-Тренировка"
+              component={ActiveWorkout}
+              options={{
+                  headerShown: false,
+                  gestureEnabled: false,
+              }}
           />
 
           <Stack.Screen
@@ -75,7 +84,7 @@ const MainPageComponent = () => {
             }}
           />
 
-          <Stack.Screen
+          {/* <Stack.Screen
             name='АктивнаТренировка'
             component={ActiveWorkout}
             options={() => ({
@@ -83,7 +92,7 @@ const MainPageComponent = () => {
               headerShown: false,
               gestureEnabled: false,
             })}
-          />
+          />*/}
 
           <Stack.Screen
             name="Хранене"

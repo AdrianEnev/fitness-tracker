@@ -109,3 +109,5 @@ if (docSnap.exists()) {
 - custom trenirovki s izkustven intelekt 
 
 - animaciq za makronutrientite
+
+- pri suzdavane na trenirovka -> ako chovek otide napred i se suzdade novo uprajnenie i posle se vurne nazad bez da e dokosval novoto uprajnenie, novoto uprajnenie da se iztrie
