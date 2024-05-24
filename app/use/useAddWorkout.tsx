@@ -19,9 +19,6 @@ const addWorkout = async (exercises: any) => {
         exercises.forEach((exercise: any) => {
             exercise.sets.forEach(async (set: any, index: any) => {
 
-                // set a document with the name equal to the index of the exercise
-                // inside that create a collection called "sets" and documents, each with a name equal to the set index
-
                 const exerciseDocRef = doc(workoutInfoCollectionRef, (exercise.exerciseIndex + 1).toString());
                 setDoc(exerciseDocRef, {
                     title: exercise.title,
@@ -33,6 +30,7 @@ const addWorkout = async (exercises: any) => {
                 const setDocRef = await addDoc(exerciseSets, {
                     reps: set.reps,
                     weight: set.weight,
+                    setIndex: index + 1
                 });
                 
             });

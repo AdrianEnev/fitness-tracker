@@ -2,14 +2,14 @@ import { View, Text, SafeAreaView, TextInput, TouchableWithoutFeedback, Pressabl
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
+import endWorkout from '../use/useEndWorkout';
 
-const ActiveWorkout = ({route}: any) => {
+const ActiveWorkout = ({route, navigation}: any) => {
 
     const { exercises } = route.params;
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [newExercises, setNewExercises] = useState<any>([...exercises]); // newExercises = copy of exercises
-
 
     const addSet = () => {
         const updatedExercises = [...exercises];
@@ -17,8 +17,8 @@ const ActiveWorkout = ({route}: any) => {
         if (currentExercise) {
             const newSet = {
                 id: Math.random().toString(),
-                reps: 0,
-                weight: 0
+                reps: "",
+                weight: ""
             };
             currentExercise.sets.push(newSet);
         }
@@ -34,9 +34,43 @@ const ActiveWorkout = ({route}: any) => {
         setNewExercises(updatedExercises);
     }
 
+    const [time, setTime] = useState(5000);
+
+    const formatTime = (seconds: number) => {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = seconds % 60;
+        const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        return timeString;
+    }
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setTime((prevTime) => prevTime + 1);
+            
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+    // <Ionicons name='save' size={24} color='#fff'/>
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={tw`w-full h-full`}>
+
+                <View style={tw`flex flex-row justify-between mt-2 mb-2 mx-3`}>
+                    <TouchableOpacity style={tw`w-18 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`}>
+                        <Text>{formatTime(time)}</Text>
+                    </TouchableOpacity>
+
+                    <View style={tw`flex flex-col h-full gap-y-2`}>
+                        <TouchableOpacity style={tw`w-18 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`} onPress={() => endWorkout(navigation)}>
+                            <Text style={tw`text-black`}>Край</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+                 
 
                 <View style={tw`flex flex-col gap-y-1`}>
                     {newExercises.map((exercise: any, index: any) => {
@@ -44,24 +78,14 @@ const ActiveWorkout = ({route}: any) => {
                             return (
                                 <View key={exercise.id} style={tw`w-full`}>
 
-                                    <View style={tw`flex flex-row justify-between mb-6 mx-3`}>
-                                        <Text style={tw`text-2xl font-medium text-center`} numberOfLines={1}>{exercise.title}</Text>
-                                        
-                                               
-                                        <View style={tw`flex flex-col h-full gap-y-2`}>
-                                            <TouchableOpacity style={tw`w-12 h-12 bg-green-500 rounded-full flex justify-center items-center`}>
-                                               <Ionicons name='save' size={24} color='#fff'/>
-                                            </TouchableOpacity>
-                                        </View>
-                                        
-                                    </View>
-                                   
+                                    <Text style={tw`text-2xl font-medium text-center mb-4`} numberOfLines={1}>{exercise.title}</Text>
+                                    
                                     <ScrollView style={tw``}>
-                                        {exercise.sets.map((set: any, setIndex: any) => (
+                                        {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
                                             <View key={set.id} style={tw`ml-3`}>
                                                 <View style={tw`flex flex-row gap-x-2`}>
                                                     <View style={tw`w-10 h-10 bg-white rounded-xl flex items-center justify-center`}>
-                                                        <Text style={tw`text-base ml-5 absolute font-medium`}>{setIndex + 1}</Text>
+                                                        <Text style={tw`text-base ml-5 absolute font-medium`}>{mapIndex + 1}</Text>
                                                     </View>
 
                                                     <View style={tw`flex flex-row gap-x-2 mb-3`}>
@@ -83,8 +107,7 @@ const ActiveWorkout = ({route}: any) => {
                                                             
                                                         />
 
-
-                                                        <TouchableOpacity style={tw`bg-red-500 rounded-2xl w-20 h-10 flex items-center justify-center`} onPress={() => removeSet(exercise.exerciseIndex, set.id)}>
+                                                        <TouchableOpacity style={tw`bg-red-500 rounded-2xl w-21 h-10 flex items-center justify-center`} onPress={() => removeSet(exercise.exerciseIndex, set.id)}>
                                                             <Text style={tw`text-white`}>Изтрий</Text>
                                                         </TouchableOpacity>
 

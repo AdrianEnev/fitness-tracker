@@ -66,7 +66,7 @@ const Workouts = ({navigation}: any) => {
                 </View>
             </View>
             
-            <View style={tw`w-full h-full mt-2 mx-2`}>
+            <View style={tw`w-full h-full mt-4 mx-2`}>
                 <FlatList
                     data={workouts}
                     renderItem={({item}: any) => renderWorkout(item)}
