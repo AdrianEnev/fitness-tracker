@@ -6,13 +6,12 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import RenderGoalNutrients from './RenderGoalNutrients';
 import RenderNutrients from './RenderNutrients';
 //import { MaterialCommunityIcons } from '@expo/vector-icons';
-import boxElement from './GoalsBoxElement';
+import singleBoxElement from './SingleBoxElement';
 import getCurrentDate from '../use/useGetCurrentDate';
 
 const RenderGoals = (
     {goalNutrients, currentNutrients, navigation}: any
 ) => {
-
 
     const {t} = useTranslation();
 
@@ -25,19 +24,19 @@ const RenderGoals = (
 
             <View style={tw`flex flex-row mx-1 gap-x-2 mt-7`}>
 
-                {boxElement('accessibility-outline', 'Тренировки', '', '', "[#ff6b6b]", () => navigation.navigate('Тренировки'))} 
+                {singleBoxElement('accessibility-outline', 'Тренировки', '', '', "[#ff6b6b]", () => navigation.navigate('Тренировки'))} 
 
-                {boxElement('egg-outline', 'Хранене', '', '', "[#ffffff]", () => navigation.navigate('Хранене'))} 
+                {singleBoxElement('egg-outline', 'Хранене', '', '', "[#ffffff]", () => navigation.navigate('Хранене'))} 
 
             </View>
                 
             <View style={tw`flex flex-row mx-1 gap-x-2 mt-3`}>
 
                 {/* Kalorii */}
-                {boxElement('flame-outline', t('calories'), currentCalories, "/" + caloriesGoal.toString() + " kcal", '[#4ecdc4]', () => {})} 
+                {singleBoxElement('flame-outline', t('calories'), currentCalories, "/" + caloriesGoal.toString() + " kcal", '[#4ecdc4]', () => {})} 
 
                  {/* Krachki */}
-                {boxElement('footsteps-outline', t('steps'), '5,000', '/10,000', "[#ffd166]", () => {})}
+                {singleBoxElement('footsteps-outline', t('steps'), '5,000', '/10,000', "[#ffd166]", () => {})}
 
                 
             </View>

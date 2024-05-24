@@ -6,15 +6,21 @@ const endWorkout = async (navigation: any, exercises: any) => {
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userSavedWorkoutsCollectionRef = collection(userDocRef, "saved_workouts");
-    const savedWorkoutDocRef = await addDoc(userSavedWorkoutsCollectionRef, {
-        title: "Saved Workout",
-        created: serverTimestamp()
-    });
-    const savedWorkoutInfoCollectionRef = collection(savedWorkoutDocRef, "info");
 
     try {
         exercises.forEach((exercise: any) => {
             exercise.sets.forEach(async (set: any, index: any) => {
+
+                if (!set.reps && !set.weight) {
+                    console.log('empty')
+                    return;
+                }
+
+                const savedWorkoutDocRef = await addDoc(userSavedWorkoutsCollectionRef, {
+                    title: "Saved Workout",
+                    created: serverTimestamp()
+                });
+                const savedWorkoutInfoCollectionRef = collection(savedWorkoutDocRef, "info");
 
                 const exerciseDocRef = doc(savedWorkoutInfoCollectionRef, (exercise.exerciseIndex).toString());
                 setDoc(exerciseDocRef, {

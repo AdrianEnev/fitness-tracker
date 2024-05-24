@@ -84,9 +84,7 @@ const Main = ({navigation}: any) => {
             
             const matchingDoc = data.docs.find((doc) => doc.id === getCurrentDate(false));
             if (matchingDoc) {
-                
                 setCurrentNutrients(matchingDoc.data() as GoalNutrients[]);
-
             }
 
         } catch (err) {

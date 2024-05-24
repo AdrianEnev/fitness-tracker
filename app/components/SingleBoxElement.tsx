@@ -3,7 +3,7 @@ import React from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
 
-const boxElement = (icon: any, title: string, currentValue: string, goalValue: string, background: string, onPress: () => void) => {
+const singleBoxElement = (icon: any, title: string, currentValue: string, goalValue: string, background: string, onPress: () => void) => {
 
     //'flame-outline', t('calories'), currentCalories, caloriesGoal.toString() + " kcal", '[#cce5e2]'
     
@@ -25,9 +25,10 @@ const boxElement = (icon: any, title: string, currentValue: string, goalValue: s
                 <Text style={tw`text-sm`}>{goalValue}</Text>
             </View>
 
+
+
         </Pressable>
     );
-    
 }
 
-export default boxElement;
+export default singleBoxElement;

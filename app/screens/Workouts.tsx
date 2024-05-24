@@ -1,10 +1,10 @@
-import { View, Text, Button, SafeAreaView, TouchableOpacity, FlatList, Pressable } from 'react-native'
+import { View, Text, Button, SafeAreaView, TouchableOpacity, FlatList, Pressable, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import CustomTabBar from '../components/CustomTabBar';
-import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
 import startWorkout from '../use/useStartWorkout';
@@ -47,9 +47,35 @@ const Workouts = ({navigation}: any) => {
         }
     }
 
+    const changeWorkoutName = async (workoutID: string) => {
+
+        Alert.prompt(
+            t('new-name-alert'),
+            '',
+            (newName) => {
+                if (newName && newName.length <= 50) {
+                updateDoc(doc(userWorkoutsCollectionRef, workoutID), {
+                    title: newName,
+                });
+                
+                } else {
+                Alert.alert(t('workout-characters-alert'), '', [
+                    {
+                    text: 'OK',
+                    style: 'cancel',
+                    },
+                ]);
+                }
+            },
+            'plain-text',
+            ""
+        );
+
+    }
+
     const renderWorkout = (workout: Workout) => {
         return (
-            <Pressable style={tw`w-[47%] h-36 bg-white shadow-md rounded-2xl mr-2 mb-2 pt-2 pl-3`}>
+            <Pressable style={tw`w-[47%] h-36 bg-white shadow-md rounded-2xl mr-2 mb-2 pt-2 pl-3`} onLongPress={() => changeWorkoutName(workout.id)}>
                 <Text style={tw`text-lg`}>{workout.title}</Text>
                 <Button title='start' onPress={() => startWorkout(workout.id, navigation)}/>
                 <Button title='delete' onPress={() => deleteWorkout(workout.id)}/>
