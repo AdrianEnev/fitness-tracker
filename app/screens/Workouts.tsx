@@ -7,7 +7,7 @@ import CustomTabBar from '../components/CustomTabBar';
 import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
-import startWorkout from '../use/useStartWorkout';
+import getWorkoutInfo from '../use/useGetWorkoutInfo';
 import { useFocusEffect } from '@react-navigation/native';
 
 const Workouts = ({navigation}: any) => {
@@ -18,6 +18,7 @@ const Workouts = ({navigation}: any) => {
 
     const [workouts, setWorkouts] = useState<Workout[]>([]);
     const [startButtonDisabled, setStartButtonDisabled] = useState(false);
+    const [viewWorkoutButtonDisabled, setViewWorkoutButtonDisabled] = useState(false);
 
     const getWorkouts = async () => {
         try {
@@ -75,14 +76,28 @@ const Workouts = ({navigation}: any) => {
 
     }
 
+    const viewWorkout = async (workout: Workout) => {
+
+        setViewWorkoutButtonDisabled(true);
+
+        const exercisesData = await getWorkoutInfo(workout.id);
+        navigation.navigate('Тренировка-Детайли', {exercises: exercisesData, workout: workout});
+
+    }
+
+    const startWorkout = async (workout: Workout) => {
+
+        setStartButtonDisabled(true);
+
+        const exercisesData = await getWorkoutInfo(workout.id);
+        navigation.navigate("Активна-Тренировка", {exercises: exercisesData});
+    }
+
     const renderWorkout = (workout: Workout) => {
         return (
-            <Pressable style={tw`w-[47%] h-38 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
+            <Pressable style={tw`w-[47%] h-38 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`} disabled={viewWorkoutButtonDisabled} onPress={() => viewWorkout(workout)} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
                 <Text style={tw`text-base`} numberOfLines={2}>{workout.title}</Text>
-                <Button title='start' disabled={startButtonDisabled} onPress={() => {
-                    setStartButtonDisabled(true);
-                    startWorkout(workout.id, navigation);
-                }}/>
+                <Button title='start' disabled={startButtonDisabled} onPress={() => startWorkout(workout)}/>
                 <Button title='delete' onPress={() => deleteWorkout(workout.id)}/>
             </Pressable>
         )

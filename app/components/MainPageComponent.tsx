@@ -12,6 +12,7 @@ import AddFoodPage from "../screens/AddFoodPage";
 import AddCustomFoodPage from "../screens/AddCustomFoodPage";
 import AddWorkoutPage from "../screens/AddWorkoutPage";
 import ActiveWorkout from "../screens/ActiveWorkout";
+import ViewWorkout from "../screens/ViewWorkout";
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +52,14 @@ const MainPageComponent = () => {
               options={{
                   headerShown: false,
                   gestureEnabled: false,
+              }}
+          />
+
+          <Stack.Screen
+              name="Тренировка-Детайли"
+              component={ViewWorkout}
+              options={{
+                  headerShown: false,
               }}
           />
 

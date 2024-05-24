@@ -3,7 +3,7 @@ import { Exercise, Workout } from "../../interfaces";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import { useState } from "react";
 
-const startWorkout = async (workoutID: string, navigation: any) => {
+const getWorkoutInfo = async (workoutID: string) => {
 
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -25,7 +25,7 @@ const startWorkout = async (workoutID: string, navigation: any) => {
             exercise.sets = sets;
         }
 
-        navigation.navigate("Активна-Тренировка", {exercises: exercisesData});
+        return exercisesData;
 
     }catch (err) {
         console.error('WorkoutID not found in database: ' + err);
@@ -33,4 +33,4 @@ const startWorkout = async (workoutID: string, navigation: any) => {
     
 }
 
-export default startWorkout;
+export default getWorkoutInfo;
