@@ -4,13 +4,13 @@ import { Exercise } from '../../interfaces';
 import { useState } from 'react';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 
-const addWorkout = async (exercises: any) => {
+const addWorkout = async (exercises: any, navigation: any) => {
 
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
     const workoutDocRef = await addDoc(userWorkoutsCollectionRef, {
-        title: Math.random().toString(36).substring(7),
+        title: "Title",
         created: serverTimestamp()
     });
     const workoutInfoCollectionRef = collection(workoutDocRef, "info");
@@ -27,7 +27,7 @@ const addWorkout = async (exercises: any) => {
                 })
 
                 const exerciseSets = collection(exerciseDocRef, "sets");
-                const setDocRef = await addDoc(exerciseSets, {
+                await addDoc(exerciseSets, {
                     reps: set.reps,
                     weight: set.weight,
                     setIndex: index + 1
@@ -37,7 +37,7 @@ const addWorkout = async (exercises: any) => {
             
         });
 
-
+        navigation.navigate('Тренировки');
         
     }catch (err) {
         console.error(err);

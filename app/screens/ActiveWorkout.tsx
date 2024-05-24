@@ -34,7 +34,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
         setNewExercises(updatedExercises);
     }
 
-    const [time, setTime] = useState(5000);
+    const [time, setTime] = useState(0);
 
     const formatTime = (seconds: number) => {
         const hours = Math.floor(seconds / 3600);
@@ -60,7 +60,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
             <SafeAreaView style={tw`w-full h-full`}>
 
                 <View style={tw`flex flex-row justify-between mt-2 mb-2 mx-3`}>
-                    <TouchableOpacity style={tw`w-18 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`}>
+                    <TouchableOpacity style={tw`w-20 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`}>
                         <Text>{formatTime(time)}</Text>
                     </TouchableOpacity>
 

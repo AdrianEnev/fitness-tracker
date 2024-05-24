@@ -8,7 +8,7 @@ import { Ionicons } from '@expo/vector-icons';
 const AddWorkoutPage = ({ navigation }: any) => {
 
     const newExercise: any = {
-        title: 'Ново Упражнение',
+        title: '',
         sets: [{ reps: '', weight: '', id: Math.random().toString() }],
         description: 'Description',
         exerciseIndex: 0,
@@ -55,7 +55,7 @@ const AddWorkoutPage = ({ navigation }: any) => {
         } else {
             // Create a new exercise
             const newExercise: Exercise = {
-                title: 'Ново Упражнение',
+                title: '',
                 sets: [{ reps: "", weight: "", id: Math.random().toString() }],
                 description: 'Description',
                 exerciseIndex: exerciseIndex,
@@ -86,10 +86,18 @@ const AddWorkoutPage = ({ navigation }: any) => {
 
     };
 
+    const updateExerciseTitle = (exerciseId: string, title: string) => {
+        setExercises(exercises.map(exercise => 
+            exercise.id === exerciseId 
+            ? { ...exercise, title } 
+            : exercise
+        ));
+    };
+
     const saveWorkout = async () => {
 
         console.log('saving...')
-        await addWorkout(exercises);
+        await addWorkout(exercises, navigation);
         console.log('saved.')
         //navigation.navigate('Тренировки');
     };
@@ -105,7 +113,15 @@ const AddWorkoutPage = ({ navigation }: any) => {
                                 <View key={exercise.id} style={tw`w-full`}>
 
                                     <View style={tw`flex flex-row justify-between mb-6 mx-3`}>
-                                        <Text style={tw`text-2xl font-medium text-center`} numberOfLines={1}>{exercise.title}</Text>
+                                        <TextInput 
+                                            style={tw`text-2xl font-medium p-2 w-80 h-12`}
+                                            keyboardType='default'
+                                            numberOfLines={3}
+                                            maxLength={30}
+                                            placeholder='Име на Упражнение'
+                                            value={exercise.title || ''}
+                                            onChangeText={(text) => updateExerciseTitle(exercise.id, text)}
+                                        />
                                         
                                                
                                         <View style={tw`flex flex-col h-full gap-y-2`}>

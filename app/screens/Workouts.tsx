@@ -4,7 +4,7 @@ import tw from 'twrnc'
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import CustomTabBar from '../components/CustomTabBar';
-import { collection, doc, getDocs, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
 import startWorkout from '../use/useStartWorkout';
@@ -38,11 +38,21 @@ const Workouts = ({navigation}: any) => {
 
     //onPress={() => navigation.navigate('Тренировка-Детайли', {workout})}
 
+    const deleteWorkout = async (id: string) => {
+        const workoutDocRef = doc(userWorkoutsCollectionRef, id);
+        try {
+            await deleteDoc(workoutDocRef);
+        } catch (err) {
+            console.error("Error deleting document: ", err);
+        }
+    }
+
     const renderWorkout = (workout: Workout) => {
         return (
             <Pressable style={tw`w-[47%] h-36 bg-white shadow-md rounded-2xl mr-2 mb-2 pt-2 pl-3`}>
                 <Text style={tw`text-lg`}>{workout.title}</Text>
                 <Button title='start' onPress={() => startWorkout(workout.id, navigation)}/>
+                <Button title='delete' onPress={() => deleteWorkout(workout.id)}/>
             </Pressable>
         )
     }
