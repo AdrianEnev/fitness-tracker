@@ -70,8 +70,9 @@ const ViewWorkout = ({route, navigation}: any) => {
                 }
             }
 
-            
         }
+
+        navigation.navigate('Тренировки');
         
     }
 

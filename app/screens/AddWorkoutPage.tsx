@@ -68,22 +68,15 @@ const AddWorkoutPage = ({ navigation }: any) => {
     };
     
     const previousExercise = () => {
-
         // before moving to the next exercise, check if the current one does not have any of its inputs filled and if so delete it
         const currentExercise = exercises[pageIndex - 1];
-        let isCurrentExerciseValid = true;
-        currentExercise.sets.forEach((set) => {
-            if (set.reps === '' && set.weight === '') {
-                isCurrentExerciseValid = false;
-            }
-        });
-
-        if (!isCurrentExerciseValid) {
+        let isCurrentExerciseEmpty = currentExercise.sets.every((set) => set.reps === '' && set.weight === '' && currentExercise.title === '');
+    
+        if (isCurrentExerciseEmpty) {
             setExercises(exercises.filter((exercise) => exercise.id !== currentExercise.id));
             setExerciseIndex(exerciseIndex - 1); // decrement exerciseIndex
         }
         setPageIndex(pageIndex - 1);
-
     };
 
     const updateExerciseTitle = (exerciseId: string, title: string) => {
