@@ -8,6 +8,7 @@ import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, setDoc
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
 import startWorkout from '../use/useStartWorkout';
+import { useFocusEffect } from '@react-navigation/native';
 
 const Workouts = ({navigation}: any) => {
 
@@ -16,6 +17,7 @@ const Workouts = ({navigation}: any) => {
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
 
     const [workouts, setWorkouts] = useState<Workout[]>([]);
+    const [startButtonDisabled, setStartButtonDisabled] = useState(false);
 
     const getWorkouts = async () => {
         try {
@@ -47,7 +49,7 @@ const Workouts = ({navigation}: any) => {
         }
     }
 
-    const changeWorkoutName = async (workoutID: string) => {
+    const changeWorkoutName = async (workoutID: string, workoutTitle: string) => {
 
         Alert.prompt(
             t('new-name-alert'),
@@ -68,16 +70,19 @@ const Workouts = ({navigation}: any) => {
                 }
             },
             'plain-text',
-            ""
+            workoutTitle
         );
 
     }
 
     const renderWorkout = (workout: Workout) => {
         return (
-            <Pressable style={tw`w-[47%] h-36 bg-white shadow-md rounded-2xl mr-2 mb-2 pt-2 pl-3`} onLongPress={() => changeWorkoutName(workout.id)}>
-                <Text style={tw`text-lg`}>{workout.title}</Text>
-                <Button title='start' onPress={() => startWorkout(workout.id, navigation)}/>
+            <Pressable style={tw`w-[47%] h-38 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
+                <Text style={tw`text-base`} numberOfLines={2}>{workout.title}</Text>
+                <Button title='start' disabled={startButtonDisabled} onPress={() => {
+                    setStartButtonDisabled(true);
+                    startWorkout(workout.id, navigation);
+                }}/>
                 <Button title='delete' onPress={() => deleteWorkout(workout.id)}/>
             </Pressable>
         )

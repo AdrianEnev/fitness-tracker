@@ -40,7 +40,7 @@ const endWorkout = async (navigation: any, exercises: any) => {
             
         });
 
-        navigation.navigate('Тренировки');
+        navigation.navigate('Главна Страница');
         
     }catch (err) {
         console.error(err);

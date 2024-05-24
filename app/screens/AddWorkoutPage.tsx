@@ -114,16 +114,15 @@ const AddWorkoutPage = ({ navigation }: any) => {
 
                                     <View style={tw`flex flex-row justify-between mb-6 mx-3`}>
                                         <TextInput 
-                                            style={tw`text-2xl font-medium p-2 w-80 h-12`}
+                                            style={tw`text-2xl font-medium p-2 w-80 h-16`}
                                             keyboardType='default'
-                                            numberOfLines={3}
-                                            maxLength={30}
+                                            multiline={false}
+                                            maxLength={50}
                                             placeholder='Име на Упражнение'
                                             value={exercise.title || ''}
                                             onChangeText={(text) => updateExerciseTitle(exercise.id, text)}
                                         />
                                         
-                                               
                                         <View style={tw`flex flex-col h-full gap-y-2`}>
                                             <TouchableOpacity style={tw`w-12 h-12 bg-green-500 rounded-full flex justify-center items-center`} onPress={saveWorkout}>
                                                <Ionicons name='save' size={24} color='#fff'/>

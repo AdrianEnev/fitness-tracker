@@ -97,7 +97,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                             style={tw`bg-white rounded-2xl p-2 w-32 h-10`}
                                                             keyboardType='number-pad'
                                                             maxLength={4}
-                                                            placeholder={set.reps.toString() + ' Повторения'}
+                                                            placeholder={set.reps === "" ? 'Повторения' : set.reps.toString() + ' Повт.'}
                                                             value={userInputs[index].sets[mapIndex].reps}
                                                             onChangeText={(text) => {
                                                                 let updatedInputs = [...userInputs];
@@ -111,7 +111,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                             style={tw`bg-white rounded-2xl p-2 w-32 h-10`}
                                                             keyboardType='number-pad'
                                                             maxLength={4}
-                                                            placeholder={set.weight.toString() + ' KG'}
+                                                            placeholder={set.weight === "" ? 'Килограми' : set.weight.toString() + ' KG'}
                                                             value={userInputs[index].sets[mapIndex].weight}
                                                             onChangeText={(text) => {
                                                                 let updatedInputs = [...userInputs];

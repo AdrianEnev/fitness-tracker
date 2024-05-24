@@ -1,26 +1,9 @@
 
 - apple face id (moje bi)
 
-- da napravq malka animaciika na vurtqshto se krugche ili neshto podobno dokato se zapazva trenirovka
-
-- loading screenove pri zarejdane na tekushta trenirovka i drugi podobni neshta
-
-- search bar kato buton na desniq ili leviq header i kato go cukna s animaciq da se razshirqva i da zaema celiq header 
-
-- buton za opciq unilateral
-
-- timer da ne moje da se spamqt novi neshta
-
-- kogato trenirovkata e zapazena da izpishe v ugula ili nqkude drugade (toq note nz dali veche sum go dobavil)
-
 - opciq da exportna vsichki zapazeni trenirovki kato pdf file ili neshto takova
 
-- pri gledane na zapazena trenirovka da se mahnat butonite za purvoto i poslednoto uprajenie
-
-
-
-- da napravq kogato e aktivna trenirovka da ne se vijda butona za nazad na purvoto uprajnenie i da ne se vijda butona za napred pri poslednoto uprajnenie
-
+- unilateral uprajneniq
 
 - ne znam dali da dobavqm description kum uprajneniqta, zasega nqma
 - otdolu e koda za descriptiona koito se slaga pri ActiveWWorkoutExercises pod seriite
@@ -44,45 +27,7 @@
 
 
 
-
-- KeyboardAvoidingView
-
-
-kogato za pruv put se registrira nqkoi ne mu izliza setup stranicata dokato ne e refreshnato prilojenieto (mai e opraveno ama moje i da ne e)
-
-
-- kod za izprashtane na email pri 5 sgresheni paroli
-const failedLoginDocRef = doc(userInfoCollectionRef, 'nutrients');
-
-// Increment the count by 1
-const incrementCount = increment(1);
-await updateDoc(failedLoginDocRef, { failedLogins: incrementCount });
-
-// Update the lastFailedLogin
-const failedLoginData = {
-    lastFailedLogin: new Date().toISOString(),
-};
-await setDoc(failedLoginDocRef, failedLoginData, { merge: true });
-
-const docSnap = await getDoc(failedLoginDocRef);
-if (docSnap.exists()) {
-    
-    if (docSnap.data()?.failedLogins === 5) {
-        sendPasswordResetEmail(auth, email)
-            .then(() => {
-                Alert.alert('Изпратен имейл за промяна на паролата!');
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-} else {
-    console.log('No such document!');
-}
-
 - notifications
-- notch size
 
 - toast message
 
@@ -95,19 +40,22 @@ if (docSnap.exists()) {
 
 - da proverq na koi iphone raboti prilojenieto i taka da opredelq razmerite na nqkoi neshta
 
-- buton za iztrivane/resetvane na opisanie
+- workout opisanie
+- stranica za zapazeni trenirovki
 
-
-- da mojesh da dobavqsh priqteli i da gledash kolko trenirovki imat priklucheni
+- da mojesh da dobavqsh priqteli i da gledash kolko trenirovki imat priklucheni i dali sa online
 
 - autoCapitalize start
 
 - smqna na parola pri akaunt v koito ne e lognat choveka
 
-- trenirovkite da izlizat kato krugli boxove koito zaemat polovinata width na ekrana i da moje usera da zadava cvqt i ime i da izglejdat mn qko s ikonki koito moje da se izberat
 
 - custom trenirovki s izkustven intelekt 
 
 - animaciq za makronutrientite
 
-- pri suzdavane na trenirovka -> ako chovek otide napred i se suzdade novo uprajnenie i posle se vurne nazad bez da e dokosval novoto uprajnenie, novoto uprajnenie da se iztrie
+- krachki
+
+- da preveda vsichko nakraq
+
+- da opravq dizaina na nastroikite i profila
