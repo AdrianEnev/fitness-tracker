@@ -10,7 +10,7 @@ const addWorkout = async (exercises: any, navigation: any) => {
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
     const workoutDocRef = await addDoc(userWorkoutsCollectionRef, {
-        title: "Title",
+        title: "Workout",
         created: serverTimestamp()
     });
     const workoutInfoCollectionRef = collection(workoutDocRef, "info");

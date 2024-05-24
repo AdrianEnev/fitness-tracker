@@ -10,6 +10,10 @@ const ActiveWorkout = ({route, navigation}: any) => {
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [newExercises, setNewExercises] = useState<any>([...exercises]); // newExercises = copy of exercises
+    const [userInputs, setUserInputs] = useState<any>(newExercises.map((exercise: any) => ({
+        ...exercise,
+        sets: exercise.sets.map((set: any) => ({...set, reps: "", weight: ""}))
+    })));
 
     const addSet = () => {
         const updatedExercises = [...exercises];
@@ -65,7 +69,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                     </TouchableOpacity>
 
                     <View style={tw`flex flex-col h-full gap-y-2`}>
-                        <TouchableOpacity style={tw`w-18 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`} onPress={() => endWorkout(navigation)}>
+                        <TouchableOpacity style={tw`w-18 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`} onPress={() => endWorkout(navigation, userInputs)}>
                             <Text style={tw`text-black`}>Край</Text>
                         </TouchableOpacity>
                     </View>
@@ -93,8 +97,13 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                             style={tw`bg-white rounded-2xl p-2 w-32 h-10`}
                                                             keyboardType='number-pad'
                                                             maxLength={4}
-                                                            placeholder='Повторения'
-                                                            value={set.reps.toString()}
+                                                            placeholder={set.reps.toString() + ' Повторения'}
+                                                            value={userInputs[index].sets[mapIndex].reps}
+                                                            onChangeText={(text) => {
+                                                                let updatedInputs = [...userInputs];
+                                                                updatedInputs[index].sets[mapIndex].reps = text;
+                                                                setUserInputs(updatedInputs);
+                                                            }}
                                                            
                                                         />
 
@@ -102,8 +111,13 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                             style={tw`bg-white rounded-2xl p-2 w-32 h-10`}
                                                             keyboardType='number-pad'
                                                             maxLength={4}
-                                                            placeholder='KG'
-                                                            value={set.weight.toString()}
+                                                            placeholder={set.weight.toString() + ' KG'}
+                                                            value={userInputs[index].sets[mapIndex].weight}
+                                                            onChangeText={(text) => {
+                                                                let updatedInputs = [...userInputs];
+                                                                updatedInputs[index].sets[mapIndex].weight = text;
+                                                                setUserInputs(updatedInputs);
+                                                            }}
                                                             
                                                         />
 
