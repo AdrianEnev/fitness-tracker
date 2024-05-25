@@ -6,7 +6,7 @@ import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { Friend } from '../../interfaces';
 
-const FriendRequestsRecieved = ({route}: any) => {
+const FriendRequestsRecieved = ({route, navigation}: any) => {
 
     const {username} = route.params;
     
@@ -103,6 +103,8 @@ const FriendRequestsRecieved = ({route}: any) => {
         }catch (err) {
             console.error('Step 3 - error ->', err);
         }
+        
+        navigation.navigate('Главна Страница');
     }
 
     const declineRequest = async (user: Friend) => {
@@ -148,9 +150,17 @@ const FriendRequestsRecieved = ({route}: any) => {
                             
                             <Text style={tw`text-lg font-medium`}>{item.username}</Text>
 
-                            <Pressable onPress={() => acceptRequest(item)}>
-                                <Ionicons name="checkmark-circle" size={24} color='green' />
-                            </Pressable>
+                            <View style={tw`flex flex-row gap-x-2`}>
+
+                                <Pressable onPress={() => declineRequest(item)}>
+                                    <Ionicons name="logo-xbox" size={32} color='red' />
+                                </Pressable>
+
+                                <Pressable onPress={() => acceptRequest(item)}>
+                                    <Ionicons name="checkmark-circle" size={32} color='green' />
+                                </Pressable>
+                                
+                            </View>
 
                         </View>
                     )}

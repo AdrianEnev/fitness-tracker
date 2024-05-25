@@ -68,3 +68,5 @@
 - cancel friend request opciq
 
 - da napravq userInfoCollectionRef global ili neshto takova che da ne trqbva da go importvam navsqkude
+
+- da napravq usera da ne moje da pipa nishto dokato napulno ne e priet ili otkazan friend request, inache vodi do lag

@@ -35,33 +35,26 @@ const FriendsList = ({navigation, route}: any) => {
     })
 
     const removeFriend = async (friend: Friend) => {
-
-        // remove friend.id from the list collection ref
-        console.log('Deleting friend 1...')
+        console.log('Deleting friend...')
+    
+        const friendDocRef = doc(listCollectionRef, friend.id);
+        const friendUserDocRef = doc(usersCollectionRef, friend.id);
+        const friendUserInfoCollectionRef = collection(friendUserDocRef, 'user_info');
+        const friendFriendsDocRef = doc(friendUserInfoCollectionRef, 'friends');
+        const friendListCollectionRef = collection(friendFriendsDocRef, 'list');
+        const loggedInUserDocRef = doc(friendListCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+    
         try {
-            const friendDocRef = doc(listCollectionRef, friend.id);
-            await deleteDoc(friendDocRef);
-
-            console.log('Friend 1 successfuly deleted');
-        }catch (err) {
+            await Promise.all([
+                deleteDoc(friendDocRef),
+                deleteDoc(loggedInUserDocRef)
+            ]);
+    
+            console.log('Friend successfully deleted');
+            navigation.navigate('Главна Страница')
+        } catch (err) {
             console.log(err);
         }
-        
-        // remove logged in user id from friends list of the friend
-        console.log('Deleting friend 2...')
-        try {
-            const friendUserDocRef = doc(usersCollectionRef, friend.id);
-            const friendUserInfoCollectionRef = collection(friendUserDocRef, 'user_info');
-            const friendFriendsDocRef = doc(friendUserInfoCollectionRef, 'friends');
-            const friendListCollectionRef = collection(friendFriendsDocRef, 'list');
-            const loggedInUserDocRef = doc(friendListCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-            await deleteDoc(loggedInUserDocRef);
-
-            console.log('Friend 2 successfuly deleted');
-        }catch (err) {
-            console.log(err);
-        }
-        
     }
 
     //onPress={() => navigation.navigate('Приятел-Профил', {username: username, friend: item})}
