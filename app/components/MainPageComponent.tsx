@@ -6,13 +6,14 @@ import SettingsMacros from "../screens/SettingsMacros";
 import SettingsAccount from "../screens/SettingsAccount";
 import SavedWorkouts from "../screens/SavedWorkouts";
 import Workouts from "../screens/Workouts";
-import ViewSavedWorkout from "../screens/ViewSavedWorkout";
 import FoodDay from "../screens/FoodDay";
 import AddFoodPage from "../screens/AddFoodPage";
 import AddCustomFoodPage from "../screens/AddCustomFoodPage";
 import AddWorkoutPage from "../screens/AddWorkoutPage";
 import ActiveWorkout from "../screens/ActiveWorkout";
 import ViewWorkout from "../screens/ViewWorkout";
+import FriendsList from "../screens/FriendsList";
+import AddFriends from "../screens/AddFriends";
 
 const Stack = createNativeStackNavigator();
 
@@ -76,15 +77,6 @@ const MainPageComponent = () => {
               component={SavedWorkouts}
               options={{
                   headerShown: false,
-              }}
-          />
-
-          <Stack.Screen
-              name="Запазена-Тренировка"
-              component={ViewSavedWorkout}
-              options={{
-                title: "Запазенa тренировкa",
-                headerShown: false,
               }}
           />
 
@@ -156,6 +148,21 @@ const MainPageComponent = () => {
                   title: "Акаунт",
                   headerShown: false,
                   
+              }}
+          />
+
+          <Stack.Screen
+              name="Приятели"
+              component={FriendsList}
+              options={{
+                  headerShown: false,
+              }}
+          />
+          <Stack.Screen
+              name="Приятели-Добави"
+              component={AddFriends}
+              options={{
+                  headerShown: false,
               }}
           />
 

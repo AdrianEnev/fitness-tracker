@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import Ionicons from '@expo/vector-icons/Ionicons';
-import Feather from '@expo/vector-icons/Feather';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { FIREBASE_AUTH, FIRESTORE_DB } from './firebaseConfig';
 import Login from './app/screens/Login';
@@ -20,18 +17,14 @@ const Stack = createStackNavigator();
 const AuthenticatedTabNavigator = ({ setupRan }: any) => {
     
     return (
-        <Stack.Navigator>
-
-            {!setupRan && ( 
-                <Stack.Screen
-                    name='Първоначални-Настройки'
-                    component={Setup}
-                    options={() => ({
-                        headerShown: false,
-                    })}
-                />
-            )}
-
+        <Stack.Navigator initialRouteName={setupRan ? "Главна-Страница" : "Първоначални-Настройки"}>
+            <Stack.Screen
+                name='Първоначални-Настройки'
+                component={Setup}
+                options={() => ({
+                    headerShown: false,
+                })}
+            />
             <Stack.Screen
                 name="Главна-Страница"
                 component={MainPageComponent}
@@ -40,11 +33,11 @@ const AuthenticatedTabNavigator = ({ setupRan }: any) => {
                     gestureEnabled: false,
                 }}
             />
-
         </Stack.Navigator>
     );
     
 };
+
 
 const UnauthenticatedTabNavigator = () => (
 
@@ -91,6 +84,8 @@ const App = () => {
             if (user) {
                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');
                 const userDocRef = doc(usersCollectionRef, user.uid);
+                setDoc(userDocRef, { filler: 'Random text shtoto inache toq document stava ghost document' });
+
                 const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
                 const checkLanguageDocument = async () => {

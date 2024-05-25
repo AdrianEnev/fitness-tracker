@@ -67,7 +67,7 @@ const SettingsAccount = ({navigation, route}: any) => {
         <SafeAreaView style={tw``}>
             
             {/* Profil ikona */}
-            <View style={tw`flex flex-col items-start ml-3`}>
+            <View style={tw`flex flex-col items-center mb-5`}>
 
                 <View>
                     {profilePicture === '' ? (
@@ -96,17 +96,28 @@ const SettingsAccount = ({navigation, route}: any) => {
                 </View>
             </View>
 
+            <View style={tw`w-full h-14 bg-white p-3 mb-1`}>
+                <Text style={tw`text-lg font-medium`}>Имейл: {email}</Text>
+            </View>
+            <View style={tw`w-full h-14 bg-white p-3 mb-1`}>       
+                <Text style={tw`text-lg font-medium`}>Потребителско Име: {username}</Text>
+            </View>       
 
-            <Text style={tw`m-3 font-medium text-base`}>Имейл: {email}</Text>
-            <Text style={tw`m-3 font-medium text-base`}>Име: {username}</Text>
-
-            <Button title='смяна на парола' onPress={() => changePassword(email, user, auth)}/>
-            
-            <Button title='изтрий акаунт' onPress={() => deleteAccount(email, user)}/>
-
-            <Button title='излез от акаунт' onPress={() => FIREBASE_AUTH.signOut()}/>
-
-            <Button title='променя на потребителско име'/>
+            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => FIREBASE_AUTH.signOut()}>
+                <Text style={tw`text-lg font-medium`}>Излез от акаунта си</Text>
+            </Pressable>
+            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`}>
+                <Text style={tw`text-lg font-medium`}>Промяна на потребителско име</Text>
+            </Pressable>
+            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => deleteAccount(email, user)}>
+                <Text style={tw`text-lg font-medium`}>Изтриване на акаунт</Text>
+            </Pressable>
+            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => changePassword(email, user, auth)}>
+                <Text style={tw`text-lg font-medium`}>Промяна на парола</Text>
+            </Pressable>
+            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели')}>
+                <Text style={tw`text-lg font-medium`}>Приятели</Text>
+            </Pressable>
 
            
 

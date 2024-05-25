@@ -12,7 +12,8 @@ const getProfilePicture = async () => {
         return url
 
     } catch (error) {
-        console.error("Error getting document:", error);
+        //console.error("Error getting document:", error);
+        return null;
   }
 };
 

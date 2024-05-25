@@ -43,7 +43,7 @@
 - workout opisanie
 - stranica za zapazeni trenirovki
 
-- da mojesh da dobavqsh priqteli i da gledash kolko trenirovki imat priklucheni i dali sa online
+- da mojesh da dobavqsh priqteli i da gledash kolko trenirovki imat priklucheni i dali sa online i kolko kilograma sa vdiganli obshto i dali sa v trenirovka
 
 - autoCapitalize start
 
@@ -59,3 +59,5 @@
 - da preveda vsichko nakraq
 
 - da opravq dizaina na nastroikite i profila
+
+
