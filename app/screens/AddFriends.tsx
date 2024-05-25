@@ -7,6 +7,7 @@ import { Friend } from '../../interfaces'
 import { FlatList } from 'react-native-gesture-handler'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
+import sendFriendRequest from '../use/useSendFriendRequest'
 
 const AddFriends = ({route}: any) => {
 
@@ -20,12 +21,16 @@ const AddFriends = ({route}: any) => {
 
     const [searchingAnimation, setSearchingAnimation] = useState(false);
 
+    const [friendRequestButtonDisabled, setFriendRequestButtonDisabled] = useState(false);
+
     const searchButton = async () => {
-        setSearchingAnimation(true);
+
+        setSearchingAnimation(true); // puska animaciqta za tursene
+
         await searchForFriend(searchQuery).then((results) => {
             setSearchResults(results);
             if (results.length > 0) {
-                addToSuggestions(results);  // Move this inside the then block
+                addToSuggestions(results); 
             }
         });
     }
@@ -48,31 +53,7 @@ const AddFriends = ({route}: any) => {
         setSearchingAnimation(false);
     }
 
-    const sendFriendRequest = async (user: Friend) => {
-        console.log(user);
-    
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, user.id);
-        const userInfoCollectionRef = collection(userDocRef, 'user_info');
-    
-        // add document called "friendRequests" if it already doesn't exist, inside add 2 collections, one named "sent" and one named "received" if they don't exist then inside received add the current logged in user's id and username
-        const friendRequestsDocRef = doc(userInfoCollectionRef, 'friendRequests');
-        const friendRequestsDoc = await getDoc(friendRequestsDocRef);
-    
-        if (!friendRequestsDoc.exists()) {
-            await setDoc(friendRequestsDocRef, {});
-        }
-    
-        const sentCollectionRef = collection(friendRequestsDocRef, 'sent');
-        const receivedCollectionRef = collection(friendRequestsDocRef, 'received');
-    
-        const loggedInUser = FIREBASE_AUTH.currentUser;
-        if (loggedInUser) {
-            const loggedInUserDocRef = doc(receivedCollectionRef, loggedInUser.uid);
-            await setDoc(loggedInUserDocRef, { username: username, id: loggedInUser.uid });
-        }
-    }
-
+   
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={tw`w-full h-full`}>
@@ -103,7 +84,12 @@ const AddFriends = ({route}: any) => {
                         data={suggestedFriends}
                         keyExtractor={(item) => item.id}
                         renderItem={({item}) => (
-                            <Pressable onPress={() => sendFriendRequest(item)}>
+                            <Pressable disabled={friendRequestButtonDisabled} onPress={async () => {
+                                setFriendRequestButtonDisabled(true);
+                                console.log('sending friend request...');
+                                await sendFriendRequest(item, username)
+                                setFriendRequestButtonDisabled(false);
+                            }}>
                                 <View style={tw`w-full h-14 bg-white p-3 mb-2 mt-3`}>
                                     
                                     <Text style={tw`text-lg font-medium`}>{item.username}</Text>
