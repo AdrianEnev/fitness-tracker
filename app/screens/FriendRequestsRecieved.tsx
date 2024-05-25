@@ -105,6 +105,37 @@ const FriendRequestsRecieved = ({route}: any) => {
         }
     }
 
+    const declineRequest = async (user: Friend) => {
+            
+        // delete sent from logged user
+        const sentCollectionRef = collection(friendRequestsDocRef, 'received');
+        const requestDocRef = doc(sentCollectionRef, user.id);
+
+        try {
+            await deleteDoc(requestDocRef);
+            console.log(`Step 1 - sucessful (Deleted request to ${user.username})`);
+
+        } catch (err) {
+            console.error(`Step 1 - error -> Error deleting request to ${user.username}: `, err);
+        }
+
+        // delete recieved from other user
+        const otherUserDocRef = doc(usersCollectionRef, user.id);
+        const otherUserInfoCollectionRef = collection(otherUserDocRef, 'user_info');
+        const otherUserFriendRequestsDocRef = doc(otherUserInfoCollectionRef, 'friendRequests');
+
+        try {
+            const receivedCollectionRef = collection(otherUserFriendRequestsDocRef, 'sent');
+            const recievedDocRef = doc(receivedCollectionRef, FIREBASE_AUTH.currentUser?.uid)
+
+            await deleteDoc(recievedDocRef)
+            console.log(`Step 2 - successful (deleted request by ${username})`)
+
+        }catch (err) {
+            console.log('Step 2 - error -> ', err)
+        }
+    }
+
     return (
         <SafeAreaView>
             <Text style={tw`m-3 text-xl text-center font-medium`}>Получени покани</Text>

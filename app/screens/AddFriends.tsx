@@ -35,18 +35,47 @@ const AddFriends = ({route}: any) => {
         });
     }
 
+    const isFriendAlready = async (checkUser: any) => {
+        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+        const userInfoCollectionRef = collection(userDocRef, 'user_info');
+        const friendsDocRef = doc(userInfoCollectionRef, 'friends');
+        const listCollectionRef = collection(friendsDocRef, 'list');
+
+       
+        const friendDocRef = doc(listCollectionRef, checkUser.id);
+        const friendDoc = await getDoc(friendDocRef);
+
+        if (friendDoc.exists()) {
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
+    
     const addToSuggestions = (users: any) => {
-        users.map((user: any) => {
+        
+        users.map(async (user: any) => {
 
-            // ako namereniqt username ne e sushtiqt kato tozi na lognatiqt chovek
-            // toest ne mojesh da pratish friend request na sebe si
+            // ako na lognatiq user username-a ne e raven na username-a na tozi koito e tursen (toest ne mojesh da prashtash na sebe si)
             if (user.username !== username) {
-                
-                if (!suggestedFriends.some((friend) => friend.username === user.username)) {
-                    setSuggestedFriends((prevFriends) => [...prevFriends, user]);
-                }
 
-            }else{
+                // ako isFriendAlready == true, skipni tozi user
+                if (await isFriendAlready(user)) {
+                
+                    console.log(await isFriendAlready(user));
+
+                    setSuggestedFriends((prevFriends) => [...prevFriends, user]);
+                    console.log('Added', user.username, 'to suggestions'); 
+
+                } else {
+
+                    console.log(user.username, 'is already a friend, not adding to suggestions'); 
+
+                }
+            } else {
                 console.log('filtered username: ' + username)
             }
         });

@@ -52,7 +52,9 @@ const sendFriendRequestFromUser = async (user: Friend, loggedInUser: User, logge
 
 // Function to send a friend request
 const sendFriendRequest = async (user: Friend, loggedInUserUsername: string) => {
+
     const loggedInUser = FIREBASE_AUTH.currentUser;
+
     if (loggedInUser) {
         try {
             // Send a friend request to the user
