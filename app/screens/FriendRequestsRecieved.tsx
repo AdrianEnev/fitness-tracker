@@ -96,8 +96,8 @@ const FriendRequestsRecieved = ({route}: any) => {
             const otherUserFriendsCollectionRef = collection(otherUserFriendsDocRef, 'list');
             const loggedInUserFriendsCollectionRef = collection(loggedInUserFriendsDocRef, 'list');
     
-            await addDoc(loggedInUserFriendsCollectionRef, { username: user.username, id: user.id });
-            await addDoc(otherUserFriendsCollectionRef, { username: username, id: FIREBASE_AUTH.currentUser?.uid });
+            await setDoc(doc(loggedInUserFriendsCollectionRef, user.id), { username: user.username, id: user.id });
+            await setDoc(doc(otherUserFriendsCollectionRef, FIREBASE_AUTH.currentUser?.uid), { username: username, id: FIREBASE_AUTH.currentUser?.uid });
     
             console.log('Step 3 - successful (added friends to both users)');
         }catch (err) {

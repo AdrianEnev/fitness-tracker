@@ -36,23 +36,21 @@ const AddFriends = ({route}: any) => {
     }
 
     const isFriendAlready = async (checkUser: any) => {
+
         const usersCollectionRef = collection(FIRESTORE_DB, 'users');
         const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
         const userInfoCollectionRef = collection(userDocRef, 'user_info');
         const friendsDocRef = doc(userInfoCollectionRef, 'friends');
         const listCollectionRef = collection(friendsDocRef, 'list');
 
-       
         const friendDocRef = doc(listCollectionRef, checkUser.id);
         const friendDoc = await getDoc(friendDocRef);
 
-        if (friendDoc.exists()) {
+        if (friendDoc.data()) {
             return true;
         } else {
             return false;
         }
-
-
     }
     
     const addToSuggestions = (users: any) => {
@@ -63,9 +61,8 @@ const AddFriends = ({route}: any) => {
             if (user.username !== username) {
 
                 // ako isFriendAlready == true, skipni tozi user
-                if (await isFriendAlready(user)) {
-                
-                    console.log(await isFriendAlready(user));
+                const alreadyFriend = await isFriendAlready(user);
+                if (!alreadyFriend) {
 
                     setSuggestedFriends((prevFriends) => [...prevFriends, user]);
                     console.log('Added', user.username, 'to suggestions'); 
