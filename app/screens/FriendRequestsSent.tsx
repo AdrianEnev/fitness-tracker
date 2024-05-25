@@ -42,7 +42,8 @@ const FriendRequestsSent = ({route}: any) => {
     }
 
     useEffect(() => {
-        onSnapshot(friendRequestsDocRef, (_snapshot) => {
+        const sentCollectionRef = collection(friendRequestsDocRef, 'sent');
+        onSnapshot(sentCollectionRef, (_snapshot) => {
             getRequests();
         });
     }, [])

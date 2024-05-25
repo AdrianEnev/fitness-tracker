@@ -82,6 +82,9 @@ const App = () => {
             setUser(user);
             
             if (user) {
+
+                //console.log(user)
+
                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');
                 const userDocRef = doc(usersCollectionRef, user.uid);
                 setDoc(userDocRef, { filler: 'Random text shtoto inache toq document stava ghost document' });

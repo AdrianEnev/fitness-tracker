@@ -1,48 +1,109 @@
-import { View, Text, SafeAreaView, Pressable } from 'react-native'
+import { View, Text, SafeAreaView, FlatList, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import tw from 'twrnc'
-import { collection, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
-import { FlatList } from 'react-native-gesture-handler';
+import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { Friend } from '../../interfaces';
 
-const FriendRequestsReceived = ({route}: any) => {
+const FriendRequestsRecieved = ({route}: any) => {
 
     const {username} = route.params;
-
-    const [receivedFriendRequests, setReceivedFriendRequests] = useState<any[]>([]);
-
+    
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
     const friendRequestsDocRef = doc(userInfoCollectionRef, 'friendRequests');
 
+    const [receivedFriendRequests, setReceivedFriendRequests] = useState<any[]>([]);
+
     const getRequests = async () => {
 
         const friendRequestsDoc = await getDoc(friendRequestsDocRef);
         if (!friendRequestsDoc.exists()) {
-            console.log('no friend requests received or sent')
+
+            // ako ne sushtestvuva friendRequests document, se suzdava prazen takuv
+            console.log('no friend requests sent or recieved')
+            await setDoc(friendRequestsDocRef, {});
         }
 
         try{
-            const receivedCollectionRef = collection(friendRequestsDocRef, 'received');
-            const snapshot = await getDocs(receivedCollectionRef);
-            const receivedRequests = snapshot.docs.map(doc => doc.data());
+            const sentCollectionRef = collection(friendRequestsDocRef, 'received');
+            const snapshot = await getDocs(sentCollectionRef);
+            const sentRequests = snapshot.docs.map(doc => doc.data());
 
-            setReceivedFriendRequests(receivedRequests);
+            setReceivedFriendRequests(sentRequests);
 
         } catch (err) {
-            console.log('no friend requests received');
+            console.log('no friend requests sent');
         }
 
     }
 
     useEffect(() => {
-        onSnapshot(friendRequestsDocRef, (_snapshot) => {
+        const receivedCollectionRef = collection(friendRequestsDocRef, 'received');
+        onSnapshot(receivedCollectionRef, (_snapshot) => {
             getRequests();
         });
     }, [])
+
+    const acceptRequest = async (user: Friend) => {
+
+        // delete sent from logged user
+        const sentCollectionRef = collection(friendRequestsDocRef, 'received');
+        const requestDocRef = doc(sentCollectionRef, user.id);
+
+        try {
+            await deleteDoc(requestDocRef);
+            console.log(`Step 1 - sucessful (Deleted request to ${user.username})`);
+
+        } catch (err) {
+            console.error(`Step 1 - error -> Error deleting request to ${user.username}: `, err);
+        }
+
+        // delete recieved from other user
+        const otherUserDocRef = doc(usersCollectionRef, user.id);
+        const otherUserInfoCollectionRef = collection(otherUserDocRef, 'user_info');
+        const otherUserFriendRequestsDocRef = doc(otherUserInfoCollectionRef, 'friendRequests');
+
+        try {
+            const receivedCollectionRef = collection(otherUserFriendRequestsDocRef, 'sent');
+            const recievedDocRef = doc(receivedCollectionRef, FIREBASE_AUTH.currentUser?.uid)
+
+            await deleteDoc(recievedDocRef)
+            console.log(`Step 2 - successful (deleted request by ${username})`)
+
+        }catch (err) {
+            console.log('Step 2 - error -> ', err)
+        }
+
+        // add to friends list
+        try {
+            // add both to friend list
+            const otherUserFriendsDocRef = doc(otherUserInfoCollectionRef, 'friends');
+            const loggedInUserFriendsDocRef = doc(userInfoCollectionRef, 'friends');
+    
+            // check if documents exist, if not create them
+            const otherUserFriendsDoc = await getDoc(otherUserFriendsDocRef);
+            const loggedInUserFriendsDoc = await getDoc(loggedInUserFriendsDocRef);
+            if (!loggedInUserFriendsDoc.exists()) {
+                await setDoc(loggedInUserFriendsDocRef, {});
+            }
+            if (!otherUserFriendsDoc.exists()) {
+                await setDoc(otherUserFriendsDocRef, {});
+            }
+    
+            const otherUserFriendsCollectionRef = collection(otherUserFriendsDocRef, 'list');
+            const loggedInUserFriendsCollectionRef = collection(loggedInUserFriendsDocRef, 'list');
+    
+            await addDoc(loggedInUserFriendsCollectionRef, { username: user.username, id: user.id });
+            await addDoc(otherUserFriendsCollectionRef, { username: username, id: FIREBASE_AUTH.currentUser?.uid });
+    
+            console.log('Step 3 - successful (added friends to both users)');
+        }catch (err) {
+            console.error('Step 3 - error ->', err);
+        }
+    }
 
     return (
         <SafeAreaView>
@@ -56,8 +117,8 @@ const FriendRequestsReceived = ({route}: any) => {
                             
                             <Text style={tw`text-lg font-medium`}>{item.username}</Text>
 
-                            <Pressable onPress={() => {}}>
-                                <Ionicons name="checkmark-circle-outline" size={24} color='green' />
+                            <Pressable onPress={() => acceptRequest(item)}>
+                                <Ionicons name="checkmark-circle" size={24} color='green' />
                             </Pressable>
 
                         </View>
@@ -70,4 +131,4 @@ const FriendRequestsReceived = ({route}: any) => {
     )
 }
 
-export default FriendRequestsReceived
+export default FriendRequestsRecieved
