@@ -25,3 +25,8 @@ export interface Split {
     created: Timestamp;
     id: string;
 }
+
+export interface Friend {
+    username: string;
+    id: string;
+}

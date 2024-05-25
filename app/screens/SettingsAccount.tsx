@@ -28,8 +28,6 @@ const SettingsAccount = ({navigation, route}: any) => {
     const [username, setUsername] = useState('');
     const [profilePicture, setProfilePicture] = useState('');
 
-    const [image, setImage] = useState(null);
-
     useFocusEffect(() => {
         const fetch = async () => {
             setUsername(await getUsername(userInfoCollectionRef));
@@ -98,10 +96,7 @@ const SettingsAccount = ({navigation, route}: any) => {
 
             <View style={tw`w-full h-14 bg-white p-3 mb-1`}>
                 <Text style={tw`text-lg font-medium`}>Имейл: {email}</Text>
-            </View>
-            <View style={tw`w-full h-14 bg-white p-3 mb-1`}>       
-                <Text style={tw`text-lg font-medium`}>Потребителско Име: {username}</Text>
-            </View>       
+            </View>      
 
             <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => FIREBASE_AUTH.signOut()}>
                 <Text style={tw`text-lg font-medium`}>Излез от акаунта си</Text>
@@ -115,7 +110,7 @@ const SettingsAccount = ({navigation, route}: any) => {
             <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => changePassword(email, user, auth)}>
                 <Text style={tw`text-lg font-medium`}>Промяна на парола</Text>
             </Pressable>
-            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели')}>
+            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели', {username: username})}>
                 <Text style={tw`text-lg font-medium`}>Приятели</Text>
             </Pressable>
 

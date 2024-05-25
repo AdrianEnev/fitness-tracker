@@ -61,3 +61,6 @@
 - da opravq dizaina na nastroikite i profila
 
 
+- problem pri registraciq i vhod:
+1. Pri vlizane v akaunt izpisva Document with id "nutrients" found no pak vodi do setup page
+2. Pri suzdavane na akaunt izpisva che nqma akaunt no vodi do main page ponqkoga
