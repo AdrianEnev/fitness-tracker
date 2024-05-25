@@ -84,20 +84,23 @@ const FriendRequestsSent = ({route}: any) => {
             <Text style={tw`m-3 text-xl text-center font-medium`}>Изпратени покани</Text>
 
                 <FlatList 
-                        data={sentFriendRequests}
-                        keyExtractor={(item) => item.id}
-                        renderItem={({item}) => (
-                            <View style={tw`w-full h-14 bg-white mb-2 mt-3 px-4 py-3 flex flex-row justify-between`}>
-                                
-                                <Text style={tw`text-lg font-medium`}>{item.username}</Text>
+                    data={sentFriendRequests}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({item}) => (
+                        <View style={tw`w-full h-14 bg-white mb-2 mt-3 px-4 py-3 flex flex-row justify-between`}>
+                            
+                            <Text style={tw`text-lg font-medium`}>{item.username}</Text>
 
-                                <Pressable onPress={() => deleteRequest(item)}>
-                                    <Ionicons name="trash-bin-outline" size={24} color='red' />
-                                </Pressable>
+                            <Pressable onPress={() => deleteRequest(item)}>
+                                <Ionicons name="trash-bin-outline" size={24} color='red' />
+                            </Pressable>
 
-                            </View>
-                        )}
-                    />
+                        </View>
+                    )}
+                    ListEmptyComponent={() => (
+                        <Text style={tw`m-3 text-lg text-center`}>Нямаш изпратени покани</Text>
+                    )}
+                />
         </SafeAreaView>
     )
 }
