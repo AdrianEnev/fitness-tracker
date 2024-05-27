@@ -1,20 +1,15 @@
 import { View, Text, Pressable } from 'react-native'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import tw from "twrnc";
 import { Ionicons } from '@expo/vector-icons';
+import getProfilePicture from '../use/useGetProfilePicture';
 
-const CustomTabBar = ({navigation, currentPage, profilePicture}: any) => {
-
-    // priema profile picture za da moje da se prati kum nastroiki s profile picture
+const CustomTabBar = ({navigation, currentPage}: any) => {
 
     const changePage = (page: string) => {
         if (currentPage !== page) {
 
-            if (page === 'Настройки-Страница') {
-                navigation.navigate(page, {profilePicture: profilePicture});
-            }else{
-                navigation.navigate(page);
-            }
+            navigation.navigate(page);
             
         }
     }
@@ -33,7 +28,7 @@ const CustomTabBar = ({navigation, currentPage, profilePicture}: any) => {
                     
                     
                     <Pressable onPress={() => changePage('Хранене')}>
-                        <Ionicons name='egg-outline' size={32} color={currentPage === 'egg' ? '#ff6b6b' : '#000'}/>
+                        <Ionicons name='egg-outline' size={32} color={currentPage === 'Хранене' ? '#ff6b6b' : '#000'}/>
                     </Pressable> 
 
                     <Pressable onPress={() => changePage('Настройки-Страница')}>

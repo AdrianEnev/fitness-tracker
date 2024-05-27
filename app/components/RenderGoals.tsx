@@ -36,7 +36,7 @@ const RenderGoals = (
                 {singleBoxElement('flame-outline', t('calories'), currentCalories, "/" + caloriesGoal.toString() + " kcal", '[#4ecdc4]', () => {})} 
 
                  {/* Krachki */}
-                {singleBoxElement('footsteps-outline', t('steps'), '5,000', '/10,000', "[#ffd166]", () => {})}
+                {singleBoxElement('footsteps-outline', t('steps'), '0', '/10,000', "[#ffd166]", () => {})}
 
                 
             </View>

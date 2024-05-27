@@ -10,9 +10,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomTabBar from '../components/CustomTabBar';
 
-const Settings = ({navigation, route}: any) => {
-
-    const profilePicture = route.params.profilePicture;
+const Settings = ({navigation}: any) => {
 
     // opciq za smenq na ezika koqto zadava neshto v bazata danni i ot tam se izvlicha ezikut za cqlata aplikaciq
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -77,7 +75,7 @@ const Settings = ({navigation, route}: any) => {
 
                 <Text style={tw`text-2xl font-medium mt-2`}>Настройки</Text>
 
-                <Button title={t('account')} onPress={() => navigation.navigate('Настройки-Акаунт', { profilePicture: profilePicture })}/>
+                <Button title={t('account')} onPress={() => navigation.navigate('Настройки-Акаунт')}/>
 
                 <Button title={t('macronutrients')} onPress={() => navigation.navigate('Настройки-Макронутриенти')}/>
 
@@ -120,7 +118,6 @@ const Settings = ({navigation, route}: any) => {
             <CustomTabBar 
                 navigation={navigation} 
                 currentPage="Настройки-Страница"
-                profilePicture={profilePicture}
             />
 
         </SafeAreaView>

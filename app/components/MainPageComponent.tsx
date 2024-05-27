@@ -19,6 +19,21 @@ import FriendRequestsRecieved from "../screens/FriendRequestsRecieved";
 
 const Stack = createNativeStackNavigator();
 
+/* 
+
+ <Stack.Navigator
+            screenOptions={({ route }) => {
+                const { params = {} } = route;
+                return {
+                    cardStyleInterpolator: (params as { animationType?: string }).animationType === 'horizontal'
+                        ? CardStyleInterpolators.forHorizontalIOS
+                        : CardStyleInterpolators.forVerticalIOS,
+                } as NativeStackNavigationOptions; 
+            }}
+        >
+
+*/
+
 const MainPageComponent = () => {
 
     return (
@@ -81,16 +96,6 @@ const MainPageComponent = () => {
                   headerShown: false,
               }}
           />
-
-          {/* <Stack.Screen
-            name='АктивнаТренировка'
-            component={ActiveWorkout}
-            options={() => ({
-              title:currentDayTitle,
-              headerShown: false,
-              gestureEnabled: false,
-            })}
-          />*/}
 
           <Stack.Screen
               name="Хранене"

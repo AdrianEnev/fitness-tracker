@@ -32,7 +32,7 @@ const RenderNutrients = React.memo(({item, currentNutrients, date}: RenderNutrie
     const fatProgress = Math.min(Number(currentFat) / fatGoal, 1);
 
     const stepsGoal = 10000;
-    const currentSteps = 5000;
+    const currentSteps = 0;
     const stepsProgress = Math.min(currentSteps / stepsGoal, 1);
 
     // da dobavq margin-top na krugchetata samo ako progresa e minal sredata

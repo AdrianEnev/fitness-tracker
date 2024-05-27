@@ -168,7 +168,6 @@ const Main = ({navigation}: any) => {
             <CustomTabBar 
                 navigation={navigation} 
                 currentPage="Главна Страница"
-                profilePicture={profilePicture}
             />
 
         </SafeAreaView>

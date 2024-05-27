@@ -14,6 +14,7 @@ import uploadFile from '../use/useUploadFile'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import getProfilePicture from '../use/useGetProfilePicture'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import CustomTabBar from '../components/CustomTabBar'
 
 const SettingsAccount = ({navigation, route}: any) => {
 
@@ -32,7 +33,8 @@ const SettingsAccount = ({navigation, route}: any) => {
         const fetch = async () => {
             setUsername(await getUsername(userInfoCollectionRef));
 
-            setProfilePicture(route.params.profilePicture);
+            const profilePicture = await getProfilePicture();
+            setProfilePicture(profilePicture || ''); // Provide a default value for profilePicture
         }
         fetch();
     });
@@ -62,31 +64,42 @@ const SettingsAccount = ({navigation, route}: any) => {
     };
 
     return (
-        <SafeAreaView style={tw``}>
+        <SafeAreaView style={tw`w-full h-full`}>
             
             {/* Profil ikona */}
             <View style={tw`flex flex-col items-center mb-5`}>
 
-                <View>
-                    {profilePicture === '' ? (
-                        <Pressable 
-                            style={tw`bg-white w-28 h-28 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}
-                            onPress={uploadProfilePicture}
-                        >
-                            <Ionicons name='person-outline' 
-                                size={40}
-                                color='#000000'  
-                            />
+                <View style={tw`w-full`}>
 
-                        </Pressable>
-                    ) : (
-                        <Pressable onPress={uploadProfilePicture}>
-                            <Image
-                                source={{ uri: profilePicture }}
-                                style={tw`w-28 h-28 rounded-full ml-2`}
-                            />
-                        </Pressable>
-                    )}
+                    <Pressable style={tw``} onPress={() => navigation.navigate("Настройки-Страница", { profilePicture: profilePicture })}>
+                        <Ionicons name='chevron-back-outline' 
+                            size={46}
+                            color='#000000'
+                        />
+                    </Pressable>
+
+                    <View style={tw`flex items-center`}>
+                        {profilePicture === '' ? (
+                            <Pressable 
+                                style={tw`bg-white w-28 h-28 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}
+                                onPress={uploadProfilePicture}
+                            >
+                                <Ionicons name='person-outline' 
+                                    size={40}
+                                    color='#000000'  
+                                />
+
+                            </Pressable>
+                        ) : (
+                            <Pressable onPress={uploadProfilePicture}>
+                                <Image
+                                    source={{ uri: profilePicture }}
+                                    style={tw`w-28 h-28 rounded-full ml-2`}
+                                />
+                            </Pressable>
+                        )}
+                    </View>
+
                 </View>
 
                 <View>
@@ -94,27 +107,32 @@ const SettingsAccount = ({navigation, route}: any) => {
                 </View>
             </View>
 
-            <View style={tw`w-full h-14 bg-white p-3 mb-1`}>
-                <Text style={tw`text-lg font-medium`}>Имейл: {email}</Text>
-            </View>      
+            <View>
+                <View style={tw`w-full h-14 bg-white p-3 mb-1`}>
+                    <Text style={tw`text-lg font-medium`}>Имейл: {email}</Text>
+                </View>      
 
-            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => FIREBASE_AUTH.signOut()}>
-                <Text style={tw`text-lg font-medium`}>Излез от акаунта си</Text>
-            </Pressable>
-            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`}>
-                <Text style={tw`text-lg font-medium`}>Промяна на потребителско име</Text>
-            </Pressable>
-            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => deleteAccount(email, user)}>
-                <Text style={tw`text-lg font-medium`}>Изтриване на акаунт</Text>
-            </Pressable>
-            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => changePassword(email, user, auth)}>
-                <Text style={tw`text-lg font-medium`}>Промяна на парола</Text>
-            </Pressable>
-            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели', {username: username})}>
-                <Text style={tw`text-lg font-medium`}>Приятели</Text>
-            </Pressable>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => FIREBASE_AUTH.signOut()}>
+                    <Text style={tw`text-lg font-medium`}>Излез от акаунта си</Text>
+                </Pressable>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`}>
+                    <Text style={tw`text-lg font-medium`}>Промяна на потребителско име</Text>
+                </Pressable>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => deleteAccount(email, user)}>
+                    <Text style={tw`text-lg font-medium`}>Изтриване на акаунт</Text>
+                </Pressable>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => changePassword(email, user, auth)}>
+                    <Text style={tw`text-lg font-medium`}>Промяна на парола</Text>
+                </Pressable>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели', {username: username})}>
+                    <Text style={tw`text-lg font-medium`}>Приятели</Text>
+                </Pressable>
+            </View>
 
-           
+            <CustomTabBar 
+                navigation={navigation} 
+                currentPage="Настройки-Страница"
+            />
 
         </SafeAreaView>
     )

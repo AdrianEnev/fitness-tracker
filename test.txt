@@ -74,3 +74,5 @@
 - pri iztrivane na akaunt da se iztriva i ot bazata danni, a ne samo ot akaunt lista
 
 - pri suzdavane na akaunt za pruv put, purvo se otvarq za polovin sekunda main page-a i posle se otvarq setup page-a
+
+- limit 1 trenirovka na den, inache da se plashta
