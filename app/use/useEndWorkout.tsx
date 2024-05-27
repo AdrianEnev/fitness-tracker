@@ -7,22 +7,18 @@ const endWorkout = async (navigation: any, exercises: any) => {
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userSavedWorkoutsCollectionRef = collection(userDocRef, "saved_workouts");
 
+    const savedWorkoutDocRef = await addDoc(userSavedWorkoutsCollectionRef, {
+        title: "Saved Workout",
+        created: serverTimestamp()
+    });
+
     try {
         exercises.forEach((exercise: any) => {
             exercise.sets.forEach(async (set: any, index: any) => {
 
-                if (!set.reps && !set.weight) {
-                    console.log('empty')
-                    return;
-                }
+                const savedWorkoutInfo = collection(savedWorkoutDocRef, "info");
 
-                const savedWorkoutDocRef = await addDoc(userSavedWorkoutsCollectionRef, {
-                    title: "Saved Workout",
-                    created: serverTimestamp()
-                });
-                const savedWorkoutInfoCollectionRef = collection(savedWorkoutDocRef, "info");
-
-                const exerciseDocRef = doc(savedWorkoutInfoCollectionRef, (exercise.exerciseIndex).toString());
+                const exerciseDocRef = doc(savedWorkoutInfo, (exercise.exerciseIndex).toString());
                 setDoc(exerciseDocRef, {
                     title: exercise.title,
                     description: exercise.description,

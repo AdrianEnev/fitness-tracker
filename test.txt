@@ -72,3 +72,5 @@
 - da napravq usera da ne moje da pipa nishto dokato napulno ne e priet ili otkazan friend request, inache vodi do lag
 
 - pri iztrivane na akaunt da se iztriva i ot bazata danni, a ne samo ot akaunt lista
+
+- pri suzdavane na akaunt za pruv put, purvo se otvarq za polovin sekunda main page-a i posle se otvarq setup page-a
