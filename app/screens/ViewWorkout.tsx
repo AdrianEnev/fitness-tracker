@@ -79,7 +79,7 @@ const ViewWorkout = ({route, navigation}: any) => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={tw`w-full h-full`}>
                 
-                <Text>{workoutTitle}</Text>
+                <Text style={tw`text-2xl font-medium m-2`}>{workoutTitle}</Text>
 
                 <View style={tw`flex flex-col gap-y-1`}>
                     {newExercises.map((exercise: any, index: any) => {
@@ -87,7 +87,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                             return (
                                 <View key={exercise.id} style={tw`w-full`}>
 
-                                    <Text style={tw`text-2xl font-medium text-center mb-4`} numberOfLines={1}>{exercise.title}</Text>
+                                    <Text style={tw`text-xl ml-3 mb-4`} numberOfLines={1}>{exercise.title}</Text>
                                     
                                     <ScrollView style={tw``}>
                                         {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
@@ -158,17 +158,18 @@ const ViewWorkout = ({route, navigation}: any) => {
 
                     <TouchableOpacity 
                         style={tw`w-24 h-12 bg-green-500 rounded-full flex justify-center items-center`}
+                        onPress={saveWorkout} // Save the workout
+                    >
+                        <Text style={tw`text-lg text-white`}>Save</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity 
+                        style={tw`w-24 h-12 bg-green-500 rounded-full flex justify-center items-center`}
                         onPress={() => setCurrentIndex((currentIndex + 1) % newExercises.length)} // Switch to next exercise
                     >
                         <Text style={tw`text-lg text-white`}>+</Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity 
-                        style={tw`w-24 h-12 bg-green-500 rounded-full flex justify-center items-center`}
-                        onPress={saveWorkout} // Save the workout
-                    >
-                        <Text style={tw`text-lg text-white`}>Save</Text>
-                    </TouchableOpacity>
                 </View>
             </SafeAreaView>
         </TouchableWithoutFeedback>

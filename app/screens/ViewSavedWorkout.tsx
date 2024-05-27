@@ -15,7 +15,7 @@ const ViewSavedWorkout = ({route}: any) => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={tw`w-full h-full`}>
                 
-                <Text>{workoutTitle}</Text>
+                <Text style={tw`text-2xl font-medium m-2`}>{workoutTitle}</Text>
 
                 <View style={tw`flex flex-col gap-y-1`}>
                     {newExercises.map((exercise: any, index: any) => {
@@ -23,7 +23,7 @@ const ViewSavedWorkout = ({route}: any) => {
                             return (
                                 <View key={exercise.id} style={tw`w-full`}>
 
-                                    <Text style={tw`text-2xl font-medium text-center mb-4`} numberOfLines={1}>{exercise.title}</Text>
+                                    <Text style={tw`text-xl ml-3 mb-4`} numberOfLines={1}>{exercise.title}</Text>
                                     
                                     <ScrollView style={tw``}>
                                         {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
@@ -33,24 +33,15 @@ const ViewSavedWorkout = ({route}: any) => {
                                                         <Text style={tw`text-base ml-5 absolute font-medium`}>{mapIndex + 1}</Text>
                                                     </View>
 
-                                                    <View style={tw`flex flex-row gap-x-2 mb-3`}>
-                                                        <TextInput
-                                                            style={tw`bg-white rounded-2xl p-2 w-32 h-10`}
-                                                            keyboardType='number-pad'
-                                                            maxLength={4}
-                                                            placeholder={set.reps === "" ? 'Повторения' : set.reps.toString() + ' Повт.'}
-                                                            
-                                                           
-                                                        />
+                                                    <View style={tw`flex flex-row gap-x-2 mb-3 w-full`}>
 
-                                                        <TextInput
-                                                            style={tw`bg-white rounded-2xl p-2 w-32 h-10`}
-                                                            keyboardType='number-pad'
-                                                            maxLength={4}
-                                                            placeholder={set.weight === "" ? 'Килограми' : set.weight.toString() + ' KG'}
-                                                            
-                                                            
-                                                        />
+                                                        <View style={tw`w-[42%] h-10 bg-white rounded-2xl flex items-start justify-center`}>
+                                                            <Text style={tw`ml-3`}>{set.reps === "" ? '0 Повторения' : set.reps.toString() + ' Повт.'}</Text>
+                                                        </View>
+
+                                                        <View style={tw`w-[42%] h-10 bg-white rounded-2xl flex items-start justify-center`}>
+                                                            <Text style={tw`ml-3`}>{set.weight === "" ? '0 KG' : set.weight.toString() + ' KG'}</Text>
+                                                        </View>
 
                                                     </View>
                                                 </View>
