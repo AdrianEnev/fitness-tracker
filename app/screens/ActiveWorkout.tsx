@@ -7,6 +7,7 @@ import endWorkout from '../use/useEndWorkout';
 const ActiveWorkout = ({route, navigation}: any) => {
 
     const { exercises } = route.params;
+    const { workoutTitle } = route.params;
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [newExercises, setNewExercises] = useState<any>([...exercises]); // newExercises = copy of exercises
@@ -14,6 +15,8 @@ const ActiveWorkout = ({route, navigation}: any) => {
         ...exercise,
         sets: exercise.sets.map((set: any) => ({...set, reps: "", weight: ""}))
     })));
+
+    
 
     const addSet = () => {
         const updatedExercises = [...exercises];
@@ -68,8 +71,10 @@ const ActiveWorkout = ({route, navigation}: any) => {
                         <Text>{formatTime(time)}</Text>
                     </TouchableOpacity>
 
+                    <Text>{workoutTitle}</Text>
+
                     <View style={tw`flex flex-col h-full gap-y-2`}>
-                        <TouchableOpacity style={tw`w-18 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`} onPress={() => endWorkout(navigation, userInputs)}>
+                        <TouchableOpacity style={tw`w-18 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`} onPress={() => endWorkout(navigation, userInputs, workoutTitle)}>
                             <Text style={tw`text-black`}>Край</Text>
                         </TouchableOpacity>
                     </View>

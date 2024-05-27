@@ -6,8 +6,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 
 const ViewWorkout = ({route, navigation}: any) => {
 
-    const { exercises } = route.params;
-    const { workout } = route.params;
+    const { exercises, workout, workoutTitle } = route.params;
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [newExercises, setNewExercises] = useState<any>([...exercises]); // newExercises = copy of exercises
@@ -79,6 +78,8 @@ const ViewWorkout = ({route, navigation}: any) => {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={tw`w-full h-full`}>
+                
+                <Text>{workoutTitle}</Text>
 
                 <View style={tw`flex flex-col gap-y-1`}>
                     {newExercises.map((exercise: any, index: any) => {

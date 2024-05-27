@@ -1,14 +1,14 @@
 import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 
-const endWorkout = async (navigation: any, exercises: any) => {
+const endWorkout = async (navigation: any, exercises: any, workoutTitle: string) => {
 
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userSavedWorkoutsCollectionRef = collection(userDocRef, "saved_workouts");
 
     const savedWorkoutDocRef = await addDoc(userSavedWorkoutsCollectionRef, {
-        title: "Saved Workout",
+        title: workoutTitle,
         created: serverTimestamp()
     });
 

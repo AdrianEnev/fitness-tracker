@@ -80,8 +80,14 @@ const Workouts = ({navigation}: any) => {
 
         setViewWorkoutButtonDisabled(true);
 
-        const exercisesData = await getWorkoutInfo(workout.id);
-        navigation.navigate('Тренировка-Детайли', {exercises: exercisesData, workout: workout});
+        const workoutInfo = await getWorkoutInfo(workout.id);
+        if (workoutInfo) {
+
+            const { exercisesData, workoutTitle } = workoutInfo;
+            navigation.navigate('Тренировка-Детайли', {exercises: exercisesData, workoutTitle: workoutTitle, workout: workout});
+
+        }
+        
 
     }
 
@@ -89,8 +95,14 @@ const Workouts = ({navigation}: any) => {
 
         setStartButtonDisabled(true);
 
-        const exercisesData = await getWorkoutInfo(workout.id);
-        navigation.navigate("Активна-Тренировка", {exercises: exercisesData});
+        const workoutInfo = await getWorkoutInfo(workout.id);
+        if (workoutInfo) {
+
+            const { exercisesData, workoutTitle } = workoutInfo;
+            navigation.navigate("Активна-Тренировка", {exercises: exercisesData, workoutTitle: workoutTitle});
+
+        }
+
     }
 
     const renderWorkout = (workout: Workout) => {

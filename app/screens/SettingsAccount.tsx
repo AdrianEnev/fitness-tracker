@@ -71,14 +71,14 @@ const SettingsAccount = ({navigation, route}: any) => {
 
                 <View style={tw`w-full`}>
 
-                    <Pressable style={tw``} onPress={() => navigation.navigate("Настройки-Страница", { profilePicture: profilePicture })}>
+                    <Pressable style={tw`w-12 h-12 z-20`} onPress={() => navigation.navigate("Настройки-Страница")}>
                         <Ionicons name='chevron-back-outline' 
                             size={46}
                             color='#000000'
                         />
                     </Pressable>
 
-                    <View style={tw`flex items-center`}>
+                    <View style={tw`flex items-center mt-[-45px]`}>
                         {profilePicture === '' ? (
                             <Pressable 
                                 style={tw`bg-white w-28 h-28 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}

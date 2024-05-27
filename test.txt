@@ -76,3 +76,5 @@
 - pri suzdavane na akaunt za pruv put, purvo se otvarq za polovin sekunda main page-a i posle se otvarq setup page-a
 
 - limit 1 trenirovka na den, inache da se plashta
+
+- ako na uprajnenie ne mu e dadeno ime da bude "Uprajnenie 5" ili nehsto takova spored reda mu

@@ -20,6 +20,8 @@ const AddWorkoutPage = ({ navigation }: any) => {
 
     const [exerciseIndex, setExerciseIndex] = useState(1);
 
+    const [workoutTitle, setWorkoutTitle] = useState('' as string);
+
     const addSet = (exerciseId: string) => {
         setExercises(exercises.map(exercise => 
             exercise.id === exerciseId 
@@ -90,7 +92,7 @@ const AddWorkoutPage = ({ navigation }: any) => {
     const saveWorkout = async () => {
 
         console.log('saving...')
-        await addWorkout(exercises, navigation);
+        await addWorkout(exercises, navigation, workoutTitle);
         console.log('saved.')
         //navigation.navigate('Тренировки');
     };
@@ -98,6 +100,18 @@ const AddWorkoutPage = ({ navigation }: any) => {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={tw`w-full h-full`}>
+
+                <View style={tw`mb-2 ml-2`}>
+                    <TextInput 
+                        style={tw`text-2xl font-medium p-2 w-80 h-16`}
+                        keyboardType='default'
+                        multiline={false}
+                        maxLength={50}
+                        placeholder='Име на Тренировка'
+                        value={workoutTitle}
+                        onChangeText={(text) => setWorkoutTitle(text)}
+                    />
+                </View>
 
                 <View style={tw`flex flex-col gap-y-1 mb-15`}>
                     {exercises.map((exercise, index) => {

@@ -4,13 +4,13 @@ import { Exercise } from '../../interfaces';
 import { useState } from 'react';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 
-const addWorkout = async (exercises: any, navigation: any) => {
+const addWorkout = async (exercises: any, navigation: any, workoutTitle: string) => {
 
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
     const workoutDocRef = await addDoc(userWorkoutsCollectionRef, {
-        title: "Workout",
+        title: workoutTitle,
         created: serverTimestamp()
     });
     const workoutInfoCollectionRef = collection(workoutDocRef, "info");

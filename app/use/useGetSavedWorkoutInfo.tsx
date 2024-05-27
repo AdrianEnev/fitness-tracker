@@ -3,7 +3,7 @@ import { Exercise, Workout } from "../../interfaces";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import { useState } from "react";
 
-const getWorkoutInfo = async (workoutID: string) => {
+const getSavedWorkoutInfo = async (workoutID: string) => {
 
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -33,4 +33,4 @@ const getWorkoutInfo = async (workoutID: string) => {
     
 }
 
-export default getWorkoutInfo;
+export default getSavedWorkoutInfo;
