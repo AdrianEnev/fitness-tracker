@@ -11,6 +11,10 @@ const getSavedWorkoutInfo = async (workoutID: string) => {
 
     try{
         const workoutDocRef = doc(userWorkoutsCollectionRef, workoutID);
+
+        const workoutTitle = await getDoc(workoutDocRef);
+        const workoutTitleData = workoutTitle.data()?.title;
+
         const workoutInfoCollectionRef = collection(workoutDocRef, "info");
         
         // Get all exercises inside workoutInfoCollectionRef
@@ -25,7 +29,7 @@ const getSavedWorkoutInfo = async (workoutID: string) => {
             exercise.sets = sets;
         }
 
-        return exercisesData;
+        return { workoutTitle: workoutTitleData, exercisesData: exercisesData };
 
     }catch (err) {
         console.error('WorkoutID not found in database: ' + err);

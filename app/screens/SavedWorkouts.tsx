@@ -50,22 +50,29 @@ const Workouts = ({navigation}: any) => {
         }
     }
 
-    /*const viewWorkout = async (workout: Workout) => {
+    const viewWorkout = async (workout: Workout) => {
 
         setViewWorkoutButtonDisabled(true);
 
-        const exercisesData = await getSavedWorkoutInfo(workout.id);
-        navigation.navigate('Тренировка-Детайли', {exercises: exercisesData, workout: workout});
+        const savedWorkoutInfo = await getSavedWorkoutInfo(workout.id);
+        if (savedWorkoutInfo) {
 
-    }*/
+            const { exercisesData, workoutTitle } = savedWorkoutInfo;
+            navigation.navigate('Виж-Запазенa-Тренировка', {exercises: exercisesData, workout: workout, workoutTitle: workoutTitle});
 
-    // onPress={() => viewWorkout(savedWorkout)}
+        }
+
+    }
 
     const renderSavedWorkout = (savedWorkout: Workout) => {
         return (
-            <Pressable style={tw`w-[47%] h-38 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`} disabled={viewWorkoutButtonDisabled}>
+            <Pressable style={tw`w-[47%] h-38 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`}>
+
                 <Text style={tw`text-base`} numberOfLines={2}>{savedWorkout.title}</Text>
+
                 <Button title='delete' onPress={() => deleteWorkout(savedWorkout.id)}/>
+
+                <Button title='View' onPress={() => viewWorkout(savedWorkout)} disabled={viewWorkoutButtonDisabled}/>
             </Pressable>
         )
     }
@@ -75,10 +82,13 @@ const Workouts = ({navigation}: any) => {
     return (
         <SafeAreaView style={tw`w-full h-full`}>
 
-            <View style={tw`w-[25%] ml-2`}>
-                <TouchableOpacity style={tw`w-full h-12 bg-[#ffd166] rounded-xl flex justify-center items-center`}>
+            <View style={tw`w-full ml-2 flex flex-row justify-between`}>
+
+                <TouchableOpacity style={tw`w-[25%] h-12 bg-[#ffd166] rounded-xl flex justify-center items-center`}>
                     <Text style={tw`text-lg text-white font-medium`}>Потърси</Text>
                 </TouchableOpacity>
+
+                <Text style={tw`text-2xl font-medium mt-1 mr-4`}>Запазени тр.</Text>
             </View>
 
               

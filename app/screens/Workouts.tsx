@@ -107,10 +107,16 @@ const Workouts = ({navigation}: any) => {
 
     const renderWorkout = (workout: Workout) => {
         return (
-            <Pressable style={tw`w-[47%] h-38 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`} disabled={viewWorkoutButtonDisabled} onPress={() => viewWorkout(workout)} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
+            <Pressable style={tw`w-[47%] h-40 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`}   onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
+                
                 <Text style={tw`text-base`} numberOfLines={2}>{workout.title}</Text>
+
                 <Button title='start' disabled={startButtonDisabled} onPress={() => startWorkout(workout)}/>
+
                 <Button title='delete' onPress={() => deleteWorkout(workout.id)}/>
+
+                <Button title='View' onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled}/>
+                
             </Pressable>
         )
     }
@@ -126,6 +132,8 @@ const Workouts = ({navigation}: any) => {
                         <Text style={tw`text-lg text-white font-medium`}>Потърси</Text>
                     </TouchableOpacity>
                 </View>
+
+                <Text style={tw`text-2xl font-medium mt-1`}>Тренировки</Text>
 
                 <View style={tw`w-[25%]`}>
                     <TouchableOpacity style={tw`w-full h-12 bg-[#4ecdc4] rounded-xl flex justify-center items-center`} onPress={() => navigation.navigate('Тренировка-Добави')}>
