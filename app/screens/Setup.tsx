@@ -5,8 +5,13 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from "twrnc";
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
+import { useRoute } from '@react-navigation/native';
+import { useContext } from 'react';
+import { SetupContext } from '../../SetupContext';
 
-const Setup = ({navigation}: any) => {
+const Setup = ({route}: any) => {
+
+    const { setSetupRan } = useContext(SetupContext);
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -20,43 +25,27 @@ const Setup = ({navigation}: any) => {
     const [carbs, setCarbs] = useState("");
     const [fat, setFat] = useState("");
 
-    useEffect(() => {
-        checkUserInfoCollection();
-    }, [])
-        
-    const checkUserInfoCollection = async () => {
-        try {
-            const snapshot = await getDocs(userInfoCollectionRef);
-            let documentFound = false;
-    
-            snapshot.forEach((doc) => {
-                if (doc.id === "nutrients") {
-                    documentFound = true;
-                }
-            });
-    
-            if (documentFound) {
-                console.log('Document with id "nutrients" found');
-            } else {
-                console.log('Setup file is being run for the first time');
-                // You can add code here to create the document if it doesn't exist
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
     const setNutrients = async () => {
         try {
-            const nutrients = {
-                calories: calories,
-                protein: protein,
-                carbs: carbs,
-                fat: fat
-            }
-            await setDoc(nutrientsDocRef, nutrients, { merge: true });
 
-            navigation.navigate('Главна-Страница');
+            if (calories !== "" && protein !== "" && carbs !== "" && fat !== "") {
+                    if (calories !== "0" && protein !== "0" && carbs !== "0" && fat !== "0") {
+
+                    const nutrients = {
+                        calories: calories,
+                        protein: protein,
+                        carbs: carbs,
+                        fat: fat
+                    }
+
+                    await setDoc(nutrientsDocRef, nutrients, { merge: true });
+                    setSetupRan(true);
+                }else{
+                    console.log('Please fill all fields');
+                }
+            }else{
+                console.log('Please fill all fields');
+            }
             
         } catch (err) {
             console.error(err);

@@ -11,20 +11,33 @@ import Setup from './app/screens/Setup';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from './app/screens/Welcome';
+import { SetupContext } from './SetupContext';
 
 const Stack = createStackNavigator();
 
-const AuthenticatedTabNavigator = ({ setupRan }: any) => {
-    
+// initialParams={{ setupRan: setupRan }}
+
+const SetupPage = () => {
     return (
-        <Stack.Navigator initialRouteName={setupRan ? "Главна-Страница" : "Първоначални-Настройки"}>
+        <Stack.Navigator>
             <Stack.Screen
                 name='Първоначални-Настройки'
                 component={Setup}
                 options={() => ({
                     headerShown: false,
                 })}
+                
             />
+        </Stack.Navigator>
+    );
+
+}
+
+const AuthenticatedTabNavigator = ({ setupRan }: any) => {
+    
+    return (
+        <Stack.Navigator initialRouteName={setupRan ? "Главна-Страница" : "Първоначални-Настройки"}>
+
             <Stack.Screen
                 name="Главна-Страница"
                 component={MainPageComponent}
@@ -37,7 +50,6 @@ const AuthenticatedTabNavigator = ({ setupRan }: any) => {
     );
     
 };
-
 
 const UnauthenticatedTabNavigator = () => (
 
@@ -77,17 +89,19 @@ const App = () => {
     const [loading, setLoading] = useState(true);
     const [setupRan, setSetupRan] = useState(false);
 
+    const onComplete = () => {
+        setSetupRan(true);
+    }
+
     React.useEffect(() => {
         const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
             setUser(user);
             
             if (user) {
 
-                //console.log(user)
-
                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');
                 const userDocRef = doc(usersCollectionRef, user.uid);
-                setDoc(userDocRef, { filler: 'Random text shtoto inache toq document stava ghost document' });
+                setDoc(userDocRef, { userID: user.uid, lastLogin: new Date()});
 
                 const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
@@ -105,34 +119,23 @@ const App = () => {
 
                 const checkUserInfoCollection = async () => {
                     try {
-                        const snapshot = await getDocs(userInfoCollectionRef);
-                        let documentFound = false;
-                
-                        snapshot.forEach((doc) => {
-                            if (doc.id === "nutrients") {
-                                documentFound = true;
-                            }
-                        });
-                
-                        if (documentFound) {
-                            setSetupRan(true);
-                            //console.log('Document with title "nutrients" found');
-                        } else {
-                            setSetupRan(false);
-                            //console.log('No document with title "nutrients" found');
-                        }
-                
-                        setLoading(false);
+                        const nutrientsDocRef = doc(userInfoCollectionRef, 'nutrients');
+                        const docSnapshot = await getDoc(nutrientsDocRef);
+                        console.log('exists')
+                        return docSnapshot.exists();
                     } catch (err) {
                         console.error(err);
+                        return false;
                     }
                 }
+
                 const fetchData = async () => {
-                    await checkUserInfoCollection();
+                    const setupHasRan = await checkUserInfoCollection();
+                    setSetupRan(setupHasRan);
                     checkLanguageDocument();
                 };
 
-                fetchData();
+                fetchData().then(() => setLoading(false));
             }else{
                 // no user, set loading to false and automatically navigate to the unathenticated page
                 setLoading(false);
@@ -152,17 +155,19 @@ const App = () => {
     }
 
     return (
-        <GestureHandlerRootView style={{flex: 1}}>
+        <SetupContext.Provider value={{ setupRan, setSetupRan }}>
+            <GestureHandlerRootView style={{flex: 1}}>
 
-                <StatusBar barStyle='dark-content'/>
+                    <StatusBar barStyle='dark-content'/>
 
-                <NavigationContainer>
+                    <NavigationContainer>
 
-                    {user ? <AuthenticatedTabNavigator setupRan = {setupRan}/> : <UnauthenticatedTabNavigator />}
+                        {user ? (setupRan ? <AuthenticatedTabNavigator /> : <SetupPage />) : <UnauthenticatedTabNavigator />}
 
-                </NavigationContainer>
-        
-        </GestureHandlerRootView>
+                    </NavigationContainer>
+            
+            </GestureHandlerRootView>
+        </SetupContext.Provider>
     );
 };
 
