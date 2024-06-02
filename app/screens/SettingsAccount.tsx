@@ -127,6 +127,9 @@ const SettingsAccount = ({navigation, route}: any) => {
                 <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели', {username: username})}>
                     <Text style={tw`text-lg font-medium`}>Приятели</Text>
                 </Pressable>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Статистика')}>
+                    <Text style={tw`text-lg font-medium`}>Статистика</Text>
+                </Pressable>
             </View>
 
             <CustomTabBar 

@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import generateRandomColour from "./useGenerateColour";
 
@@ -7,6 +7,7 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string)
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userSavedWorkoutsCollectionRef = collection(userDocRef, "saved_workouts");
+    const userInfoCollectionRef = collection(userDocRef, "user_info");
 
     const savedWorkoutDocRef = await addDoc(userSavedWorkoutsCollectionRef, {
         title: workoutTitle,
@@ -14,33 +15,45 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string)
         colour: generateRandomColour()
     });
 
+    let totalWeight = 0;
+
     try {
-        exercises.forEach((exercise: any) => {
-            exercise.sets.forEach(async (set: any, index: any) => {
+        await Promise.all(exercises.map(async (exercise: any) => {
+            const savedWorkoutInfo = collection(savedWorkoutDocRef, "info");
+            const exerciseDocRef = doc(savedWorkoutInfo, (exercise.exerciseIndex).toString());
+            await setDoc(exerciseDocRef, {
+                title: exercise.title,
+                description: exercise.description,
+                exerciseIndex: exercise.exerciseIndex,
+            });
 
-                const savedWorkoutInfo = collection(savedWorkoutDocRef, "info");
-
-                const exerciseDocRef = doc(savedWorkoutInfo, (exercise.exerciseIndex).toString());
-                setDoc(exerciseDocRef, {
-                    title: exercise.title,
-                    description: exercise.description,
-                    exerciseIndex: exercise.exerciseIndex,
-                })
-
+            await Promise.all(exercise.sets.map(async (set: any, index: any) => {
                 const exerciseSets = collection(exerciseDocRef, "sets");
                 await addDoc(exerciseSets, {
                     reps: set.reps,
                     weight: set.weight,
                     setIndex: index + 1
                 });
-                
-            });
-            
+
+                totalWeight += parseFloat(set.weight);
+            }));
+        }));
+
+        // Dobavqne na tejestta povdignata prez cqlata trenirovka kum tova koeto e zapazeno v bazata danni
+        const weightLiftedDocRef = doc(userInfoCollectionRef, "weight_lifted");
+        const weightLiftedDoc = await getDoc(weightLiftedDocRef);
+
+        if (weightLiftedDoc.exists()) {
+            totalWeight += weightLiftedDoc.data().weight;
+        }
+
+        await setDoc(weightLiftedDocRef, {
+            weight: totalWeight
         });
 
         navigation.navigate('Главна Страница');
         
-    }catch (err) {
+    } catch (err) {
         console.error(err);
     }
 }

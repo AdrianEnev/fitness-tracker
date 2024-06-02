@@ -13,8 +13,6 @@ const addWorkout = async (exercises: any, navigation: any, workoutTitle: string)
     });
     const workoutInfoCollectionRef = collection(workoutDocRef, "info");
 
-
-
     try {
         exercises.forEach((exercise: any) => {
             exercise.sets.forEach(async (set: any, index: any) => {

@@ -77,4 +77,4 @@
 
 - limit 1 trenirovka na den, inache da se plashta
 
-- ako na uprajnenie ne mu e dadeno ime da bude "Uprajnenie 5" ili nehsto takova spored reda mu
+- dokato ne e dobaven priqtelqt da ne moje da se pipa nishto ili da vidq zashto taka lagi

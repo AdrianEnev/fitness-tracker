@@ -17,6 +17,8 @@ import AddFriends from "../screens/AddFriends";
 import FriendRequestsSent from "../screens/FriendRequestsSent";
 import FriendRequestsRecieved from "../screens/FriendRequestsRecieved";
 import ViewSavedWorkout from "../screens/ViewSavedWorkout";
+import Statistics from "../screens/Statistics";
+import ViewFriendProfile from "../screens/ViewFriendProfile";
 
 const Stack = createNativeStackNavigator();
 
@@ -160,9 +162,14 @@ const MainPageComponent = () => {
               name="Настройки-Акаунт"
               component={SettingsAccount}
               options={{
-                  title: "Акаунт",
                   headerShown: false,
-                  
+              }}
+          />
+          <Stack.Screen
+              name="Настройки-Статистика"
+              component={Statistics}
+              options={{
+                  headerShown: false,
               }}
           />
 
@@ -180,6 +187,15 @@ const MainPageComponent = () => {
                   headerShown: false,
               }}
           />
+
+          <Stack.Screen
+              name="Приятел-Акаунт"
+              component={ViewFriendProfile}
+              options={{
+                  headerShown: false,
+              }}
+          />
+
           <Stack.Screen
               name="Приятели-Покани-Изпратени"
               component={FriendRequestsSent}

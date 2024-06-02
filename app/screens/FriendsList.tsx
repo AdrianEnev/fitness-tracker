@@ -88,7 +88,7 @@ const FriendsList = ({navigation, route}: any) => {
                             <Text style={tw`text-lg text-black font-medium`}>{item.username}</Text>
 
                             <View style={tw`flex flex-row gap-x-3`}>
-                                <TouchableOpacity style={tw`w-24 h-12 bg-blue-500 rounded-2xl flex items-center justify-center shadow-md`}>
+                                <TouchableOpacity style={tw`w-24 h-12 bg-blue-500 rounded-2xl flex items-center justify-center shadow-md`} onPress={() => navigation.navigate('Приятел-Акаунт', {friend_info: item})}>
                                     <Text style={tw`text-lg text-white font-medium`}>Профил</Text>
                                 </TouchableOpacity>
 
