@@ -9,6 +9,7 @@ import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomTabBar from '../components/CustomTabBar';
+import exportSavedWorkouts from '../use/useExportSavedWorkouts';
 
 const Settings = ({navigation}: any) => {
 
@@ -111,7 +112,7 @@ const Settings = ({navigation}: any) => {
 
                 </View>
 
-                <Button title='export saved workouts' />
+                <Button title='export saved workouts' onPress={exportSavedWorkouts}/>
 
             </View>
 

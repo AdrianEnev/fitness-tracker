@@ -64,15 +64,24 @@ const Workouts = ({navigation}: any) => {
 
     }
 
-    const renderSavedWorkout = (savedWorkout: Workout) => {
+    const renderSavedWorkout = (savedWorkout: any) => {
         return (
-            <Pressable style={tw`w-[47%] h-38 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`}>
+            <Pressable style={tw`w-[47%] h-36 bg-${savedWorkout.colour} shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`}>
 
-                <Text style={tw`text-base`} numberOfLines={2}>{savedWorkout.title}</Text>
+                <Text style={tw`text-base font-medium text-center`} numberOfLines={2}>{savedWorkout.title}</Text>
 
-                <Button title='delete' onPress={() => deleteWorkout(savedWorkout.id)}/>
+                <Pressable onPress={() => deleteWorkout(savedWorkout.id)} 
+                    style={tw`w-full h-10 bg-white rounded-2xl flex items-center justify-center mt-2`}
+                >
+                    <Text>изтрий</Text>
+                </Pressable>
 
-                <Button title='View' onPress={() => viewWorkout(savedWorkout)} disabled={viewWorkoutButtonDisabled}/>
+                <Pressable onPress={() => viewWorkout(savedWorkout)} disabled={viewWorkoutButtonDisabled}
+                    style={tw`w-full h-10 bg-white rounded-2xl flex items-center justify-center mt-2`}
+                >
+                    <Text>подробности</Text>
+                </Pressable>
+               
             </Pressable>
         )
     }
@@ -82,17 +91,9 @@ const Workouts = ({navigation}: any) => {
     return (
         <SafeAreaView style={tw`w-full h-full`}>
 
-            <View style={tw`w-full ml-2 flex flex-row justify-between`}>
+            <Text style={tw`text-2xl font-medium mt-1 text-center`}>Запазени Тренировки</Text>
 
-                <TouchableOpacity style={tw`w-[25%] h-12 bg-[#ffd166] rounded-xl flex justify-center items-center`}>
-                    <Text style={tw`text-lg text-white font-medium`}>Потърси</Text>
-                </TouchableOpacity>
-
-                <Text style={tw`text-2xl font-medium mt-1 mr-4`}>Запазени тр.</Text>
-            </View>
-
-              
-            <View style={tw`w-full h-full mt-4 mx-2`}>
+            <View style={tw`w-full h-full mt-5 mx-2`}>
                 <FlatList
                     data={savedWorkouts}
                     renderItem={({item}: any) => renderSavedWorkout(item)}

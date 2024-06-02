@@ -1,7 +1,5 @@
 
 import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
-import { Exercise } from '../../interfaces';
-import { useState } from 'react';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 
 const addWorkout = async (exercises: any, navigation: any, workoutTitle: string) => {
@@ -15,9 +13,15 @@ const addWorkout = async (exercises: any, navigation: any, workoutTitle: string)
     });
     const workoutInfoCollectionRef = collection(workoutDocRef, "info");
 
+
+
     try {
         exercises.forEach((exercise: any) => {
             exercise.sets.forEach(async (set: any, index: any) => {
+
+                if (exercise.title === '') {
+                    exercise.title = "Упражнение " + (exercise.exerciseIndex + 1);
+                }
 
                 const exerciseDocRef = doc(workoutInfoCollectionRef, (exercise.exerciseIndex + 1).toString());
                 setDoc(exerciseDocRef, {

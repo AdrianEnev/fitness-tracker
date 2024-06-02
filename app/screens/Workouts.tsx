@@ -9,6 +9,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
 import getWorkoutInfo from '../use/useGetWorkoutInfo';
 import { useFocusEffect } from '@react-navigation/native';
+import generateRandomColour from '../use/useGenerateColour';
 
 const Workouts = ({navigation}: any) => {
 
@@ -107,15 +108,27 @@ const Workouts = ({navigation}: any) => {
 
     const renderWorkout = (workout: Workout) => {
         return (
-            <Pressable style={tw`w-[47%] h-40 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`}   onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
+            <Pressable style={tw`w-[47%] h-48 bg-[#ffd166] shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
                 
-                <Text style={tw`text-base`} numberOfLines={2}>{workout.title}</Text>
+                <Text style={tw`text-base font-medium text-center`} numberOfLines={2}>{workout.title}</Text>
 
-                <Button title='start' disabled={startButtonDisabled} onPress={() => startWorkout(workout)}/>
+                <Pressable  onPress={() => startWorkout(workout)} disabled={startButtonDisabled}
+                    style={tw`w-full h-10 bg-white rounded-2xl flex items-center justify-center mt-2`}
+                >
+                    <Text>начало</Text>
+                </Pressable>
 
-                <Button title='delete' onPress={() => deleteWorkout(workout.id)}/>
+                <Pressable onPress={() => deleteWorkout(workout.id)} 
+                    style={tw`w-full h-10 bg-white rounded-2xl flex items-center justify-center mt-2`}
+                >
+                    <Text>изтрий</Text>
+                </Pressable>
 
-                <Button title='View' onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled}/>
+                <Pressable onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled}
+                    style={tw`w-full h-10 bg-white rounded-2xl flex items-center justify-center mt-2`}
+                >
+                    <Text>подробности</Text>
+                </Pressable>
                 
             </Pressable>
         )
@@ -127,13 +140,9 @@ const Workouts = ({navigation}: any) => {
         <SafeAreaView style={tw`w-full h-full`}>
 
             <View style={tw`w-[96%] flex flex-row justify-between mx-2`}>
-                <View style={tw`w-[25%]`}>
-                    <TouchableOpacity style={tw`w-full h-12 bg-[#ffd166] rounded-xl flex justify-center items-center`}>
-                        <Text style={tw`text-lg text-white font-medium`}>Потърси</Text>
-                    </TouchableOpacity>
-                </View>
+                
 
-                <Text style={tw`text-2xl font-medium mt-1`}>Тренировки</Text>
+                <Text style={tw`text-2xl font-medium mt-1 ml-2`}>Тренировки</Text>
 
                 <View style={tw`w-[25%]`}>
                     <TouchableOpacity style={tw`w-full h-12 bg-[#4ecdc4] rounded-xl flex justify-center items-center`} onPress={() => navigation.navigate('Тренировка-Добави')}>

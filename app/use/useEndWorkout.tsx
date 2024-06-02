@@ -1,5 +1,6 @@
 import { addDoc, collection, doc, serverTimestamp, setDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
+import generateRandomColour from "./useGenerateColour";
 
 const endWorkout = async (navigation: any, exercises: any, workoutTitle: string) => {
 
@@ -9,7 +10,8 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string)
 
     const savedWorkoutDocRef = await addDoc(userSavedWorkoutsCollectionRef, {
         title: workoutTitle,
-        created: serverTimestamp()
+        created: serverTimestamp(),
+        colour: generateRandomColour()
     });
 
     try {
