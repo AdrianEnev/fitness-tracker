@@ -5,7 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { FIREBASE_AUTH, FIREBASE_STORAGE, FIRESTORE_DB } from '../../firebaseConfig';
 import { useFocusEffect } from '@react-navigation/native';
-import { collection, doc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot } from 'firebase/firestore';
 
 const ViewFriendProfile = ({route}: any) => {
 
@@ -13,6 +13,7 @@ const ViewFriendProfile = ({route}: any) => {
 
     const [profilePicture, setProfilePicture] = useState('');
     const [weightLifted, setWeightLifted] = useState(0);
+    const [friendRegistrationDate, setFriendRegistrationDate] = useState<React.ReactNode | null>(null);
 
     const getFriendProfilePicture = async () => {
 
@@ -34,7 +35,7 @@ const ViewFriendProfile = ({route}: any) => {
     const getFriendWeightLifted = async () => {
         
         const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+        const userDocRef = doc(usersCollectionRef, friend_info.id);
         const userInfoCollectionRef = collection(userDocRef, 'user_info')
         const userWeightLiftedDocRef = doc(userInfoCollectionRef, 'weight_lifted');
 
@@ -46,9 +47,37 @@ const ViewFriendProfile = ({route}: any) => {
         return () => unsubscribe();
     }
 
+    const getFriendRegistrationDate = async () => {
+        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+        const userDocRef = doc(usersCollectionRef, friend_info.id);
+    
+        try {
+            const docSnapshot = await getDoc(userDocRef);
+            if (docSnapshot.exists()) {
+
+                let registrationDate = docSnapshot.data()?.registrationDate;
+                let date = registrationDate.toDate();
+                
+                let formattedDate = date.toLocaleDateString('en-GB', {
+                    day: '2-digit',
+                    month: '2-digit',
+                    year: 'numeric'
+                });
+
+                setFriendRegistrationDate(<Text>Регистриран: {formattedDate}</Text>);
+
+            } else {
+                console.log("No such document!");
+            }
+        } catch (error) {
+            console.log("Error getting document:", error);
+        }
+    }
+
     useFocusEffect(() => {
         getFriendProfilePicture();
         getFriendWeightLifted();
+        getFriendRegistrationDate();
     })
 
     return (
@@ -89,6 +118,7 @@ const ViewFriendProfile = ({route}: any) => {
 
             
             <Text>Подвигната тежест: {weightLifted} КГ</Text>
+            {friendRegistrationDate}
 
         </SafeAreaView>
     )

@@ -89,10 +89,6 @@ const App = () => {
     const [loading, setLoading] = useState(true);
     const [setupRan, setSetupRan] = useState(false);
 
-    const onComplete = () => {
-        setSetupRan(true);
-    }
-
     React.useEffect(() => {
         const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
             setUser(user);
@@ -101,7 +97,20 @@ const App = () => {
 
                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');
                 const userDocRef = doc(usersCollectionRef, user.uid);
-                setDoc(userDocRef, { userID: user.uid, lastLogin: new Date()});
+
+                const checkUserDocument = async () => {
+                    try {
+                        const userDocSnapshot = await getDoc(userDocRef);
+                        if (!userDocSnapshot.exists()) {
+                            await setDoc(userDocRef, { userID: user.uid, lastLogin: new Date(), registrationDate: new Date() });
+                        } else {
+                            await setDoc(userDocRef, { userID: user.uid, lastLogin: new Date() }, { merge: true });
+                        }
+                    } catch (err) {
+                        console.error(err);
+                    }
+                };
+                
 
                 const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
@@ -130,6 +139,7 @@ const App = () => {
                 }
 
                 const fetchData = async () => {
+                    await checkUserDocument();
                     const setupHasRan = await checkUserInfoCollection();
                     setSetupRan(setupHasRan);
                     checkLanguageDocument();

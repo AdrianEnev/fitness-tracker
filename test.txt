@@ -78,3 +78,5 @@
 - limit 1 trenirovka na den, inache da se plashta
 
 - dokato ne e dobaven priqtelqt da ne moje da se pipa nishto ili da vidq zashto taka lagi
+
+- badgove za 50 trenirovki i nqkvi takiva
