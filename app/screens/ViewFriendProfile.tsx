@@ -21,7 +21,6 @@ const ViewFriendProfile = ({route}: any) => {
         const imageRef = ref(FIREBASE_STORAGE, imagePath);
 
         try {
-
             const url = await getDownloadURL(imageRef);
             setProfilePicture(url);
 
@@ -64,7 +63,7 @@ const ViewFriendProfile = ({route}: any) => {
                     year: 'numeric'
                 });
 
-                setFriendRegistrationDate(<Text>Регистриран: {formattedDate}</Text>);
+                setFriendRegistrationDate(<Text style={tw`text-lg m-2`}>Регистриран: {formattedDate}</Text>);
 
             } else {
                 console.log("No such document!");
@@ -112,12 +111,12 @@ const ViewFriendProfile = ({route}: any) => {
                 </View>
 
                 <View>
-                    <Text style={tw`text-xl `}>{friend_info.username}</Text>
+                    <Text style={tw`text-xl`}>{friend_info.username}</Text>
                 </View>
             </View>
 
             
-            <Text>Подвигната тежест: {weightLifted} КГ</Text>
+            <Text style={tw`text-lg m-2`}>Подвигната тежест: {weightLifted || 0} КГ</Text>
             {friendRegistrationDate}
 
         </SafeAreaView>

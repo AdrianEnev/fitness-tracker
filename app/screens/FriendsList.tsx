@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { Friend } from '../../interfaces';
-import { collection, deleteDoc, doc, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { FlatList } from 'react-native-gesture-handler';
 
@@ -35,23 +35,29 @@ const FriendsList = ({navigation, route}: any) => {
     })
 
     const removeFriend = async (friend: Friend) => {
-        console.log('Deleting friend...')
-    
+
         const friendDocRef = doc(listCollectionRef, friend.id);
         const friendUserDocRef = doc(usersCollectionRef, friend.id);
         const friendUserInfoCollectionRef = collection(friendUserDocRef, 'user_info');
         const friendFriendsDocRef = doc(friendUserInfoCollectionRef, 'friends');
         const friendListCollectionRef = collection(friendFriendsDocRef, 'list');
         const loggedInUserDocRef = doc(friendListCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    
+        
         try {
-            await Promise.all([
-                deleteDoc(friendDocRef),
-                deleteDoc(loggedInUserDocRef)
-            ]);
+            const friendDoc = await getDoc(friendDocRef);
+            const loggedInUserDoc = await getDoc(loggedInUserDocRef);
     
-            console.log('Friend successfully deleted');
-            navigation.navigate('Главна Страница')
+            if (friendDoc.exists() && loggedInUserDoc.exists()) {
+                await Promise.all([
+                    deleteDoc(friendDocRef),
+                    deleteDoc(loggedInUserDocRef)
+                ]);
+        
+                console.log('Friend successfully deleted');
+                navigation.navigate('Главна Страница')
+            } else {
+                console.log('Friend already deleted');
+            }
         } catch (err) {
             console.log(err);
         }

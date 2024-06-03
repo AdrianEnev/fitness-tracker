@@ -80,3 +80,7 @@
 - dokato ne e dobaven priqtelqt da ne moje da se pipa nishto ili da vidq zashto taka lagi
 
 - badgove za 50 trenirovki i nqkvi takiva
+
+- pri iztrivane na akaunt da se premahne chovek ot friend listovete + da mahna pending requestovete
+
+- dokato neshto se promenq v bazata danni da ne moje usera da izleze ot priloejnieto i da go prekusne, da se uverq che imat stabilen internet i ne sa izlezli predi vsichkko da bude svursheno (moje bi s Promise)
