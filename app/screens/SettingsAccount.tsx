@@ -22,6 +22,8 @@ const SettingsAccount = ({navigation, route}: any) => {
     const user = auth.currentUser;
     const email = user?.email;
 
+    const {friendRequestsNumber} = route.params;
+
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
@@ -71,14 +73,7 @@ const SettingsAccount = ({navigation, route}: any) => {
 
                 <View style={tw`w-full`}>
 
-                    <Pressable style={tw`w-12 h-12 z-20`} onPress={() => navigation.navigate("Настройки-Страница")}>
-                        <Ionicons name='chevron-back-outline' 
-                            size={46}
-                            color='#000000'
-                        />
-                    </Pressable>
-
-                    <View style={tw`flex items-center mt-[-45px]`}>
+                    <View style={tw`flex items-center`}>
                         {profilePicture === '' ? (
                             <Pressable 
                                 style={tw`bg-white w-28 h-28 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}
@@ -124,8 +119,15 @@ const SettingsAccount = ({navigation, route}: any) => {
                 <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => changePassword(email, user, auth)}>
                     <Text style={tw`text-lg font-medium`}>Промяна на парола</Text>
                 </Pressable>
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели', {username: username})}>
-                    <Text style={tw`text-lg font-medium`}>Приятели</Text>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели', {username: username, friendRequestsNumber: friendRequestsNumber})}>
+                    <View>
+                        <Text style={tw`text-lg font-medium`}>Приятели</Text>
+                        {friendRequestsNumber >= "1" && 
+                            <View style={tw`w-6 h-6 bg-red-500 rounded-full absolute top-[-14px] left-21 flex justify-center items-center`}>
+                                <Text style={tw`text-white`}>{friendRequestsNumber}</Text>
+                            </View>
+                        }
+                    </View>
                 </Pressable>
                 <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Статистика')}>
                     <Text style={tw`text-lg font-medium`}>Статистика</Text>

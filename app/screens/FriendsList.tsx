@@ -9,6 +9,7 @@ import { FlatList } from 'react-native-gesture-handler';
 const FriendsList = ({navigation, route}: any) => {
 
     const {username} = route.params;
+    const {friendRequestsNumber} = route.params;
 
     const [friends, setFriends] = useState<Friend[]>([]);
 
@@ -78,9 +79,16 @@ const FriendsList = ({navigation, route}: any) => {
                     <Text style={tw`text-lg text-black font-medium`}>Изпратени</Text>
                 </TouchableOpacity>
 
-                <TouchableOpacity style={tw`w-32 h-12 bg-white rounded-xl flex justify-center items-center`} onPress={() => navigation.navigate('Приятели-Покани-Получени', {username: username})}>
-                    <Text style={tw`text-lg text-black font-medium`}>Получени</Text>
-                </TouchableOpacity>
+                <View>
+                    <TouchableOpacity style={tw`w-32 h-12 bg-white rounded-xl flex justify-center items-center`} onPress={() => navigation.navigate('Приятели-Покани-Получени', {username: username})}>
+                            <Text style={tw`text-lg text-black font-medium`}>Получени</Text>
+                    </TouchableOpacity>
+                    {friendRequestsNumber >= "1" && 
+                        <View style={tw`w-6 h-6 bg-red-500 rounded-full absolute top-[-6px] left-[-2px] flex justify-center items-center`}>
+                            <Text style={tw`text-white`}>{friendRequestsNumber}</Text>
+                        </View>
+                    }
+                </View>
 
             </View>
 

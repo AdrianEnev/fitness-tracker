@@ -16,6 +16,7 @@ import getCurrentDate from '../use/useGetCurrentDate';
 import getProfilePicture from '../use/useGetProfilePicture';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import CustomTabBar from '../components/CustomTabBar';
+import getFriendRequests from '../use/useGetFriendRequestsRecieved';
 
 const Main = ({navigation}: any) => {
 
@@ -31,11 +32,13 @@ const Main = ({navigation}: any) => {
     const [username, setUsername] = useState('');
     const [profilePicture, setProfilePicture] = useState('');
 
+    const [friendRequestsNumber, setFriendRequestsNumber] = useState("");
+
     useFocusEffect(
         React.useCallback(() => {
 
             const fetch = async () => {
-                await getLanguage(userInfoCollectionRef);
+                getLanguage(userInfoCollectionRef);
 
                 const username = await getUsername(userInfoCollectionRef);
                 setUsername(username);
@@ -44,6 +47,14 @@ const Main = ({navigation}: any) => {
                 if (profilePictureData && profilePictureData !== profilePicture) {
                     setProfilePicture(profilePictureData);
                 }
+
+                const friendRequests = await getFriendRequests(userInfoCollectionRef);
+                if (friendRequests <= 9) {
+                    setFriendRequestsNumber(friendRequests.toString());
+                }else {
+                    setFriendRequestsNumber("9+");
+                }
+                
             }
             fetch();
             updateCurrentNutrients();
@@ -119,11 +130,11 @@ const Main = ({navigation}: any) => {
                                 <Ionicons name='person-outline' 
                                     size={40}
                                     color='#000000'  
-                                    onPress={() => navigation.navigate("Настройки-Акаунт", { profilePicture: profilePicture })}
+                                    onPress={() => navigation.navigate("Настройки-Акаунт", { friendRequestsNumber: friendRequestsNumber })}
                                 />
                             </View>
                         ) : (
-                            <Pressable onPress={() => navigation.navigate("Настройки-Акаунт", { profilePicture: profilePicture })}>
+                            <Pressable onPress={() => navigation.navigate("Настройки-Акаунт", { friendRequestsNumber: friendRequestsNumber })}>
                                 <Image
                                     source={{ uri: profilePicture }}
                                     style={tw`w-16 h-16 rounded-full ml-2`}
@@ -140,12 +151,19 @@ const Main = ({navigation}: any) => {
                     </View>
 
                     <View>
-                        <TouchableWithoutFeedback onPress={() => navigation.navigate("Настройки-Страница", { profilePicture: profilePicture })} 
-                            style={tw`bg-white w-16 h-16 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
-                            <Ionicons name='settings-outline' 
-                                size={40}
-                                color='#000000'
-                            />
+                        <TouchableWithoutFeedback onPress={() => navigation.navigate("Настройки-Страница", { friendRequestsNumber: friendRequestsNumber })} 
+                                style={tw`bg-white w-16 h-16 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
+                            <View>
+                                <Ionicons name='settings-outline' 
+                                    size={40}
+                                    color='#000000'
+                                />
+                                {friendRequestsNumber >= "1" && 
+                                    <View style={tw`w-6 h-6 bg-red-500 rounded-full absolute top-[-18px] left-[-8px] flex justify-center items-center`}>
+                                        <Text style={tw`text-white`}>{friendRequestsNumber}</Text>
+                                    </View>
+                                }
+                            </View>
                         </TouchableWithoutFeedback>
                     </View>
 

@@ -1,4 +1,4 @@
-import { View, Text, Button, TouchableOpacity } from 'react-native'
+import { View, Text, Button, TouchableOpacity, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import tw from 'twrnc'
 import { Switch } from 'react-native';
@@ -10,8 +10,11 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomTabBar from '../components/CustomTabBar';
 import exportSavedWorkouts from '../use/useExportSavedWorkouts';
+import getFriendRequests from '../use/useGetFriendRequestsRecieved';
 
-const Settings = ({navigation}: any) => {
+const Settings = ({navigation, route}: any) => {
+
+    const {friendRequestsNumber} = route.params;
 
     // opciq za smenq na ezika koqto zadava neshto v bazata danni i ot tam se izvlicha ezikut za cqlata aplikaciq
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -72,15 +75,26 @@ const Settings = ({navigation}: any) => {
     return (
         <SafeAreaView style={tw`h-full`}>
 
-            <View style={tw`mx-3`}>
+            <View style={tw``}>
 
-                <Text style={tw`text-2xl font-medium mt-2`}>Настройки</Text>
+                <Text style={tw`text-2xl font-medium mb-4 text-center`}>Настройки</Text>
 
-                <Button title={t('account')} onPress={() => navigation.navigate('Настройки-Акаунт')}/>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Акаунт', {friendRequestsNumber: friendRequestsNumber})}>
+                    <View>
+                        <Text style={tw`text-lg font-medium`}>{t('account')}</Text>
+                        {friendRequestsNumber >= "1" && 
+                            <View style={tw`w-6 h-6 bg-red-500 rounded-full absolute top-[-12px] left-17 flex justify-center items-center`}>
+                                <Text style={tw`text-white`}>{friendRequestsNumber}</Text>
+                            </View>
+                        }
+                    </View>
+                </Pressable>
 
-                <Button title={t('macronutrients')} onPress={() => navigation.navigate('Настройки-Макронутриенти')}/>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Макронутриенти')}>
+                    <Text style={tw`text-lg font-medium`}>{t('macronutrients')}</Text>
+                </Pressable>
 
-                <View style={tw`flex flex-row justify-center`}>
+                <View style={tw`flex flex-row justify-center mt-10`}>
 
                     <TouchableOpacity 
                         style={selectedLanguage === 'en' ? tw`px-3 py-2 bg-blue-500 w-14` : tw`px-3 py-2 bg-gray-300 w-14`} 
@@ -92,7 +106,7 @@ const Settings = ({navigation}: any) => {
                     <TouchableOpacity 
                         style={selectedLanguage === 'bg' ? tw`px-3 py-2 bg-blue-500 w-14` : tw`px-3 py-2 bg-gray-300 w-14`} 
                         onPress={() => changeLanguage('bg')}
-                    >
+                    >   
                         <Text style={tw`text-white text-lg`}>BG</Text>
                     </TouchableOpacity>
 

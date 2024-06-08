@@ -44,3 +44,5 @@
 - badgove za 50 trenirovki i nqkvi takiva
 
 - dokato neshto se promenq v bazata danni da ne moje usera da izleze ot priloejnieto i da go prekusne, da se uverq che imat stabilen internet i ne sa izlezli predi vsichkko da bude svursheno (moje bi s Promise)
+
+- disable receiving friend requests
