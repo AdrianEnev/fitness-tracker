@@ -9,7 +9,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import sendFriendRequest from '../use/useSendFriendRequest'
 
-const AddFriends = ({route}: any) => {
+const AddFriends = ({route, navigation}: any) => {
 
     // imeto na potrebitelq koito e lognat
     const {username} = route.params;
@@ -126,7 +126,7 @@ const AddFriends = ({route}: any) => {
                             <Pressable disabled={friendRequestButtonDisabled} onPress={async () => {
                                 setFriendRequestButtonDisabled(true);
                                 console.log('sending friend request...');
-                                await sendFriendRequest(item, username)
+                                await sendFriendRequest(item, username, navigation)
                                 setFriendRequestButtonDisabled(false);
                             }}>
                                 <View style={tw`w-full h-14 bg-white p-3 mb-2 mt-3`}>

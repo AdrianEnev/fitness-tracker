@@ -50,3 +50,4 @@
 - kato se izprati pokana za priqtelstvo da se mahne choveka ot suggested lista
 
 - da pokazva kolko pokani sa izprateni i kolko sa polucheni pri butonite gore na friendslist
+- online / offline

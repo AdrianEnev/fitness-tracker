@@ -94,7 +94,7 @@ const FriendRequestsRecieved = ({route, navigation}: any) => {
             });
 
             console.log('Step 3 - successful (added friends to both users)');
-            alert(`Поканата на ${user.username} беше приета успешно!`);
+            navigation.goBack();
 
         } catch (err) {
             console.error('Step 3 - error ->', err);

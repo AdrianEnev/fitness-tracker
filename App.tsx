@@ -1,14 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { FIREBASE_AUTH, FIRESTORE_DB } from './firebaseConfig';
 import Login from './app/screens/Login';
 import Register from './app/screens/Register';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { ActivityIndicator, StatusBar, View } from 'react-native'
+import { ActivityIndicator, AppState, StatusBar, View } from 'react-native'
 import MainPageComponent from './app/components/MainPageComponent';
 import Setup from './app/screens/Setup';
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, onSnapshot, setDoc } from 'firebase/firestore';
 import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from './app/screens/Welcome';
 import { SetupContext } from './SetupContext';
@@ -83,7 +83,34 @@ const UnauthenticatedTabNavigator = () => (
 
 );
 
+
+
+
 const App = () => {
+
+    const appState = useRef(AppState.currentState);
+    const [appStateVisible, setAppStateVisible] = useState(appState.current);
+    
+    let appStateListener: any;
+
+    useEffect(() => {
+
+        appStateListener = AppState.addEventListener('change', _handleAppStateChange);
+        return () => {
+            appStateListener();
+        }
+        
+    }, []);
+
+    const _handleAppStateChange = (nextAppState: any) => {
+        if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+            //console.log('App has come to the foreground!');
+        }
+        appState.current = nextAppState;
+        setAppStateVisible(appState.current);
+       // console.log('AppState', appState.current);
+
+    }
 
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
@@ -97,23 +124,27 @@ const App = () => {
 
                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');
                 const userDocRef = doc(usersCollectionRef, user.uid);
+                const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
                 const checkUserDocument = async () => {
                     try {
                         const userDocSnapshot = await getDoc(userDocRef);
                         if (!userDocSnapshot.exists()) {
                             await setDoc(userDocRef, { userID: user.uid, lastLogin: new Date(), registrationDate: new Date() });
+
+                            addDoc(userInfoCollectionRef, {
+                                status: 'online',
+                            });
                         } else {
                             await setDoc(userDocRef, { userID: user.uid, lastLogin: new Date() }, { merge: true });
+                            setDoc(doc(userInfoCollectionRef, 'status'), { status: 'online' });
                         }
                     } catch (err) {
                         console.error(err);
                     }
+
                 };
                 
-
-                const userInfoCollectionRef = collection(userDocRef, 'user_info');
-
                 const checkLanguageDocument = async () => {
                     try {
                         const languageDocRef = doc(userInfoCollectionRef, 'language');
@@ -130,8 +161,8 @@ const App = () => {
                     try {
                         const nutrientsDocRef = doc(userInfoCollectionRef, 'nutrients');
                         const docSnapshot = await getDoc(nutrientsDocRef);
-                        console.log('exists')
                         return docSnapshot.exists();
+                        // exists
                     } catch (err) {
                         console.error(err);
                         return false;

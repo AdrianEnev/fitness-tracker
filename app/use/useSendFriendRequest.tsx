@@ -51,18 +51,21 @@ const sendFriendRequestFromUser = async (user: Friend, loggedInUser: User, logge
 }
 
 // Function to send a friend request
-const sendFriendRequest = async (user: Friend, loggedInUserUsername: string) => {
+const sendFriendRequest = async (user: Friend, loggedInUserUsername: string, navigation: any) => {
 
     const loggedInUser = FIREBASE_AUTH.currentUser;
 
     if (loggedInUser) {
         try {
+
+            alert('Пращане на покана')
+
             // Send a friend request to the user
             await sendFriendRequestToUser(user, loggedInUser, loggedInUserUsername);
             // Send a friend request from the logged in user
             await sendFriendRequestFromUser(user, loggedInUser, loggedInUserUsername);
             
-            alert('Покана за приятелство изпратена!')
+            navigation.goBack();
 
         } catch (error) {
             // If an error occurs, display it in an alert
