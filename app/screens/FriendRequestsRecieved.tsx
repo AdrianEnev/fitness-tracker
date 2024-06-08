@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, FlatList, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, setDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, runTransaction, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -48,93 +48,80 @@ const FriendRequestsRecieved = ({route, navigation}: any) => {
     }, [])
 
     const acceptRequest = async (user: Friend) => {
-
-        // delete sent from logged user
+ 
+        // delete sent from logged user - Step 1
         const sentCollectionRef = collection(friendRequestsDocRef, 'received');
         const requestDocRef = doc(sentCollectionRef, user.id);
 
-        try {
-            await deleteDoc(requestDocRef);
-            console.log(`Step 1 - sucessful (Deleted request to ${user.username})`);
-
-        } catch (err) {
-            console.error(`Step 1 - error -> Error deleting request to ${user.username}: `, err);
-        }
-
-        // delete recieved from other user
+        // delete received from other user
         const otherUserDocRef = doc(usersCollectionRef, user.id);
         const otherUserInfoCollectionRef = collection(otherUserDocRef, 'user_info');
         const otherUserFriendRequestsDocRef = doc(otherUserInfoCollectionRef, 'friendRequests');
+        const receivedCollectionRef = collection(otherUserFriendRequestsDocRef, 'sent');
+        const receivedDocRef = doc(receivedCollectionRef, FIREBASE_AUTH.currentUser?.uid)
 
         try {
-            const receivedCollectionRef = collection(otherUserFriendRequestsDocRef, 'sent');
-            const recievedDocRef = doc(receivedCollectionRef, FIREBASE_AUTH.currentUser?.uid)
-
-            await deleteDoc(recievedDocRef)
-            console.log(`Step 2 - successful (deleted request by ${username})`)
-
-        }catch (err) {
-            console.log('Step 2 - error -> ', err)
+            await runTransaction(FIRESTORE_DB, async (transaction) => {
+                transaction.delete(requestDocRef);
+                transaction.delete(receivedDocRef);
+            });
+            console.log(`Steps 1 and 2 - successful (Deleted request to and by ${user.username})`);
+        } catch (err) {
+            console.error(`Steps 1 and 2 - error -> Error deleting request to and by ${user.username}: `, err);
         }
 
-        // add to friends list
+        // Add to friends list - Step 2
+        const otherUserFriendsDocRef = doc(otherUserInfoCollectionRef, 'friends');
+        const loggedInUserFriendsDocRef = doc(userInfoCollectionRef, 'friends');
+
         try {
-            // add both to friend list
-            const otherUserFriendsDocRef = doc(otherUserInfoCollectionRef, 'friends');
-            const loggedInUserFriendsDocRef = doc(userInfoCollectionRef, 'friends');
-    
-            // check if documents exist, if not create them
-            const otherUserFriendsDoc = await getDoc(otherUserFriendsDocRef);
-            const loggedInUserFriendsDoc = await getDoc(loggedInUserFriendsDocRef);
-            if (!loggedInUserFriendsDoc.exists()) {
-                await setDoc(loggedInUserFriendsDocRef, {});
-            }
-            if (!otherUserFriendsDoc.exists()) {
-                await setDoc(otherUserFriendsDocRef, {});
-            }
-    
-            const otherUserFriendsCollectionRef = collection(otherUserFriendsDocRef, 'list');
-            const loggedInUserFriendsCollectionRef = collection(loggedInUserFriendsDocRef, 'list');
-    
-            await setDoc(doc(loggedInUserFriendsCollectionRef, user.id), { username: user.username, id: user.id });
-            await setDoc(doc(otherUserFriendsCollectionRef, FIREBASE_AUTH.currentUser?.uid), { username: username, id: FIREBASE_AUTH.currentUser?.uid });
-    
+            await runTransaction(FIRESTORE_DB, async (transaction) => {
+                const otherUserFriendsDoc = await transaction.get(otherUserFriendsDocRef);
+                const loggedInUserFriendsDoc = await transaction.get(loggedInUserFriendsDocRef);
+
+                if (!otherUserFriendsDoc.exists()) {
+                    transaction.set(otherUserFriendsDocRef, {});
+                }
+                if (!loggedInUserFriendsDoc.exists()) {
+                    transaction.set(loggedInUserFriendsDocRef, {});
+                }
+
+                const otherUserFriendsCollectionRef = collection(otherUserFriendsDocRef, 'list');
+                const loggedInUserFriendsCollectionRef = collection(loggedInUserFriendsDocRef, 'list');
+
+                transaction.set(doc(otherUserFriendsCollectionRef, FIREBASE_AUTH.currentUser?.uid), { username: username, id: FIREBASE_AUTH.currentUser?.uid });
+                transaction.set(doc(loggedInUserFriendsCollectionRef, user.id), { username: user.username, id: user.id });
+            });
+
             console.log('Step 3 - successful (added friends to both users)');
-        }catch (err) {
+            alert(`Поканата на ${user.username} беше приета успешно!`);
+
+        } catch (err) {
             console.error('Step 3 - error ->', err);
         }
         
-        navigation.navigate('Главна Страница');
     }
 
     const declineRequest = async (user: Friend) => {
-            
         // delete sent from logged user
         const sentCollectionRef = collection(friendRequestsDocRef, 'received');
         const requestDocRef = doc(sentCollectionRef, user.id);
-
-        try {
-            await deleteDoc(requestDocRef);
-            console.log(`Step 1 - sucessful (Deleted request to ${user.username})`);
-
-        } catch (err) {
-            console.error(`Step 1 - error -> Error deleting request to ${user.username}: `, err);
-        }
-
-        // delete recieved from other user
+    
+        // delete received from other user
         const otherUserDocRef = doc(usersCollectionRef, user.id);
         const otherUserInfoCollectionRef = collection(otherUserDocRef, 'user_info');
         const otherUserFriendRequestsDocRef = doc(otherUserInfoCollectionRef, 'friendRequests');
-
+        const receivedCollectionRef = collection(otherUserFriendRequestsDocRef, 'sent');
+        const receivedDocRef = doc(receivedCollectionRef, FIREBASE_AUTH.currentUser?.uid)
+    
         try {
-            const receivedCollectionRef = collection(otherUserFriendRequestsDocRef, 'sent');
-            const recievedDocRef = doc(receivedCollectionRef, FIREBASE_AUTH.currentUser?.uid)
-
-            await deleteDoc(recievedDocRef)
-            console.log(`Step 2 - successful (deleted request by ${username})`)
-
-        }catch (err) {
-            console.log('Step 2 - error -> ', err)
+            await runTransaction(FIRESTORE_DB, async (transaction) => {
+                transaction.delete(requestDocRef);
+                transaction.delete(receivedDocRef);
+            });
+            console.log(`Steps 1 and 2 - successful (Deleted request to and by ${user.username})`);
+        } catch (err) {
+            console.error(`Steps 1 and 2 - error -> Error deleting request to and by ${user.username}: `, err);
         }
     }
 

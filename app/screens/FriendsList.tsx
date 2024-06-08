@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { Friend } from '../../interfaces';
-import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, runTransaction } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { FlatList } from 'react-native-gesture-handler';
 
@@ -12,6 +12,8 @@ const FriendsList = ({navigation, route}: any) => {
     const {friendRequestsNumber} = route.params;
 
     const [friends, setFriends] = useState<Friend[]>([]);
+
+    const [removeFriendDisabled, setRemoveFriendDisabled] = useState(false);
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -36,34 +38,32 @@ const FriendsList = ({navigation, route}: any) => {
     })
 
     const removeFriend = async (friend: Friend) => {
+        console.log('running remove friend');
+        setRemoveFriendDisabled(true);
+    
+        const loggedInUserFriendsCollectionRef = collection(friendsDocRef, 'list');
+        const loggedInUserFriendDocRef = doc(loggedInUserFriendsCollectionRef, friend.id);
 
-        const friendDocRef = doc(listCollectionRef, friend.id);
         const friendUserDocRef = doc(usersCollectionRef, friend.id);
         const friendUserInfoCollectionRef = collection(friendUserDocRef, 'user_info');
         const friendFriendsDocRef = doc(friendUserInfoCollectionRef, 'friends');
-        const friendListCollectionRef = collection(friendFriendsDocRef, 'list');
-        const loggedInUserDocRef = doc(friendListCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+        const friendFriendsCollectionRef = collection(friendFriendsDocRef, 'list');
+        const friendFriendDocRef = doc(friendFriendsCollectionRef, FIREBASE_AUTH.currentUser?.uid);
         
-        try {
-            const friendDoc = await getDoc(friendDocRef);
-            const loggedInUserDoc = await getDoc(loggedInUserDocRef);
+        console.log('About to delete documents');
     
-            if (friendDoc.exists() && loggedInUserDoc.exists()) {
-                await Promise.all([
-                    deleteDoc(friendDocRef),
-                    deleteDoc(loggedInUserDocRef)
-                ]);
-        
-                console.log('Friend successfully deleted');
-                navigation.navigate('Главна Страница')
-            } else {
-                console.log('Friend already deleted');
-            }
+        try {
+            await runTransaction(FIRESTORE_DB, async (transaction) => {
+                transaction.delete(loggedInUserFriendDocRef);
+                transaction.delete(friendFriendDocRef);
+            });
+            console.log('Delete operations successful');
         } catch (err) {
-            console.log(err);
+            console.error('Error deleting documents:', err);
         }
+    
+        setRemoveFriendDisabled(false);
     }
-
     //onPress={() => navigation.navigate('Приятел-Профил', {username: username, friend: item})}
 
     return (
@@ -106,7 +106,7 @@ const FriendsList = ({navigation, route}: any) => {
                                     <Text style={tw`text-lg text-white font-medium`}>Профил</Text>
                                 </TouchableOpacity>
 
-                                <TouchableOpacity style={tw`w-28 h-12 bg-red-500 rounded-2xl flex items-center justify-center shadow-md`} onPress={() => removeFriend(item)}>
+                                <TouchableOpacity style={tw`w-28 h-12 bg-red-500 rounded-2xl flex items-center justify-center shadow-md`} disabled={removeFriendDisabled} onPress={() => removeFriend(item)}>
                                     <Text style={tw`text-lg text-white font-medium`}>Премахни</Text>
                                 </TouchableOpacity>
                             </View>
