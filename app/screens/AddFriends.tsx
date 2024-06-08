@@ -53,29 +53,42 @@ const AddFriends = ({route}: any) => {
         }
     }
     
-    const addToSuggestions = (users: any) => {
-        
-        users.map(async (user: any) => {
+    const isRequestPending = async (checkUser: any) => {
+        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+        const userInfoCollectionRef = collection(userDocRef, 'user_info');
+        const friendRequestsCollectionRef = doc(userInfoCollectionRef, 'friendRequests');
+        const sentCollectionRef = collection(friendRequestsCollectionRef, 'received');
+    
+        const requestDocRef = doc(sentCollectionRef, checkUser.id);
+        const requestDoc = await getDoc(requestDocRef);
+    
+        if (requestDoc.data()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-            // ako na lognatiq user username-a ne e raven na username-a na tozi koito e tursen (toest ne mojesh da prashtash na sebe si)
+    const addToSuggestions = async (users: any) => {
+        const suggestions = await Promise.all(users.map(async (user: any) => {
             if (user.username !== username) {
-
-                // ako isFriendAlready == true, skipni tozi user
                 const alreadyFriend = await isFriendAlready(user);
-                if (!alreadyFriend) {
-
-                    setSuggestedFriends((prevFriends) => [...prevFriends, user]);
-                    console.log('Added', user.username, 'to suggestions'); 
-
+                const requestPending = await isRequestPending(user);
+                if (!alreadyFriend && !requestPending) {
+                    console.log('Added', user.username, 'to suggestions');
+                    return user;
                 } else {
-
-                    console.log(user.username, 'is already a friend, not adding to suggestions'); 
-
+                    console.log(user.username, 'is already a friend or has a pending request, not adding to suggestions');
+                    return null;
                 }
             } else {
-                console.log('filtered username: ' + username)
+                console.log('filtered username: ' + username);
+                return null;
             }
-        });
+        }));
+    
+        setSuggestedFriends(suggestions.filter(user => user !== null));
         setSearchingAnimation(false);
     }
 
