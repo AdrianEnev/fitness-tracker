@@ -13,8 +13,8 @@ const Welcome = ({navigation}: any) => {
 
                 <View style={tw`ml-1`}>
                     <Text style={tw`text-base mb-2 font-medium`}>ENV: Fitness Tracker</Text>
-                    <Text style={tw`text-4xl font-medium`}>Тестет тетстт за</Text>
-                    <Text style={tw`text-4xl font-medium mb-3`}>тесст тетст!</Text>
+                    <Text style={tw`text-4xl font-medium`}>Няква кач фраза</Text>
+                    <Text style={tw`text-4xl font-medium mb-3`}>Негрите тест!</Text>
                 </View>
                 
 

@@ -5,50 +5,23 @@
 
 - unilateral uprajneniq
 
-- ne znam dali da dobavqm description kum uprajneniqta, zasega nqma
-- otdolu e koda za descriptiona koito se slaga pri ActiveWWorkoutExercises pod seriite
-<View>
-                {item.description ? (
-
-                    <View style={tw`mx-3 mb-2`}>
-                        <TextInput
-                        style={tw`text-white bg-blue-500 w-[100%] min-h-8 p-2`}
-                        maxLength={100}
-                        defaultValue={item.description}
-                        multiline={true}
-                        />
-                    </View>
-                    
-                ) : (
-                    <View></View>
-                )}
-                </View>
-
-
-
-
 - notifications
 
 - toast message
 
-- da se uverq che nqma nikude text koito moje da e prekaleno dulug
-
 - moje bi da markiram warm up setove s drug cvqt ili neshto takova nz
-- da napravq po malki kutiite za reps, weight, rpe, delete pri po maluk razmer na telefona
 
 - pri suzdavane na akaunt da izliza opciq za presmqtane na dnevni kalorii
 
 - da proverq na koi iphone raboti prilojenieto i taka da opredelq razmerite na nqkoi neshta
 
 - workout opisanie
-- stranica za zapazeni trenirovki
 
-- da mojesh da dobavqsh priqteli i da gledash kolko trenirovki imat priklucheni i dali sa online i kolko kilograma sa vdiganli obshto i dali sa v trenirovka
+- kolko trenirovki e izpulnil chovek da se sledi
 
 - autoCapitalize start
 
 - smqna na parola pri akaunt v koito ne e lognat choveka
-
 
 - custom trenirovki s izkustven intelekt 
 
@@ -60,18 +33,7 @@
 
 - da opravq dizaina na nastroikite i profila
 
-
-- problem pri registraciq i vhod:
-1. Pri vlizane v akaunt izpisva Document with id "nutrients" found no pak vodi do setup page
-2. Pri suzdavane na akaunt izpisva che nqma akaunt no vodi do main page ponqkoga
-
-- cancel friend request opciq
-
 - da napravq userInfoCollectionRef global ili neshto takova che da ne trqbva da go importvam navsqkude
-
-- da napravq usera da ne moje da pipa nishto dokato napulno ne e priet ili otkazan friend request, inache vodi do lag
-
-- pri iztrivane na akaunt da se iztriva i ot bazata danni, a ne samo ot akaunt lista
 
 - pri suzdavane na akaunt za pruv put, purvo se otvarq za polovin sekunda main page-a i posle se otvarq setup page-a
 
@@ -80,7 +42,5 @@
 - dokato ne e dobaven priqtelqt da ne moje da se pipa nishto ili da vidq zashto taka lagi
 
 - badgove za 50 trenirovki i nqkvi takiva
-
-- pri iztrivane na akaunt da se premahne chovek ot friend listovete + da mahna pending requestovete
 
 - dokato neshto se promenq v bazata danni da ne moje usera da izleze ot priloejnieto i da go prekusne, da se uverq che imat stabilen internet i ne sa izlezli predi vsichkko da bude svursheno (moje bi s Promise)
