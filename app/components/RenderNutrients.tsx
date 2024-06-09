@@ -38,15 +38,24 @@ const RenderNutrients = React.memo(({item, currentNutrients, date}: RenderNutrie
     // da dobavq margin-top na krugchetata samo ako progresa e minal sredata
 
     const nutrientBox = (progress: any, title: any, currentAmount: any) => {
-        const isLowProgress = progress < 0.05; // adjust this threshold as needed
+        const isLowProgress = progress < 0.4;
+        const filledHeight = Math.max(14, 40 * progress);
         return (
             <View style={tw`flex flex-col`}>
                 <View style={tw`h-40 w-14 bg-gray-200 rounded-full justify-end`}>
-                    <View style={tw`h-${progress*40} w-14 bg-[#4ecdc4] rounded-full flex items-center ${isLowProgress ? 'justify-end' : 'justify-start'}`}>
-                        <View style={tw`bg-white w-12 h-12 rounded-full flex items-center justify-center ${isLowProgress ? 'mb-1' : 'mt-1'}`}>
-                            <Text>{currentAmount}</Text>
+                    {progress > 0 ? (
+                        <View style={tw`h-${filledHeight} w-14 bg-[#4ecdc4] rounded-full flex items-center ${isLowProgress ? 'justify-end' : 'justify-start'}`}>
+                            <View style={tw`bg-white w-12 h-12 rounded-full flex items-center justify-center ${isLowProgress ? 'mb-1' : 'mt-1'}`}>
+                                <Text>{currentAmount}</Text>
+                            </View>
                         </View>
-                    </View>
+                    ) : (
+                        <View style={tw`h-${filledHeight} w-14 rounded-full flex items-center ${isLowProgress ? 'justify-end' : 'justify-start'}`}>
+                            <View style={tw`bg-white w-12 h-12 rounded-full flex items-center justify-center ${isLowProgress ? 'mb-1' : 'mt-1'}`}>
+                                <Text>{currentAmount}</Text>
+                            </View>
+                        </View>
+                    )}
                 </View>
                 <Text style={tw`text-lg ml-1`}>{title}</Text>
             </View>
