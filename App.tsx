@@ -11,7 +11,10 @@ import Setup from './app/screens/Setup';
 import { addDoc, collection, doc, getDoc, getDocs, onSnapshot, setDoc } from 'firebase/firestore';
 import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from './app/screens/Welcome';
-import { SetupContext } from './SetupContext';
+import getUsername from './app/use/useGetUsername';
+import getProfilePicture from './app/use/useGetProfilePicture';
+import GlobalContext from './GlobalContext';
+import getFriendRequests from './app/use/useGetFriendRequestsRecieved';
 
 const Stack = createStackNavigator();
 
@@ -88,7 +91,7 @@ const UnauthenticatedTabNavigator = () => (
 
 const App = () => {
 
-    const appState = useRef(AppState.currentState);
+    /*const appState = useRef(AppState.currentState);
     const [appStateVisible, setAppStateVisible] = useState(appState.current);
     
     let appStateListener: any;
@@ -110,11 +113,16 @@ const App = () => {
         setAppStateVisible(appState.current);
        // console.log('AppState', appState.current);
 
-    }
+    }*/
 
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(true);
     const [setupRan, setSetupRan] = useState(false);
+
+    const [username, setUsername] = useState('');
+    const [profilePicture, setProfilePicture] = useState('');
+
+    const [friendRequestsNumber, setFriendRequestsNumber] = useState("");
 
     React.useEffect(() => {
         const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
@@ -174,6 +182,17 @@ const App = () => {
                     const setupHasRan = await checkUserInfoCollection();
                     setSetupRan(setupHasRan);
                     checkLanguageDocument();
+
+                    setUsername(await getUsername(userInfoCollectionRef));
+                    const profilePic = await getProfilePicture();
+                    setProfilePicture(profilePic || '');
+
+                    const friendRequests = await getFriendRequests();
+                    if (friendRequests <= 9) {
+                        setFriendRequestsNumber(friendRequests.toString());
+                    }else {
+                        setFriendRequestsNumber("9+");
+                    }
                 };
 
                 fetchData().then(() => setLoading(false));
@@ -196,7 +215,7 @@ const App = () => {
     }
 
     return (
-        <SetupContext.Provider value={{ setupRan, setSetupRan }}>
+        <GlobalContext.Provider value={{ setupRan, setSetupRan, username, profilePicture, setUsername, setProfilePicture, friendRequestsNumber }}>
             <GestureHandlerRootView style={{flex: 1}}>
 
                     <StatusBar barStyle='dark-content'/>
@@ -208,7 +227,7 @@ const App = () => {
                     </NavigationContainer>
             
             </GestureHandlerRootView>
-        </SetupContext.Provider>
+        </GlobalContext.Provider>
     );
 };
 

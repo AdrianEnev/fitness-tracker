@@ -1,15 +1,15 @@
 import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { Friend } from '../../interfaces';
 import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, runTransaction } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { FlatList } from 'react-native-gesture-handler';
+import GlobalContext from '../../GlobalContext';
 
 const FriendsList = ({navigation, route}: any) => {
 
-    const {username} = route.params;
-    const {friendRequestsNumber} = route.params;
+    const { username, friendRequestsNumber } = useContext(GlobalContext);
 
     const [friends, setFriends] = useState<Friend[]>([]);
 

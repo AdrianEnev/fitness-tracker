@@ -1,5 +1,5 @@
 import { View, Text, Button, Pressable, Image } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 import tw from 'twrnc'
 import { getAuth } from 'firebase/auth'
@@ -15,6 +15,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import getProfilePicture from '../use/useGetProfilePicture'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import CustomTabBar from '../components/CustomTabBar'
+import GlobalContext from '../../GlobalContext'
 
 const SettingsAccount = ({navigation, route}: any) => {
 
@@ -22,24 +23,7 @@ const SettingsAccount = ({navigation, route}: any) => {
     const user = auth.currentUser;
     const email = user?.email;
 
-    const {friendRequestsNumber} = route.params;
-
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const userInfoCollectionRef = collection(userDocRef, 'user_info');
-
-    const [username, setUsername] = useState('');
-    const [profilePicture, setProfilePicture] = useState('');
-
-    useFocusEffect(() => {
-        const fetch = async () => {
-            setUsername(await getUsername(userInfoCollectionRef));
-
-            const profilePicture = await getProfilePicture();
-            setProfilePicture(profilePicture || ''); // Provide a default value for profilePicture
-        }
-        fetch();
-    });
+    const { username, profilePicture, friendRequestsNumber } = useContext(GlobalContext);
 
     const uriToBlob = async (uri: string): Promise<Blob> => {
         const response = await fetch(uri);
@@ -119,7 +103,7 @@ const SettingsAccount = ({navigation, route}: any) => {
                 <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => changePassword(email, user, auth)}>
                     <Text style={tw`text-lg font-medium`}>Промяна на парола</Text>
                 </Pressable>
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели', {username: username, friendRequestsNumber: friendRequestsNumber})}>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели')}>
                     <View>
                         <Text style={tw`text-lg font-medium`}>Приятели</Text>
                         {friendRequestsNumber >= "1" && 

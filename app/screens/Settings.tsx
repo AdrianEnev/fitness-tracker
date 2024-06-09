@@ -1,5 +1,5 @@
 import { View, Text, Button, TouchableOpacity, Pressable } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import tw from 'twrnc'
 import { Switch } from 'react-native';
 import i18next from '../../services/i18next';
@@ -11,10 +11,10 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomTabBar from '../components/CustomTabBar';
 import exportSavedWorkouts from '../use/useExportSavedWorkouts';
 import getFriendRequests from '../use/useGetFriendRequestsRecieved';
+import getUsername from '../use/useGetUsername';
+import GlobalContext from '../../GlobalContext';
 
 const Settings = ({navigation, route}: any) => {
-
-    const {friendRequestsNumber} = route.params;
 
     // opciq za smenq na ezika koqto zadava neshto v bazata danni i ot tam se izvlicha ezikut za cqlata aplikaciq
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -22,6 +22,7 @@ const Settings = ({navigation, route}: any) => {
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
     const [selectedLanguage, setSelectedLanguage] = useState('en');
+    const { friendRequestsNumber } = useContext(GlobalContext);
 
     const { t } = useTranslation();
 
@@ -60,6 +61,7 @@ const Settings = ({navigation, route}: any) => {
                 await i18next.changeLanguage(language);
                 setSelectedLanguage(language);
                 
+                
             })();
     
             return () => {
@@ -79,7 +81,7 @@ const Settings = ({navigation, route}: any) => {
 
                 <Text style={tw`text-2xl font-medium mb-4 text-center`}>Настройки</Text>
 
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Акаунт', {friendRequestsNumber: friendRequestsNumber})}>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Акаунт')}>
                     <View>
                         <Text style={tw`text-lg font-medium`}>{t('account')}</Text>
                         {friendRequestsNumber >= "1" && 
@@ -92,6 +94,19 @@ const Settings = ({navigation, route}: any) => {
 
                 <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Макронутриенти')}>
                     <Text style={tw`text-lg font-medium`}>{t('macronutrients')}</Text>
+                </Pressable>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели')}>
+                    <View>
+                        <Text style={tw`text-lg font-medium`}>Приятели</Text>
+                        {friendRequestsNumber >= "1" && 
+                            <View style={tw`w-6 h-6 bg-red-500 rounded-full absolute top-[-14px] left-21 flex justify-center items-center`}>
+                                <Text style={tw`text-white`}>{friendRequestsNumber}</Text>
+                            </View>
+                        }
+                    </View>
+                </Pressable>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Статистика')}>
+                    <Text style={tw`text-lg font-medium`}>Статистика</Text>
                 </Pressable>
 
                 <View style={tw`flex flex-row justify-center mt-10`}>

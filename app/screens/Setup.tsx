@@ -7,11 +7,11 @@ import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import { useRoute } from '@react-navigation/native';
 import { useContext } from 'react';
-import { SetupContext } from '../../SetupContext';
+import GlobalContext from '../../GlobalContext';
 
 const Setup = ({route}: any) => {
 
-    const { setSetupRan } = useContext(SetupContext);
+    const { setSetupRan } = useContext(GlobalContext);
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);

@@ -51,3 +51,5 @@
 
 - da pokazva kolko pokani sa izprateni i kolko sa polucheni pri butonite gore na friendslist
 - online / offline
+
+- global variables

@@ -1,5 +1,5 @@
 import { View, Text, Pressable, ScrollView, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import tw from "twrnc";
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -17,6 +17,7 @@ import getProfilePicture from '../use/useGetProfilePicture';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import CustomTabBar from '../components/CustomTabBar';
 import getFriendRequests from '../use/useGetFriendRequestsRecieved';
+import GlobalContext from '../../GlobalContext';
 
 const Main = ({navigation}: any) => {
 
@@ -29,32 +30,15 @@ const Main = ({navigation}: any) => {
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
     const foodDaysCollectionRef = collection(userDocRef, 'food_days');
 
-    const [username, setUsername] = useState('');
-    const [profilePicture, setProfilePicture] = useState('');
+    const { username, profilePicture } = useContext(GlobalContext);
 
-    const [friendRequestsNumber, setFriendRequestsNumber] = useState("");
+    const {friendRequestsNumber} = useContext(GlobalContext);
 
     useFocusEffect(
         React.useCallback(() => {
 
             const fetch = async () => {
                 getLanguage(userInfoCollectionRef);
-
-                const username = await getUsername(userInfoCollectionRef);
-                setUsername(username);
-
-                const profilePictureData = await getProfilePicture();
-                if (profilePictureData && profilePictureData !== profilePicture) {
-                    setProfilePicture(profilePictureData);
-                }
-
-                const friendRequests = await getFriendRequests(userInfoCollectionRef);
-                if (friendRequests <= 9) {
-                    setFriendRequestsNumber(friendRequests.toString());
-                }else {
-                    setFriendRequestsNumber("9+");
-                }
-                
             }
             fetch();
             updateCurrentNutrients();
@@ -130,11 +114,11 @@ const Main = ({navigation}: any) => {
                                 <Ionicons name='person-outline' 
                                     size={40}
                                     color='#000000'  
-                                    onPress={() => navigation.navigate("Настройки-Акаунт", { friendRequestsNumber: friendRequestsNumber })}
+                                    onPress={() => navigation.navigate("Настройки-Акаунт")}
                                 />
                             </View>
                         ) : (
-                            <Pressable onPress={() => navigation.navigate("Настройки-Акаунт", { friendRequestsNumber: friendRequestsNumber })}>
+                            <Pressable onPress={() => navigation.navigate("Настройки-Акаунт")}>
                                 <Image
                                     source={{ uri: profilePicture }}
                                     style={tw`w-16 h-16 rounded-full ml-2`}
@@ -151,7 +135,7 @@ const Main = ({navigation}: any) => {
                     </View>
 
                     <View>
-                        <TouchableWithoutFeedback onPress={() => navigation.navigate("Настройки-Страница", { friendRequestsNumber: friendRequestsNumber })} 
+                        <TouchableWithoutFeedback onPress={() => navigation.navigate("Настройки-Страница")} 
                                 style={tw`bg-white w-16 h-16 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
                             <View>
                                 <Ionicons name='settings-outline' 
