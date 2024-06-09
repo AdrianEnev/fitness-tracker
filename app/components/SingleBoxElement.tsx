@@ -8,7 +8,7 @@ const singleBoxElement = (icon: any, title: string, currentValue: string, goalVa
     //'flame-outline', t('calories'), currentCalories, caloriesGoal.toString() + " kcal", '[#cce5e2]'
     
     return (
-        <Pressable onPress={onPress} style={tw`w-[49%] h-28 bg-${background} shadow-md rounded-2xl`}>
+        <Pressable onPress={onPress} style={tw`w-[49%] h-28 bg-${background} shadow-lg rounded-2xl`}>
 
             <View style={tw`flex flex-row gap-x-1 ml-1 mt-2`}>
 

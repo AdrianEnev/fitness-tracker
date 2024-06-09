@@ -29,6 +29,13 @@ const FoodDay = ({route, navigation}: any) => {
     const { date } = route.params;
 
     const getDate = () => {
+        if (date.day < 10 && date.month < 10) {
+            return `0${date.day}/0${date.month}/${date.year}`;
+        } else if (date.day < 10) {
+            return `0${date.day}/${date.month}/${date.year}`;
+        } else if (date.month < 10) {
+            return `${date.day}/0${date.month}/${date.year}`;
+        }
         return `${date.day}/${date.month}/${date.year}`;
     }
 
