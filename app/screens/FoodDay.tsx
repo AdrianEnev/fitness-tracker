@@ -42,8 +42,6 @@ const FoodDay = ({route, navigation}: any) => {
     let [goalNutrients, setGoalNutrients] = useState<GoalNutrients[]>([]);
     let [currentFoods, setCurrentFoods] = useState<Food[]>([]);
 
-    //let [filteredCurrentFoods, setFilteredCurrentFoods] = useState<Food[]>([])
-
     // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk 
     // object
     let [currentNutrients, setCurrentNutrients] = useState<GoalNutrients[]>([]);

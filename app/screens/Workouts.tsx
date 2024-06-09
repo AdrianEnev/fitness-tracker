@@ -8,8 +8,7 @@ import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, setDoc
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
 import getWorkoutInfo from '../use/useGetWorkoutInfo';
-import { useFocusEffect } from '@react-navigation/native';
-import generateRandomColour from '../use/useGenerateColour';
+import Ionicons from '@expo/vector-icons/Ionicons'
 
 const Workouts = ({navigation}: any) => {
 
@@ -88,7 +87,12 @@ const Workouts = ({navigation}: any) => {
             navigation.navigate('Тренировка-Детайли', {exercises: exercisesData, workoutTitle: workoutTitle, workout: workout});
 
         }
+
         
+        setTimeout(() => {
+            setViewWorkoutButtonDisabled(false);
+            console.log('button enabled')
+        }, 100);
 
     }
 
@@ -104,31 +108,30 @@ const Workouts = ({navigation}: any) => {
 
         }
 
+        setTimeout(() => {
+            setStartButtonDisabled(false);
+            console.log('button enabled')
+        }, 100);
+
     }
 
     const renderWorkout = (workout: Workout) => {
         return (
-            <Pressable style={tw`w-[47%] h-48 bg-[#ffd166] shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
+            <Pressable style={tw`w-[96%] h-14 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
                 
-                <Text style={tw`text-base font-medium text-center`} numberOfLines={2}>{workout.title}</Text>
+                <View style={tw`flex flex-row justify-between`}>
+ 
+                    <View style={tw`w-[70%]`}>
+                        <Text style={tw`text-2xl font-medium`} ellipsizeMode='tail' numberOfLines={1}>{workout.title}</Text>
+                    </View>
 
-                <Pressable  onPress={() => startWorkout(workout)} disabled={startButtonDisabled}
-                    style={tw`w-full h-10 bg-white rounded-2xl flex items-center justify-center mt-2`}
-                >
-                    <Text>начало</Text>
-                </Pressable>
+                    <View style={tw`flex flex-row gap-x-1`}>
+                        <Ionicons name='close' size={40} color='#ef4444' onPress={() => deleteWorkout(workout.id)}/>
+                        <Ionicons name='caret-forward-outline' size={40} color='#22c55e' onPress={() => startWorkout(workout)} disabled={startButtonDisabled}/>
+                        <Ionicons name='create-outline' size={36} color='#3b82f6' onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled}/>
+                    </View>
 
-                <Pressable onPress={() => deleteWorkout(workout.id)} 
-                    style={tw`w-full h-10 bg-white rounded-2xl flex items-center justify-center mt-2`}
-                >
-                    <Text>изтрий</Text>
-                </Pressable>
-
-                <Pressable onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled}
-                    style={tw`w-full h-10 bg-white rounded-2xl flex items-center justify-center mt-2`}
-                >
-                    <Text>подробности</Text>
-                </Pressable>
+                </View>
                 
             </Pressable>
         )
@@ -139,16 +142,20 @@ const Workouts = ({navigation}: any) => {
     return (
         <SafeAreaView style={tw`w-full h-full`}>
 
-            <View style={tw`w-[96%] flex flex-row justify-between mx-2`}>
+            <View style={tw`w-full flex flex-row justify-between`}>
+
+                <Pressable style={tw`h-12 w-12 bg-white shadow-md rounded-2xl flex items-center justify-center ml-2`}>
+                    <Ionicons name='search-outline' size={28} color='black' />
+                </Pressable>
                 
-
-                <Text style={tw`text-2xl font-medium mt-1 ml-2`}>Тренировки</Text>
-
-                <View style={tw`w-[25%]`}>
-                    <TouchableOpacity style={tw`w-full h-12 bg-[#4ecdc4] rounded-xl flex justify-center items-center`} onPress={() => navigation.navigate('Тренировка-Добави')}>
-                        <Text style={tw`text-lg text-gray-100 font-medium`}>Добави</Text>
-                    </TouchableOpacity>
+                <View style={tw`h-12 w-44 bg-white shadow-md rounded-xl flex items-center justify-center`}>
+                    <Text style={tw`text-2xl font-medium mb-[2px]`}>Тренировки</Text>
                 </View>
+
+                <Pressable style={tw`h-12 w-12 bg-white shadow-md rounded-2xl flex items-center justify-center mr-2`} onPress={() => navigation.navigate("Тренировка-Добави")}>
+                    <Ionicons name='add-outline' size={36} color='black' />
+                </Pressable>
+
             </View>
             
             <View style={tw`w-full h-full mt-4 mx-2`}>
@@ -156,7 +163,7 @@ const Workouts = ({navigation}: any) => {
                     data={workouts}
                     renderItem={({item}: any) => renderWorkout(item)}
                     keyExtractor={(workout: Workout) => workout.id}
-                    numColumns={2}
+                   
                 />
             </View>
 

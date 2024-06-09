@@ -102,8 +102,8 @@ const ViewWorkout = ({route, navigation}: any) => {
                                                             style={tw`bg-white rounded-2xl p-2 w-32 h-10`}
                                                             keyboardType='number-pad'
                                                             maxLength={4}
-                                                            placeholder={set.reps === "" ? 'Повторения' : set.reps.toString() + ' Повт.'}
-                                                            value={userInputs[index].sets[mapIndex].reps}
+                                                            
+                                                            value={userInputs[index].sets[mapIndex].reps || '0'}
                                                             onChangeText={(text) => {
                                                                 let updatedInputs = [...userInputs];
                                                                 updatedInputs[index].sets[mapIndex].reps = text;

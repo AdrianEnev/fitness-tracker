@@ -55,3 +55,5 @@
 - global variables
 
 - trenirovkite da izlizat samo s imeto "trenirovki" v glavnata stranica i kato cukna na tqh da se pokajat "zapazeni trenirovki" i "trenirovuchni programi"
+
+- edit workout name
