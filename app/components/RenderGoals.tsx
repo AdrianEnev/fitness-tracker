@@ -1,5 +1,5 @@
-import { View, Text, FlatList, Pressable } from 'react-native'
-import React, { useEffect } from 'react'
+import { View, Text, FlatList, Pressable, Button } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -18,33 +18,65 @@ const RenderGoals = (
     //caloriesGoal e object a currentCalories e array nqmam nikva ideq shto
     const caloriesGoal = parseInt(goalNutrients[0]?.calories, 10) || 0;
     const currentCalories = currentNutrients?.calories ?? 0;
+    
+    const [workoutContainerHeight, setWorkoutContainerHeight] = useState('h-11');
+    const expandContainer = () => { 
+        setWorkoutContainerHeight(prevHeight => prevHeight === 'h-11' ? 'h-28' : 'h-11');
+    }
 
     return (
         <View>
 
-            <View style={tw`flex flex-row mx-1 gap-x-2 mt-7`}>
+            <View style={tw`flex flex-row mx-1 gap-x-2 mt-5`}>
 
-                <View style={tw`w-[49%] h-28 bg-[#ff6b6b] shadow-md rounded-2xl flex flex-col justify-between`}>
+                <View style={tw`${workoutContainerHeight} w-[49%] bg-[#ff6b6b] shadow-md rounded-2xl flex flex-col justify-between`}>
                     
-                    <Pressable style={tw`flex flex-row gap-x-1 ml-1 mt-2`} onPress={() => navigation.navigate('Тренировки')}>
+                    <Pressable style={tw`flex flex-row gap-x-1 ml-2 mt-2`} onPress={expandContainer}>
 
-                        <Ionicons name='accessibility-outline' size={24} color='black' />
+                        <View style={tw`flex flex-row justify-between w-full`}>
+                            <View style={tw`flex flex-row`}>
+                                <Ionicons name='accessibility-outline' size={24} color='black' />
 
-                        <View style={tw`mt-[-3px]`}>
-                            <Text style={tw`text-lg`}>Тренировки</Text>
+                                <View style={tw`mt-[-3px] ml-1`}>
+                                    <Text style={tw`text-lg`}>Тренировки</Text>
+                                </View>
+                            </View>
+
+                            <View style={tw`mr-1`}>
+                                {workoutContainerHeight === 'h-11' ? 
+                                    <Ionicons name='chevron-forward-outline' size={28} color='black'/> :
+                                    <Ionicons name='chevron-down-outline' size={28} color='black'/>
+                                }
+                            </View>
                         </View>
+
+                        
 
                     </Pressable>
 
-                    <Pressable style={tw`flex flex-row gap-x-1 ml-1 mb-2`} onPress={() => navigation.navigate('Запазени-Тренировки')}>
+                    {workoutContainerHeight === 'h-28' && (
+                        <View style={tw`mb-2 ml-1`}>
+                            <Pressable style={tw`flex flex-row ml-1`} onPress={() => navigation.navigate('Тренировки')}>
 
-                        <Ionicons name='accessibility-outline' size={24} color='black' />
+                                <Ionicons name='list-outline' size={21} color='black' />
 
-                        <View style={tw`mt-[-3px]`}>
-                            <Text style={tw`text-lg`}>Запазени тр.</Text>
+                                <View style={tw`mt-[-3px] ml-1 mb-3`}>
+                                    <Text style={tw`text-base`}>Програми</Text>
+                                </View>
+
+                            </Pressable>
+
+                            <Pressable style={tw`flex flex-row ml-1`} onPress={() => navigation.navigate('Запазени-Тренировки')}>
+
+                                <Ionicons name='bookmark-outline' size={21} color='black' />
+
+                                <View style={tw`mt-[-3px] ml-1`}>
+                                    <Text style={tw`text-base`}>Запазени</Text>
+                                </View>
+
+                            </Pressable>
                         </View>
-
-                    </Pressable>
+                    )}
 
                 </View>
 

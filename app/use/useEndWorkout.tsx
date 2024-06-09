@@ -1,8 +1,17 @@
 import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import generateRandomColour from "./useGenerateColour";
+import { Exercise } from "../../interfaces";
 
 const endWorkout = async (navigation: any, exercises: any, workoutTitle: string) => {
+
+    if (!exercises.length || exercises.every((exercise: any) => 
+        !exercise.sets || 
+        exercise.sets.length === 0 || 
+        exercise.sets.every((set: any) => set.reps === ''))) {
+        console.log("Cannot end workout: no exercises provided or all exercises have no sets or all sets have empty reps.");
+        return;
+    }
 
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);

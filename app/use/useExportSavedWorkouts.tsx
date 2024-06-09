@@ -5,6 +5,11 @@ import { Exercise, Workout, Set } from '../../interfaces';
 const exportSavedWorkouts = async () => {
     const workouts = await getWorkouts();
 
+    if (workouts.length === 0) {
+        console.log("No saved workouts found.");
+        return;
+    }
+    
     workouts.forEach(workout => {
         console.log(`Workout Title: ${workout.title} (ID: ${workout.id})`);
         workout.exercises.forEach(exercise => {

@@ -23,7 +23,7 @@ const SettingsAccount = ({navigation, route}: any) => {
     const user = auth.currentUser;
     const email = user?.email;
 
-    const { username, profilePicture, friendRequestsNumber } = useContext(GlobalContext);
+    const { username, profilePicture, setProfilePicture, friendRequestsNumber } = useContext(GlobalContext);
 
     const uriToBlob = async (uri: string): Promise<Blob> => {
         const response = await fetch(uri);
@@ -45,6 +45,8 @@ const SettingsAccount = ({navigation, route}: any) => {
             const blob = await uriToBlob(result.assets[0].uri);
             await uploadFile(blob, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
             alert('Snimkata be kachena uspeshno!')
+
+            setProfilePicture(result.assets[0].uri);
 
         }
     };
@@ -102,19 +104,6 @@ const SettingsAccount = ({navigation, route}: any) => {
                 </Pressable>
                 <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => changePassword(email, user, auth)}>
                     <Text style={tw`text-lg font-medium`}>Промяна на парола</Text>
-                </Pressable>
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели')}>
-                    <View>
-                        <Text style={tw`text-lg font-medium`}>Приятели</Text>
-                        {friendRequestsNumber >= "1" && 
-                            <View style={tw`w-6 h-6 bg-red-500 rounded-full absolute top-[-14px] left-21 flex justify-center items-center`}>
-                                <Text style={tw`text-white`}>{friendRequestsNumber}</Text>
-                            </View>
-                        }
-                    </View>
-                </Pressable>
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Статистика')}>
-                    <Text style={tw`text-lg font-medium`}>Статистика</Text>
                 </Pressable>
             </View>
 

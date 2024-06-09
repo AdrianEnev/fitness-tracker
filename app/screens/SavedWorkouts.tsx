@@ -1,14 +1,11 @@
 import { View, Text, Button, SafeAreaView, TouchableOpacity, FlatList, Pressable, Alert } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
-import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import CustomTabBar from '../components/CustomTabBar';
 import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
-import getWorkoutInfo from '../use/useGetWorkoutInfo';
-import { useFocusEffect } from '@react-navigation/native';
 import getSavedWorkoutInfo from '../use/useGetSavedWorkoutInfo';
 
 const Workouts = ({navigation}: any) => {
@@ -53,6 +50,7 @@ const Workouts = ({navigation}: any) => {
     const viewWorkout = async (workout: Workout) => {
 
         setViewWorkoutButtonDisabled(true);
+        console.log('button disabled')
 
         const savedWorkoutInfo = await getSavedWorkoutInfo(workout.id);
         if (savedWorkoutInfo) {
@@ -62,13 +60,23 @@ const Workouts = ({navigation}: any) => {
 
         }
 
+        setTimeout(() => {
+            setViewWorkoutButtonDisabled(false);
+            console.log('button enabled')
+        }, 100);
+
     }
 
     const renderSavedWorkout = (savedWorkout: any) => {
+
+        const date = savedWorkout.created.toDate();
+        const formattedDate = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+
         return (
-            <Pressable style={tw`w-[47%] h-36 bg-${savedWorkout.colour} shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`}>
+            <Pressable style={tw`w-[47%] h-42 bg-${savedWorkout.colour} shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`}>
 
                 <Text style={tw`text-base font-medium text-center`} numberOfLines={2}>{savedWorkout.title}</Text>
+                <Text style={tw`text-base font-medium text-center`} numberOfLines={2}>{formattedDate}</Text>
 
                 <Pressable onPress={() => deleteWorkout(savedWorkout.id)} 
                     style={tw`w-full h-10 bg-white rounded-2xl flex items-center justify-center mt-2`}

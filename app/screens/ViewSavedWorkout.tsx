@@ -1,8 +1,6 @@
 import { View, Text, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import tw from 'twrnc'
-import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 
 const ViewSavedWorkout = ({route}: any) => {
 
