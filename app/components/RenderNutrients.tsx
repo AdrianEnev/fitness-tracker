@@ -35,8 +35,6 @@ const RenderNutrients = React.memo(({item, currentNutrients, date}: RenderNutrie
     const currentSteps = 0;
     const stepsProgress = Math.min(currentSteps / stepsGoal, 1);
 
-    // da dobavq margin-top na krugchetata samo ako progresa e minal sredata
-
     const nutrientBox = (progress: any, title: any, currentAmount: any) => {
         const isLowProgress = progress < 0.4;
         const filledHeight = Math.max(14, 40 * progress);
