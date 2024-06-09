@@ -66,18 +66,22 @@ const ActiveWorkout = ({route, navigation}: any) => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={tw`w-full h-full`}>
 
-                <View style={tw`flex flex-row justify-between mt-2 mb-2 mx-3`}>
+                <View style={tw`flex flex-row justify-between mt-2 mb-5 mx-3`}>
                     <TouchableOpacity style={tw`w-20 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`}>
                         <Text>{formatTime(time)}</Text>
                     </TouchableOpacity>
 
-                    <Text>{workoutTitle}</Text>
+                    
 
                     <View style={tw`flex flex-col h-full gap-y-2`}>
                         <TouchableOpacity style={tw`w-18 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`} onPress={() => endWorkout(navigation, userInputs, workoutTitle)}>
                             <Text style={tw`text-black`}>Край</Text>
                         </TouchableOpacity>
                     </View>
+                </View>
+
+                <View style={tw`ml-3 mb-2`}>
+                    <Text style={tw`text-xl font-medium`} ellipsizeMode='tail' numberOfLines={2}>{workoutTitle}</Text>
                 </View>
                  
 
@@ -87,7 +91,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                             return (
                                 <View key={exercise.id} style={tw`w-full`}>
 
-                                    <Text style={tw`text-2xl font-medium text-center mb-4`} numberOfLines={1}>{exercise.title}</Text>
+                                    <Text style={tw`text-lg font-medium text-center mb-4`} numberOfLines={1}>{exercise.title}</Text>
                                     
                                     <ScrollView style={tw``}>
                                         {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (

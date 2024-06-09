@@ -7,6 +7,7 @@ import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, setDoc
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
 import getSavedWorkoutInfo from '../use/useGetSavedWorkoutInfo';
+import Ionicons from '@expo/vector-icons/Ionicons'
 
 const Workouts = ({navigation}: any) => {
 
@@ -47,22 +48,22 @@ const Workouts = ({navigation}: any) => {
         }
     }
 
-    const viewWorkout = async (workout: Workout) => {
+    const viewWorkout = async (workout: Workout, date: any, time: any) => {
 
         setViewWorkoutButtonDisabled(true);
-        console.log('button disabled')
+        
 
         const savedWorkoutInfo = await getSavedWorkoutInfo(workout.id);
         if (savedWorkoutInfo) {
 
             const { exercisesData, workoutTitle } = savedWorkoutInfo;
-            navigation.navigate('Виж-Запазенa-Тренировка', {exercises: exercisesData, workout: workout, workoutTitle: workoutTitle});
+            navigation.navigate('Виж-Запазенa-Тренировка', {exercises: exercisesData, workout: workout, workoutTitle: workoutTitle, date: date, time: time});
 
         }
 
         setTimeout(() => {
             setViewWorkoutButtonDisabled(false);
-            console.log('button enabled')
+            
         }, 100);
 
     }
@@ -71,24 +72,23 @@ const Workouts = ({navigation}: any) => {
 
         const date = savedWorkout.created.toDate();
         const formattedDate = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const formattedTime = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + 'ч.';
 
         return (
-            <Pressable style={tw`w-[47%] h-42 bg-${savedWorkout.colour} shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`}>
+            <Pressable style={tw`w-[96%] h-14 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`}>
 
-                <Text style={tw`text-base font-medium text-center`} numberOfLines={2}>{savedWorkout.title}</Text>
-                <Text style={tw`text-base font-medium text-center`} numberOfLines={2}>{formattedDate}</Text>
+                <View style={tw`flex flex-row justify-between`}>
 
-                <Pressable onPress={() => deleteWorkout(savedWorkout.id)} 
-                    style={tw`w-full h-10 bg-white rounded-2xl flex items-center justify-center mt-2`}
-                >
-                    <Text>изтрий</Text>
-                </Pressable>
+                    <View style={tw`w-[76%] flex flex-col`}>
+                        <Text style={tw`text-2xl font-medium`} ellipsizeMode='tail' numberOfLines={1}>{savedWorkout.title}</Text>
+                    </View>
 
-                <Pressable onPress={() => viewWorkout(savedWorkout)} disabled={viewWorkoutButtonDisabled}
-                    style={tw`w-full h-10 bg-white rounded-2xl flex items-center justify-center mt-2`}
-                >
-                    <Text>подробности</Text>
-                </Pressable>
+                    <View style={tw`flex flex-row gap-x-1`}>
+                        <Ionicons name='close' size={40} color='#ef4444' onPress={() => deleteWorkout(savedWorkout.id)}/>
+                        <Ionicons name='eye-outline' size={38} color='#22c55e' onPress={() => viewWorkout(savedWorkout, formattedDate, formattedTime)} disabled={viewWorkoutButtonDisabled}                        />
+                    </View>
+
+                 </View>
                
             </Pressable>
         )

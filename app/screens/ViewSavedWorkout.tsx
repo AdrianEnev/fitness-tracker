@@ -4,7 +4,7 @@ import tw from 'twrnc'
 
 const ViewSavedWorkout = ({route}: any) => {
 
-    const { exercises, workout, workoutTitle } = route.params;
+    const { exercises, workout, workoutTitle, date, time } = route.params;
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [newExercises, setNewExercises] = useState<any>([...exercises]); // newExercises = copy of exercises
@@ -13,7 +13,10 @@ const ViewSavedWorkout = ({route}: any) => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={tw`w-full h-full`}>
                 
-                <Text style={tw`text-2xl font-medium m-2`}>{workoutTitle}</Text>
+                <View style={tw`flex flex-col mx-3 mb-3`}>
+                    <Text style={tw`text-2xl font-medium`}>{workoutTitle}</Text>
+                    <Text style={tw`text-2xl`} numberOfLines={1}>{date} - {time}</Text>
+                </View>
 
                 <View style={tw`flex flex-col gap-y-1`}>
                     {newExercises.map((exercise: any, index: any) => {
@@ -21,7 +24,7 @@ const ViewSavedWorkout = ({route}: any) => {
                             return (
                                 <View key={exercise.id} style={tw`w-full`}>
 
-                                    <Text style={tw`text-xl ml-3 mb-4`} numberOfLines={1}>{exercise.title}</Text>
+                                    <Text style={tw`text-2xl text-center mb-4`} numberOfLines={1}>{exercise.title}</Text>
                                     
                                     <ScrollView style={tw``}>
                                         {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
