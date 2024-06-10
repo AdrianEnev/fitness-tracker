@@ -1,4 +1,4 @@
-import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button } from 'react-native'
+import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, Pressable, TouchableOpacity } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
@@ -57,63 +57,65 @@ const Setup = ({route}: any) => {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={tw`flex-1`}>
 
-                    <View>
-                        <View style={tw`flex flex-row justify-between`}>
+                    <Text style={tw`text-2xl font-medium text-center my-2`}>Добре Дошъл!</Text>
 
-                            <TextInput 
-                                style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                keyboardType='number-pad' 
-                                maxLength={4} 
-                                onChangeText={(text) => setCalories(text)} 
-                            />
+                    <Text style={tw`text-xl font-medium text-center`}>Дневна цел:</Text>
 
-                            <Text style={tw`font-medium text-xl mt-3`}>{t('calories')}</Text>
-
-                        </View>
-
-                        <View style={tw`flex flex-row justify-between`}>
-
-                            <TextInput 
-                                style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                keyboardType='number-pad' 
-                                maxLength={3} 
-                                onChangeText={(text) => setProtein(text)}
-                            />
-
-                            <Text style={tw`font-medium text-xl mt-3`}>{t('protein')}</Text>
-
-                        </View>
-
-                        <View style={tw`flex flex-row justify-between`}>
-
-                            <TextInput 
-                                style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                keyboardType='number-pad' 
-                                maxLength={3} 
-                                onChangeText={(text) => setCarbs(text)}
-                            />
-
-                            <Text style={tw`font-medium text-xl mt-3`}>{t('carbs')}</Text>
-
-                        </View>
-
-                        <View style={tw`flex flex-row justify-between`}>
-
-                            <TextInput 
-                                style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                                keyboardType='number-pad' 
-                                maxLength={3} 
-                                onChangeText={(text) => setFat(text)}
-                            />
-
-                            <Text style={tw`font-medium text-xl mt-3`}>{t('fat')}</Text>
-
-                        </View>
+                    <View style={tw`flex flex-row flex-wrap gap-y-3 mt-5 mx-2`}>
                     
+                        <View style={tw`w-1/2 flex items-start justify-start mb-2`}>
+
+                            <Text style={tw`text-xl font-medium mb-[-5px]`}>Калории</Text>
+                            <TextInput
+                                onChangeText={setCalories}
+                                keyboardType='numeric' 
+                                style={tw`bg-white shadow-lg border border-red-600 rounded-md w-[97%] h-12 p-1 mt-2`}
+                            />
+
+                        </View>
+
+                        <View style={tw`w-1/2 flex items-start justify-start mb-2`}>
+
+                            <Text style={tw`text-xl font-medium mb-[-5px]`}>Протеин</Text>
+                            <TextInput
+                                onChangeText={setProtein}
+                                keyboardType='numeric' 
+                                style={tw`bg-white shadow-lg border border-red-600 rounded-md w-[97%] h-12 p-1 mt-2`}
+                            />
+
+                        </View>
+
+                        <View style={tw`w-1/2 flex items-start justify-start mb-2`}>
+
+                            <Text style={tw`text-xl font-medium mb-[-5px]`}>Въглехидрати</Text>
+                            <TextInput
+                                onChangeText={setCarbs}
+                                keyboardType='numeric' 
+                                style={tw`bg-white shadow-lg border border-red-600 rounded-md w-[97%] h-12 p-1 mt-2`}
+                            />
+
+                        </View>
+
+                        <View style={tw`w-1/2 flex items-start justify-start mb-2`}>
+
+                            <Text style={tw`text-xl font-medium mb-[-5px]`}>Мазнини</Text>
+                            <TextInput
+                                onChangeText={setFat}
+                                keyboardType='numeric' 
+                                style={tw`bg-white shadow-lg border border-red-600 rounded-md w-[97%] h-12 p-1 mt-2`}
+                            />
+
+                        </View>
+
                     </View>
 
-                    <View style={tw`flex-1 justify-end mb-3`}>
-                        <Button onPress={() => setNutrients()} title='Запази'/> 
+                    <View style={tw`flex-1 justify-end mb-8`}>
+                        <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-2xl flex justify-center items-center shadow-md mt-1`}
+                        onPress={() => setNutrients()}>
+
+                            <Text style={tw`text-2xl text-white`}>Запази</Text>
+
+                        </TouchableOpacity>
                     </View>
 
                 </View>
