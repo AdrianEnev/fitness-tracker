@@ -14,7 +14,6 @@ import getUsername from '../use/useGetUsername';
 import getCurrentDate from '../use/useGetCurrentDate';
 import getProfilePicture from '../use/useGetProfilePicture';
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import CustomTabBar from '../components/CustomTabBar';
 import getFriendRequests from '../use/useGetFriendRequestsRecieved';
 import GlobalContext from '../../GlobalContext';
 import HorizontalCalendar from '../components/HorizontalCalendar';
@@ -160,31 +159,37 @@ const Main = ({navigation}: any) => {
                 <View style={tw`mx-1`}>
                     
                     <HorizontalCalendar navigation={navigation} />
-                    <WorkoutFoodButtons />
+                    <WorkoutFoodButtons navigation={navigation} />
 
 
-                    <Nutrients currentNutrients={currentNutrients} date={getCurrentDate(true)}/>
+                    <Nutrients currentNutrients={currentNutrients} navigation={navigation} currentPage='Main'/>
                     
-                    {/*            
-                        <RenderGoals 
-                            goalNutrients={goalNutrients}
-                            currentNutrients={currentNutrients}
-                            navigation={navigation}
-                        />
-                    */}
                     
                 </View>
 
             </ScrollView>
 
-            {/* Footer */}
-            {/*
-                <CustomTabBar 
-                    navigation={navigation} 
-                    currentPage="Главна Страница"
+            {/**Floating navigation bar */}
+
+            <View style={tw`absolute w-[96.5%] h-20 bg-white shadow-lg bottom-8 mx-2 rounded-xl flex flex-row justify-around items-center`}>
+                <Ionicons name='home-outline' 
+                    size={40}
+                    color='red'  
                 />
-            */}
-            
+                <Ionicons name='fitness-outline' 
+                    size={40}
+                    color='red'  
+                />
+                <Ionicons name='calendar-clear-outline' 
+                    size={40}
+                    color='red'  
+                />
+                <Ionicons name='settings-outline' 
+                    size={40}
+                    color='red'  
+                />
+            </View>
+
 
         </SafeAreaView>
         

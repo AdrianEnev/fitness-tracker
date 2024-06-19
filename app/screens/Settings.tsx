@@ -8,7 +8,6 @@ import { useFocusEffect } from '@react-navigation/native';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomTabBar from '../components/CustomTabBar';
 import exportSavedWorkouts from '../use/useExportSavedWorkouts';
 import getFriendRequests from '../use/useGetFriendRequestsRecieved';
 import getUsername from '../use/useGetUsername';
@@ -144,11 +143,6 @@ const Settings = ({navigation, route}: any) => {
                 <Button title='export saved workouts' onPress={exportSavedWorkouts}/>
 
             </View>
-
-            <CustomTabBar 
-                navigation={navigation} 
-                currentPage="Настройки-Страница"
-            />
 
         </SafeAreaView>
     )

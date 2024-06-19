@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
-import CustomTabBar from '../components/CustomTabBar';
 import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
@@ -166,8 +165,6 @@ const Workouts = ({navigation}: any) => {
                    
                 />
             </View>
-
-            <CustomTabBar navigation={navigation} currentPage='Тренировки'/>
             
         </SafeAreaView>
     )

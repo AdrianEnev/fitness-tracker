@@ -14,7 +14,6 @@ import uploadFile from '../use/useUploadFile'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import getProfilePicture from '../use/useGetProfilePicture'
 import Ionicons from '@expo/vector-icons/Ionicons';
-import CustomTabBar from '../components/CustomTabBar'
 import GlobalContext from '../../GlobalContext'
 
 const SettingsAccount = ({navigation, route}: any) => {
@@ -106,11 +105,6 @@ const SettingsAccount = ({navigation, route}: any) => {
                     <Text style={tw`text-lg font-medium`}>Промяна на парола</Text>
                 </Pressable>
             </View>
-
-            <CustomTabBar 
-                navigation={navigation} 
-                currentPage="Настройки-Страница"
-            />
 
         </SafeAreaView>
     )

@@ -1,19 +1,22 @@
 import { View, Text, Pressable } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
+import Ionicons from '@expo/vector-icons/Ionicons'
 
-const WorkoutFoodButtons = () => {
+//heart-outline; fitness-outline
+
+const WorkoutFoodButtons = ({navigation}: any) => {
     return (
         <View style={tw`mt-3 mx-2`}>
             
             <View style={tw`flex flex-row gap-x-2`}>
-
-                <Pressable style={tw`w-[49%] h-32 bg-red-500 rounded-lg shadow-lg pl-2 pt-2`}>
-                    <Text style={tw`text-base font-medium text-white`}>Тренировки</Text>
+                
+                <Pressable style={tw`w-[49%] h-32 bg-red-500 rounded-lg shadow-lg flex items-center justify-center`} onPress={() => navigation.navigate('Тренировки')}>
+                    <Ionicons name='fitness-outline' size={64} color='white'/>
                 </Pressable>
                 
-                <Pressable style={tw`w-[49%] h-32 bg-white rounded-lg shadow-md pl-2 pt-2`}>
-                    <Text style={tw`text-base font-medium`}>Хранене</Text>
+                <Pressable style={tw`w-[49%] h-32 bg-white rounded-lg shadow-md flex items-center justify-center`} onPress={() => navigation.navigate('')}>
+                    <Ionicons name='calendar-clear-outline' size={64} />
                 </Pressable>
 
             </View>

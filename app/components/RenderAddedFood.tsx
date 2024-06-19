@@ -18,7 +18,7 @@ const RenderAddedFood = ({ item, onDelete }: { item: any, onDelete: (item: any) 
 
     return (
 
-        <View style={tw`bg-white shadow-md rounded-2xl w-full h-[200px] my-1 pt-2 pl-3`}>
+        <View style={tw`bg-white shadow-md rounded-lg w-full h-[200px] my-2 pt-2 pl-3`}>
 
             <View style={tw`flex flex-row gap-x-3`}>
                 <Text style={tw`text-black text-lg`}>{item.title}  -</Text>

@@ -18,17 +18,22 @@ const HorizontalCalendar = ({navigation}: any) => {
     };
 
     const formatDate = (date: Date, format: string) => {
+
+        const weekDaysBG = ['Нед', 'Пон', 'Вт', 'Ср', 'Чет', 'Пет', 'Съб'];
+        //const weekDaysEN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
         switch (format) {
             case 'ddd':
                 // Assuming this returns the day of the week in a short format (e.g., Mon, Tue)
-                return new Intl.DateTimeFormat('en-US', { weekday: 'short' }).format(date);
+                const dayOfWeek = date.getDay();
+                return weekDaysBG[dayOfWeek];
             case 'DD.MM':
                 // Manually constructing the date string in DD.MM format
                 const day = date.getDate().toString().padStart(2, '0');
                 const month = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() is 0-indexed
                 return `${day}.${month}`;
             default:
-                return date.toLocaleDateString();
+                return date.toLocaleDateString('bg-BG');
         }
     };
 

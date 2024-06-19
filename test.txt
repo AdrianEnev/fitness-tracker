@@ -52,3 +52,9 @@
 - da moje opredelena hrana da se zapazva v list sus saved foods
 - add to current day buton v star den
 - schedule food za budeshti dni
+
+-> FoodDay ima element sus margin top - [-500px]. Da se uverq che nqma da suzdade problemi v budeshte
+
+- bottom navigation bar
+
+- cloud-outline ili bookmark-outline za savenati trenirovki

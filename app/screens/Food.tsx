@@ -5,7 +5,6 @@ import { bgLocaleConfig, enLocaleConfig } from "../../CalendarConfig";
 import { CalendarList, LocaleConfig } from 'react-native-calendars';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
-import CustomTabBar from '../components/CustomTabBar';
 
 LocaleConfig.locales['bg'] = bgLocaleConfig;
 LocaleConfig.locales['en'] = enLocaleConfig;
@@ -60,9 +59,6 @@ const Food = ({navigation}: any) => {
                 />
 
             </View>
-
-            <CustomTabBar navigation={navigation} currentPage="Хранене"/>
-
             
         </View>
     )

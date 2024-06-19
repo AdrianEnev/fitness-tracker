@@ -1,7 +1,7 @@
 import { View, Text, FlatList, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import tw from "twrnc"
-import { GoalNutrients } from './SettingsMacros';
+import { GoalNutrients } from '../../interfaces'
 import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -10,6 +10,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import Nutrients from '../components/Nutrients';
 
 export interface Food {
     title: string;
@@ -24,6 +25,7 @@ export interface Food {
 
 const FoodDay = ({route, navigation}: any) => {
 
+    //{"dateString": "2024-06-19", "day": 19, "month": 6, "timestamp": 1718791193903, "year": 2024} -> example of what should be passed
     const { date } = route.params;
 
     const getDate = () => {
@@ -188,7 +190,7 @@ const FoodDay = ({route, navigation}: any) => {
     );
     
     return (
-        <SafeAreaView style={tw`h-full`}>
+        <SafeAreaView style={tw`flex-1`}>
 
             <View style={tw`flex flex-row justify-between mt-2 ml-2`}>
                
@@ -201,18 +203,14 @@ const FoodDay = ({route, navigation}: any) => {
                 </Pressable>
                 
             </View>
+        
+            <View style={tw``}>
 
-            <View style={tw`w-[96%] h-62 bg-white mt-3 mx-2 shadow-md rounded-2xl`}>
-
-                {/** <FlatList 
-                    data={goalNutrients} 
-                    renderItem={({item}) => <RenderNutrients item={item} currentNutrients={currentNutrients} date={getDate()} />}  
-                    scrollEnabled={false}
-                />*/}
+                <Nutrients currentNutrients={currentNutrients} navigation={navigation} currentPage='FoodDay'/>
 
             </View>
 
-            <View style={tw`flex-1 mt-2 mx-2 shadow-md rounded-2xl`}>
+            <View style={tw`mx-2 mt-[-570px] flex-1`}>
 
                 <FlatList 
                     data={currentFoods}
