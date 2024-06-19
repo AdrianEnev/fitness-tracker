@@ -5,12 +5,10 @@ import { GoalNutrients } from './SettingsMacros';
 import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import RenderGoalNutrients from '../components/RenderGoalNutrients';
 import RenderAddedFood from '../components/RenderAddedFood';
 import { useFocusEffect } from '@react-navigation/native';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
-import RenderNutrients from '../components/RenderNutrients';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export interface Food {
@@ -206,11 +204,11 @@ const FoodDay = ({route, navigation}: any) => {
 
             <View style={tw`w-[96%] h-62 bg-white mt-3 mx-2 shadow-md rounded-2xl`}>
 
-                <FlatList 
+                {/** <FlatList 
                     data={goalNutrients} 
                     renderItem={({item}) => <RenderNutrients item={item} currentNutrients={currentNutrients} date={getDate()} />}  
                     scrollEnabled={false}
-                />
+                />*/}
 
             </View>
 

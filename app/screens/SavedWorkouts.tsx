@@ -88,7 +88,7 @@ const Workouts = ({navigation}: any) => {
                         <Ionicons name='eye-outline' size={38} color='#22c55e' onPress={() => viewWorkout(savedWorkout, formattedDate, formattedTime)} disabled={viewWorkoutButtonDisabled}                        />
                     </View>
 
-                 </View>
+                </View>
                
             </Pressable>
         )

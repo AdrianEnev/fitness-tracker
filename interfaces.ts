@@ -30,3 +30,11 @@ export interface Friend {
     username: string;
     id: string;
 }
+
+export interface GoalNutrients {
+    calories: string,
+    protein: string,
+    carbs: string,
+    fat: string,
+    id: string
+}

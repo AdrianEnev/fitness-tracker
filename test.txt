@@ -31,29 +31,24 @@
 
 - da preveda vsichko nakraq
 
-- da opravq dizaina na nastroikite i profila
 
 - da napravq userInfoCollectionRef global ili neshto takova che da ne trqbva da go importvam navsqkude
 
 - pri suzdavane na akaunt za pruv put, purvo se otvarq za polovin sekunda main page-a i posle se otvarq setup page-a
 
-- limit 1 trenirovka na den, inache da se plashta
+
 
 - dokato ne e dobaven priqtelqt da ne moje da se pipa nishto ili da vidq zashto taka lagi
 
-- badgove za 50 trenirovki i nqkvi takiva
 
 - dokato neshto se promenq v bazata danni da ne moje usera da izleze ot priloejnieto i da go prekusne, da se uverq che imat stabilen internet i ne sa izlezli predi vsichkko da bude svursheno (moje bi s Promise)
 
 - disable receiving friend requests
-- problem pri gledane na profil s datata "toDate" of undefined
-- kato se izprati pokana za priqtelstvo da se mahne choveka ot suggested lista
 
-- da pokazva kolko pokani sa izprateni i kolko sa polucheni pri butonite gore na friendslist
-- online / offline
+- email verification
 
-- global variables
+- login using gmail + get gmail profile picture 
 
-- trenirovkite da izlizat samo s imeto "trenirovki" v glavnata stranica i kato cukna na tqh da se pokajat "zapazeni trenirovki" i "trenirovuchni programi"
-
-- edit workout name
+- da moje opredelena hrana da se zapazva v list sus saved foods
+- add to current day buton v star den
+- schedule food za budeshti dni

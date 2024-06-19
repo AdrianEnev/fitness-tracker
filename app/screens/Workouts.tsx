@@ -121,7 +121,7 @@ const Workouts = ({navigation}: any) => {
                 
                 <View style={tw`flex flex-row justify-between`}>
  
-                    <View style={tw`w-[70%]`}>
+                    <View style={tw`w-[70%] h-20`}>
                         <Text style={tw`text-2xl font-medium`} ellipsizeMode='tail' numberOfLines={1}>{workout.title}</Text>
                     </View>
 

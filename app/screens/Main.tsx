@@ -3,13 +3,12 @@ import React, { useContext, useEffect, useState } from 'react'
 import tw from "twrnc";
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { GoalNutrients } from './SettingsMacros';
+import { GoalNutrients } from '../../interfaces';
 import { collection, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import RenderGoals from '../components/RenderGoals';
 import getLanguage from '../use/useGetLanguage';
 import getUsername from '../use/useGetUsername';
 import getCurrentDate from '../use/useGetCurrentDate';
@@ -18,10 +17,15 @@ import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import CustomTabBar from '../components/CustomTabBar';
 import getFriendRequests from '../use/useGetFriendRequestsRecieved';
 import GlobalContext from '../../GlobalContext';
+import HorizontalCalendar from '../components/HorizontalCalendar';
+import WorkoutFoodButtons from '../components/WorkoutFoodButtons';
+import Nutrients from '../components/Nutrients';
 
 const Main = ({navigation}: any) => {
 
     //const [steps, setSteps] = useState(0);
+
+    const { setGoalNutrients } = useContext(GlobalContext);
 
     const { t } = useTranslation();
 
@@ -48,7 +52,6 @@ const Main = ({navigation}: any) => {
 
     // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk
     let [currentNutrients, setCurrentNutrients] = useState<GoalNutrients[]>([]);
-    let [goalNutrients, setGoalNutrients] = useState<GoalNutrients[]>([]);
 
     const updateGoalNutrients = async () => {
         try {
@@ -57,7 +60,7 @@ const Main = ({navigation}: any) => {
     
             if (docSnap.exists()) {
                 const data = docSnap.data() as GoalNutrients;
-                setGoalNutrients([{ ...data, id: docSnap.id }]);
+                setGoalNutrients({ ...data, id: docSnap.id });
             } else {
                 console.log("No such document!");
             }
@@ -156,21 +159,32 @@ const Main = ({navigation}: any) => {
                 {/* Celi */}
                 <View style={tw`mx-1`}>
                     
-                    <RenderGoals 
-                        goalNutrients={goalNutrients}
-                        currentNutrients={currentNutrients}
-                        navigation={navigation}
-                    />
+                    <HorizontalCalendar navigation={navigation} />
+                    <WorkoutFoodButtons />
+
+
+                    <Nutrients currentNutrients={currentNutrients} date={getCurrentDate(true)}/>
+                    
+                    {/*            
+                        <RenderGoals 
+                            goalNutrients={goalNutrients}
+                            currentNutrients={currentNutrients}
+                            navigation={navigation}
+                        />
+                    */}
                     
                 </View>
 
             </ScrollView>
 
             {/* Footer */}
-            <CustomTabBar 
-                navigation={navigation} 
-                currentPage="Главна Страница"
-            />
+            {/*
+                <CustomTabBar 
+                    navigation={navigation} 
+                    currentPage="Главна Страница"
+                />
+            */}
+            
 
         </SafeAreaView>
         

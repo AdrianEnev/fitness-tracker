@@ -6,14 +6,7 @@ import { TextInput } from 'react-native-gesture-handler';
 import { setDoc, collection, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
-
-export interface GoalNutrients {
-    calories: string,
-    protein: string,
-    carbs: string,
-    fat: string,
-    id: string
-}
+import { GoalNutrients } from '../../interfaces';
 
 const Settings = () => {
 

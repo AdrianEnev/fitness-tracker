@@ -1,13 +1,30 @@
 import React from 'react';
+import { GoalNutrients } from './interfaces';
 
-const GlobalContext = React.createContext({
+interface GlobalContextType {
+  username: string;
+  profilePicture: string;
+  setupRan: boolean;
+  friendRequestsNumber: string;
+  goalNutrients: GoalNutrients | null; // Changed to a single object or null
+  setUsername: (username: string) => void;
+  setProfilePicture: (profilePicture: string) => void;
+  setSetupRan: (value: boolean) => void;
+  setGoalNutrients: (value: GoalNutrients | null) => void; // Updated the type here as well
+}
+
+const defaultValues: GlobalContextType = {
   username: '',
   profilePicture: '',
   setupRan: false,
   friendRequestsNumber: "",
-  setUsername: (username: string) => {},
-  setProfilePicture: (profilePicture: string) => {},
-  setSetupRan: (value: boolean) => {},
-});
+  goalNutrients: null, // Now null, indicating no goalNutrients set initially
+  setUsername: () => {},
+  setProfilePicture: () => {},
+  setSetupRan: () => {},
+  setGoalNutrients: () => {},
+};
+
+const GlobalContext = React.createContext<GlobalContextType>(defaultValues);
 
 export default GlobalContext;
