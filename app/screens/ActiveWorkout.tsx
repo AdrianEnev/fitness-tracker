@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import endWorkout from '../use/useEndWorkout';
+import BottomNavigationBar from '../components/BottomNavigationBar';
 
 const ActiveWorkout = ({route, navigation}: any) => {
 
@@ -168,7 +169,13 @@ const ActiveWorkout = ({route, navigation}: any) => {
                     </TouchableOpacity>
                 </View>
 
-                
+                <BottomNavigationBar
+                    currentPage='ActiveWorkout'
+                    navigation={navigation}
+                    userInputs={userInputs} // Passed as prop
+                    workoutTitle={workoutTitle} // Passed as prop
+                />
+
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );

@@ -8,6 +8,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
 import getWorkoutInfo from '../use/useGetWorkoutInfo';
 import Ionicons from '@expo/vector-icons/Ionicons'
+import BottomNavigationBar from '../components/BottomNavigationBar';
 
 const Workouts = ({navigation}: any) => {
 
@@ -165,6 +166,8 @@ const Workouts = ({navigation}: any) => {
                    
                 />
             </View>
+
+            <BottomNavigationBar currentPage='Workouts' navigation={navigation}/>
             
         </SafeAreaView>
     )

@@ -11,6 +11,7 @@ import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Nutrients from '../components/Nutrients';
+import BottomNavigationBar from '../components/BottomNavigationBar';
 
 export interface Food {
     title: string;
@@ -219,6 +220,8 @@ const FoodDay = ({route, navigation}: any) => {
                 />
 
             </View>
+
+            <BottomNavigationBar currentPage='Food' navigation={navigation}/>
 
         </SafeAreaView>
     )

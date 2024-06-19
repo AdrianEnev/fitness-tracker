@@ -12,6 +12,7 @@ import exportSavedWorkouts from '../use/useExportSavedWorkouts';
 import getFriendRequests from '../use/useGetFriendRequestsRecieved';
 import getUsername from '../use/useGetUsername';
 import GlobalContext from '../../GlobalContext';
+import BottomNavigationBar from '../components/BottomNavigationBar';
 
 const Settings = ({navigation, route}: any) => {
 
@@ -143,6 +144,8 @@ const Settings = ({navigation, route}: any) => {
                 <Button title='export saved workouts' onPress={exportSavedWorkouts}/>
 
             </View>
+
+            <BottomNavigationBar currentPage='Settings' navigation={navigation}/>
 
         </SafeAreaView>
     )

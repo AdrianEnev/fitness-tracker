@@ -19,6 +19,7 @@ import GlobalContext from '../../GlobalContext';
 import HorizontalCalendar from '../components/HorizontalCalendar';
 import WorkoutFoodButtons from '../components/WorkoutFoodButtons';
 import Nutrients from '../components/Nutrients';
+import BottomNavigationBar from '../components/BottomNavigationBar';
 
 const Main = ({navigation}: any) => {
 
@@ -169,27 +170,7 @@ const Main = ({navigation}: any) => {
 
             </ScrollView>
 
-            {/**Floating navigation bar */}
-
-            <View style={tw`absolute w-[96.5%] h-20 bg-white shadow-lg bottom-8 mx-2 rounded-xl flex flex-row justify-around items-center`}>
-                <Ionicons name='home-outline' 
-                    size={40}
-                    color='red'  
-                />
-                <Ionicons name='fitness-outline' 
-                    size={40}
-                    color='red'  
-                />
-                <Ionicons name='calendar-clear-outline' 
-                    size={40}
-                    color='red'  
-                />
-                <Ionicons name='settings-outline' 
-                    size={40}
-                    color='red'  
-                />
-            </View>
-
+            <BottomNavigationBar currentPage='Main' navigation={navigation}/>
 
         </SafeAreaView>
         

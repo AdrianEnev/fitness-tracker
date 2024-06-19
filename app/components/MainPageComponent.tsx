@@ -21,7 +21,6 @@ import Statistics from "../screens/Statistics";
 import ViewFriendProfile from "../screens/ViewFriendProfile";
 
 const Stack = createNativeStackNavigator();
-
 /* 
 
  <Stack.Navigator
@@ -41,9 +40,6 @@ const MainPageComponent = () => {
 
     return (
       <Stack.Navigator
-        screenOptions={{
-          animation: 'slide_from_right',
-        }}
       >
 
           <Stack.Screen

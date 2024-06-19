@@ -58,3 +58,7 @@
 - bottom navigation bar
 
 - cloud-outline ili bookmark-outline za savenati trenirovki
+
+end workout butona da e v bottom tab navigatora pri pusnata trenirovka (stop-outline)
+
+- da pomislq dali da napravq currentNutrients global variable

@@ -27,15 +27,6 @@ const Food = ({navigation}: any) => {
         };
     }, []);
 
-    const generateColor = () => {
-        
-        // zelenoto izglejda nai dobre no zasega shte go ostavq na sluchaen princip
-
-        // cherveno, zeleno, julto
-        const colours = ["#ff6b6b", "#4ecdc4", "#ffd166"];
-        return colours[Math.floor(Math.random() * colours.length)];
-    }
-
     const currentDate = new Date().toISOString().split('T')[0].split('-').join('-');
    
     return (
@@ -54,7 +45,7 @@ const Food = ({navigation}: any) => {
                         navigation.navigate("Хранене-Ден", {date: day});
                     }}
                     markedDates={{
-                        [currentDate]: {selected: true, selectedColor: generateColor(), textColor: 'white'},
+                        [currentDate]: {selected: true, selectedColor: '#ff6b6b', textColor: 'white'},
                     }}
                 />
 

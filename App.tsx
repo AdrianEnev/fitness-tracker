@@ -98,11 +98,6 @@ const UnauthenticatedTabNavigator = () => (
 
 );
 
-
-
-
-
-
     /*const appState = useRef(AppState.currentState);
     const [appStateVisible, setAppStateVisible] = useState(appState.current);
     
@@ -126,7 +121,8 @@ const UnauthenticatedTabNavigator = () => (
        // console.log('AppState', appState.current);
 
     }*/
-       const App = () => {
+   
+    const App = () => {
         const [user, setUser] = useState<User | null>(null);
         const [loading, setLoading] = useState(true);
         const [setupRan, setSetupRan] = useState(false);
