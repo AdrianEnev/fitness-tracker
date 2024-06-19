@@ -17,20 +17,26 @@ const ActiveWorkout = ({route, navigation}: any) => {
         sets: exercise.sets.map((set: any) => ({...set, reps: "", weight: ""}))
     })));
 
-    
-
     const addSet = () => {
-        const updatedExercises = [...exercises];
-        const currentExercise = updatedExercises.find((exercise: any) => exercise.exerciseIndex === currentIndex + 1);
-        if (currentExercise) {
+        // Use newExercises for updates to ensure UI consistency
+        const updatedExercises = [...newExercises];
+        const updatedUserInputs = [...userInputs]; // Clone userInputs for updates
+    
+        const currentExerciseIndex = updatedExercises.findIndex((exercise: any) => exercise.exerciseIndex === currentIndex + 1);
+        if (currentExerciseIndex !== -1) {
             const newSet = {
                 id: Math.random().toString(),
                 reps: "",
                 weight: ""
             };
-            currentExercise.sets.push(newSet);
+    
+            // Update both exercises and userInputs
+            updatedExercises[currentExerciseIndex].sets.push(newSet);
+            updatedUserInputs[currentExerciseIndex].sets.push({...newSet}); // Clone newSet for userInputs
+    
+            setNewExercises(updatedExercises);
+            setUserInputs(updatedUserInputs); // Update userInputs to reflect the new set
         }
-        setNewExercises(updatedExercises);
     }
 
     const removeSet = (exerciseIndex: number, setId: string) => {
@@ -61,30 +67,27 @@ const ActiveWorkout = ({route, navigation}: any) => {
         return () => clearInterval(interval);
     }, []);
 
-    // <Ionicons name='save' size={24} color='#fff'/>
+    const forwardButton = () => {
+        setCurrentIndex((currentIndex + 1) % newExercises.length);
+    }
+
+    const backButton = () => {
+        setCurrentIndex((currentIndex - 1 + newExercises.length) % newExercises.length);
+    }
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={tw`w-full h-full`}>
-
-                <View style={tw`flex flex-row justify-between mt-2 mb-5 mx-3`}>
-                    <TouchableOpacity style={tw`w-20 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`}>
-                        <Text>{formatTime(time)}</Text>
-                    </TouchableOpacity>
-
-                    
-
-                    <View style={tw`flex flex-col h-full gap-y-2`}>
-                        <TouchableOpacity style={tw`w-18 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`} onPress={() => endWorkout(navigation, userInputs, workoutTitle)}>
-                            <Text style={tw`text-black`}>Край</Text>
-                        </TouchableOpacity>
-                    </View>
-                </View>
+                
+                <TouchableOpacity style={tw`w-20 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`}>
+                    <Text>{formatTime(time)}</Text>
+                </TouchableOpacity>
 
                 <View style={tw`ml-3 mb-2`}>
                     <Text style={tw`text-xl font-medium`} ellipsizeMode='tail' numberOfLines={2}>{workoutTitle}</Text>
                 </View>
                  
+            
 
                 <View style={tw`flex flex-col gap-y-1`}>
                     {newExercises.map((exercise: any, index: any) => {
@@ -153,27 +156,13 @@ const ActiveWorkout = ({route, navigation}: any) => {
                     })}
                 </View>
 
-                <View style={tw`flex flex-row justify-between p-4`}>
-                    <TouchableOpacity 
-                        style={tw`w-24 h-12 bg-green-500 rounded-full flex justify-center items-center`}
-                        onPress={() => setCurrentIndex((currentIndex - 1 + newExercises.length) % exercises.length)} // Switch to previous exercise
-                    >
-                        <Text style={tw`text-lg text-white`}>-</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity 
-                        style={tw`w-24 h-12 bg-green-500 rounded-full flex justify-center items-center`}
-                        onPress={() => setCurrentIndex((currentIndex + 1) % newExercises.length)} // Switch to next exercise
-                    >
-                        <Text style={tw`text-lg text-white`}>+</Text>
-                    </TouchableOpacity>
-                </View>
-
                 <BottomNavigationBar
                     currentPage='ActiveWorkout'
                     navigation={navigation}
-                    userInputs={userInputs} // Passed as prop
-                    workoutTitle={workoutTitle} // Passed as prop
+                    userInputs={userInputs}
+                    workoutTitle={workoutTitle}
+                    forwardButton={forwardButton}
+                    backButton={backButton}
                 />
 
             </SafeAreaView>

@@ -21,19 +21,25 @@ const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) 
 }
 
 const BottomNavigationBar = (
-    {currentPage, navigation, userInputs, workoutTitle}: 
-    {currentPage: string, navigation: any, userInputs?: any, workoutTitle?: any}
+    {
+        currentPage, navigation, 
+        userInputs, workoutTitle, forwardButton, backButton
+    }: 
+    {
+        currentPage: string, navigation: any,
+        userInputs?: any, workoutTitle?: any, forwardButton?: () => void, backButton?: () => void
+    }
 ) => {
 
     return (
         <View style={tw`
-            absolute w-[96.5%] h-20 bg-white shadow-lg bottom-8 mx-2 rounded-xl flex flex-row justify-around items-center
+            absolute w-[96.5%] h-20 bg-white shadow-lg bottom-8 mx-2 rounded-2xl flex flex-row justify-around items-center
         `}>
             
             {currentPage === 'ActiveWorkout' ? (
                 <View style={tw`flex flex-row justify-between w-full`}>
 
-                    <Pressable>
+                    <Pressable onPress={backButton}>
                         <Ionicons name='chevron-back' color='#ef4444' size={64}/>
                     </Pressable>
 
@@ -41,7 +47,7 @@ const BottomNavigationBar = (
                         <Ionicons name='stop-outline' color='#ef4444' size={64}/>
                     </Pressable>
 
-                    <Pressable>
+                    <Pressable onPress={forwardButton}>
                         <Ionicons name='chevron-forward' color='#ef4444' size={64}/>
                     </Pressable>
                 </View>
