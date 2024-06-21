@@ -1,112 +1,187 @@
-import { View, Text, Button, Pressable, Image } from 'react-native'
+import { View, Text, Button, Pressable, Image, Alert } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 import tw from 'twrnc'
 import { getAuth } from 'firebase/auth'
 import deleteAccount  from '../use/useDeleteAccount';
 import changePassword from '../use/useChangePassword'
-import { useTranslation } from 'react-i18next';
-import getUsername from '../use/useGetUsername'
-import { collection, doc } from 'firebase/firestore'
-import { useFocusEffect } from '@react-navigation/native'
-import * as ImagePicker from 'expo-image-picker';
-import uploadFile from '../use/useUploadFile'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import getProfilePicture from '../use/useGetProfilePicture'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalContext from '../../GlobalContext'
+import uploadProfilePicture from '../use/useUploadProfilePicture'
+import ProfilePicture from '../components/ProfilePicture'
+import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
 
-const SettingsAccount = ({navigation, route}: any) => {
+const SettingsAccount = () => {
 
     const auth = getAuth();
     const user = auth.currentUser;
     const email = user?.email;
 
-    const { username, profilePicture, setProfilePicture, friendRequestsNumber } = useContext(GlobalContext);
+    const { username, setUsername, profilePicture, setProfilePicture } = useContext(GlobalContext);
 
-    const uriToBlob = async (uri: string): Promise<Blob> => {
-        const response = await fetch(uri);
-        const blob = await response.blob();
-        return blob;
-      };
-      
-    // okazva se che ima po lesen nachin za updatevane na profilna direktno ot firebase akaunta na usera ama veche napravih toq nachin tui che taka shte sedi  
-    const uploadProfilePicture = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: true,
-            aspect: [1, 1],
-            quality: 1,
-        });
-      
-        if (!result.canceled) {
+    const logOut = () => {
 
-            const blob = await uriToBlob(result.assets[0].uri);
-            await uploadFile(blob, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
-            alert('Snimkata be kachena uspeshno!')
+        // add confirmation alert before logging out
+        Alert.alert(
+            'Излизане от Акаунт',
+            'Сигурен ли си, че искаш да излезеш от този акаунт?',
+            [
+                {
+                    text: 'Отказ',
+                    style: 'cancel',
+                },
+                {
+                    text: 'Напред',
+                    style: 'destructive',
+                    onPress: () => {
+                        FIREBASE_AUTH.signOut();
+                    },
+                },
+            ],
+        );
 
-            setProfilePicture(result.assets[0].uri);
+    }
 
-        }
-    };
+    const changeUsername = async () => {
+        Alert.prompt(
+            'Смяна на име',
+            'Моля въведи ново потребителско име',
+            [
+                {
+                    text: 'Отказ',
+                    style: 'default',
+                },
+                {
+                    text: 'Смяна',
+                    style: 'default',
+                    onPress: async (newUsername: string | undefined) => {
+
+                        if (newUsername) {
+
+                            const trimmedUsername = newUsername.trim();
+                            console.log(trimmedUsername);
+
+                            if (newUsername.length <= 2) {
+                                alert('Потребителското име трябва да съдържа поне 3 символа!');
+                                return;
+                            } 
+
+                            if (newUsername == username) {
+                                alert('Потребителското име не може да бъде същото като предишното!');
+                                return;
+                            }
+                        
+                            let isUsernameTaken = false;
+                        
+                            const usersSnapshot = await getDocs(collection(FIRESTORE_DB, 'users'));
+                            for (const doc of usersSnapshot.docs) {
+                                const userInfoCollectionRef = collection(doc.ref, 'user_info');
+                                const usernameDoc = await getDocs(userInfoCollectionRef);
+                                for (const doc of usernameDoc.docs) {
+                                    if (doc.id === 'username') {
+                                        if (doc.data().username.trim() === trimmedUsername) {
+                                            alert('Потребителското име е заето!');
+                                            isUsernameTaken = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (isUsernameTaken) break;
+                            }
+                        
+                            if (isUsernameTaken) return;
+                        
+                            try {
+                                const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+                                const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+                                const userInfoCollectionRef = collection(userDocRef, 'user_info');
+
+
+                                // check if there is a 7 day difference between the current date and the date inside the database and if so, alert the user that there is still a cooldown
+                        
+                                // add a document inside userInfoCollectionRef and call that document "username"
+                                await setDoc(doc(userInfoCollectionRef, 'username'), { username: trimmedUsername, date: new Date()});
+                                setUsername(trimmedUsername);
+
+                                alert('Името ви успешно беше сменено на ' + trimmedUsername);
+                            } catch(err: any) {
+                                alert(err);
+                            }
+
+                        }
+                        
+                        
+                    },
+                },
+            ],
+            'plain-text',
+        );
+    }
+
+    const button = (title: String, icon: any, background: string, iconColor: any, iconSize: number, action: any) => {
+        return (
+            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={action}>
+                <View style={tw`flex flex-row justify-between`}>
+
+                    <View style={tw`flex flex-row`}>
+                        <View style={tw`w-10 h-10 bg-${background} rounded-full flex items-center justify-center mr-2`}>
+                            <Ionicons name={icon} size={iconSize} color={iconColor} />
+                        </View>
+                        
+                        <View style={tw`flex justify-center`}>
+                            <Text style={tw`text-lg font-medium`}>{title}</Text>
+                        </View>
+                    </View>
+
+                    <View style={tw`flex justify-center`}>
+                        <Ionicons name='chevron-forward' size={24} color='#6b7280' />
+                    </View>
+
+                </View>
+            </Pressable>
+        )
+    }
 
     return (
-        <SafeAreaView style={tw`w-full h-full`}>
+        <View style={tw`w-full h-full`}>
+
+            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>Профил</Text>
+            </View> 
             
-            {/* Profil ikona */}
-            <View style={tw`flex flex-col items-center mb-5`}>
 
-                <View style={tw`w-full`}>
+            <View style={tw`bg-white h-full pt-3`}>
 
-                    <View style={tw`flex items-center`}>
-                        {profilePicture === '' ? (
-                            <Pressable 
-                                style={tw`bg-white w-28 h-28 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}
-                                onPress={uploadProfilePicture}
-                            >
-                                <Ionicons name='person-outline' 
-                                    size={40}
-                                    color='#000000'  
-                                />
+                {/* Profile Picture + Username + Email */}
+                <View style={tw`w-full flex flex-row mb-3`}>
 
-                            </Pressable>
-                        ) : (
-                            <Pressable onPress={uploadProfilePicture}>
-                                <Image
-                                    source={{ uri: profilePicture }}
-                                    style={tw`w-28 h-28 rounded-full ml-2`}
-                                />
-                            </Pressable>
-                        )}
+                    <ProfilePicture profilePicture={profilePicture} setProfilePicture={setProfilePicture}/>
+
+                    <View style={tw`flex flex-col justify-center ml-2`}>
+
+                        <Text style={tw`text-xl font-medium`}>{username}</Text>
+                        <Text style={tw`text-base text-gray-500`}>{FIREBASE_AUTH.currentUser?.email}</Text>
+
                     </View>
 
                 </View>
 
-                <View>
-                    <Text style={tw`text-xl `}>{username}</Text>
-                </View>
+                {/* Seperator */}
+                <View style={tw`h-[2px] w-[94%] bg-gray-300 rounded-full mx-2`}></View>
+
+                {/* Icons */}
+                {button('Изход', 'log-out-outline', 'blue-300', '#3b82f6', 28, () => logOut())}
+                {button('Смяна на име', 'text-outline', 'yellow-300', '#eab308', 24, () => changeUsername())}
+                {button('Изтриване на акаунт', 'close-outline', 'red-300', '#ef4444', 34, () => deleteAccount(email, user))}
+                {button('Промяна на парола', 'create-outline', 'green-300', '#22c55e', 26, () => changePassword(email, user, auth))}
+
+                
+                
+               
             </View>
 
-            <View>
-                <View style={tw`w-full h-14 bg-white p-3 mb-1`}>
-                    <Text style={tw`text-lg font-medium`}>Имейл: {email}</Text>
-                </View>      
-
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => FIREBASE_AUTH.signOut()}>
-                    <Text style={tw`text-lg font-medium`}>Излез от акаунта си</Text>
-                </Pressable>
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`}>
-                    <Text style={tw`text-lg font-medium`}>Промяна на потребителско име</Text>
-                </Pressable>
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => deleteAccount(email, user)}>
-                    <Text style={tw`text-lg font-medium`}>Изтриване на акаунт</Text>
-                </Pressable>
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => changePassword(email, user, auth)}>
-                    <Text style={tw`text-lg font-medium`}>Промяна на парола</Text>
-                </Pressable>
-            </View>
-
-        </SafeAreaView>
+        </View>
     )
 }
 

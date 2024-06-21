@@ -1,4 +1,4 @@
-import { View, Text, Button, TouchableOpacity, Pressable } from 'react-native'
+import { View, Text, Button, TouchableOpacity, Pressable, Image } from 'react-native'
 import React, { useContext, useState } from 'react'
 import tw from 'twrnc'
 import { Switch } from 'react-native';
@@ -7,14 +7,12 @@ import { useTranslation } from 'react-i18next';
 import { useFocusEffect } from '@react-navigation/native';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import exportSavedWorkouts from '../use/useExportSavedWorkouts';
-import getFriendRequests from '../use/useGetFriendRequestsRecieved';
-import getUsername from '../use/useGetUsername';
+import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalContext from '../../GlobalContext';
 import BottomNavigationBar from '../components/BottomNavigationBar';
+import ProfilePicture from '../components/ProfilePicture';
 
-const Settings = ({navigation, route}: any) => {
+const Settings = ({navigation}: any) => {
 
     // opciq za smenq na ezika koqto zadava neshto v bazata danni i ot tam se izvlicha ezikut za cqlata aplikaciq
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -22,7 +20,7 @@ const Settings = ({navigation, route}: any) => {
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
     const [selectedLanguage, setSelectedLanguage] = useState('en');
-    const { friendRequestsNumber } = useContext(GlobalContext);
+    const { friendRequestsNumber, profilePicture, setProfilePicture, username } = useContext(GlobalContext);
 
     const { t } = useTranslation();
 
@@ -60,94 +58,104 @@ const Settings = ({navigation, route}: any) => {
                 const language = await getLanguage();
                 await i18next.changeLanguage(language);
                 setSelectedLanguage(language);
-                
-                
             })();
-    
-            return () => {
-                // Optional: You can do something when the screen is unfocused
-                // This function runs when the screen goes out of focus
-            };
         }, [])
     );
-    
-    const [isEnabled, setIsEnabled] = useState(false);
-    const toggleSwitch = () => setIsEnabled(previousState => !previousState);
 
     return (
-        <SafeAreaView style={tw`h-full`}>
+        <View style={tw`h-full`}>
 
-            <View style={tw``}>
+            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>Настройки</Text>
+            </View>
 
-                <Text style={tw`text-2xl font-medium mb-4 text-center`}>Настройки</Text>
+            <View style={tw`bg-white h-full`}>
 
                 <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Акаунт')}>
-                    <View>
-                        <Text style={tw`text-lg font-medium`}>{t('account')}</Text>
-                        {friendRequestsNumber >= "1" && 
-                            <View style={tw`w-6 h-6 bg-red-500 rounded-full absolute top-[-12px] left-17 flex justify-center items-center`}>
-                                <Text style={tw`text-white`}>{friendRequestsNumber}</Text>
+                    <View style={tw`flex flex-row justify-between`}>
+
+                        <View style={tw`flex flex-row`}>
+                            <View style={tw`w-10 h-10 bg-blue-300 rounded-full flex items-center justify-center mr-2`}>
+                                <Ionicons name='person-outline' size={28} color='#2563eb' />
                             </View>
-                        }
+                            
+                            <View style={tw`flex justify-center`}>
+                                <Text style={tw`text-lg font-medium`}>{t('account')}</Text>
+                            </View>
+                        </View>
+
+                        <View style={tw`flex justify-center`}>
+                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
+                        </View>
+
                     </View>
                 </Pressable>
 
                 <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Макронутриенти')}>
-                    <Text style={tw`text-lg font-medium`}>{t('macronutrients')}</Text>
-                </Pressable>
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели')}>
-                    <View>
-                        <Text style={tw`text-lg font-medium`}>Приятели</Text>
-                        {friendRequestsNumber >= "1" && 
-                            <View style={tw`w-6 h-6 bg-red-500 rounded-full absolute top-[-14px] left-21 flex justify-center items-center`}>
-                                <Text style={tw`text-white`}>{friendRequestsNumber}</Text>
+                    <View style={tw`flex flex-row justify-between`}>
+
+                        <View style={tw`flex flex-row`}>
+                            <View style={tw`w-10 h-10 bg-orange-300 rounded-full flex items-center justify-center mr-2`}>
+                                <Ionicons name='flame-outline' size={28} color='#d97706' />
                             </View>
-                        }
+                            
+                            <View style={tw`flex justify-center`}>
+                                <Text style={tw`text-lg font-medium`}>{t('macronutrients')}</Text>
+                            </View>
+                        </View>
+
+                        <View style={tw`flex justify-center`}>
+                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
+                        </View>
+
                     </View>
                 </Pressable>
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Статистика')}>
-                    <Text style={tw`text-lg font-medium`}>Статистика</Text>
+
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели')}>
+                    <View style={tw`flex flex-row justify-between`}>
+
+                        <View style={tw`flex flex-row`}>
+                            <View style={tw`w-10 h-10 bg-green-300 rounded-full flex items-center justify-center mr-2`}>
+                                <Ionicons name='people-outline' size={28} color='#22c55e' />
+                            </View>
+                            
+                            <View style={tw`flex justify-center`}>
+                                <Text style={tw`text-lg font-medium`}>Приятели</Text>
+                            </View>
+                        </View>
+
+                        <View style={tw`flex justify-center`}>
+                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
+                        </View>
+
+                    </View>
                 </Pressable>
 
-                <View style={tw`flex flex-row justify-center mt-10`}>
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Статистика')}>
+                    <View style={tw`flex flex-row justify-between`}>
 
-                    <TouchableOpacity 
-                        style={selectedLanguage === 'en' ? tw`px-3 py-2 bg-blue-500 w-14` : tw`px-3 py-2 bg-gray-300 w-14`} 
-                        onPress={() => changeLanguage('en')}
-                    >
-                        <Text style={tw`text-white text-lg`}>EN</Text>
-                    </TouchableOpacity>
+                        <View style={tw`flex flex-row`}>
+                            <View style={tw`w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center mr-2`}>
+                                <Ionicons name='stats-chart-outline' size={26} color='#eab308' />
+                            </View>
+                            
+                            <View style={tw`flex justify-center`}>
+                                <Text style={tw`text-lg font-medium`}>Статистика</Text>
+                            </View>
+                        </View>
 
-                    <TouchableOpacity 
-                        style={selectedLanguage === 'bg' ? tw`px-3 py-2 bg-blue-500 w-14` : tw`px-3 py-2 bg-gray-300 w-14`} 
-                        onPress={() => changeLanguage('bg')}
-                    >   
-                        <Text style={tw`text-white text-lg`}>BG</Text>
-                    </TouchableOpacity>
+                        <View style={tw`flex justify-center`}>
+                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
+                        </View>
 
-                </View>
-
-                <View style={tw`flex flex-row justify-between mx-32 mt-5`}>
-
-                    <Text>FACEID todo!</Text>
-
-                    <Switch
-                        trackColor={{true: '#ffffff'}}
-                        ios_backgroundColor="#3e3e3e"
-                        thumbColor={isEnabled ? '#50C878' : '#FF5733'}
-                        onValueChange={toggleSwitch}
-                        value={isEnabled}
-                    />
-
-                </View>
-
-                <Button title='export saved workouts' onPress={exportSavedWorkouts}/>
+                    </View>
+                </Pressable>
 
             </View>
 
             <BottomNavigationBar currentPage='Settings' navigation={navigation}/>
 
-        </SafeAreaView>
+        </View>
     )
 }
 

@@ -11,10 +11,10 @@ const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) 
         }}>
             <Ionicons name={icon} 
                 size={40}
-                color='#ef4444'  
+                color='#fd1c47'  
             />
             {currentPage === goalPage && (
-                <View style={tw`w-[39px] h-1 bg-red-400 rounded-lg`}></View>
+                <View style={tw`w-[39px] h-1 bg-[#fd1c47] rounded-lg`}></View>
             )}
         </Pressable>
     )

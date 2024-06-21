@@ -1,152 +1,96 @@
-import { View, Button, Text, FlatList, TouchableWithoutFeedback, Keyboard } from 'react-native'
-import React, {useEffect, useState} from 'react'
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
+import React, { useEffect, useState } from 'react';
+import { View, Text, FlatList, TouchableWithoutFeedback, Keyboard, TouchableOpacity, TextInput } from 'react-native';
 import tw from "twrnc";
-import { TextInput } from 'react-native-gesture-handler';
-import { setDoc, collection, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
+import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import i18next from '../../services/i18next';
-import { useTranslation } from 'react-i18next';
-import { GoalNutrients } from '../../interfaces';
 
 const Settings = () => {
-
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
-    const nutrientsDocRef = doc(userInfoCollectionRef, 'nutrients')
+    const nutrientsDocRef = doc(userInfoCollectionRef, 'nutrients');
 
-    let [nutrients, setNutrients] = useState<GoalNutrients[]>([]);
-
-    /*const updateNutrients = async () => {
-        try {
-          const data = await getDocs(userInfoCollectionRef);
-  
-          const filteredData: GoalNutrients[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as GoalNutrients));
-          
-          setNutrients(filteredData);
-          
-        } catch (err) {
-          console.error(err);
-        }
-    };*/
+    let [nutrients, setNutrients] = useState({});
+    let [tempNutrients, setTempNutrients] = useState({});
 
     const updateNutrients = async () => {
-        try {
-            const docRef = doc(userInfoCollectionRef, "nutrients");
-            const docSnap = await getDoc(docRef);
-    
-            if (docSnap.exists()) {
-                const data = docSnap.data() as GoalNutrients;
-                setNutrients([{ ...data, id: docSnap.id }]);
-            } else {
-                console.log("No such document!");
-            }
-        } catch (err) {
-            console.error(err);
+        const docSnap = await getDoc(nutrientsDocRef);
+        if (docSnap.exists()) {
+            setNutrients(docSnap.data());
+            setTempNutrients(docSnap.data()); // Initialize tempNutrients with the current nutrients
+        } else {
+            console.log("No such document!");
         }
     };
 
-    const setNutrient = async (text: string, nutrientType: string) => {
+    const setNutrient = (value: any, nutrientType: any) => {
+        setTempNutrients(prevState => ({
+            ...prevState,
+            [nutrientType]: value
+        }));
+    };
+
+    const saveNutrients = async () => {
         try {
-            const updatedNutrient = { [nutrientType]: text };
-            await setDoc(nutrientsDocRef, updatedNutrient, { merge: true });
+            await setDoc(nutrientsDocRef, tempNutrients, { merge: true });
+            setNutrients(tempNutrients); // Update the nutrients state with the saved values
         } catch (err) {
             console.error(err);
         }
     };
 
     useEffect(() => {
-        onSnapshot(userInfoCollectionRef, (_snapshot) => {
+        onSnapshot(userInfoCollectionRef, () => {
             updateNutrients();
         });
     }, []);
 
-    const renderNutrients = ({item}: any) => {
-        return (
-            <View style={tw`mt-10`}>
-                <View style={tw`flex flex-row justify-between`}>
+    const nutrientBox = (value: any, title: string) => (
+        <View style={tw`w-[48%]`}>
+            <Text style={tw`text-xl font-medium text-black ml-[6px] mb-1`}>{i18next.t(title)}</Text>
+            <TextInput 
+                style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] pb-[6px] pl-3 text-white font-medium text-xl`} 
+                keyboardType='number-pad' 
+                defaultValue={`${value}`}
+                maxLength={4} 
+                onChangeText={(text) => setNutrient(text, title)} 
+            />
+        </View>
+    );
 
-                    <TextInput 
-                        style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                        placeholder='Калории' 
-                        keyboardType='number-pad' 
-                        defaultValue={item.calories}
-                        maxLength={4} 
-                        onChangeText={(text) => setNutrient(text, "calories")} 
-                    />
-
-                    <Text style={tw`font-medium text-xl mt-3`}>Калории</Text>
-
-                </View>
-
-                <View style={tw`flex flex-row justify-between`}>
-
-                    <TextInput 
-                        style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                        placeholder='Протеин' 
-                        keyboardType='number-pad' 
-                        defaultValue={item.protein}
-                        maxLength={3} 
-                        onChangeText={(text) => {
-                            setNutrient(text, "protein")
-                        }}
-                    />
-
-                    <Text style={tw`font-medium text-xl mt-3`}>Протеин</Text>
-
-                </View>
-
-                <View style={tw`flex flex-row justify-between`}>
-
-                    <TextInput 
-                        style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                        placeholder='Въглехидрати' 
-                        keyboardType='number-pad' 
-                        defaultValue={item.carbs}
-                        maxLength={3} 
-                        onChangeText={(text) => setNutrient(text, "carbs")} //da ne moje texta da zapochva s 0 kato naprimer 0800 kalorii
-                    />
-
-                    <Text style={tw`font-medium text-xl mt-3`}>Въглехидрати</Text>
-
-                </View>
-
-                <View style={tw`flex flex-row justify-between`}>
-
-                    <TextInput 
-                        style={tw`border border-gray-400 p-2 rounded-lg mt-3 w-[40%]`} 
-                        placeholder='Мазнини' 
-                        keyboardType='number-pad' 
-                        defaultValue={item.fat}
-                        maxLength={3} 
-                        onChangeText={(text) => setNutrient(text, "fat")} //da ne moje texta da zapochva s 0 kato naprimer 0800 kalorii
-                    />
-
-                    <Text style={tw`font-medium text-xl mt-3`}>Мазнини</Text>
-
-                </View>
-                
-            </View>
-            
-        );
-    }
+    const renderNutrients = ({ item }: any) => (
+        <View style={tw`flex flex-row flex-wrap w-full gap-x-3 gap-y-3 mt-3`}>
+            {nutrientBox(item.calories, 'calories')}
+            {nutrientBox(item.protein, 'protein')}
+            {nutrientBox(item.carbs, 'carbs')}
+            {nutrientBox(item.fat, 'fat')}
+        </View>
+    );
 
     return (
-      <View style={tw`mx-3 h-full flex-1`}>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={tw`h-full flex-1`}>
+            
+            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>Макроси</Text>
+            </View> 
 
-                <View style={tw`flex-1`}>
-
-
-                    <View>
-                        <FlatList data={nutrients} renderItem={(item) => renderNutrients(item)} />
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={tw`h-full w-full bg-white`}>
+                    <View style={tw`mx-3`}>
+                        <FlatList data={[tempNutrients]} renderItem={renderNutrients} />
                     </View>
-
                 </View>
+            </TouchableWithoutFeedback>
 
-          </TouchableWithoutFeedback>
-      </View>
-    )
-}
+            <TouchableOpacity 
+                style={tw`w-[94.5%] h-14 bg-[#fd1c47] shadow-md rounded-2xl flex justify-center items-center absolute bottom-8 mx-3`}
+                onPress={saveNutrients}
+            >
+                <Text style={tw`text-2xl text-white`}>Запазване</Text>
+            </TouchableOpacity>
+        </View>
+    );
+};
 
-export default Settings
+export default Settings;

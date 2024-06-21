@@ -221,8 +221,6 @@ const FoodDay = ({route, navigation}: any) => {
 
             </View>
 
-            <BottomNavigationBar currentPage='Food' navigation={navigation}/>
-
         </SafeAreaView>
     )
 }

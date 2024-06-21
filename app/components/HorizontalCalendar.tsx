@@ -53,7 +53,7 @@ const HorizontalCalendar = ({navigation}: any) => {
         <View>
             <View style={tw`flex flex-row justify-between mt-4 mx-2`}>
                 {dates.map((date, index) => (
-                    <Pressable key={index} style={tw`${isToday(date) ? 'bg-red-500' : 'bg-white shadow-md'} w-[18%] h-20 rounded-xl flex items-center pt-1`}
+                    <Pressable key={index} style={tw`${isToday(date) ? 'bg-[#fd1c47]' : 'bg-white shadow-md'} w-[18%] h-20 rounded-xl flex items-center pt-1`}
                     onPress={() => {
 
                         const dateString = date.toISOString().split('T')[0];

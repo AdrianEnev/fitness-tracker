@@ -60,7 +60,7 @@ const Nutrients = ({ currentNutrients, navigation, currentPage}: RenderNutrients
                     <Text style={tw`text-xl font-medium text-center text-gray-600 mb-1`}>{title}</Text>
     
                     <View style={tw`flex flex-row`}>
-                        <View style={tw`w-[${redWidthPercentage}%] h-4 bg-red-400 ${redWidthPercentage >= 100 ? 'rounded-lg' : 'rounded-l-lg'} mr-[-1px]`}></View>
+                        <View style={tw`w-[${redWidthPercentage}%] h-4 bg-[#fd3e6b] ${redWidthPercentage >= 100 ? 'rounded-lg' : 'rounded-l-lg'} mr-[-1px]`}></View>
                         <View style={tw`w-[${blueWidthPercentage}%] h-4 bg-[#3d5875] rounded-r-lg`}></View>
                     </View>
     
@@ -105,7 +105,7 @@ const Nutrients = ({ currentNutrients, navigation, currentPage}: RenderNutrients
                         size={160}
                         width={15}
                         fill={(currentCalories / goalCalories) * 100}
-                        tintColor="#f87171"
+                        tintColor="#fd2e5b"
                         backgroundColor="#3d5875"
                         lineCap='round'
                         arcSweepAngle={270}

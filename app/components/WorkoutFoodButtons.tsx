@@ -11,7 +11,7 @@ const WorkoutFoodButtons = ({navigation}: any) => {
             
             <View style={tw`flex flex-row gap-x-2`}>
                 
-                <Pressable style={tw`w-[49%] h-32 bg-red-500 rounded-lg shadow-lg flex items-center justify-center`} onPress={() => navigation.navigate('Тренировки')}>
+                <Pressable style={tw`w-[49%] h-32 bg-[#fd1c47] rounded-lg shadow-lg flex items-center justify-center`} onPress={() => navigation.navigate('Тренировки')}>
                     <Ionicons name='fitness-outline' size={64} color='white'/>
                 </Pressable>
                 
