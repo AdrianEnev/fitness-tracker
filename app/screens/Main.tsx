@@ -36,6 +36,7 @@ const Main = ({navigation}: any) => {
 
     const { username, profilePicture } = useContext(GlobalContext);
 
+    const [currentFormattedDate, setCurrentFormattedDate] = useState<any>();
     const {friendRequestsNumber} = useContext(GlobalContext);
 
     useFocusEffect(
@@ -46,6 +47,17 @@ const Main = ({navigation}: any) => {
             }
             fetch();
             updateCurrentNutrients();
+
+            const currentDate = getCurrentDate(false);
+            const formattedDate = {
+                dateString: currentDate,
+                day: parseInt(currentDate.split('-')[0]),
+                month: parseInt(currentDate.split('-')[1]),
+                year: parseInt(currentDate.split('-')[2]),
+                timestamp: Date.now()
+            }
+
+            setCurrentFormattedDate(formattedDate)
             
         }, [])
     );
@@ -162,9 +174,13 @@ const Main = ({navigation}: any) => {
                     <HorizontalCalendar navigation={navigation} />
                     <WorkoutFoodButtons navigation={navigation} />
 
-
-                    <Nutrients currentNutrients={currentNutrients} navigation={navigation} currentPage='Main'/>
-                    
+                    <Nutrients 
+                        currentNutrients={currentNutrients} 
+                        navigation={navigation} 
+                        formattedDate={currentFormattedDate} 
+                        regularDate={getCurrentDate(true)} 
+                        currentPage='Main'
+                    />
                     
                 </View>
 

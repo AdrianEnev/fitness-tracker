@@ -9,9 +9,11 @@ type RenderNutrientsProps = {
     currentNutrients: any;
     navigation: any;
     currentPage: string;
+    formattedDate: any;
+    regularDate: any
 };
 
-const Nutrients = ({ currentNutrients, navigation, currentPage}: RenderNutrientsProps) => {
+const Nutrients = ({ currentNutrients, navigation, currentPage, formattedDate, regularDate}: RenderNutrientsProps) => {
 
     const { goalNutrients } = useContext(GlobalContext);
     
@@ -24,16 +26,6 @@ const Nutrients = ({ currentNutrients, navigation, currentPage}: RenderNutrients
     const goalProtein = parseInt(String(goalNutrients?.protein)) || 0;
     const goalCarbs = parseInt(String(goalNutrients?.carbs)) || 0;
     const goalFat = parseInt(String(goalNutrients?.fat)) || 0;
-
-
-    const currentDate = getCurrentDate(false);
-    const formattedDate = {
-        dateString: currentDate,
-        day: parseInt(currentDate.split('-')[0]),
-        month: parseInt(currentDate.split('-')[1]),
-        year: parseInt(currentDate.split('-')[2]),
-        timestamp: Date.now()
-    }
 
     const progressElement = (currentProgress: number, goalProgress: number, title: string) => {
 
@@ -96,7 +88,7 @@ const Nutrients = ({ currentNutrients, navigation, currentPage}: RenderNutrients
 
                     <View style={tw`flex flex-col`}>
                         <Text style={tw`text-2xl font-medium`}>Калории</Text>
-                        <Text style={tw`text-lg text-gray-600 mt-[-5px]`}>{getCurrentDate(true)}</Text>
+                        <Text style={tw`text-lg text-gray-600 mt-[-5px]`}>{regularDate}</Text>
                     </View>
 
                     <AnimatedCircularProgress

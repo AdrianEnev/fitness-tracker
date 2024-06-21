@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Pressable } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import tw from "twrnc"
 import { GoalNutrients } from '../../interfaces'
 import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
@@ -12,6 +12,7 @@ import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Nutrients from '../components/Nutrients';
 import BottomNavigationBar from '../components/BottomNavigationBar';
+import getCurrentDate from '../use/useGetCurrentDate';
 
 export interface Food {
     title: string;
@@ -31,13 +32,14 @@ const FoodDay = ({route, navigation}: any) => {
 
     const getDate = () => {
         if (date.day < 10 && date.month < 10) {
-            return `0${date.day}/0${date.month}/${date.year}`;
+            return `0${date.day}.0${date.month}.${date.year}`;
         } else if (date.day < 10) {
-            return `0${date.day}/${date.month}/${date.year}`;
+            return `0${date.day}.${date.month}.${date.year}`;
         } else if (date.month < 10) {
-            return `${date.day}/0${date.month}/${date.year}`;
+            return `${date.day}.0${date.month}.${date.year}`;
         }
-        return `${date.day}/${date.month}/${date.year}`;
+
+        return `${date.day}.${date.month}.${date.year}`;
     }
 
     let [goalNutrients, setGoalNutrients] = useState<GoalNutrients[]>([]);
@@ -207,7 +209,13 @@ const FoodDay = ({route, navigation}: any) => {
         
             <View style={tw``}>
 
-                <Nutrients currentNutrients={currentNutrients} navigation={navigation} currentPage='FoodDay'/>
+                <Nutrients 
+                    currentNutrients={currentNutrients} 
+                    navigation={navigation} 
+                    regularDate={getDate()} 
+                    formattedDate={date} 
+                    currentPage='FoodDay'
+                />
 
             </View>
 

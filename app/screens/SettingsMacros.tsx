@@ -5,8 +5,10 @@ import { collection, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import i18next from '../../services/i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import BottomNavigationBar from '../components/BottomNavigationBar';
 
-const Settings = () => {
+const Settings = ({navigation}: any) => {
+
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
@@ -35,7 +37,8 @@ const Settings = () => {
     const saveNutrients = async () => {
         try {
             await setDoc(nutrientsDocRef, tempNutrients, { merge: true });
-            setNutrients(tempNutrients); // Update the nutrients state with the saved values
+            setNutrients(tempNutrients); 
+            navigation.goBack();
         } catch (err) {
             console.error(err);
         }
@@ -70,24 +73,27 @@ const Settings = () => {
     );
 
     return (
-        <SafeAreaView style={tw`h-full flex-1 bg-white`}>
-
+        <SafeAreaView style={tw`w-full h-full bg-white`}>
             <Text style={tw`text-2xl font-medium text-center mt-1 mb-4`}>Цели за Деня</Text>
 
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={tw`h-full w-full bg-white`}>
-                    <View style={tw`mx-3`}>
-                        <FlatList data={[tempNutrients]} renderItem={renderNutrients} />
+                <View style={tw`flex-1`}>
+                    <View style={tw`w-full bg-white`}>
+                        <View style={tw`mx-3`}>
+                            <FlatList data={[tempNutrients]} renderItem={renderNutrients} />
+                        </View>
                     </View>
+
+                    <TouchableOpacity 
+                        style={tw`w-[94.5%] h-14 bg-[#fd1c47] shadow-md rounded-2xl flex justify-center items-center mx-3 mt-3`}
+                        onPress={saveNutrients}
+                    >
+                        <Text style={tw`text-2xl text-white`}>Запазване</Text>
+                    </TouchableOpacity>
                 </View>
             </TouchableWithoutFeedback>
 
-            <TouchableOpacity 
-                style={tw`w-[94.5%] h-14 bg-[#fd1c47] shadow-md rounded-2xl flex justify-center items-center absolute bottom-8 mx-3`}
-                onPress={saveNutrients}
-            >
-                <Text style={tw`text-2xl text-white`}>Запазване</Text>
-            </TouchableOpacity>
+            <BottomNavigationBar currentPage='Settings' navigation={navigation}/>
         </SafeAreaView>
     );
 };

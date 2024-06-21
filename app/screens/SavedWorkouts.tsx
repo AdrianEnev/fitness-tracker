@@ -7,6 +7,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
 import getSavedWorkoutInfo from '../use/useGetSavedWorkoutInfo';
 import Ionicons from '@expo/vector-icons/Ionicons'
+import BottomNavigationBar from '../components/BottomNavigationBar';
 
 const Workouts = ({navigation}: any) => {
 
@@ -67,6 +68,8 @@ const Workouts = ({navigation}: any) => {
 
     }
 
+    // <Ionicons name='close' size={40} color='white' onPress={() => deleteWorkout(savedWorkout.id)}/>
+
     const renderSavedWorkout = (savedWorkout: any) => {
 
         const date = savedWorkout.created.toDate();
@@ -74,33 +77,38 @@ const Workouts = ({navigation}: any) => {
         const formattedTime = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + 'ч.';
 
         return (
-            <Pressable style={tw`w-[96%] h-14 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`}>
-
+            <Pressable style={tw`w-[94%] h-24 bg-[#fd1c47] shadow-lg rounded-2xl p-3 mb-2 mx-3`} 
+                onPress={() => viewWorkout(savedWorkout, formattedDate, formattedTime)} disabled={viewWorkoutButtonDisabled}
+            >
                 <View style={tw`flex flex-row justify-between`}>
 
-                    <View style={tw`w-[76%] flex flex-col`}>
-                        <Text style={tw`text-2xl font-medium`} ellipsizeMode='tail' numberOfLines={1}>{savedWorkout.title}</Text>
+                    <View style={tw`w-[88%] flex flex-col`}>
+                        <Text style={tw`text-2xl font-medium text-white`} ellipsizeMode='tail' numberOfLines={1}>{savedWorkout.title}</Text>
+                        <Text style={tw`text-2xl font-medium text-white`} ellipsizeMode='tail' numberOfLines={1}>{formattedDate} - {formattedTime}</Text>
                     </View>
 
                     <View style={tw`flex flex-row gap-x-1`}>
-                        <Ionicons name='close' size={40} color='#ef4444' onPress={() => deleteWorkout(savedWorkout.id)}/>
-                        <Ionicons name='eye-outline' size={38} color='#22c55e' onPress={() => viewWorkout(savedWorkout, formattedDate, formattedTime)} disabled={viewWorkoutButtonDisabled}                        />
+                        
+                        <View style={tw`flex justify-center`}>
+                            <Ionicons name='chevron-forward' size={24} color='white' />
+                        </View>
                     </View>
 
                 </View>
+
                
             </Pressable>
         )
     }
 
-    const { t } = useTranslation();
-
     return (
-        <SafeAreaView style={tw`w-full h-full`}>
+        <View style={tw`w-full h-full`}>
 
-            <Text style={tw`text-2xl font-medium mt-1 text-center`}>Запазени Тренировки</Text>
+            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+                <Text style={tw`text-3xl font-medium text-black m-3`}>Запазени Тренировки</Text>
+            </View>
 
-            <View style={tw`w-full h-full mt-5 mx-2`}>
+            <View style={tw`w-full h-full bg-white pt-3`}>
                 <FlatList
                     data={savedWorkouts}
                     renderItem={({item}: any) => renderSavedWorkout(item)}
@@ -108,8 +116,10 @@ const Workouts = ({navigation}: any) => {
                     numColumns={2}
                 />
             </View>
+
+            <BottomNavigationBar currentPage='Settings' navigation={navigation}/>
             
-        </SafeAreaView>
+        </View>
     )
 }
 

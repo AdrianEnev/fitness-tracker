@@ -11,8 +11,9 @@ import GlobalContext from '../../GlobalContext'
 import uploadProfilePicture from '../use/useUploadProfilePicture'
 import ProfilePicture from '../components/ProfilePicture'
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
+import BottomNavigationBar from '../components/BottomNavigationBar'
 
-const SettingsAccount = () => {
+const SettingsAccount = ({navigation}: any) => {
 
     const auth = getAuth();
     const user = auth.currentUser;
@@ -172,6 +173,8 @@ const SettingsAccount = () => {
                 {button('Промяна на парола', 'create-outline', 'green-300', '#22c55e', 26, () => changePassword(email, user, auth))}
                
             </View>
+
+            <BottomNavigationBar currentPage='Settings' navigation={navigation}/>
 
         </SafeAreaView>
     )
