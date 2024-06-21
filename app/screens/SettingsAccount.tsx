@@ -144,14 +144,9 @@ const SettingsAccount = () => {
     }
 
     return (
-        <View style={tw`w-full h-full`}>
+        <SafeAreaView style={tw`w-full h-full bg-white`}>
 
-            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
-                <Text style={tw`text-4xl font-medium text-black m-3`}>Профил</Text>
-            </View> 
-            
-
-            <View style={tw`bg-white h-full pt-3`}>
+            <View style={tw`h-full pt-2`}>
 
                 {/* Profile Picture + Username + Email */}
                 <View style={tw`w-full flex flex-row mb-3`}>
@@ -175,13 +170,10 @@ const SettingsAccount = () => {
                 {button('Смяна на име', 'text-outline', 'yellow-300', '#eab308', 24, () => changeUsername())}
                 {button('Изтриване на акаунт', 'close-outline', 'red-300', '#ef4444', 34, () => deleteAccount(email, user))}
                 {button('Промяна на парола', 'create-outline', 'green-300', '#22c55e', 26, () => changePassword(email, user, auth))}
-
-                
-                
                
             </View>
 
-        </View>
+        </SafeAreaView>
     )
 }
 

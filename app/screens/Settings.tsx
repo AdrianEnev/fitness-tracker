@@ -62,6 +62,32 @@ const Settings = ({navigation}: any) => {
         }, [])
     );
 
+    const button = (navigationPath: string, icon: any, iconColor: any, background: string, title: string) => {
+
+        return (
+            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate(navigationPath)}>
+                <View style={tw`flex flex-row justify-between`}>
+
+                    <View style={tw`flex flex-row`}>
+                        <View style={tw`w-10 h-10 bg-${background} rounded-full flex items-center justify-center mr-2`}>
+                            <Ionicons name={icon} size={28} color={iconColor} />
+                        </View>
+                        
+                        <View style={tw`flex justify-center`}>
+                            <Text style={tw`text-lg font-medium`}>{title}</Text>
+                        </View>
+                    </View>
+
+                    <View style={tw`flex justify-center`}>
+                        <Ionicons name='chevron-forward' size={24} color='#6b7280' />
+                    </View>
+
+                </View>
+            </Pressable>
+        )
+
+    }
+
     return (
         <View style={tw`h-full`}>
 
@@ -71,85 +97,12 @@ const Settings = ({navigation}: any) => {
 
             <View style={tw`bg-white h-full`}>
 
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Акаунт')}>
-                    <View style={tw`flex flex-row justify-between`}>
+                {button('Настройки-Акаунт', 'person-outline', '#3b82f6', 'blue-300', 'Профил')}
+                {button('Настройки-Макронутриенти', 'flame-outline', '#d97706', 'orange-300', 'Макронутриенти')}
+                {button('Приятели', 'people-outline', '#22c55e', 'green-300', 'Приятели')}
+                {button('Настройки-Статистика', 'stats-chart-outline', '#eab308', 'yellow-300', 'Статистика')}
+                {button('Запазени-Тренировки', 'cloud-outline', '#ec4899', 'pink-300', 'Запазени Тренировки')}
 
-                        <View style={tw`flex flex-row`}>
-                            <View style={tw`w-10 h-10 bg-blue-300 rounded-full flex items-center justify-center mr-2`}>
-                                <Ionicons name='person-outline' size={28} color='#2563eb' />
-                            </View>
-                            
-                            <View style={tw`flex justify-center`}>
-                                <Text style={tw`text-lg font-medium`}>{t('account')}</Text>
-                            </View>
-                        </View>
-
-                        <View style={tw`flex justify-center`}>
-                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
-                        </View>
-
-                    </View>
-                </Pressable>
-
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Макронутриенти')}>
-                    <View style={tw`flex flex-row justify-between`}>
-
-                        <View style={tw`flex flex-row`}>
-                            <View style={tw`w-10 h-10 bg-orange-300 rounded-full flex items-center justify-center mr-2`}>
-                                <Ionicons name='flame-outline' size={28} color='#d97706' />
-                            </View>
-                            
-                            <View style={tw`flex justify-center`}>
-                                <Text style={tw`text-lg font-medium`}>{t('macronutrients')}</Text>
-                            </View>
-                        </View>
-
-                        <View style={tw`flex justify-center`}>
-                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
-                        </View>
-
-                    </View>
-                </Pressable>
-
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Приятели')}>
-                    <View style={tw`flex flex-row justify-between`}>
-
-                        <View style={tw`flex flex-row`}>
-                            <View style={tw`w-10 h-10 bg-green-300 rounded-full flex items-center justify-center mr-2`}>
-                                <Ionicons name='people-outline' size={28} color='#22c55e' />
-                            </View>
-                            
-                            <View style={tw`flex justify-center`}>
-                                <Text style={tw`text-lg font-medium`}>Приятели</Text>
-                            </View>
-                        </View>
-
-                        <View style={tw`flex justify-center`}>
-                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
-                        </View>
-
-                    </View>
-                </Pressable>
-
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate('Настройки-Статистика')}>
-                    <View style={tw`flex flex-row justify-between`}>
-
-                        <View style={tw`flex flex-row`}>
-                            <View style={tw`w-10 h-10 bg-yellow-300 rounded-full flex items-center justify-center mr-2`}>
-                                <Ionicons name='stats-chart-outline' size={26} color='#eab308' />
-                            </View>
-                            
-                            <View style={tw`flex justify-center`}>
-                                <Text style={tw`text-lg font-medium`}>Статистика</Text>
-                            </View>
-                        </View>
-
-                        <View style={tw`flex justify-center`}>
-                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
-                        </View>
-
-                    </View>
-                </Pressable>
 
             </View>
 

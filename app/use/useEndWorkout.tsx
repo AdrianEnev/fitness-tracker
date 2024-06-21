@@ -35,7 +35,9 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string)
                 description: exercise.description,
                 exerciseIndex: exercise.exerciseIndex,
             });
-
+    
+            let exerciseTotalWeight = 0; // Temporary variable to accumulate weight for each exercise
+    
             await Promise.all(exercise.sets.map(async (set: any, index: any) => {
                 const exerciseSets = collection(exerciseDocRef, "sets");
                 await addDoc(exerciseSets, {
@@ -43,25 +45,47 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string)
                     weight: set.weight,
                     setIndex: index + 1
                 });
-
-                totalWeight += parseFloat(set.weight);
+    
+                const weight = parseFloat(set.weight);
+                if (!isNaN(weight)) { // Ensure weight is a number
+                    exerciseTotalWeight += weight;
+                }
             }));
+    
+            totalWeight += exerciseTotalWeight; // Update totalWeight after all sets of an exercise are processed
         }));
+    
+        // Ensure totalWeight is a number before updating the document
+        // Ensure totalWeight is a number before updating the document
+        if (!isNaN(totalWeight)) {
+            // Update the document with totalWeight
+            const statisticsDocRef = doc(userInfoCollectionRef, "statistics");
+            const statisticsDoc = await getDoc(statisticsDocRef);
 
-        // Dobavqne na tejestta povdignata prez cqlata trenirovka kum tova koeto e zapazeno v bazata danni
-        const weightLiftedDocRef = doc(userInfoCollectionRef, "weight_lifted");
-        const weightLiftedDoc = await getDoc(weightLiftedDocRef);
+            let finishedWorkouts = 0; // Default to 0 if not found
+            let existingWeight = 0;
 
-        if (weightLiftedDoc.exists()) {
-            totalWeight += weightLiftedDoc.data().weight;
+            if (statisticsDoc.exists()) {
+                const data = statisticsDoc.data();
+                existingWeight = typeof data.weight === 'number' ? data.weight : 0;
+                finishedWorkouts = typeof data.finishedWorkouts === 'number' ? data.finishedWorkouts : 0;
+            }
+
+            totalWeight += existingWeight; // Add existing weight to totalWeight
+
+            // Increment finishedWorkouts count
+            finishedWorkouts += 1;
+
+            // Update the document with new totalWeight and finishedWorkouts count
+            await setDoc(statisticsDocRef, {
+                weightLifted: totalWeight,
+                finishedWorkouts: finishedWorkouts
+            });
+        } else {
+            console.error('Total weight is NaN');
         }
 
-        await setDoc(weightLiftedDocRef, {
-            weight: totalWeight
-        });
-
         navigation.navigate('Главна Страница');
-        
     } catch (err) {
         console.error(err);
     }

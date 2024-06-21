@@ -4,6 +4,7 @@ import tw from "twrnc";
 import { collection, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import i18next from '../../services/i18next';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const Settings = () => {
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -52,7 +53,7 @@ const Settings = () => {
             <TextInput 
                 style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] pb-[6px] pl-3 text-white font-medium text-xl`} 
                 keyboardType='number-pad' 
-                defaultValue={`${value}`}
+                defaultValue={value}
                 maxLength={4} 
                 onChangeText={(text) => setNutrient(text, title)} 
             />
@@ -69,11 +70,9 @@ const Settings = () => {
     );
 
     return (
-        <View style={tw`h-full flex-1`}>
-            
-            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
-                <Text style={tw`text-4xl font-medium text-black m-3`}>Макроси</Text>
-            </View> 
+        <SafeAreaView style={tw`h-full flex-1 bg-white`}>
+
+            <Text style={tw`text-2xl font-medium text-center mt-1 mb-4`}>Цели за Деня</Text>
 
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={tw`h-full w-full bg-white`}>
@@ -89,7 +88,7 @@ const Settings = () => {
             >
                 <Text style={tw`text-2xl text-white`}>Запазване</Text>
             </TouchableOpacity>
-        </View>
+        </SafeAreaView>
     );
 };
 
