@@ -152,7 +152,7 @@ const SettingsAccount = ({navigation}: any) => {
                 {/* Profile Picture + Username + Email */}
                 <View style={tw`w-full flex flex-row mb-3`}>
 
-                    <ProfilePicture profilePicture={profilePicture} setProfilePicture={setProfilePicture}/>
+                    <ProfilePicture />
 
                     <View style={tw`flex flex-col justify-center ml-2`}>
 

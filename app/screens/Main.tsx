@@ -20,6 +20,7 @@ import HorizontalCalendar from '../components/HorizontalCalendar';
 import WorkoutFoodButtons from '../components/WorkoutFoodButtons';
 import Nutrients from '../components/Nutrients';
 import BottomNavigationBar from '../components/BottomNavigationBar';
+import ProfilePicture from '../components/ProfilePicture';
 
 //bg-[#fd3e6b]
 
@@ -125,23 +126,8 @@ const Main = ({navigation}: any) => {
                 <View style={tw`flex flex-row justify-between mt-2 mx-1`}>
 
                     <View style={tw`flex flex-row`}>
-                        {/* Profil ikona */}
-                        {profilePicture === '' ? (
-                            <View style={tw`bg-white w-16 h-16 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
-                                <Ionicons name='person-outline' 
-                                    size={40}
-                                    color='#000000'  
-                                    onPress={() => navigation.navigate("Настройки-Акаунт")}
-                                />
-                            </View>
-                        ) : (
-                            <Pressable onPress={() => navigation.navigate("Настройки-Акаунт")}>
-                                <Image
-                                    source={{ uri: profilePicture }}
-                                    style={tw`w-16 h-16 rounded-full ml-2`}
-                                />
-                            </Pressable>
-                        )}
+                        
+                        <ProfilePicture page='Main'/>
 
                         {/* Zdravei User */}
                         <View style={tw`flex flex-col ml-3`}>

@@ -2,8 +2,13 @@ import { View, Pressable, Image } from "react-native"
 import Ionicons from '@expo/vector-icons/Ionicons';
 import uploadProfilePicture from '../use/useUploadProfilePicture';
 import tw from 'twrnc';
+import GlobalContext from "../../GlobalContext";
+import { useContext } from "react";
 
-const ProfilePicture = ({profilePicture, setProfilePicture}: any) => {
+const ProfilePicture = ({page}: any) => {
+
+    const { profilePicture, setProfilePicture } = useContext(GlobalContext);
+
     return (
         <View>
             {profilePicture === '' ? (
@@ -21,7 +26,7 @@ const ProfilePicture = ({profilePicture, setProfilePicture}: any) => {
                 <Pressable onPress={() => uploadProfilePicture(setProfilePicture)}>
                     <Image
                         source={{ uri: profilePicture }}
-                        style={tw`w-22 h-22 rounded-full ml-2`}
+                        style={tw`${page === 'Main' ? 'w-16 h-16' : 'w-22 h-22'} rounded-full ml-2`}
                     />
                 </Pressable>
             )}

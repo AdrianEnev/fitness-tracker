@@ -20,16 +20,17 @@ const Workouts = ({navigation}: any) => {
 
     const getWorkouts = async () => {
         try {
-            const data = await getDocs(query(userSavedWorkoutsCollectionRef, orderBy("created", "desc")));
-      
+
+            const q = query(userSavedWorkoutsCollectionRef, orderBy("created", "desc"));
+            const data = await getDocs(q);
+
             const filteredData: Workout[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Workout));
-      
+
             setSavedWorkouts(filteredData);
-            
         } catch (err) {
             console.error(err);
         }
-    }
+    };
 
     useEffect(() => {
         onSnapshot(userSavedWorkoutsCollectionRef, (_snapshot) => {
@@ -39,14 +40,14 @@ const Workouts = ({navigation}: any) => {
 
     //onPress={() => navigation.navigate('Тренировка-Детайли', {workout})}
 
-    const deleteWorkout = async (id: string) => {
+    /*const deleteWorkout = async (id: string) => {
         const workoutDocRef = doc(userSavedWorkoutsCollectionRef, id);
         try {
             await deleteDoc(workoutDocRef);
         } catch (err) {
             console.error("Error deleting document: ", err);
         }
-    }
+    }*/
 
     const viewWorkout = async (workout: Workout, date: any, time: any) => {
 
@@ -94,18 +95,18 @@ const Workouts = ({navigation}: any) => {
     }
 
     return (
-        <View style={tw`w-full h-full`}>
+        <View style={tw`w-full h-full bg-white`}>
 
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
                 <Text style={tw`text-3xl font-medium text-black m-3`}>Запазени Тренировки</Text>
             </View>
 
-            <View style={tw`w-full h-full bg-white pt-3`}>
+            <View style={tw`w-full h-[72%] bg-white pt-3 pb-3`}>
                 <FlatList
                     data={savedWorkouts}
                     renderItem={({item}: any) => renderSavedWorkout(item)}
                     keyExtractor={(workout: Workout) => workout.id}
-                    numColumns={2}
+                    showsVerticalScrollIndicator={false}
                 />
             </View>
 

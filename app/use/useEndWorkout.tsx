@@ -4,6 +4,8 @@ import generateRandomColour from "./useGenerateColour";
 
 const endWorkout = async (navigation: any, exercises: any, workoutTitle: string) => {
 
+    navigation.navigate('Главна Страница');
+
     if (!exercises.length || exercises.every((exercise: any) => 
         !exercise.sets || 
         exercise.sets.length === 0 || 
@@ -33,6 +35,7 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string)
                 title: exercise.title,
                 description: exercise.description,
                 exerciseIndex: exercise.exerciseIndex,
+                note: exercise.note,
             });
     
             let exerciseTotalWeight = 0; // Temporary variable to accumulate weight for each exercise
@@ -84,8 +87,6 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string)
         } else {
             console.error('Total weight is NaN');
         }
-
-        navigation.navigate('Главна Страница');
     } catch (err) {
         console.error(err);
     }

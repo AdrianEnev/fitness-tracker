@@ -4,6 +4,8 @@ import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { BlurView } from 'expo-blur';
+import NoteModal from '../components/NoteModal';
+import EndWorkoutModal from '../components/EndWorkoutModal';
 
 const ActiveWorkout = ({route, navigation}: any) => {
 
@@ -14,10 +16,12 @@ const ActiveWorkout = ({route, navigation}: any) => {
     const [newExercises, setNewExercises] = useState<any>([...exercises]); // newExercises = copy of exercises
     const [userInputs, setUserInputs] = useState<any>(newExercises.map((exercise: any) => ({
         ...exercise,
-        sets: exercise.sets.map((set: any) => ({...set, reps: "", weight: ""}))
+        sets: exercise.sets.map((set: any) => ({...set, reps: "", weight: ""})),
+        note: ""
     })));
 
-    const [isModalVisible, setIsModalVisible] = useState(false);
+    const [isNoteModalVisible, setIsNoteModalVisible] = useState(false);
+    const [isEndWorkoutModalVisible, setIsEndWorkoutModalVisible] = useState(false);
 
     const addSet = () => {
         // Use newExercises for updates to ensure UI consistency
@@ -42,13 +46,30 @@ const ActiveWorkout = ({route, navigation}: any) => {
     }
 
     const removeSet = (exerciseIndex: number, setId: string) => {
+        // Update newExercises
         const updatedExercises = [...newExercises];
         const currentExercise = updatedExercises.find((exercise: any) => exercise.exerciseIndex === exerciseIndex);
         if (currentExercise) {
             currentExercise.sets = currentExercise.sets.filter((set: any) => set.id !== setId);
         }
         setNewExercises(updatedExercises);
-    }
+    
+        // Update userInputs to reflect the change
+        const updatedUserInputs = [...userInputs];
+        const currentUserInputExercise = updatedUserInputs.find((input: any) => input.exerciseIndex === exerciseIndex);
+        if (currentUserInputExercise) {
+            currentUserInputExercise.sets = currentUserInputExercise.sets.filter((set: any) => set.id !== setId);
+        }
+        setUserInputs(updatedUserInputs);
+    };
+
+    const updateNote = (exerciseIndex: number, note: string) => {
+        const updatedInputs = [...userInputs];
+        if (updatedInputs[exerciseIndex]) {
+            updatedInputs[exerciseIndex].note = note; // Update the note for the specific exercise
+            setUserInputs(updatedInputs); // Update the state
+        }
+    };
 
     const [time, setTime] = useState(0);
 
@@ -79,11 +100,10 @@ const ActiveWorkout = ({route, navigation}: any) => {
 
     return (
         <>
-
-            {isModalVisible && (
+            { (isNoteModalVisible || isEndWorkoutModalVisible) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
-                    intensity={100}
+                    intensity={50}
                     tint='dark'
                 />
             )}
@@ -91,32 +111,22 @@ const ActiveWorkout = ({route, navigation}: any) => {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <SafeAreaView style={tw`w-full h-full bg-white`}>
 
-                
+                    <NoteModal
+                        isNoteModalVisible={isNoteModalVisible}
+                        setIsNoteModalVisible={setIsNoteModalVisible}
+                        userInputs={userInputs}
+                        currentIndex={currentIndex}
+                        updateNote={updateNote}
+                    />
 
-                    <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={isModalVisible}
-                        onRequestClose={() => {
-                            setIsModalVisible(!isModalVisible);
-                        }}
-                        >
-                            <View style={tw`flex-1 justify-center items-center`}>
-                                <View style={tw`bg-white p-20 rounded-xl`}>
-
-                                    <Text style={tw`mb-4`}>Your modal content here</Text>
-
-                                    <Pressable
-                                        style={tw`bg-blue-500 rounded-xl p-2`}
-                                        onPress={() => setIsModalVisible(!isModalVisible)}
-                                    >
-
-                                        <Text style={tw`text-white text-center`}>Close Modal</Text>
-
-                                    </Pressable>
-                                </View>
-                            </View>
-                    </Modal>
+                    <EndWorkoutModal
+                        isEndWorkoutModalVisible={isEndWorkoutModalVisible}
+                        setIsEndWorkoutModalVisible={setIsEndWorkoutModalVisible}
+                        navigation={navigation}
+                        exercises={userInputs}
+                        workoutTitle={workoutTitle}
+                    />
+                    
 
                     <View style={tw`flex flex-row justify-between mx-3 w-[95%]`}>
                         <TouchableOpacity style={tw`w-22 h-10 bg-[#fd354a] shadow-md rounded-xl flex justify-center items-center`}>
@@ -143,7 +153,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                             <Text style={tw`text-xl text-blue-400 font-medium max-w-[85%]`} ellipsizeMode='tail' numberOfLines={3}>{exercise.title}</Text>
                                             
                                             <Pressable style={tw`w-12 h-8 bg-blue-200 rounded-xl flex items-center justify-center mt-[2px]`}
-                                            onPress={() => setIsModalVisible(true)}
+                                            onPress={() => setIsNoteModalVisible(true)}
                                             >
                                                 <Ionicons name='folder-outline' color='#60a5fa' style={tw`mt-[-1px]`} size={24}/>
                                             </Pressable>
@@ -239,8 +249,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                     <BottomNavigationBar
                         currentPage='ActiveWorkout'
                         navigation={navigation}
-                        userInputs={userInputs}
-                        workoutTitle={workoutTitle}
+                        setIsEndWorkoutModalVisible={setIsEndWorkoutModalVisible}
                         forwardButton={forwardButton}
                         backButton={backButton}
                     />

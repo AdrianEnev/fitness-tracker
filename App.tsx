@@ -146,7 +146,7 @@ const UnauthenticatedTabNavigator = () => (
                         await checkUserDocument(userDocRef, user, userInfoCollectionRef);
                         const setupHasRan = await checkUserInfoCollection(userInfoCollectionRef);
                         setSetupRan(setupHasRan);
-                        checkLanguageDocument(usersCollectionRef);
+                        checkLanguageDocument(userInfoCollectionRef);
     
                         setUsername(await getUsername(userInfoCollectionRef));
                         const profilePic = await getProfilePicture();
