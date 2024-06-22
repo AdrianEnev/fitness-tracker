@@ -127,7 +127,7 @@ const Main = ({navigation}: any) => {
 
                     <View style={tw`flex flex-row`}>
                         
-                        <ProfilePicture page='Main'/>
+                        <ProfilePicture navigation={navigation} page='Main'/>
 
                         {/* Zdravei User */}
                         <View style={tw`flex flex-col ml-3`}>

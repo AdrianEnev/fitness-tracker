@@ -1,20 +1,62 @@
 import { View, Pressable, Image } from "react-native"
 import Ionicons from '@expo/vector-icons/Ionicons';
-import uploadProfilePicture from '../use/useUploadProfilePicture';
 import tw from 'twrnc';
-import GlobalContext from "../../GlobalContext";
-import { useContext } from "react";
+import * as ImagePicker from 'expo-image-picker';
+import uploadFile from '../use/useUploadFile'
+import { useContext } from 'react';
+import GlobalContext from '../../GlobalContext';
+import { FIREBASE_AUTH } from '../../firebaseConfig';
+import { NavigationProp } from "@react-navigation/native";
 
-const ProfilePicture = ({page}: any) => {
+interface ProfilePictureProps {
+    page: any;
+    navigation?: NavigationProp<any>;
+}
+
+const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
 
     const { profilePicture, setProfilePicture } = useContext(GlobalContext);
+
+    const uriToBlob = async (uri: string): Promise<Blob> => {
+        const response = await fetch(uri);
+        const blob = await response.blob();
+        return blob;
+      };
+    
+    // okazva se che ima po lesen nachin za updatevane na profilna direktno ot firebase akaunta na usera ama veche napravih toq nachin tui che taka shte sedi  
+    const uploadProfilePicture = async () => {
+    
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            aspect: [1, 1],
+            quality: 1,
+        });
+      
+        if (!result.canceled) {
+    
+            const blob = await uriToBlob(result.assets[0].uri);
+            await uploadFile(blob, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
+            alert('Snimkata be kachena uspeshno!')
+    
+            setProfilePicture(result.assets[0].uri);
+    
+        }
+    };
 
     return (
         <View>
             {profilePicture === '' ? (
                 <Pressable 
                     style={tw`bg-white w-28 h-28 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}
-                    onPress={() => uploadProfilePicture(setProfilePicture)}
+                    onPress={() => {
+                        if (page === 'Main') {
+                            navigation?.navigate('Настройки-Акаунт')
+                            return;
+                        }
+
+                        uploadProfilePicture();
+                    }}
                 >
                     <Ionicons name='person-outline' 
                         size={40}
@@ -23,7 +65,14 @@ const ProfilePicture = ({page}: any) => {
 
                 </Pressable>
             ) : (
-                <Pressable onPress={() => uploadProfilePicture(setProfilePicture)}>
+                <Pressable onPress={() => {
+                    if (page === 'Main') {
+                        navigation?.navigate('Настройки-Акаунт')
+                        return;
+                    }
+
+                    uploadProfilePicture();
+                }}>
                     <Image
                         source={{ uri: profilePicture }}
                         style={tw`${page === 'Main' ? 'w-16 h-16' : 'w-22 h-22'} rounded-full ml-2`}

@@ -8,7 +8,6 @@ import changePassword from '../use/useChangePassword'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalContext from '../../GlobalContext'
-import uploadProfilePicture from '../use/useUploadProfilePicture'
 import ProfilePicture from '../components/ProfilePicture'
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
 import BottomNavigationBar from '../components/BottomNavigationBar'
@@ -152,7 +151,7 @@ const SettingsAccount = ({navigation}: any) => {
                 {/* Profile Picture + Username + Email */}
                 <View style={tw`w-full flex flex-row mb-3`}>
 
-                    <ProfilePicture />
+                    <ProfilePicture page='SettingsAccount'/>
 
                     <View style={tw`flex flex-col justify-center ml-2`}>
 
