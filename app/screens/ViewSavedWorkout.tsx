@@ -110,7 +110,6 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
                                                                     <Text style={tw`ml-3`}>{set.rpe === "" ? '0 KG' : set.rpe.toString() + ' KG'}</Text>
                                                                 </View>
 
-                                                                
 
                                                             </View>
                                                         </View>

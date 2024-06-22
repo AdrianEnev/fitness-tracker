@@ -55,12 +55,13 @@
 
 -> FoodDay ima element sus margin top - [-500px]. Da se uverq che nqma da suzdade problemi v budeshte
 
-- bottom navigation bar
 
-- cloud-outline ili bookmark-outline za savenati trenirovki
 
-end workout butona da e v bottom tab navigatora pri pusnata trenirovka (stop-outline)
+
 
 - da pomislq dali da napravq currentNutrients global variable
 
 - da ne moje endWorkout i drugi butoni da runvat 2 puti ednovremenno
+- timera ne raboti kato izlqza ot prilojenieto
+ 
+- da izliza ako priqtel vmomenta pravi trenirovka (da moje da se spira tazi opciq)

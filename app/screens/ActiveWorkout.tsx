@@ -2,7 +2,6 @@ import { View, Text, SafeAreaView, TextInput, TouchableWithoutFeedback, Pressabl
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
-import endWorkout from '../use/useEndWorkout';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 
 const ActiveWorkout = ({route, navigation}: any) => {
@@ -77,67 +76,96 @@ const ActiveWorkout = ({route, navigation}: any) => {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <SafeAreaView style={tw`w-full h-full`}>
+            <SafeAreaView style={tw`w-full h-full bg-white`}>
                 
-                <TouchableOpacity style={tw`w-20 h-10 bg-white shadow-md rounded-xl flex justify-center items-center`}>
-                    <Text>{formatTime(time)}</Text>
-                </TouchableOpacity>
+                
 
-                <View style={tw`ml-3 mb-2`}>
-                    <Text style={tw`text-xl font-medium`} ellipsizeMode='tail' numberOfLines={2}>{workoutTitle}</Text>
+                <View style={tw`flex flex-row justify-between mx-3 w-[95%]`}>
+                    <TouchableOpacity style={tw`w-22 h-10 bg-[#fd354a] shadow-md rounded-xl flex justify-center items-center`}>
+                        <Text style={tw`text-white font-medium text-base`}>{formatTime(time)}</Text>
+                    </TouchableOpacity>
+
+                    
+                    <TouchableOpacity style={tw`w-22 h-10 bg-[#2fc766] rounded-xl flex justify-center items-center`} onPress={addSet}>
+                        <Text style={tw`text-base font-medium text-white`}>+ Серия</Text>
+                    </TouchableOpacity>
+                    
                 </View>
-                 
-            
 
+                
+                <Text style={tw`text-2xl font-bold ml-3 my-5`} ellipsizeMode='tail' numberOfLines={3}>{workoutTitle}</Text>
+                 
                 <View style={tw`flex flex-col gap-y-1`}>
                     {newExercises.map((exercise: any, index: any) => {
                         if (exercise.exerciseIndex === currentIndex + 1) {
                             return (
                                 <View key={exercise.id} style={tw`w-full`}>
-
-                                    <Text style={tw`text-lg font-medium text-center mb-4`} numberOfLines={1}>{exercise.title}</Text>
                                     
+                                    <View style={tw`flex flex-row gap-x-3 mx-3 mb-3`}>
+                                        <Text style={tw`text-xl text-blue-400 font-medium max-w-[85%]`} ellipsizeMode='tail' numberOfLines={3}>{exercise.title}</Text>
+                                        
+                                        <Pressable style={tw`w-12 h-8 bg-blue-200 rounded-xl flex items-center justify-center mt-[2px]`}>
+                                            <Ionicons name='folder-outline' color='#60a5fa' style={tw`mt-[-1px]`} size={24}/>
+                                        </Pressable>
+                                    </View>
+
                                     <ScrollView style={tw``}>
                                         {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
                                             <View key={set.id} style={tw`ml-3`}>
                                                 <View style={tw`flex flex-row gap-x-2`}>
-                                                    <View style={tw`w-10 h-10 bg-white rounded-xl flex items-center justify-center`}>
-                                                        <Text style={tw`text-base ml-5 absolute font-medium`}>{mapIndex + 1}</Text>
+                                                    
+                                                    <View style={tw`flex flex-col`}>
+                                                        <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+
+                                                        <View style={tw`w-10 h-10 bg-neutral-100 rounded-xl flex items-center justify-center ${mapIndex != 0 ? '' : ''}`}>
+                                                            <Text style={tw`text-base font-medium`}>{mapIndex + 1}</Text>
+                                                        </View>
                                                     </View>
-
+                                                
                                                     <View style={tw`flex flex-row gap-x-2 mb-3`}>
-                                                        <TextInput
-                                                            style={tw`bg-white rounded-2xl p-2 w-16 h-10`}
-                                                            keyboardType='number-pad'
-                                                            maxLength={4}
-                                                            placeholder={set.reps === "" ? 'Повторения' : set.reps.toString() + ' Повт.'}
-                                                            value={userInputs[index].sets[mapIndex].reps}
-                                                            onChangeText={(text) => {
-                                                                let updatedInputs = [...userInputs];
-                                                                updatedInputs[index].sets[mapIndex].reps = text;
-                                                                setUserInputs(updatedInputs);
-                                                            }}
-                                                           
-                                                        />
+
+                                                        <View style={tw`w-[30.3%]`}>
+                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повт.</Text>
+
+                                                            <TextInput
+                                                                style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
+                                                                keyboardType='number-pad'
+                                                                maxLength={4}
+                                                                placeholder={set.reps === "" ? 'Повторения' : set.reps.toString()}
+                                                                value={userInputs[index].sets[mapIndex].reps}
+                                                                onChangeText={(text) => {
+                                                                    let updatedInputs = [...userInputs];
+                                                                    updatedInputs[index].sets[mapIndex].reps = text;
+                                                                    setUserInputs(updatedInputs);
+                                                                }}
+                                                            />
+                                                        </View>
+                                                        
+                                                        <View style={tw`w-[30.3%]`}>
+                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
+
+                                                            <TextInput
+                                                                style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
+                                                                keyboardType='number-pad'
+                                                                maxLength={4}
+                                                                placeholder={set.weight === "" ? 'Килограми' : set.weight.toString()}
+                                                                value={userInputs[index].sets[mapIndex].weight}
+                                                                onChangeText={(text) => {
+                                                                    let updatedInputs = [...userInputs];
+                                                                    updatedInputs[index].sets[mapIndex].weight = text;
+                                                                    setUserInputs(updatedInputs);
+                                                                }}
+                                                            />
+                                                        </View>
+                                                        
+                                                        <View style={tw`w-16`}>
+                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>RPE</Text>
 
                                                         <TextInput
-                                                            style={tw`bg-white rounded-2xl p-2 w-16 h-10`}
-                                                            keyboardType='number-pad'
-                                                            maxLength={4}
-                                                            placeholder={set.weight === "" ? 'Килограми' : set.weight.toString() + ' KG'}
-                                                            value={userInputs[index].sets[mapIndex].weight}
-                                                            onChangeText={(text) => {
-                                                                let updatedInputs = [...userInputs];
-                                                                updatedInputs[index].sets[mapIndex].weight = text;
-                                                                setUserInputs(updatedInputs);
-                                                            }}
-                                                        />
-
-                                                        <TextInput
-                                                            style={tw`bg-white rounded-2xl p-2 w-16 h-10`}
+                                                            style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
                                                             keyboardType='number-pad'
                                                             maxLength={2}
-                                                            placeholder={set.rpe === "" ? 'RPE' : 'RPE ' + set.rpe}
+                                                            placeholder=''
                                                             value={userInputs[index].sets[mapIndex].rpe}
                                                             onChangeText={(text) => {
                                                                 let updatedInputs = [...userInputs];
@@ -145,9 +173,12 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                                 setUserInputs(updatedInputs);
                                                             }}
                                                         />
+                                                        </View>
 
-                                                        <TouchableOpacity style={tw`bg-red-500 rounded-2xl w-21 h-10 flex items-center justify-center`} onPress={() => removeSet(exercise.exerciseIndex, set.id)}>
-                                                            <Text style={tw`text-white`}>Изтрий</Text>
+                                                        <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
+                                                        onPress={() => removeSet(exercise.exerciseIndex, set.id)}
+                                                        >
+                                                            <Ionicons name='close' size={36} color='white' />
                                                         </TouchableOpacity>
 
                                                     </View>
@@ -155,11 +186,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                             </View>
                                         ))}
 
-                                        <View style={tw`mx-3`}>
-                                            <TouchableOpacity style={tw`w-full h-12 bg-green-500 rounded-xl flex justify-center items-center`} onPress={addSet}>
-                                                <Text style={tw`text-lg text-white`}>+ Добави Серия</Text>
-                                            </TouchableOpacity>
-                                        </View>
+                                       
 
                                     </ScrollView>
                                 </View>
