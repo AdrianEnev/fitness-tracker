@@ -21,6 +21,8 @@ import WorkoutFoodButtons from '../components/WorkoutFoodButtons';
 import Nutrients from '../components/Nutrients';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 
+//bg-[#fd3e6b]
+
 const Main = ({navigation}: any) => {
 
     //const [steps, setSteps] = useState(0);

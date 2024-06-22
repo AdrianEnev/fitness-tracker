@@ -23,11 +23,13 @@ const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) 
 const BottomNavigationBar = (
     {
         currentPage, navigation, 
-        userInputs, workoutTitle, forwardButton, backButton
+        userInputs, workoutTitle, forwardButton, backButton,
+        deleteSavedWorkout
     }: 
     {
         currentPage: string, navigation: any,
         userInputs?: any, workoutTitle?: any, forwardButton?: () => void, backButton?: () => void
+        deleteSavedWorkout?: () => void
     }
 ) => {
 
@@ -45,6 +47,21 @@ const BottomNavigationBar = (
 
                     <Pressable onPress={() => endWorkout(navigation, userInputs, workoutTitle)}>
                         <Ionicons name='stop-outline' color='#ef4444' size={64}/>
+                    </Pressable>
+
+                    <Pressable onPress={forwardButton}>
+                        <Ionicons name='chevron-forward' color='#ef4444' size={64}/>
+                    </Pressable>
+                </View>
+            ) : currentPage === 'SavedWorkout' ? (
+                <View style={tw`flex flex-row justify-between w-full`}>
+
+                    <Pressable onPress={backButton}>
+                        <Ionicons name='chevron-back' color='#ef4444' size={64}/>
+                    </Pressable>
+
+                    <Pressable onPress={deleteSavedWorkout}>
+                        <Ionicons name='trash-outline' color='#ef4444' size={64}/>
                     </Pressable>
 
                     <Pressable onPress={forwardButton}>

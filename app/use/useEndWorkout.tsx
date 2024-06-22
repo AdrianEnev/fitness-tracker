@@ -21,7 +21,6 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string)
     const savedWorkoutDocRef = await addDoc(userSavedWorkoutsCollectionRef, {
         title: workoutTitle,
         created: serverTimestamp(),
-        colour: generateRandomColour()
     });
 
     let totalWeight = 0;
@@ -43,6 +42,7 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string)
                 await addDoc(exerciseSets, {
                     reps: set.reps,
                     weight: set.weight,
+                    rpe: set.rpe !== undefined ? set.rpe : "0",
                     setIndex: index + 1
                 });
     

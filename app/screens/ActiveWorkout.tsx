@@ -107,7 +107,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
 
                                                     <View style={tw`flex flex-row gap-x-2 mb-3`}>
                                                         <TextInput
-                                                            style={tw`bg-white rounded-2xl p-2 w-32 h-10`}
+                                                            style={tw`bg-white rounded-2xl p-2 w-16 h-10`}
                                                             keyboardType='number-pad'
                                                             maxLength={4}
                                                             placeholder={set.reps === "" ? 'Повторения' : set.reps.toString() + ' Повт.'}
@@ -121,7 +121,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                         />
 
                                                         <TextInput
-                                                            style={tw`bg-white rounded-2xl p-2 w-32 h-10`}
+                                                            style={tw`bg-white rounded-2xl p-2 w-16 h-10`}
                                                             keyboardType='number-pad'
                                                             maxLength={4}
                                                             placeholder={set.weight === "" ? 'Килограми' : set.weight.toString() + ' KG'}
@@ -131,7 +131,19 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                                 updatedInputs[index].sets[mapIndex].weight = text;
                                                                 setUserInputs(updatedInputs);
                                                             }}
-                                                            
+                                                        />
+
+                                                        <TextInput
+                                                            style={tw`bg-white rounded-2xl p-2 w-16 h-10`}
+                                                            keyboardType='number-pad'
+                                                            maxLength={2}
+                                                            placeholder={set.rpe === "" ? 'RPE' : 'RPE ' + set.rpe}
+                                                            value={userInputs[index].sets[mapIndex].rpe}
+                                                            onChangeText={(text) => {
+                                                                let updatedInputs = [...userInputs];
+                                                                updatedInputs[index].sets[mapIndex].rpe = text;
+                                                                setUserInputs(updatedInputs);
+                                                            }}
                                                         />
 
                                                         <TouchableOpacity style={tw`bg-red-500 rounded-2xl w-21 h-10 flex items-center justify-center`} onPress={() => removeSet(exercise.exerciseIndex, set.id)}>

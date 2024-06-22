@@ -52,18 +52,10 @@ const Workouts = ({navigation}: any) => {
 
         setViewWorkoutButtonDisabled(true);
         
-
-        const savedWorkoutInfo = await getSavedWorkoutInfo(workout.id);
-        if (savedWorkoutInfo) {
-
-            const { exercisesData, workoutTitle } = savedWorkoutInfo;
-            navigation.navigate('Виж-Запазенa-Тренировка', {exercises: exercisesData, workout: workout, workoutTitle: workoutTitle, date: date, time: time});
-
-        }
+        await navigation.navigate('Виж-Запазенa-Тренировка', { workout: workout, date: date, time: time});
 
         setTimeout(() => {
             setViewWorkoutButtonDisabled(false);
-            
         }, 100);
 
     }

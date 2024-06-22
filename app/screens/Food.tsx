@@ -45,7 +45,7 @@ const Food = ({navigation}: any) => {
                         navigation.navigate("Хранене-Ден", {date: day});
                     }}
                     markedDates={{
-                        [currentDate]: {selected: true, selectedColor: '#ff6b6b', textColor: 'white'},
+                        [currentDate]: {selected: true, selectedColor: '#fd3e6b', textColor: 'white'},
                     }}
                 />
 
