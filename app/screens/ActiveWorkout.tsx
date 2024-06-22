@@ -1,8 +1,9 @@
-import { View, Text, SafeAreaView, TextInput, TouchableWithoutFeedback, Pressable, TouchableOpacity, ScrollView, Keyboard } from 'react-native'
+import { View, Text, SafeAreaView, TextInput, TouchableWithoutFeedback, Pressable, TouchableOpacity, ScrollView, Keyboard, Modal } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import BottomNavigationBar from '../components/BottomNavigationBar';
+import { BlurView } from 'expo-blur';
 
 const ActiveWorkout = ({route, navigation}: any) => {
 
@@ -15,6 +16,8 @@ const ActiveWorkout = ({route, navigation}: any) => {
         ...exercise,
         sets: exercise.sets.map((set: any) => ({...set, reps: "", weight: ""}))
     })));
+
+    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const addSet = () => {
         // Use newExercises for updates to ensure UI consistency
@@ -75,137 +78,178 @@ const ActiveWorkout = ({route, navigation}: any) => {
     }
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <SafeAreaView style={tw`w-full h-full bg-white`}>
-                
+        <>
+
+            {isModalVisible && (
+                <BlurView
+                    style={tw`absolute w-full h-full z-10`}
+                    intensity={100}
+                    tint='dark'
+                />
+            )}
+
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <SafeAreaView style={tw`w-full h-full bg-white`}>
+
                 
 
-                <View style={tw`flex flex-row justify-between mx-3 w-[95%]`}>
-                    <TouchableOpacity style={tw`w-22 h-10 bg-[#fd354a] shadow-md rounded-xl flex justify-center items-center`}>
-                        <Text style={tw`text-white font-medium text-base`}>{formatTime(time)}</Text>
-                    </TouchableOpacity>
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={isModalVisible}
+                        onRequestClose={() => {
+                            setIsModalVisible(!isModalVisible);
+                        }}
+                        >
+                            <View style={tw`flex-1 justify-center items-center`}>
+                                <View style={tw`bg-white p-20 rounded-xl`}>
+
+                                    <Text style={tw`mb-4`}>Your modal content here</Text>
+
+                                    <Pressable
+                                        style={tw`bg-blue-500 rounded-xl p-2`}
+                                        onPress={() => setIsModalVisible(!isModalVisible)}
+                                    >
+
+                                        <Text style={tw`text-white text-center`}>Close Modal</Text>
+
+                                    </Pressable>
+                                </View>
+                            </View>
+                    </Modal>
+
+                    <View style={tw`flex flex-row justify-between mx-3 w-[95%]`}>
+                        <TouchableOpacity style={tw`w-22 h-10 bg-[#fd354a] shadow-md rounded-xl flex justify-center items-center`}>
+                            <Text style={tw`text-white font-medium text-base`}>{formatTime(time)}</Text>
+                        </TouchableOpacity>
+
+                        
+                        <TouchableOpacity style={tw`w-22 h-10 bg-[#2fc766] rounded-xl flex justify-center items-center`} onPress={addSet}>
+                            <Text style={tw`text-base font-medium text-white`}>+ Серия</Text>
+                        </TouchableOpacity>
+                        
+                    </View>
 
                     
-                    <TouchableOpacity style={tw`w-22 h-10 bg-[#2fc766] rounded-xl flex justify-center items-center`} onPress={addSet}>
-                        <Text style={tw`text-base font-medium text-white`}>+ Серия</Text>
-                    </TouchableOpacity>
+                    <Text style={tw`text-2xl font-bold ml-3 my-5`} ellipsizeMode='tail' numberOfLines={3}>{workoutTitle}</Text>
                     
-                </View>
-
-                
-                <Text style={tw`text-2xl font-bold ml-3 my-5`} ellipsizeMode='tail' numberOfLines={3}>{workoutTitle}</Text>
-                 
-                <View style={tw`flex flex-col gap-y-1`}>
-                    {newExercises.map((exercise: any, index: any) => {
-                        if (exercise.exerciseIndex === currentIndex + 1) {
-                            return (
-                                <View key={exercise.id} style={tw`w-full`}>
-                                    
-                                    <View style={tw`flex flex-row gap-x-3 mx-3 mb-3`}>
-                                        <Text style={tw`text-xl text-blue-400 font-medium max-w-[85%]`} ellipsizeMode='tail' numberOfLines={3}>{exercise.title}</Text>
+                    <View style={tw`flex flex-col gap-y-1`}>
+                        {newExercises.map((exercise: any, index: any) => {
+                            if (exercise.exerciseIndex === currentIndex + 1) {
+                                return (
+                                    <View key={exercise.id} style={tw`w-full`}>
                                         
-                                        <Pressable style={tw`w-12 h-8 bg-blue-200 rounded-xl flex items-center justify-center mt-[2px]`}>
-                                            <Ionicons name='folder-outline' color='#60a5fa' style={tw`mt-[-1px]`} size={24}/>
-                                        </Pressable>
-                                    </View>
+                                        <View style={tw`flex flex-row gap-x-3 mx-3 mb-3`}>
+                                            <Text style={tw`text-xl text-blue-400 font-medium max-w-[85%]`} ellipsizeMode='tail' numberOfLines={3}>{exercise.title}</Text>
+                                            
+                                            <Pressable style={tw`w-12 h-8 bg-blue-200 rounded-xl flex items-center justify-center mt-[2px]`}
+                                            onPress={() => setIsModalVisible(true)}
+                                            >
+                                                <Ionicons name='folder-outline' color='#60a5fa' style={tw`mt-[-1px]`} size={24}/>
+                                            </Pressable>
+                                        </View>
 
-                                    <ScrollView style={tw``}>
-                                        {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
-                                            <View key={set.id} style={tw`ml-3`}>
-                                                <View style={tw`flex flex-row gap-x-2`}>
+                                        <ScrollView style={tw``}>
+                                            {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
+                                                <View key={set.id} style={tw`ml-3`}>
+                                                    <View style={tw`flex flex-row gap-x-2`}>
+                                                        
+                                                        <View style={tw`flex flex-col`}>
+                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+
+                                                            <View style={tw`w-10 h-10 bg-neutral-100 rounded-xl flex items-center justify-center ${mapIndex != 0 ? '' : ''}`}>
+                                                                <Text style={tw`text-base font-medium`}>{mapIndex + 1}</Text>
+                                                            </View>
+                                                        </View>
                                                     
-                                                    <View style={tw`flex flex-col`}>
-                                                        <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+                                                        <View style={tw`flex flex-row gap-x-2 mb-3`}>
 
-                                                        <View style={tw`w-10 h-10 bg-neutral-100 rounded-xl flex items-center justify-center ${mapIndex != 0 ? '' : ''}`}>
-                                                            <Text style={tw`text-base font-medium`}>{mapIndex + 1}</Text>
-                                                        </View>
-                                                    </View>
-                                                
-                                                    <View style={tw`flex flex-row gap-x-2 mb-3`}>
+                                                            <View style={tw`w-[30.3%]`}>
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повт.</Text>
 
-                                                        <View style={tw`w-[30.3%]`}>
-                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повт.</Text>
+                                                                <TextInput
+                                                                    style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
+                                                                    keyboardType='number-pad'
+                                                                    maxLength={4}
+                                                                    placeholder={set.reps === "" ? 'Повторения' : set.reps.toString()}
+                                                                    value={userInputs[index].sets[mapIndex].reps}
+                                                                    onChangeText={(text) => {
+                                                                        let updatedInputs = [...userInputs];
+                                                                        updatedInputs[index].sets[mapIndex].reps = text;
+                                                                        setUserInputs(updatedInputs);
+                                                                    }}
+                                                                />
+                                                            </View>
+                                                            
+                                                            <View style={tw`w-[30.3%]`}>
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
+
+                                                                <TextInput
+                                                                    style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
+                                                                    keyboardType='number-pad'
+                                                                    maxLength={4}
+                                                                    placeholder={set.weight === "" ? 'Килограми' : set.weight.toString()}
+                                                                    value={userInputs[index].sets[mapIndex].weight}
+                                                                    onChangeText={(text) => {
+                                                                        let updatedInputs = [...userInputs];
+                                                                        updatedInputs[index].sets[mapIndex].weight = text;
+                                                                        setUserInputs(updatedInputs);
+                                                                    }}
+                                                                />
+                                                            </View>
+                                                            
+                                                            <View style={tw`w-16`}>
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>RPE</Text>
 
                                                             <TextInput
                                                                 style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
                                                                 keyboardType='number-pad'
-                                                                maxLength={4}
-                                                                placeholder={set.reps === "" ? 'Повторения' : set.reps.toString()}
-                                                                value={userInputs[index].sets[mapIndex].reps}
+                                                                maxLength={2}
+                                                                placeholder=''
+                                                                value={userInputs[index].sets[mapIndex].rpe}
                                                                 onChangeText={(text) => {
                                                                     let updatedInputs = [...userInputs];
-                                                                    updatedInputs[index].sets[mapIndex].reps = text;
+                                                                    updatedInputs[index].sets[mapIndex].rpe = text;
                                                                     setUserInputs(updatedInputs);
                                                                 }}
                                                             />
+                                                            </View>
+
+                                                            <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
+                                                            onPress={() => removeSet(exercise.exerciseIndex, set.id)}
+                                                            >
+                                                                <Ionicons name='close' size={36} color='white' />
+                                                            </TouchableOpacity>
+
                                                         </View>
-                                                        
-                                                        <View style={tw`w-[30.3%]`}>
-                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
-
-                                                            <TextInput
-                                                                style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
-                                                                keyboardType='number-pad'
-                                                                maxLength={4}
-                                                                placeholder={set.weight === "" ? 'Килограми' : set.weight.toString()}
-                                                                value={userInputs[index].sets[mapIndex].weight}
-                                                                onChangeText={(text) => {
-                                                                    let updatedInputs = [...userInputs];
-                                                                    updatedInputs[index].sets[mapIndex].weight = text;
-                                                                    setUserInputs(updatedInputs);
-                                                                }}
-                                                            />
-                                                        </View>
-                                                        
-                                                        <View style={tw`w-16`}>
-                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>RPE</Text>
-
-                                                        <TextInput
-                                                            style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
-                                                            keyboardType='number-pad'
-                                                            maxLength={2}
-                                                            placeholder=''
-                                                            value={userInputs[index].sets[mapIndex].rpe}
-                                                            onChangeText={(text) => {
-                                                                let updatedInputs = [...userInputs];
-                                                                updatedInputs[index].sets[mapIndex].rpe = text;
-                                                                setUserInputs(updatedInputs);
-                                                            }}
-                                                        />
-                                                        </View>
-
-                                                        <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
-                                                        onPress={() => removeSet(exercise.exerciseIndex, set.id)}
-                                                        >
-                                                            <Ionicons name='close' size={36} color='white' />
-                                                        </TouchableOpacity>
-
                                                     </View>
                                                 </View>
-                                            </View>
-                                        ))}
+                                            ))}
 
-                                       
+                                        
 
-                                    </ScrollView>
-                                </View>
-                            );
-                        }
-                    })}
-                </View>
 
-                <BottomNavigationBar
-                    currentPage='ActiveWorkout'
-                    navigation={navigation}
-                    userInputs={userInputs}
-                    workoutTitle={workoutTitle}
-                    forwardButton={forwardButton}
-                    backButton={backButton}
-                />
+                                        </ScrollView>
+                                    </View>
+                                );
+                            }
+                        })}
+                    </View>
 
-            </SafeAreaView>
-        </TouchableWithoutFeedback>
+                    <BottomNavigationBar
+                        currentPage='ActiveWorkout'
+                        navigation={navigation}
+                        userInputs={userInputs}
+                        workoutTitle={workoutTitle}
+                        forwardButton={forwardButton}
+                        backButton={backButton}
+                    />
+
+                </SafeAreaView>
+            </TouchableWithoutFeedback>
+
+        </>
+        
     );
 }
 
