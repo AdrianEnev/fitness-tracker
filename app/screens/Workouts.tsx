@@ -88,7 +88,6 @@ const Workouts = ({navigation}: any) => {
 
         }
 
-        
         setTimeout(() => {
             setViewWorkoutButtonDisabled(false);
             console.log('button enabled')

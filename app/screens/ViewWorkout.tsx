@@ -1,8 +1,9 @@
 import { View, Text, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import tw from 'twrnc'
-import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import BottomNavigationBar from '../components/BottomNavigationBar';
 
 const ViewWorkout = ({route, navigation}: any) => {
 
@@ -14,28 +15,44 @@ const ViewWorkout = ({route, navigation}: any) => {
         ...exercise,
         sets: exercise.sets.map((set: any) => ({...set, reps: set.reps, weight: set.weight}))
     })));
+    
+
+    const generateID = () => {
+        // generate ID that would resemble what firebase would generate
+        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
+    }
 
     const addSet = () => {
-        const updatedExercises = [...exercises];
-        const currentExercise = updatedExercises.find((exercise: any) => exercise.exerciseIndex === currentIndex + 1);
-        if (currentExercise) {
+        const updatedExercises = [...newExercises];
+        const updatedUserInputs = [...userInputs];
+        const currentExerciseIndex = updatedExercises.findIndex((exercise: any) => exercise.exerciseIndex === currentIndex + 1);
+        
+        if (currentExerciseIndex !== -1) {
             const newSet = {
-                id: Math.random().toString(),
-                reps: "",
-                weight: ""
+                id: generateID(), // Generates a random ID
+                reps: "0",
+                weight: "0"
             };
-            currentExercise.sets.push(newSet);
+            updatedExercises[currentExerciseIndex].sets.push(newSet);
+            updatedUserInputs[currentExerciseIndex].sets.push({...newSet}); // Clone newSet to avoid direct reference
+            
+            setNewExercises(updatedExercises);
+            setUserInputs(updatedUserInputs); // Ensure userInputs is also updated
         }
-        setNewExercises(updatedExercises);
     }
 
     const removeSet = (exerciseIndex: number, setId: string) => {
         const updatedExercises = [...newExercises];
-        const currentExercise = updatedExercises.find((exercise: any) => exercise.exerciseIndex === exerciseIndex);
-        if (currentExercise) {
-            currentExercise.sets = currentExercise.sets.filter((set: any) => set.id !== setId);
+        const updatedUserInputs = [...userInputs];
+        const currentExerciseIndex = updatedExercises.findIndex((exercise: any) => exercise.exerciseIndex === exerciseIndex);
+    
+        if (currentExerciseIndex !== -1) {
+            updatedExercises[currentExerciseIndex].sets = updatedExercises[currentExerciseIndex].sets.filter((set: any) => set.id !== setId);
+            updatedUserInputs[currentExerciseIndex].sets = updatedUserInputs[currentExerciseIndex].sets.filter((set: any) => set.id !== setId);
+            
+            setNewExercises(updatedExercises);
+            setUserInputs(updatedUserInputs); // Ensure userInputs is also updated
         }
-        setNewExercises(updatedExercises);
     }
 
     const saveWorkout = async () => {
@@ -75,11 +92,34 @@ const ViewWorkout = ({route, navigation}: any) => {
         
     }
 
+    const deleteWorkout = async () => {
+        // delete the workout from the database
+        const usersCollectionRef = collection(FIRESTORE_DB, "users");
+        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+        const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
+        const workoutDocRef = doc(userWorkoutsCollectionRef, workout.id);
+
+        await deleteDoc(workoutDocRef);
+        navigation.navigate('Тренировки');
+    }
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <SafeAreaView style={tw`w-full h-full`}>
+            <SafeAreaView style={tw`w-full h-full bg-white`}>
+
+                <View style={tw`flex flex-row justify-between mx-3 w-[95%]`}>
+                    <TouchableOpacity style={tw`w-22 h-10 bg-[#2fc766] shadow-md rounded-xl flex justify-center items-center`} onPress={saveWorkout}>
+                        <Text style={tw`text-white font-medium text-base`}>Запази</Text>
+                    </TouchableOpacity>
+
+                    
+                    <TouchableOpacity style={tw`w-22 h-10 bg-blue-500 rounded-xl flex justify-center items-center`} onPress={addSet}>
+                        <Text style={tw`text-base font-medium text-white`}>+ Серия</Text>
+                    </TouchableOpacity>
+                    
+                </View>
                 
-                <Text style={tw`text-2xl font-medium m-2`}>{workoutTitle}</Text>
+                <Text style={tw`text-2xl font-bold ml-3 my-5`} ellipsizeMode='tail' numberOfLines={3}>{workoutTitle}</Text>
 
                 <View style={tw`flex flex-col gap-y-1`}>
                     {newExercises.map((exercise: any, index: any) => {
@@ -87,23 +127,23 @@ const ViewWorkout = ({route, navigation}: any) => {
                             return (
                                 <View key={exercise.id} style={tw`w-full`}>
 
-                                    <Text style={tw`text-xl ml-3 mb-4`} numberOfLines={1}>{exercise.title}</Text>
+                                    <Text style={tw`text-xl text-blue-400 font-medium max-w-[85%] ml-3 mb-3`} ellipsizeMode='tail' numberOfLines={3}>{exercise.title}</Text>
                                     
                                     <ScrollView style={tw``}>
                                         {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
                                             <View key={set.id} style={tw`ml-3`}>
                                                 <View style={tw`flex flex-row gap-x-2`}>
-                                                    <View style={tw`w-10 h-10 bg-white rounded-xl flex items-center justify-center`}>
+                                                    <View style={tw`w-10 h-10 bg-neutral-100 rounded-xl flex items-center justify-center`}>
                                                         <Text style={tw`text-base ml-5 absolute font-medium`}>{mapIndex + 1}</Text>
                                                     </View>
 
                                                     <View style={tw`flex flex-row gap-x-2 mb-3`}>
                                                         <TextInput
-                                                            style={tw`bg-white rounded-2xl p-2 w-32 h-10`}
+                                                            style={tw`bg-neutral-100 rounded-2xl p-2 w-[34%] h-10`}
                                                             keyboardType='number-pad'
                                                             maxLength={4}
                                                             
-                                                            value={userInputs[index].sets[mapIndex].reps || '0'}
+                                                            value={userInputs[index].sets[mapIndex].reps}
                                                             onChangeText={(text) => {
                                                                 let updatedInputs = [...userInputs];
                                                                 updatedInputs[index].sets[mapIndex].reps = text;
@@ -113,7 +153,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                                                         />
 
                                                         <TextInput
-                                                            style={tw`bg-white rounded-2xl p-2 w-32 h-10`}
+                                                            style={tw`bg-neutral-100 rounded-2xl p-2 w-[34%] h-10`}
                                                             keyboardType='number-pad'
                                                             maxLength={4}
                                                             placeholder={set.weight === "" ? 'Килограми' : set.weight.toString() + ' KG'}
@@ -126,7 +166,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                                                             
                                                         />
 
-                                                        <TouchableOpacity style={tw`bg-red-500 rounded-2xl w-21 h-10 flex items-center justify-center`} onPress={() => removeSet(exercise.exerciseIndex, set.id)}>
+                                                        <TouchableOpacity style={tw`bg-red-500 rounded-2xl w-[21%] h-10 flex items-center justify-center`} onPress={() => removeSet(exercise.exerciseIndex, set.id)}>
                                                             <Text style={tw`text-white`}>Изтрий</Text>
                                                         </TouchableOpacity>
 
@@ -135,12 +175,6 @@ const ViewWorkout = ({route, navigation}: any) => {
                                             </View>
                                         ))}
 
-                                        <View style={tw`mx-3`}>
-                                            <TouchableOpacity style={tw`w-full h-12 bg-green-500 rounded-xl flex justify-center items-center`} onPress={addSet}>
-                                                <Text style={tw`text-lg text-white`}>+ Добави Серия</Text>
-                                            </TouchableOpacity>
-                                        </View>
-
                                     </ScrollView>
                                 </View>
                             );
@@ -148,29 +182,14 @@ const ViewWorkout = ({route, navigation}: any) => {
                     })}
                 </View>
 
-                <View style={tw`flex flex-row justify-between p-4`}>
-                    <TouchableOpacity 
-                        style={tw`w-24 h-12 bg-green-500 rounded-full flex justify-center items-center`}
-                        onPress={() => setCurrentIndex((currentIndex - 1 + newExercises.length) % exercises.length)} // Switch to previous exercise
-                    >
-                        <Text style={tw`text-lg text-white`}>-</Text>
-                    </TouchableOpacity>
+                <BottomNavigationBar
+                    currentPage='SavedWorkout'
+                    navigation={navigation}
+                    deleteSavedWorkout={deleteWorkout}
+                    forwardButton={() => setCurrentIndex((currentIndex + 1) % newExercises.length)}
+                    backButton={() => setCurrentIndex((currentIndex - 1 + newExercises.length) % exercises.length)}
+                />
 
-                    <TouchableOpacity 
-                        style={tw`w-24 h-12 bg-green-500 rounded-full flex justify-center items-center`}
-                        onPress={saveWorkout} // Save the workout
-                    >
-                        <Text style={tw`text-lg text-white`}>Save</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity 
-                        style={tw`w-24 h-12 bg-green-500 rounded-full flex justify-center items-center`}
-                        onPress={() => setCurrentIndex((currentIndex + 1) % newExercises.length)} // Switch to next exercise
-                    >
-                        <Text style={tw`text-lg text-white`}>+</Text>
-                    </TouchableOpacity>
-
-                </View>
             </SafeAreaView>
         </TouchableWithoutFeedback>
     );
