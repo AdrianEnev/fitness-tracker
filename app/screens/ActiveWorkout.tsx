@@ -98,6 +98,28 @@ const ActiveWorkout = ({route, navigation}: any) => {
         setCurrentIndex((currentIndex - 1 + newExercises.length) % newExercises.length);
     }
 
+    const handleEndWorkoutVisibility = () => {
+        // Check if userInputs are not empty and at least one userInput has sets with meaningful input
+        const shouldShowModal = userInputs.length && userInputs.some((userInput: any) => {
+            return userInput.sets && 
+            userInput.sets.length > 0 && 
+            userInput.sets.some((set: any) => set.reps !== '' || set.weight !== '');
+        });
+    
+        // Additional check: Consider workout empty if all sets in all userInputs have no reps and weight input
+        const isEverySetEmpty = userInputs.every((userInput: any) => {
+            return userInput.sets.every((set: any) => set.reps === '' && set.weight === '');
+        });
+    
+        if (shouldShowModal && !isEverySetEmpty) {
+            setIsEndWorkoutModalVisible(true);
+        } else {
+            // If the condition is not met or all sets are empty, navigate to the main page directly
+            navigation.navigate('Главна Страница');
+        }
+    };
+
+
     return (
         <>
             { (isNoteModalVisible || isEndWorkoutModalVisible) && (
@@ -249,7 +271,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                     <BottomNavigationBar
                         currentPage='ActiveWorkout'
                         navigation={navigation}
-                        setIsEndWorkoutModalVisible={setIsEndWorkoutModalVisible}
+                        toggleEndWorkoutModal={handleEndWorkoutVisibility}
                         forwardButton={forwardButton}
                         backButton={backButton}
                     />

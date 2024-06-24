@@ -4,8 +4,6 @@ import generateRandomColour from "./useGenerateColour";
 
 const endWorkout = async (navigation: any, exercises: any, workoutTitle: string) => {
 
-    navigation.navigate('Главна Страница');
-
     if (!exercises.length || exercises.every((exercise: any) => 
         !exercise.sets || 
         exercise.sets.length === 0 || 
@@ -14,6 +12,8 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string)
         navigation.navigate('Главна Страница');
         return;
     }
+
+    navigation.navigate('Главна Страница');
 
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);

@@ -65,3 +65,5 @@
 - timera ne raboti kato izlqza ot prilojenieto (moga da vzema chasa kogato e izlqzul nqkoi ot prilojenieto i da vzema chasa kato pak vleze i da dobavq razlikata kum timera)
  
 - da izliza ako priqtel vmomenta pravi trenirovka (da moje da se spira tazi opciq)
+
+- da ne se pokazva end workout modal ako trenirovkata e prazna

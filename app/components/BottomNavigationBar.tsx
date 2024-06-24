@@ -23,13 +23,13 @@ const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) 
 const BottomNavigationBar = (
     {
         currentPage, navigation, 
-        setIsEndWorkoutModalVisible, forwardButton, backButton,
-        deleteSavedWorkout
+        forwardButton, backButton,
+        deleteSavedWorkout, toggleEndWorkoutModal
     }: 
     {
         currentPage: string, navigation: any,
-        setIsEndWorkoutModalVisible?: any, forwardButton?: () => void, backButton?: () => void
-        deleteSavedWorkout?: () => void
+        forwardButton?: () => void, backButton?: () => void
+        deleteSavedWorkout?: () => void, toggleEndWorkoutModal?: () => void
     }
 ) => {
 
@@ -45,7 +45,7 @@ const BottomNavigationBar = (
                         <Ionicons name='chevron-back' color='#ef4444' size={64}/>
                     </Pressable>
 
-                    <Pressable onPress={() => setIsEndWorkoutModalVisible(true)}>
+                    <Pressable onPress={toggleEndWorkoutModal}>
                         <Ionicons name='stop-outline' color='#ef4444' size={64}/>
                     </Pressable>
 
