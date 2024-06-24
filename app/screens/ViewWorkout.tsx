@@ -84,6 +84,26 @@ const ViewWorkout = ({route, navigation}: any) => {
                         });
                     }
                 }
+
+                // Add new sets to the database
+                const addedSets = currentExercise.sets.filter((set: any) => !sets.some((dbSet: any) => dbSet.id === set.id));
+                let nextIndex = sets.length; // Start indexing for new sets after the existing ones
+                for (let addedSet of addedSets) {
+                    const newSetRef = doc(setsCollectionRef);
+                    setDoc(newSetRef, {
+                        reps: addedSet.reps,
+                        weight: addedSet.weight,
+                        index: nextIndex // Assign the index
+                    });
+                    nextIndex++; // Increment the index for the next new set
+                }
+
+                // Remove deleted sets from the database
+                const removedSets = sets.filter(set => !currentExercise.sets.some((inputSet: any) => inputSet.id === set.id));
+                for (let removedSet of removedSets) {
+                    const setDocRef = doc(setsCollectionRef, removedSet.id);
+                    deleteDoc(setDocRef);
+                }
             }
 
         }
