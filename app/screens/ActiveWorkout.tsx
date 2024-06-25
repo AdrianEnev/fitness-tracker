@@ -233,18 +233,18 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                             <View style={tw`w-16`}>
                                                                 <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>RPE</Text>
 
-                                                            <TextInput
-                                                                style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
-                                                                keyboardType='number-pad'
-                                                                maxLength={2}
-                                                                placeholder=''
-                                                                value={userInputs[index].sets[mapIndex].rpe}
-                                                                onChangeText={(text) => {
-                                                                    let updatedInputs = [...userInputs];
-                                                                    updatedInputs[index].sets[mapIndex].rpe = text;
-                                                                    setUserInputs(updatedInputs);
-                                                                }}
-                                                            />
+                                                                <TextInput
+                                                                    style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
+                                                                    keyboardType='number-pad'
+                                                                    maxLength={2}
+                                                                    placeholder=''
+                                                                    value={userInputs[index].sets[mapIndex].rpe}
+                                                                    onChangeText={(text) => {
+                                                                        let updatedInputs = [...userInputs];
+                                                                        updatedInputs[index].sets[mapIndex].rpe = text;
+                                                                        setUserInputs(updatedInputs);
+                                                                    }}
+                                                                />
                                                             </View>
 
                                                             <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 

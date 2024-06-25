@@ -4,6 +4,7 @@ import tw from 'twrnc'
 import { collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import BottomNavigationBar from '../components/BottomNavigationBar';
+import { Ionicons } from '@expo/vector-icons';
 
 const ViewWorkout = ({route, navigation}: any) => {
 
@@ -15,6 +16,8 @@ const ViewWorkout = ({route, navigation}: any) => {
         ...exercise,
         sets: exercise.sets.map((set: any) => ({...set, reps: set.reps, weight: set.weight}))
     })));
+
+    
     
 
     const generateID = () => {
@@ -144,6 +147,30 @@ const ViewWorkout = ({route, navigation}: any) => {
         navigation.navigate('Тренировки');
     }
 
+    const handleContentSizeChange = (event: any) => {
+        const { height } = event.nativeEvent.contentSize;
+        const lineHeight = 20; // Assuming the line height is 20, adjust this based on your TextInput style
+        const lines = height / lineHeight;
+    
+        if (lines >= 2) {
+          // If content spans 2 or more lines, add bottom margin
+          setTextInputStyle(tw`text-xl text-blue-500 font-medium max-w-[85%] min-h-16 max-h-32 ml-3 mt-3 mb-3`);
+        } else {
+          // No bottom margin needed for single line
+          setTextInputStyle(tw`text-xl text-blue-500 font-medium max-w-[85%] min-h-16 max-h-32 ml-3 mt-3 mb-[-10px]`);
+        }
+    };
+
+    const updateExerciseTitle = (exerciseId: string, title: string) => {
+        setNewExercises(exercises.map((exercise: any) => 
+            exercise.id === exerciseId 
+            ? { ...exercise, title } 
+            : exercise
+        ));
+    };
+
+    const [textInputStyle, setTextInputStyle] = useState({});
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={tw`w-full h-full bg-white`}>
@@ -168,48 +195,73 @@ const ViewWorkout = ({route, navigation}: any) => {
                             return (
                                 <View key={exercise.id} style={tw`w-full`}>
 
-                                    <Text style={tw`text-xl text-blue-400 font-medium max-w-[85%] ml-3 mb-3`} ellipsizeMode='tail' numberOfLines={3}>{exercise.title}</Text>
-                                    
+                                    <TextInput 
+                                        style={textInputStyle}
+                                        keyboardType='default'
+                                        multiline={true}
+                                        numberOfLines={2}
+                                        maxLength={50}
+                                        placeholder={exercise.title}
+                                        placeholderTextColor='#93c5fd'
+                                        defaultValue={exercise.title}
+                                        onChangeText={(text) => updateExerciseTitle(text, exercise.id)}
+                                        onContentSizeChange={handleContentSizeChange}
+                                    />
+                                
                                     <ScrollView style={tw``}>
                                         {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
                                             <View key={set.id} style={tw`ml-3`}>
                                                 <View style={tw`flex flex-row gap-x-2`}>
-                                                    <View style={tw`w-10 h-10 bg-neutral-100 rounded-xl flex items-center justify-center`}>
-                                                        <Text style={tw`text-base ml-5 absolute font-medium`}>{mapIndex + 1}</Text>
+                                                    
+                                                    <View style={tw`flex flex-col`}>
+                                                        <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+
+                                                        <View style={tw`w-10 h-10 bg-neutral-100 rounded-xl flex items-center justify-center ${mapIndex != 0 ? '' : ''}`}>
+                                                            <Text style={tw`text-base font-medium`}>{mapIndex + 1}</Text>
+                                                        </View>
                                                     </View>
 
                                                     <View style={tw`flex flex-row gap-x-2 mb-3`}>
-                                                        <TextInput
-                                                            style={tw`bg-neutral-100 rounded-2xl p-2 w-[34%] h-10`}
-                                                            keyboardType='number-pad'
-                                                            maxLength={4}
-                                                            
-                                                            value={userInputs[index].sets[mapIndex].reps}
-                                                            onChangeText={(text) => {
-                                                                let updatedInputs = [...userInputs];
-                                                                updatedInputs[index].sets[mapIndex].reps = text;
-                                                                setUserInputs(updatedInputs);
-                                                            }}
-                                                           
-                                                        />
 
-                                                        <TextInput
-                                                            style={tw`bg-neutral-100 rounded-2xl p-2 w-[34%] h-10`}
-                                                            keyboardType='number-pad'
-                                                            maxLength={4}
-                                                            placeholder={set.weight === "" ? 'Килограми' : set.weight.toString() + ' KG'}
-                                                            value={userInputs[index].sets[mapIndex].weight}
-                                                            onChangeText={(text) => {
-                                                                let updatedInputs = [...userInputs];
-                                                                updatedInputs[index].sets[mapIndex].weight = text;
-                                                                setUserInputs(updatedInputs);
-                                                            }}
-                                                            
-                                                        />
+                                                        <View style={tw`w-[39%]`}>
+                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повт.</Text>
 
-                                                        <TouchableOpacity style={tw`bg-red-500 rounded-2xl w-[21%] h-10 flex items-center justify-center`} onPress={() => removeSet(exercise.exerciseIndex, set.id)}>
-                                                            <Text style={tw`text-white`}>Изтрий</Text>
-                                                        </TouchableOpacity>
+                                                            <TextInput
+                                                                style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
+                                                                keyboardType='number-pad'
+                                                                maxLength={4}
+                                                                placeholder={set.reps === "" ? 'Повторения' : set.reps.toString()}
+                                                                value={userInputs[index].sets[mapIndex].reps}
+                                                                onChangeText={(text) => {
+                                                                    let updatedInputs = [...userInputs];
+                                                                    updatedInputs[index].sets[mapIndex].reps = text;
+                                                                    setUserInputs(updatedInputs);
+                                                                }}
+                                                            />
+                                                        </View>
+
+                                                        <View style={tw`w-[39%]`}>
+                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
+
+                                                            <TextInput
+                                                                style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
+                                                                keyboardType='number-pad'
+                                                                maxLength={4}
+                                                                placeholder={set.weight === "" ? 'Килограми' : set.weight.toString()}
+                                                                value={userInputs[index].sets[mapIndex].weight}
+                                                                onChangeText={(text) => {
+                                                                    let updatedInputs = [...userInputs];
+                                                                    updatedInputs[index].sets[mapIndex].weight = text;
+                                                                    setUserInputs(updatedInputs);
+                                                                }}
+                                                            />
+                                                        </View>
+
+                                                        <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
+                                                            onPress={() => removeSet(exercise.exerciseIndex, set.id)}
+                                                            >
+                                                                <Ionicons name='close' size={36} color='white' />
+                                                            </TouchableOpacity>
 
                                                     </View>
                                                 </View>

@@ -29,7 +29,7 @@ const NoteModal: React.FC<NoteModalProps> = ({ isNoteModalVisible, setIsNoteModa
                             style={tw`w-full h-[65%]`}
                             placeholder='Бележка'
                             placeholderTextColor={'#a0aec0'}
-                            maxLength={350}
+                            maxLength={200}
                             multiline={true}
                             value={userInputs[currentIndex].note}
                             onChangeText={(text) => updateNote(currentIndex, text)}

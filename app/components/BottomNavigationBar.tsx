@@ -68,6 +68,17 @@ const BottomNavigationBar = (
                         <Ionicons name='chevron-forward' color='#ef4444' size={64}/>
                     </Pressable>
                 </View>
+            ) : currentPage === 'AddWorkout' ? (
+                <View style={tw`flex flex-row justify-between w-full`}>
+
+                    <Pressable onPress={backButton}>
+                        <Ionicons name='chevron-back' color='#ef4444' size={64}/>
+                    </Pressable>
+
+                    <Pressable onPress={forwardButton}>
+                        <Ionicons name='chevron-forward' color='#ef4444' size={64}/>
+                    </Pressable>
+                </View>
             ) : (
                 <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
                     {Button({currentPage, navigation, icon: 'home-outline', navigationPage: 'Главна Страница', goalPage: 'Main'})}
