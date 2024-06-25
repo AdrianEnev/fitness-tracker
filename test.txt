@@ -67,3 +67,5 @@
 - da izliza ako priqtel vmomenta pravi trenirovka (da moje da se spira tazi opciq)
 
 - da ne se pokazva end workout modal ako trenirovkata e prazna
+
+- zaglavieto na nova trenirovka da bude trimnato inache ima izlishno prazno razstoqnie

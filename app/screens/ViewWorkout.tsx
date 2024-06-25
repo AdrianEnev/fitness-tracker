@@ -53,11 +53,17 @@ const ViewWorkout = ({route, navigation}: any) => {
             setNewExercises(updatedExercises);
             setUserInputs(updatedUserInputs); // Ensure userInputs is also updated
         }
+
+        const currentExercise = updatedExercises.find(exercise => exercise.exerciseIndex === exerciseIndex);
+        if (currentExercise) {
+            currentExercise.sets.forEach((set: any, index: any) => {
+                set.setIndex = index + 1;
+            });
+        }
     }
 
     const saveWorkout = async () => {
         
-        // update the exercises in the database to match userInputs
         const usersCollectionRef = collection(FIRESTORE_DB, "users");
         const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
         const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
@@ -75,17 +81,19 @@ const ViewWorkout = ({route, navigation}: any) => {
 
             const currentExercise = userInputs.find((input: any) => input.id === exercise.id);
             if (currentExercise) {
+               
                 for (let set of exercise.sets) {
                     const currentSet = currentExercise.sets.find((inputSet: any) => inputSet.id === set.id);
                     if (currentSet) {
                         setDoc(doc(setsCollectionRef, set.id), {
                             reps: currentSet.reps,
-                            weight: currentSet.weight
+                            weight: currentSet.weight,
+                            setIndex: currentSet.setIndex
                         });
                     }
                 }
 
-                // Add new sets to the database
+                // Adding new sets
                 const addedSets = currentExercise.sets.filter((set: any) => !sets.some((dbSet: any) => dbSet.id === set.id));
                 let nextIndex = sets.length; // Start indexing for new sets after the existing ones
                 for (let addedSet of addedSets) {
@@ -93,16 +101,29 @@ const ViewWorkout = ({route, navigation}: any) => {
                     setDoc(newSetRef, {
                         reps: addedSet.reps,
                         weight: addedSet.weight,
-                        index: nextIndex // Assign the index
+                        setIndex: nextIndex + 1
                     });
-                    nextIndex++; // Increment the index for the next new set
+                    nextIndex++;
                 }
 
-                // Remove deleted sets from the database
-                const removedSets = sets.filter(set => !currentExercise.sets.some((inputSet: any) => inputSet.id === set.id));
-                for (let removedSet of removedSets) {
-                    const setDocRef = doc(setsCollectionRef, removedSet.id);
-                    deleteDoc(setDocRef);
+                // Check if any sets were removed (and not added)
+                const removedSetsExist = sets.length > currentExercise.sets.length;
+                if (removedSetsExist) {
+                    // First, delete all existing sets in Firestore to start fresh
+                    for (let set of sets) {
+                        const setDocRef = doc(setsCollectionRef, set.id);
+                        deleteDoc(setDocRef);
+                    }
+
+                    // Then, add back all current sets with new indexes
+                    currentExercise.sets.forEach((set: any, index: number) => {
+                        const newSetRef = doc(setsCollectionRef, set.id ? set.id : generateID()); // Use existing ID or generate a new one
+                        setDoc(newSetRef, {
+                            reps: set.reps,
+                            weight: set.weight,
+                            setIndex: index + 1 // Re-index starting from 1
+                        });
+                    });
                 }
             }
 

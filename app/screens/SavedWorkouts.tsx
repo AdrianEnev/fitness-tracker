@@ -107,6 +107,12 @@ const Workouts = ({navigation}: any) => {
                     renderItem={({item}: any) => renderSavedWorkout(item)}
                     keyExtractor={(workout: Workout) => workout.id}
                     showsVerticalScrollIndicator={false}
+                    ListEmptyComponent=
+                    {
+                        <Text style={tw`text-xl text-center font-medium text-blue-500`} numberOfLines={2}>
+                            Нямаш запазени тренировки
+                        </Text>
+                    }
                 />
             </View>
 
