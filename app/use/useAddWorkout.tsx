@@ -24,7 +24,6 @@ const addWorkout = async (exercises: any, navigation: any, workoutTitle: string)
                 const exerciseDocRef = doc(workoutInfoCollectionRef, (exercise.exerciseIndex + 1).toString());
                 setDoc(exerciseDocRef, {
                     title: exercise.title,
-                    description: exercise.description,
                     exerciseIndex: exercise.exerciseIndex + 1,
                 })
 

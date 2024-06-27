@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
@@ -16,9 +16,6 @@ const ViewWorkout = ({route, navigation}: any) => {
         ...exercise,
         sets: exercise.sets.map((set: any) => ({...set, reps: set.reps, weight: set.weight}))
     })));
-
-    
-    
 
     const generateID = () => {
         // generate ID that would resemble what firebase would generate
@@ -128,6 +125,15 @@ const ViewWorkout = ({route, navigation}: any) => {
                         });
                     });
                 }
+
+                // check if any of the exercise titles have been updated
+                const currentExerciseTitle = newExercises.find((ex: any) => ex.id === exercise.id);
+                if (currentExerciseTitle) {
+                    setDoc(doc(workoutInfoCollectionRef, exercise.id), {
+                        title: currentExerciseTitle.title,
+                        exerciseIndex: currentExerciseTitle.exerciseIndex
+                    });
+                }
             }
 
         }
@@ -162,11 +168,22 @@ const ViewWorkout = ({route, navigation}: any) => {
     };
 
     const updateExerciseTitle = (exerciseId: string, title: string) => {
-        setNewExercises(exercises.map((exercise: any) => 
-            exercise.id === exerciseId 
+    
+        // Use newExercises instead of exercises to ensure we're updating the latest state
+        const newExercisesUpdated = newExercises.map((exercise: any) => 
+            exercise.id.toString() === exerciseId.toString() 
             ? { ...exercise, title } 
             : exercise
-        ));
+        );
+        setNewExercises(newExercisesUpdated);
+    
+        // Ensure userInputs is also updated based on newExercisesUpdated to keep the state consistent
+        const updatedUserInputs = userInputs.map((input: any) => 
+            input.id.toString() === exerciseId.toString() 
+            ? { ...input, title } 
+            : input
+        );
+        setUserInputs(updatedUserInputs);
     };
 
     const [textInputStyle, setTextInputStyle] = useState({});
@@ -204,7 +221,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                                         placeholder={exercise.title}
                                         placeholderTextColor='#93c5fd'
                                         defaultValue={exercise.title}
-                                        onChangeText={(text) => updateExerciseTitle(text, exercise.id)}
+                                        onChangeText={(text) => updateExerciseTitle(exercise.id, text)}
                                         onContentSizeChange={handleContentSizeChange}
                                     />
                                 

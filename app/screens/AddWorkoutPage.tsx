@@ -14,7 +14,6 @@ const AddWorkoutPage = ({ navigation }: any) => {
     const newExercise: any = {
         title: '',
         sets: [{ reps: '', weight: '', id: Math.random().toString() }],
-        description: 'Description',
         exerciseIndex: 0,
         id: Math.random().toString(),
     };
@@ -63,7 +62,6 @@ const AddWorkoutPage = ({ navigation }: any) => {
             const newExercise: Exercise = {
                 title: '',
                 sets: [{ reps: "", weight: "", id: Math.random().toString() }],
-                description: 'Description',
                 exerciseIndex: exerciseIndex,
                 id: Math.random().toString(),
             };
