@@ -10,6 +10,8 @@ const ViewWorkout = ({route, navigation}: any) => {
 
     const { exercises, workout, workoutTitle } = route.params;
 
+    const [newWorkoutTitle, setNewWorkoutTitle] = useState('');
+
     const [currentIndex, setCurrentIndex] = useState(0);
     const [newExercises, setNewExercises] = useState<any>([...exercises]); // newExercises = copy of exercises
     const [userInputs, setUserInputs] = useState<any>(newExercises.map((exercise: any) => ({
@@ -134,6 +136,15 @@ const ViewWorkout = ({route, navigation}: any) => {
                         exerciseIndex: currentExerciseTitle.exerciseIndex
                     });
                 }
+
+                if (newWorkoutTitle === '') {
+                    return;
+                }else{
+                    setDoc(workoutDocRef, {
+                        title: newWorkoutTitle.trim(),
+                        created: workout.created
+                    });
+                }
             }
 
         }
@@ -204,7 +215,17 @@ const ViewWorkout = ({route, navigation}: any) => {
                     
                 </View>
                 
-                <Text style={tw`text-2xl font-bold ml-3 my-5`} ellipsizeMode='tail' numberOfLines={3}>{workoutTitle}</Text>
+                <TextInput 
+                    style={tw`text-2xl font-bold mx-3 my-5`}
+                    keyboardType='default'
+                    multiline={true}
+                    numberOfLines={2}
+                    maxLength={50}
+                    placeholder={workoutTitle}
+                    placeholderTextColor='#93c5fd'
+                    defaultValue={workoutTitle}
+                    onChangeText={(text) => setNewWorkoutTitle(text)}
+                />
 
                 <View style={tw`flex flex-col gap-y-1`}>
                     {newExercises.map((exercise: any, index: any) => {

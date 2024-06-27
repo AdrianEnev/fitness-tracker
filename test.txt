@@ -69,3 +69,6 @@
 - da ne se pokazva end workout modal ako trenirovkata e prazna
 
 - zaglavieto na nova trenirovka da bude trimnato inache ima izlishno prazno razstoqnie
+
+- check if workout is empty before adding
+- trim any titles so they dont have white spaces
