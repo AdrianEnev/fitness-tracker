@@ -24,13 +24,11 @@ const Register = () => {
         if (trimmedEmail.length == 0 || password.length == 0 || confirmPassword.length == 0 || trimmedUsername.length == 0) {    
             return;
         }
-
         const weirdCharPattern = /[^a-zA-Z0-9@#$£€%^&*()"'-/|.,?![]{}+=_~<>¥]/;
         if (weirdCharPattern.test(password)) {
             alert('Паролата не може да съдържа емоджитa!');
             return;
         }
-
         if (password !== confirmPassword) {
             alert("Паролите не са еднакви!");
             return;
@@ -41,6 +39,10 @@ const Register = () => {
         } 
         if (password.length <= 8) {
             alert('Паролата трябва да съдържа поне 8 символа!');
+            return;
+        }
+        if (password === trimmedUsername) {
+            alert('Паролата не може да бъде същата като потребителското име!');
             return;
         }
         
@@ -82,6 +84,8 @@ const Register = () => {
     const [passwordCharacters, setPasswordCharacters] = useState(65);
     const [confirmPasswordCharacters, setConfirmPasswordCharacters] = useState(65);
 
+    const [registerButtonDisabled, setRegisterButtonDisabled] = useState(false);
+
     useEffect(() => {
 
         setPasswordCharacters(65 - password.length);
@@ -104,7 +108,7 @@ const Register = () => {
                                 <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>Имейл</Text>
                                 <TextInput 
                                     style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
-                                    placeholder='example@gmail.com'
+                                    placeholder='пример@gmail.com'
                                     onChangeText={(text: string) => setEmail(text)} 
                                     value={email} 
                                     autoCapitalize='none'
@@ -116,7 +120,7 @@ const Register = () => {
                                 <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>Потребителско име</Text>
                                 <TextInput 
                                     style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
-                                    placeholder='Hairynigga365'
+                                    placeholder='Гошо Иванов'
                                     onChangeText={(text: string) => setUsername(text)} 
                                     value={username} 
                                     autoCapitalize='none' 
@@ -133,7 +137,7 @@ const Register = () => {
 
                                 <TextInput 
                                     style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
-                                    placeholder='Enter your password'
+                                    placeholder='Въведи парола'
                                     onChangeText={(text: string) => setPassword(text)} 
                                     value={password} 
                                     autoCapitalize='none'
@@ -150,7 +154,7 @@ const Register = () => {
 
                                 <TextInput 
                                     style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
-                                    placeholder='Enter your password again'
+                                    placeholder='Потвърди парола'
                                     onChangeText={(text: string) => setConfirmPassword(text)} 
                                     value={confirmPassword} 
                                     autoCapitalize='none'
@@ -159,7 +163,10 @@ const Register = () => {
                             </View>
                             
                             <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-lg flex justify-center items-center shadow-md`}
-                                onPress={signUp}>
+                                onPress={() => {
+                                    setRegisterButtonDisabled(true)
+                                    signUp()
+                                }}>
 
                                 <Text style={tw`text-2xl text-white`}>Регистрация</Text>
 

@@ -8,6 +8,8 @@ import { useTranslation } from 'react-i18next';
 import { useRoute } from '@react-navigation/native';
 import { useContext } from 'react';
 import GlobalContext from '../../GlobalContext';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import getLanguage from '../use/useGetLanguage';
 
 const Setup = ({route}: any) => {
 
@@ -24,6 +26,10 @@ const Setup = ({route}: any) => {
     const [protein, setProtein] = useState("");
     const [carbs, setCarbs] = useState("");
     const [fat, setFat] = useState("");
+
+    useEffect(() => {
+        getLanguage(userInfoCollectionRef);
+    }, [])
 
     const setNutrients = async () => {
         try {
@@ -53,74 +59,71 @@ const Setup = ({route}: any) => {
     }
 
     return (
-        <View style={tw`mx-3 h-full flex-1 mt-10`}>
+        <SafeAreaView style={tw`flex-1 bg-white`}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={tw`flex-1`}>
+                <View style={tw`flex-1 mx-3`}>
 
-                    <Text style={tw`text-2xl font-medium text-center my-2`}>Добре Дошъл!</Text>
+                    <Text style={tw`text-3xl font-medium text-center my-2 mt-5`}>Welcome to Lunge!</Text>
 
-                    <Text style={tw`text-xl font-medium text-center`}>Дневна цел:</Text>
+                    <Text style={tw`text-2xl font-medium text-center mt-[-4px]`}>Set your daily goals:</Text>
 
-                    <View style={tw`flex flex-row flex-wrap gap-y-3 mt-5 mx-2`}>
+                    <View style={tw`flex flex-row flex-wrap w-full gap-x-3 gap-y-3 mt-6`}>
                     
-                        <View style={tw`w-1/2 flex items-start justify-start mb-2`}>
-
-                            <Text style={tw`text-xl font-medium mb-[-5px]`}>Калории</Text>
-                            <TextInput
-                                onChangeText={setCalories}
+                        <View style={tw`w-[48%]`}>
+                            <Text style={tw`text-xl font-medium text-black ml-[6px] mb-1`}>{t('calories')}</Text>
+                            <TextInput 
+                                style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] pb-[6px] pl-3 text-white font-medium text-xl`} 
                                 keyboardType='number-pad' 
-                                style={tw`bg-white shadow-lg border border-red-600 rounded-md w-[97%] h-12 p-1 mt-2`}
+                                maxLength={4} 
+                                onChangeText={setCalories} 
+                                
                             />
-
                         </View>
 
-                        <View style={tw`w-1/2 flex items-start justify-start mb-2`}>
-
-                            <Text style={tw`text-xl font-medium mb-[-5px]`}>Протеин</Text>
-                            <TextInput
-                                onChangeText={setProtein}
+                        <View style={tw`w-[48%]`}>
+                            <Text style={tw`text-xl font-medium text-black ml-[6px] mb-1`}>{t('protein')}</Text>
+                            <TextInput 
+                                style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] pb-[6px] pl-3 text-white font-medium text-xl`} 
                                 keyboardType='number-pad' 
-                                style={tw`bg-white shadow-lg border border-red-600 rounded-md w-[97%] h-12 p-1 mt-2`}
+                                maxLength={4} 
+                                onChangeText={setProtein} 
                             />
-
                         </View>
 
-                        <View style={tw`w-1/2 flex items-start justify-start mb-2`}>
-
-                            <Text style={tw`text-xl font-medium mb-[-5px]`}>Въглехидрати</Text>
-                            <TextInput
-                                onChangeText={setCarbs}
+                        <View style={tw`w-[48%]`}>
+                            <Text style={tw`text-xl font-medium text-black ml-[6px] mb-1`}>{t('carbs')}</Text>
+                            <TextInput 
+                                style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] pb-[6px] pl-3 text-white font-medium text-xl`} 
                                 keyboardType='number-pad' 
-                                style={tw`bg-white shadow-lg border border-red-600 rounded-md w-[97%] h-12 p-1 mt-2`}
+                                maxLength={4} 
+                                onChangeText={setCarbs} 
                             />
-
                         </View>
 
-                        <View style={tw`w-1/2 flex items-start justify-start mb-2`}>
-
-                            <Text style={tw`text-xl font-medium mb-[-5px]`}>Мазнини</Text>
-                            <TextInput
-                                onChangeText={setFat}
+                        <View style={tw`w-[48%]`}>
+                            <Text style={tw`text-xl font-medium text-black ml-[6px] mb-1`}>{t('fat')}</Text>
+                            <TextInput 
+                                style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] pb-[6px] pl-3 text-white font-medium text-xl`} 
                                 keyboardType='number-pad' 
-                                style={tw`bg-white shadow-lg border border-red-600 rounded-md w-[97%] h-12 p-1 mt-2`}
+                                maxLength={4} 
+                                onChangeText={setFat} 
                             />
-
                         </View>
 
                     </View>
 
-                    <View style={tw`flex-1 justify-end mb-8`}>
+                    <View style={tw`flex-1 justify-end mb-4`}>
                         <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-2xl flex justify-center items-center shadow-md mt-1`}
                         onPress={() => setNutrients()}>
 
-                            <Text style={tw`text-2xl text-white`}>Запази</Text>
+                            <Text style={tw`text-2xl text-white`}>{t('save')}</Text>
 
                         </TouchableOpacity>
                     </View>
 
                 </View>
             </TouchableWithoutFeedback>
-        </View>
+        </SafeAreaView>
     )
 }
 

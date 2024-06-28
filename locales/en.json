@@ -43,6 +43,9 @@
     "no-exercises-alert": "Тhis day does not contain any exercises!",
     "good-morning": "Good Morning",
     "good-afternoon": "Good Afternoon",
-    "good-evening": "Good Evening"
+    "good-evening": "Good Evening",
+    "login": "Login",
+    "register": "Register",
+    "slogan": "Log your workouts and diet & connect with friends"
 
 }

@@ -11,7 +11,6 @@ export const checkUserDocument = async (userDocRef: any, user: any, userInfoColl
             });
         } else {
             await setDoc(userDocRef, { userID: user.uid, lastLogin: new Date() }, { merge: true });
-            setDoc(doc(userInfoCollectionRef, 'status'), { status: 'online' });
         }
     } catch (err) {
         console.error(err);
@@ -24,7 +23,7 @@ export const checkLanguageDocument = async (userInfoCollectionRef: any) => {
         const languageDocRef = doc(userInfoCollectionRef, 'language');
         const languageDocSnapshot = await getDoc(languageDocRef);
         if (!languageDocSnapshot.exists()) {
-            await setDoc(languageDocRef, { language: 'bg' });
+            await setDoc(languageDocRef, { language: 'en' });
         }
     } catch (err) {
         console.error(err);

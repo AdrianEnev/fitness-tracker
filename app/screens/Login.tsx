@@ -1,4 +1,4 @@
-import { View, TextInput, Button, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity } from 'react-native'
+import { View, TextInput, Button, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../../firebaseConfig';
@@ -30,24 +30,53 @@ const Login = ({navigation}: any) => {
     }
 
   return (
-    <SafeAreaView style={tw`mx-5 flex-1`}>
+    <SafeAreaView style={tw`flex-1 bg-white`}>
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={tw`flex-1`}>
+            <View style={tw`flex-1 mx-5`}>
 
-                <Text style={tw`text-base text-center font-medium mt-2`}>ENV: Fitness Tracker</Text>
+                <Text style={tw`text-4xl text-center text-[#fd1c47] font-bold my-2`}>Вход</Text>
 
                 <KeyboardAvoidingView behavior='padding'>
                     
                     <View style={tw`flex-col gap-y-2 my-5`}>
-                        <TextInput style={tw`bg-white h-10 pl-2 rounded-lg`} placeholder="Email" onChangeText={(text: string) => setEmail(text)} value={email} autoCapitalize='none'/>
-                        <TextInput style={tw`bg-white h-10 pl-2 rounded-lg`} textContentType='password' placeholder="Password" onChangeText={(text: string) => setPassword(text)} value={password} autoCapitalize='none'/>
+                       
+                        <View style={tw`mb-2`}>
+                            <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>Имейл</Text>
+                            <TextInput 
+                                style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
+                                placeholder='example@gmail.com'
+                                onChangeText={(text: string) => setEmail(text)} 
+                                value={email} 
+                                autoCapitalize='none'
+                                maxLength={50}
+                            />
+                        </View>
+                        
+                        <View style={tw`mb-2`}>
+                            
+                            <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>Парола</Text>
+                                
+                            <TextInput 
+                                style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
+                                placeholder='Enter your password'
+                                onChangeText={(text: string) => setPassword(text)} 
+                                value={password} 
+                                autoCapitalize='none'
+                                maxLength={65}
+                            />
 
-                        <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-2xl flex justify-center items-center shadow-md mt-1`}
-                        onPress={signIn}>
+                            <Pressable style={tw`flex items-end w-full mt-1 mb-2`} onPress={() => navigation.navigate('Парола-Смяна')}>
+                                <Text style={tw`font-medium text-gray-500`}>Забравена парола?</Text>
+                            </Pressable>
+                        </View>
+                        
+                        <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-lg flex justify-center items-center shadow-md`}
+                            onPress={signIn}>
                             <Text style={tw`text-2xl text-white`}>Вход</Text>
                         </TouchableOpacity>
+                        
 
-                        <Button title='Забравена Парола' onPress={() => navigation.navigate('Парола-Смяна')}/>
+                        
                             
                     </View>
                 
@@ -55,6 +84,7 @@ const Login = ({navigation}: any) => {
             </View>
         </TouchableWithoutFeedback>
     </SafeAreaView>
+
   )
 }
 

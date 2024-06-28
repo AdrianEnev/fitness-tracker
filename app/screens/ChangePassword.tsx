@@ -24,28 +24,39 @@ const ChangePassword = () => {
     }
 
     return (
-      <SafeAreaView style={tw`mx-5 flex-1`}>
-          <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-              <View style={tw`flex-1`}>
+        <SafeAreaView style={tw`flex-1 bg-white`}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={tw`flex-1 mx-5`}>
+                
+                    <Text style={tw`text-4xl text-center text-[#fd1c47] font-bold my-2`}>Нова парола</Text>
 
-                  <Text style={tw`text-base text-center font-medium mt-2`}>ENV: Fitness Tracker</Text>
+                    <KeyboardAvoidingView behavior='padding'>
+                        
+                        <View style={tw`flex-col gap-y-2 my-5`}>
+                        <View style={tw`mb-2`}>
+                            <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>Имейл</Text>
+                            <TextInput 
+                                style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
+                                placeholder='example@gmail.com'
+                                onChangeText={(text: string) => setEmail(text)} 
+                                value={email} 
+                                autoCapitalize='none'
+                                maxLength={50}
+                            />
+                        </View>
 
-                  <KeyboardAvoidingView behavior='padding'>
-                      
-                      <View style={tw`flex-col gap-y-2 my-5`}>
-                          <TextInput style={tw`bg-white h-10 pl-2 rounded-lg`} placeholder="Email" onChangeText={(text: string) => setEmail(text)} value={email} autoCapitalize='none'/>
+                            <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-lg flex justify-center items-center shadow-md`}
+                                onPress={changePassword}>
+                                <Text style={tw`text-2xl text-white`}>Изпрати </Text>
+                            </TouchableOpacity>
+                                
+                        </View>
+                    
+                    </KeyboardAvoidingView>
 
-                          <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-2xl flex justify-center items-center shadow-md mt-1`}
-                          onPress={changePassword}>
-                              <Text style={tw`text-2xl text-white`}>Изпрати </Text>
-                          </TouchableOpacity>
-                              
-                      </View>
-                  
-                  </KeyboardAvoidingView>
-              </View>
-          </TouchableWithoutFeedback>
-      </SafeAreaView>
+                </View>
+            </TouchableWithoutFeedback>
+        </SafeAreaView>
     )
 }
 
