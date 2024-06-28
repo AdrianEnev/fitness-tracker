@@ -18,29 +18,16 @@ const Workouts = ({navigation}: any) => {
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
 
     const [workouts, setWorkouts] = useState<Workout[]>([]);
-    const [numberOfExercises, setNumberOfExercises] = useState<{ [key: string]: number }>({});
-    const [startButtonDisabled, setStartButtonDisabled] = useState(false);
     const [viewWorkoutButtonDisabled, setViewWorkoutButtonDisabled] = useState(false);
 
     const getWorkouts = async () => {
         try {
             const data = await getDocs(query(userWorkoutsCollectionRef, orderBy("created", "desc")));
-            const workoutsData: Workout[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Workout));
-            setWorkouts(workoutsData);
-    
-            // Initialize an object to hold the number of exercises for each workout
-            const exercisesCount: { [key: string]: number } = {};
-    
-            // Iterate over each workout to fetch the number of documents in the 'info' collection
-            for (const workout of workoutsData) {
-                const infoCollectionRef = collection(userWorkoutsCollectionRef, workout.id, "info");
-                const infoDocs = await getDocs(infoCollectionRef);
-                exercisesCount[workout.id] = infoDocs.size; // Assign the count to the workout's ID
-            }
-    
-            // Update the state with the number of exercises for each workout
-            setNumberOfExercises(exercisesCount);
-    
+      
+            const filteredData: Workout[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Workout));
+      
+            setWorkouts(filteredData);
+            
         } catch (err) {
             console.error(err);
         }
@@ -98,14 +85,12 @@ const Workouts = ({navigation}: any) => {
     }
 
     const getInitials = (name: string) => {
-        return name.split(' ').map(word => word[0]).join('').substring(0, 3);
+        return name.split(' ').map(word => word[0]).join('').substring(0, 3).toUpperCase();
     }
-
-   
 
     const renderWorkout = (workout: Workout) => {
 
-        const exercisesCount = numberOfExercises[workout.id] || 'Зареждане на';
+        const exercisesCount = workout.numberOfExercises;
 
         return (
             <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
@@ -142,7 +127,7 @@ const Workouts = ({navigation}: any) => {
 
             <View style={tw`flex flex-row justify-between mx-3`}>
 
-                <Pressable style={tw`w-13 h-13 bg-[#fa1148] rounded-2xl flex items-center justify-center`}>
+                <Pressable style={tw`w-13 h-13 bg-[#fa1148] rounded-2xl flex items-center justify-center`} onPress={() => navigation.goBack()}>
                     <Ionicons name='arrow-back-outline' size={30} color='white'/>
                 </Pressable>
 
@@ -173,3 +158,6 @@ const Workouts = ({navigation}: any) => {
 }
 
 export default Workouts
+
+
+

@@ -23,7 +23,8 @@ const addWorkout = async (exercises: any, navigation: any, workoutTitle: string)
     const workoutDocRef = await addDoc(userWorkoutsCollectionRef, {
         title: workoutTitle.trim(),
         created: serverTimestamp(),
-        colour: generateRandomColour()
+        colour: generateRandomColour(),
+        numberOfExercises: exercises.length
     });
     const workoutInfoCollectionRef = collection(workoutDocRef, "info");
 

@@ -18,6 +18,7 @@ export interface Workout {
     exercises: Exercise[];
     id: string;
     colour: string;
+    numberOfExercises: number;
 }
 
 export interface Split {
