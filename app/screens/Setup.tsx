@@ -68,7 +68,7 @@ const Setup = ({route}: any) => {
                             <Text style={tw`text-xl font-medium mb-[-5px]`}>Калории</Text>
                             <TextInput
                                 onChangeText={setCalories}
-                                keyboardType='numeric' 
+                                keyboardType='number-pad' 
                                 style={tw`bg-white shadow-lg border border-red-600 rounded-md w-[97%] h-12 p-1 mt-2`}
                             />
 
@@ -79,7 +79,7 @@ const Setup = ({route}: any) => {
                             <Text style={tw`text-xl font-medium mb-[-5px]`}>Протеин</Text>
                             <TextInput
                                 onChangeText={setProtein}
-                                keyboardType='numeric' 
+                                keyboardType='number-pad' 
                                 style={tw`bg-white shadow-lg border border-red-600 rounded-md w-[97%] h-12 p-1 mt-2`}
                             />
 
@@ -90,7 +90,7 @@ const Setup = ({route}: any) => {
                             <Text style={tw`text-xl font-medium mb-[-5px]`}>Въглехидрати</Text>
                             <TextInput
                                 onChangeText={setCarbs}
-                                keyboardType='numeric' 
+                                keyboardType='number-pad' 
                                 style={tw`bg-white shadow-lg border border-red-600 rounded-md w-[97%] h-12 p-1 mt-2`}
                             />
 
@@ -101,7 +101,7 @@ const Setup = ({route}: any) => {
                             <Text style={tw`text-xl font-medium mb-[-5px]`}>Мазнини</Text>
                             <TextInput
                                 onChangeText={setFat}
-                                keyboardType='numeric' 
+                                keyboardType='number-pad' 
                                 style={tw`bg-white shadow-lg border border-red-600 rounded-md w-[97%] h-12 p-1 mt-2`}
                             />
 

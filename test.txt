@@ -81,3 +81,5 @@
  - loading da izliza v bottom navigation bar
 
  - keyboardType='number-pad' 
+
+ - aktivna trenirovka status

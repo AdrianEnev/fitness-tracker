@@ -69,6 +69,7 @@ const MainPageComponent = () => {
               options={{
                   headerShown: false,
                   gestureEnabled: false,
+                  animationDuration: 0,
               }}
           />
 
@@ -77,6 +78,7 @@ const MainPageComponent = () => {
               component={ViewWorkout}
               options={{
                   headerShown: false,
+                  
               }}
           />
 

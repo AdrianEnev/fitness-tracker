@@ -48,7 +48,7 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
         <View>
             {profilePicture === '' ? (
                 <Pressable 
-                    style={tw`bg-white w-28 h-28 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}
+                    style={tw`bg-white ${page === 'Main' ? 'w-16 h-16' : 'w-22 h-22'} rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}
                     onPress={() => {
                         if (page === 'Main') {
                             navigation?.navigate('Настройки-Акаунт')

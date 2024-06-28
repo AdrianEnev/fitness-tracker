@@ -80,7 +80,7 @@ const Workouts = ({navigation}: any) => {
         setTimeout(() => {
             setViewWorkoutButtonDisabled(false);
             console.log('button enabled')
-        }, 100);
+        }, 500);
 
     }
 

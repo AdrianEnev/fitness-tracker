@@ -1,5 +1,5 @@
 import { View, TextInput, Button, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from "twrnc";
@@ -19,20 +19,31 @@ const Register = () => {
     const signUp = async() => {
         
         const trimmedUsername = username.trim();
+        const trimmedEmail = email.trim();
     
-        if (email.length <= 0 || password.length <= 0 || confirmPassword.length <= 0 || trimmedUsername.length <= 0) {    
+        if (trimmedEmail.length == 0 || password.length == 0 || confirmPassword.length == 0 || trimmedUsername.length == 0) {    
             return;
         }
-    
+
+        const weirdCharPattern = /[^a-zA-Z0-9@#$£€%^&*()"'-/|.,?![]{}+=_~<>¥]/;
+        if (weirdCharPattern.test(password)) {
+            alert('Паролата не може да съдържа емоджитa!');
+            return;
+        }
+
         if (password !== confirmPassword) {
             alert("Паролите не са еднакви!");
             return;
         }
-    
         if (trimmedUsername.length <= 2) {
             alert('Потребителското име трябва да съдържа поне 3 символа!');
             return;
         } 
+        if (password.length <= 8) {
+            alert('Паролата трябва да съдържа поне 8 символа!');
+            return;
+        }
+        
     
         let isUsernameTaken = false;
     
@@ -55,7 +66,7 @@ const Register = () => {
         if (isUsernameTaken) return;
     
         try {
-            const after = await createUserWithEmailAndPassword(auth, email, password);
+            const after = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
     
             const usersCollectionRef = collection(FIRESTORE_DB, 'users');
             const userDocRef = doc(usersCollectionRef, after.user.uid);
@@ -68,27 +79,92 @@ const Register = () => {
         }
     }
 
-    return (
-        <SafeAreaView style={tw`mx-5 flex-1`}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={tw`flex-1`}>
+    const [passwordCharacters, setPasswordCharacters] = useState(65);
+    const [confirmPasswordCharacters, setConfirmPasswordCharacters] = useState(65);
 
-                    <Text style={tw`text-base text-center font-medium mt-2`}>ENV: Fitness Tracker</Text>
+    useEffect(() => {
+
+        setPasswordCharacters(65 - password.length);
+        setConfirmPasswordCharacters(65 - confirmPassword.length);
+
+    }, [password, confirmPassword])
+
+    return (
+        <SafeAreaView style={tw`flex-1 bg-white`}>
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={tw`flex-1 mx-5`}>
+
+                    <Text style={tw`text-4xl text-center text-[#fd1c47] font-bold my-2`}>Регистрация</Text>
 
                     <KeyboardAvoidingView behavior='padding'>
                         
                         <View style={tw`flex-col gap-y-2 my-5`}>
-                            <TextInput style={tw`bg-white h-10 pl-2 rounded-lg`} placeholder="Потребителско име" onChangeText={(text: string) => setUsername(text)} value={username} autoCapitalize='none' maxLength={22}/>
-                            <TextInput style={tw`bg-white h-10 pl-2 rounded-lg`} placeholder="Имейл" onChangeText={(text: string) => setEmail(text)} value={email} autoCapitalize='none'/>
-                            <TextInput style={tw`bg-white h-10 pl-2 rounded-lg`} textContentType='password' placeholder="Парола" onChangeText={(text: string) => setPassword(text)} value={password} autoCapitalize='none'/>
-                            <TextInput style={tw`bg-white h-10 pl-2 rounded-lg`} textContentType='password' placeholder="Потвърди парола" onChangeText={(text: string) => setConfirmPassword(text)} value={confirmPassword} autoCapitalize='none'/>
+
+                            <View style={tw`mb-2`}>
+                                <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>Имейл</Text>
+                                <TextInput 
+                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
+                                    placeholder='example@gmail.com'
+                                    onChangeText={(text: string) => setEmail(text)} 
+                                    value={email} 
+                                    autoCapitalize='none'
+                                    maxLength={50}
+                                />
+                            </View>
+
+                            <View style={tw`mb-2`}>
+                                <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>Потребителско име</Text>
+                                <TextInput 
+                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
+                                    placeholder='Hairynigga365'
+                                    onChangeText={(text: string) => setUsername(text)} 
+                                    value={username} 
+                                    autoCapitalize='none' 
+                                    maxLength={22}
+                                />
+                            </View>
+
+                            <View style={tw`mb-2`}>
+                                
+                                <View style={tw`flex flex-row justify-between`}>
+                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>Парола</Text>
+                                    <Text style={tw`font-medium text-gray-400 mb-1 mr-2`}>{passwordCharacters}</Text>
+                                </View>
+
+                                <TextInput 
+                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
+                                    placeholder='Enter your password'
+                                    onChangeText={(text: string) => setPassword(text)} 
+                                    value={password} 
+                                    autoCapitalize='none'
+                                    maxLength={65}
+                                />
+                            </View>
+
+                            <View style={tw`mb-2`}>
+
+                                <View style={tw`flex flex-row justify-between`}>
+                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>Потвърди парола</Text>
+                                    <Text style={tw`font-medium text-gray-400 mb-1 mr-2`}>{confirmPasswordCharacters}</Text>
+                                </View>
+
+                                <TextInput 
+                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
+                                    placeholder='Enter your password again'
+                                    onChangeText={(text: string) => setConfirmPassword(text)} 
+                                    value={confirmPassword} 
+                                    autoCapitalize='none'
+                                    maxLength={65}
+                                />
+                            </View>
                             
-                            <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-2xl flex justify-center items-center shadow-md mt-1`}
+                            <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-lg flex justify-center items-center shadow-md`}
                                 onPress={signUp}>
 
                                 <Text style={tw`text-2xl text-white`}>Регистрация</Text>
 
                             </TouchableOpacity>
+
                         </View>
                     
                     </KeyboardAvoidingView>

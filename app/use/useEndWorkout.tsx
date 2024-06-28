@@ -33,7 +33,7 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string)
             const exerciseDocRef = doc(savedWorkoutInfo, (exercise.exerciseIndex).toString());
             await setDoc(exerciseDocRef, {
                 title: exercise.title,
-                description: exercise.description,
+                description: exercise.description || "",
                 exerciseIndex: exercise.exerciseIndex,
                 note: exercise.note,
             });

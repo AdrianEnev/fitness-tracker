@@ -37,7 +37,7 @@ const Main = ({navigation}: any) => {
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
     const foodDaysCollectionRef = collection(userDocRef, 'food_days');
 
-    const { username, profilePicture } = useContext(GlobalContext);
+    const { username } = useContext(GlobalContext);
 
     const [currentFormattedDate, setCurrentFormattedDate] = useState<any>();
     const {friendRequestsNumber} = useContext(GlobalContext);
