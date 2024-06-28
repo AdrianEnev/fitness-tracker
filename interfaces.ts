@@ -17,6 +17,7 @@ export interface Workout {
     title: string;
     exercises: Exercise[];
     id: string;
+    colour: string;
 }
 
 export interface Split {

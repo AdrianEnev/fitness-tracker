@@ -31,7 +31,7 @@ const ViewWorkout = ({route, navigation}: any) => {
         
         if (currentExerciseIndex !== -1) {
             const newSet = {
-                id: generateID(), // Generates a random ID
+                id: generateID(),
                 reps: "",
                 weight: ""
             };
@@ -142,7 +142,8 @@ const ViewWorkout = ({route, navigation}: any) => {
                 }else{
                     setDoc(workoutDocRef, {
                         title: newWorkoutTitle.trim(),
-                        created: workout.created
+                        created: workout.created,
+                        colour: workout.colour
                     });
                 }
             }
@@ -317,8 +318,10 @@ const ViewWorkout = ({route, navigation}: any) => {
                     currentPage='ViewWorkout'
                     navigation={navigation}
                     deleteSavedWorkout={deleteWorkout}
+                    workout={workout}
                     forwardButton={() => setCurrentIndex((currentIndex + 1) % newExercises.length)}
                     backButton={() => setCurrentIndex((currentIndex - 1 + newExercises.length) % exercises.length)}
+                    viewWorkoutNumberOfExercises={newExercises.length}
                 />
 
             </SafeAreaView>

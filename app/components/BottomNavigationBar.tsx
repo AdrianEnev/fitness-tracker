@@ -3,6 +3,7 @@ import React from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import endWorkout from '../use/useEndWorkout';
+import startWorkout from '../use/useStartWorkout';
 
 const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) => {
     return (
@@ -28,7 +29,8 @@ const BottomNavigationBar = (
         foodDayDate,
         saveCustomFood,
         displayFoods,
-        workoutsSearchButton
+        workout,
+        viewWorkoutNumberOfExercises
     }: 
     {
         currentPage: string, navigation: any,
@@ -37,7 +39,8 @@ const BottomNavigationBar = (
         foodDayDate?: any,
         saveCustomFood?: () => void,
         displayFoods?: () => void,
-        workoutsSearchButton?: () => void
+        workout?: any,
+        viewWorkoutNumberOfExercises?: number
     }
 ) => {
 
@@ -114,33 +117,30 @@ const BottomNavigationBar = (
                     </Pressable>
                 </View>
             ) : currentPage === 'Workouts' ? (
-                <View style={tw`flex flex-row justify-around w-full`}>
+                <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
 
-                    <Pressable onPress={workoutsSearchButton}>
-                        <Ionicons name="search-circle-outline" size={72} color="#ef4444"/>
-                    </Pressable>
-                    
-                    <Pressable onPress={() => navigation.navigate("Тренировка-Добави")}>
-                        <Ionicons name="add-circle-outline" size={72} color="#ef4444"/>
-                    </Pressable>
+                    {Button({currentPage, navigation, icon: 'home-outline', navigationPage: 'Главна Страница', goalPage: 'Main'})}
+                    {Button({currentPage, navigation, icon: 'fitness-outline', navigationPage: 'Тренировки', goalPage: 'Workouts'})}
+                    {Button({currentPage, navigation, icon: 'calendar-clear-outline', navigationPage: 'Хранене', goalPage: 'Food'})}
+                    {Button({currentPage, navigation, icon: 'settings-outline', navigationPage: 'Настройки-Страница', goalPage: 'Settings'})}
 
                 </View>
             ) : currentPage === 'ViewWorkout' ? (
-                <View style={tw`flex flex-row justify-between w-full`}>
+                <View style={tw`flex flex-row ${viewWorkoutNumberOfExercises === 1 ? 'justify-around' : 'justify-between'} w-full`}>
 
-                    <Pressable onPress={backButton}>
+                    <Pressable onPress={backButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
                         <Ionicons name='chevron-back-circle-outline' color='#3b82f6' size={72}/>
                     </Pressable>
 
                     <Pressable onPress={deleteSavedWorkout}>
-                        <Ionicons name='caret-forward-circle-outline' color='#22c55e' size={72}/>
-                    </Pressable>
-                    
-                    <Pressable onPress={deleteSavedWorkout}>
                         <Ionicons name='close-circle-outline' color='#ef4444' size={72}/>
                     </Pressable>
 
-                    <Pressable onPress={forwardButton}>
+                    <Pressable onPress={() => startWorkout(workout, navigation)}>
+                        <Ionicons name='caret-forward-circle-outline' color='#22c55e' size={72}/>
+                    </Pressable>
+                    
+                    <Pressable onPress={forwardButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
                         <Ionicons name='chevron-forward-circle-outline' color='#3b82f6' size={72}/>
                     </Pressable>
                 </View>
