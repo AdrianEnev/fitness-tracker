@@ -8,6 +8,8 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Food } from './FoodDay';
 import getNutrients from '../use/useGetNutrients';
 import { useTranslation } from 'react-i18next';
+import BottomNavigationBar from '../components/BottomNavigationBar';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 const AddFoodPage = ({route, navigation}: any) => {
     
@@ -132,7 +134,7 @@ const AddFoodPage = ({route, navigation}: any) => {
 
         return (
 
-            <Pressable style={tw`bg-blue-500 w-full h-64 my-1 pt-2 pl-3 rounded-xl`} onPress={() => addItem(item)}>
+            <Pressable style={tw`bg-blue-500 w-full min-h-52 my-1 pt-2 pl-3 rounded-xl`} onPress={() => addItem(item)}>
 
                 <View style={tw`flex flex-row justify-between`}>
                     <Text style={tw`text-white text-lg`}>{foodTitle}</Text>
@@ -149,14 +151,9 @@ const AddFoodPage = ({route, navigation}: any) => {
     }
 
     return (
-        <View style={tw`bg-white h-full`}>
-            <View style={tw`bg-white w-full h-12`}></View>
+        <SafeAreaView style={tw`bg-white h-full w-full`}>
 
             <View style={tw`flex flex-row justify-between mt-4 mx-2`}>
-
-                <Pressable style={tw`bg-blue-500 w-12 h-12 rounded-full items-center justify-center self-center mr-3`} onPress={()=>displayFoods()}>
-                    <Ionicons name="search" size={24} color="white"/>
-                </Pressable>
 
                 <TextInput
                     style={tw`text-2xl w-[200px] h-16 bg-blue-500 text-white rounded-lg p-3`}
@@ -176,7 +173,7 @@ const AddFoodPage = ({route, navigation}: any) => {
 
             </View>
 
-            <View style={tw`mt-2 mx-3 flex-1 mb-5`}>
+            <View style={tw`mt-2 mx-3 w-[94.5%] h-[80%] mb-5`}>
                 <FlatList data={foods} renderItem={({item}) => renderSearchedFoods(item)} showsVerticalScrollIndicator={false}/>
             </View>
 
@@ -184,8 +181,10 @@ const AddFoodPage = ({route, navigation}: any) => {
                 <ActivityIndicator size="large" color="blue" style={tw`flex items-center justify-center flex-1`}/>
             }
 
+            <BottomNavigationBar currentPage='AddFoodPage' navigation={navigation} displayFoods={displayFoods}/>
+
            
-        </View>
+        </SafeAreaView>
     )
 }
 

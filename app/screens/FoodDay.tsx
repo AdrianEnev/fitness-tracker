@@ -193,21 +193,9 @@ const FoodDay = ({route, navigation}: any) => {
     );
     
     return (
-        <SafeAreaView style={tw`flex-1`}>
+        <SafeAreaView style={tw`flex-1 bg-white`}>
 
-            <View style={tw`flex flex-row justify-between mt-2 ml-2`}>
-               
-                <Pressable style={tw`bg-blue-500 w-12 h-12 rounded-full items-center justify-center self-center mr-3`} onPress={() => navigation.navigate("Храна-Добави", { date: date })}>
-                    <Ionicons name="add-outline" size={36} color="white"/>
-                </Pressable>
-
-                <Pressable style={tw`bg-blue-500 w-12 h-12 rounded-full items-center justify-center self-center mr-3`} onPress={() => navigation.navigate("Храна-Потърси", { date: date })}>
-                    <Ionicons name="search-outline" size={28} color="white"/>
-                </Pressable>
-                
-            </View>
-        
-            <View style={tw``}>
+            <View style={tw`w-[99.2%]`}>
 
                 <Nutrients 
                     currentNutrients={currentNutrients} 
@@ -219,15 +207,24 @@ const FoodDay = ({route, navigation}: any) => {
 
             </View>
 
-            <View style={tw`mx-2 mt-[-570px] flex-1`}>
+            <View style={tw`mx-2 mt-[-570px] w-[96%] h-[56%] bg-white rounded-lg`}>
 
                 <FlatList 
                     data={currentFoods}
                     renderItem={({ item }) => <RenderAddedFood item={item} onDelete={() => handleDeleteFood(item)} />} 
                     showsVerticalScrollIndicator={false} 
+                    ListEmptyComponent={
+                        <Text style={tw`text-xl font-medium text-center mt-2`}>Нямаш добавени храни!</Text>
+                    }
                 />
 
             </View>
+
+            <BottomNavigationBar 
+                currentPage='FoodDay' 
+                navigation={navigation} 
+                foodDayDate={date}
+            />
 
         </SafeAreaView>
     )

@@ -72,3 +72,12 @@
 
 - check if workout is empty before adding
 - trim any titles so they dont have white spaces
+
+- da naprvaq purvo da se navigira kum stranicata i posle da se viewne workouta, sushtoto sus aktivna trenirovka
+ - bottom navigation bar v settingsmacros
+
+ - ako e 1 gram da pishe 1 gram ne 1 grama vuv render added food
+
+ - loading da izliza v bottom navigation bar
+
+ - keyboardType='number-pad' 

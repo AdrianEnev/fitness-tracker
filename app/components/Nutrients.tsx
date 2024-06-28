@@ -40,6 +40,10 @@ const Nutrients = ({ currentNutrients, navigation, currentPage, formattedDate, r
             // calculate width based on progress
             const progressRatio = currentProgress / goalProgress;
             redWidthPercentage = Math.min(100, progressRatio * 100); // Ensure it does not exceed 100%
+            
+            if (redWidthPercentage <= 10 && redWidthPercentage > 0) {
+                redWidthPercentage = 3; // Set to a minimum visible width, e.g., 20%
+            }
             blueWidthPercentage = 100 - redWidthPercentage;
 
 
@@ -79,10 +83,12 @@ const Nutrients = ({ currentNutrients, navigation, currentPage, formattedDate, r
     // key v animatedcircularprogress sluji da updateva stoinostta na fill zashtoto purvonachalno e 0 dokato ne se predade ot main kum nutrients
     return (
         <Pressable style={tw`mt-3 mx-2 w-full h-full`} onPress={() => {
-            navigation.navigate("Хранене-Ден", {date: formattedDate});
+            if (currentPage == 'Main'){
+                navigation.navigate("Хранене-Ден", {date: formattedDate});
+            }
         }}>
 
-            <View style={tw`w-[96.5%] ${currentPage === 'Main' ? 'h-[33%]' : 'h-[31%]'} bg-white rounded-lg shadow-lg pt-2 pl-3`}>
+            <View style={tw`${currentPage === 'Main' ? 'h-[33%] shadow-lg pt-2 pl-3 w-[96.5%]' : 'h-[31%] w-full px-1 mt-[-10px]'} bg-white rounded-lg`}>
                 
                 <View style={tw`flex flex-row justify-between`}>
 

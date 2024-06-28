@@ -24,12 +24,20 @@ const BottomNavigationBar = (
     {
         currentPage, navigation, 
         forwardButton, backButton,
-        deleteSavedWorkout, toggleEndWorkoutModal
+        deleteSavedWorkout, toggleEndWorkoutModal,
+        foodDayDate,
+        saveCustomFood,
+        displayFoods,
+        workoutsSearchButton
     }: 
     {
         currentPage: string, navigation: any,
         forwardButton?: () => void, backButton?: () => void
-        deleteSavedWorkout?: () => void, toggleEndWorkoutModal?: () => void
+        deleteSavedWorkout?: () => void, toggleEndWorkoutModal?: () => void,
+        foodDayDate?: any,
+        saveCustomFood?: () => void,
+        displayFoods?: () => void,
+        workoutsSearchButton?: () => void
     }
 ) => {
 
@@ -77,6 +85,63 @@ const BottomNavigationBar = (
 
                     <Pressable onPress={forwardButton}>
                         <Ionicons name='chevron-forward' color='#ef4444' size={64}/>
+                    </Pressable>
+                </View>
+            ) : currentPage === "FoodDay" ? (
+                <View style={tw`flex flex-row justify-around w-full items-center`}>
+                    <Pressable onPress={() => navigation.navigate("Храна-Добави", { date: foodDayDate })}>
+                        <Ionicons name="add-circle-outline" size={72} color="#ef4444"/>
+                    </Pressable>
+
+                    <Pressable onPress={() => console.log('delete all foods')} style={tw``}>
+                        <Ionicons name="refresh-circle-outline" size={72} color="#ef4444"/>
+                    </Pressable>
+
+                    <Pressable onPress={() => navigation.navigate("Храна-Потърси", { date: foodDayDate })}>
+                        <Ionicons name="search-circle-outline" size={72} color="#ef4444"/>
+                    </Pressable>
+                </View>
+            ) : currentPage === "AddCustomFood" ? (
+                <View style={tw`flex items-center justify-center`}>
+                    <Pressable onPress={saveCustomFood}>
+                        <Ionicons name='checkmark-done' color='#ef4444' size={64}/>
+                    </Pressable>
+                </View>
+            ) : currentPage === "AddFoodPage" ? (
+                <View style={tw`flex items-center justify-center`}>
+                    <Pressable onPress={displayFoods}>
+                        <Ionicons name="search-circle-outline" size={72} color="#ef4444"/>
+                    </Pressable>
+                </View>
+            ) : currentPage === 'Workouts' ? (
+                <View style={tw`flex flex-row justify-around w-full`}>
+
+                    <Pressable onPress={workoutsSearchButton}>
+                        <Ionicons name="search-circle-outline" size={72} color="#ef4444"/>
+                    </Pressable>
+                    
+                    <Pressable onPress={() => navigation.navigate("Тренировка-Добави")}>
+                        <Ionicons name="add-circle-outline" size={72} color="#ef4444"/>
+                    </Pressable>
+
+                </View>
+            ) : currentPage === 'ViewWorkout' ? (
+                <View style={tw`flex flex-row justify-between w-full`}>
+
+                    <Pressable onPress={backButton}>
+                        <Ionicons name='chevron-back-circle-outline' color='#3b82f6' size={72}/>
+                    </Pressable>
+
+                    <Pressable onPress={deleteSavedWorkout}>
+                        <Ionicons name='caret-forward-circle-outline' color='#22c55e' size={72}/>
+                    </Pressable>
+                    
+                    <Pressable onPress={deleteSavedWorkout}>
+                        <Ionicons name='close-circle-outline' color='#ef4444' size={72}/>
+                    </Pressable>
+
+                    <Pressable onPress={forwardButton}>
+                        <Ionicons name='chevron-forward-circle-outline' color='#3b82f6' size={72}/>
                     </Pressable>
                 </View>
             ) : (

@@ -32,8 +32,8 @@ const ViewWorkout = ({route, navigation}: any) => {
         if (currentExerciseIndex !== -1) {
             const newSet = {
                 id: generateID(), // Generates a random ID
-                reps: "0",
-                weight: "0"
+                reps: "",
+                weight: ""
             };
             updatedExercises[currentExerciseIndex].sets.push(newSet);
             updatedUserInputs[currentExerciseIndex].sets.push({...newSet}); // Clone newSet to avoid direct reference
@@ -246,7 +246,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                                         onContentSizeChange={handleContentSizeChange}
                                     />
                                 
-                                    <ScrollView style={tw``}>
+                                    <ScrollView style={tw`h-[75%] mb-3`}>
                                         {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
                                             <View key={set.id} style={tw`ml-3`}>
                                                 <View style={tw`flex flex-row gap-x-2`}>
@@ -314,7 +314,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                 </View>
 
                 <BottomNavigationBar
-                    currentPage='SavedWorkout'
+                    currentPage='ViewWorkout'
                     navigation={navigation}
                     deleteSavedWorkout={deleteWorkout}
                     forwardButton={() => setCurrentIndex((currentIndex + 1) % newExercises.length)}

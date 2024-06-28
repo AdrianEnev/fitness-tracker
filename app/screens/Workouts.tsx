@@ -1,4 +1,4 @@
-import { View, Text, Button, SafeAreaView, TouchableOpacity, FlatList, Pressable, Alert } from 'react-native'
+import { View, Text, Button, SafeAreaView, TouchableOpacity, FlatList, Pressable, Alert, TextInput } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import i18next from '../../services/i18next';
@@ -116,7 +116,7 @@ const Workouts = ({navigation}: any) => {
 
     const renderWorkout = (workout: Workout) => {
         return (
-            <Pressable style={tw`w-[96%] h-14 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
+            <Pressable style={tw`w-[96%] h-24 bg-white shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
                 
                 <View style={tw`flex flex-row justify-between`}>
  
@@ -124,10 +124,9 @@ const Workouts = ({navigation}: any) => {
                         <Text style={tw`text-2xl font-medium`} ellipsizeMode='tail' numberOfLines={1}>{workout.title}</Text>
                     </View>
 
-                    <View style={tw`flex flex-row gap-x-1`}>
+                    <View style={tw`flex flex-col gap-x-1`}>
                         <Ionicons name='close' size={40} color='#ef4444' onPress={() => deleteWorkout(workout.id)}/>
                         <Ionicons name='caret-forward-outline' size={40} color='#22c55e' onPress={() => startWorkout(workout)} disabled={startButtonDisabled}/>
-                        <Ionicons name='create-outline' size={36} color='#3b82f6' onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled}/>
                     </View>
 
                 </View>
@@ -138,25 +137,26 @@ const Workouts = ({navigation}: any) => {
 
     const { t } = useTranslation();
 
+    const searchButton = () => {
+        console.log('TODO search button');
+    }
+
     return (
-        <SafeAreaView style={tw`w-full h-full`}>
+        <SafeAreaView style={tw`w-full h-full bg-white`}>
 
-            <View style={tw`w-full flex flex-row justify-between`}>
-
-                <Pressable style={tw`h-12 w-12 bg-white shadow-md rounded-2xl flex items-center justify-center ml-2`}>
-                    <Ionicons name='search-outline' size={28} color='black' />
-                </Pressable>
-                
-                <View style={tw`h-12 w-44 bg-white shadow-md rounded-xl flex items-center justify-center`}>
-                    <Text style={tw`text-2xl font-medium mb-[2px]`}>Тренировки</Text>
-                </View>
-
-                <Pressable style={tw`h-12 w-12 bg-white shadow-md rounded-2xl flex items-center justify-center mr-2`} onPress={() => navigation.navigate("Тренировка-Добави")}>
-                    <Ionicons name='add-outline' size={36} color='black' />
-                </Pressable>
-
-            </View>
             
+                
+            <View style={tw`flex flex-row w-full ml-3`}>
+                
+                <Pressable style={tw`w-12 h-12 bg-[#fd3e57] shadow-md flex items-center justify-center rounded-xl`} onPress={() => navigation.goBack()}>
+                    <Ionicons name='arrow-back-outline' size={32} color='white'/>
+                </Pressable>
+
+                <View style={tw`w-[42%] h-12 bg-[#fd3e57] shadow-md rounded-xl ml-2`}>
+                    <Text style={tw`text-2xl text-white font-medium ml-3 mt-[6px]`}>Тренировки</Text>
+                </View>
+            </View>
+
             <View style={tw`w-full h-full mt-4 mx-2`}>
                 <FlatList
                     data={workouts}
@@ -166,7 +166,7 @@ const Workouts = ({navigation}: any) => {
                 />
             </View>
 
-            <BottomNavigationBar currentPage='Workouts' navigation={navigation}/>
+            <BottomNavigationBar currentPage='Main' navigation={navigation} workoutsSearchButton={searchButton} />
             
         </SafeAreaView>
     )
