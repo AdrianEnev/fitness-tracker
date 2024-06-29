@@ -32,7 +32,8 @@ const BottomNavigationBar = (
         workout,
         viewWorkoutNumberOfExercises,
         friendsListUsername,
-        removeFriend
+        removeFriend,
+        addSetButton, addWorkoutButton
     }: 
     {
         currentPage: string, navigation: any,
@@ -44,7 +45,8 @@ const BottomNavigationBar = (
         workout?: any,
         viewWorkoutNumberOfExercises?: number,
         friendsListUsername?: string,
-        removeFriend?: () => void
+        removeFriend?: () => void,
+        addSetButton?: () => void, addWorkoutButton?: () => void
     }
 ) => {
 
@@ -84,14 +86,22 @@ const BottomNavigationBar = (
                     </Pressable>
                 </View>
             ) : currentPage === 'AddWorkout' ? (
-                <View style={tw`flex flex-row justify-between w-full`}>
+                <View style={tw`flex flex-row justify-around w-full`}>
 
                     <Pressable onPress={backButton}>
-                        <Ionicons name='chevron-back' color='#ef4444' size={64}/>
+                        <Ionicons name='chevron-back-circle-outline' color='#ef4444' size={72}/>
                     </Pressable>
 
+                    <Pressable onPress={addSetButton}>
+                        <Ionicons name="add-circle-outline" size={72} color="#3b82f6"/>
+                    </Pressable>
+                    <Pressable onPress={addWorkoutButton}>
+                        <Ionicons name="checkmark-circle-outline" size={72} color="#22c55e"/>
+                    </Pressable>
+
+
                     <Pressable onPress={forwardButton}>
-                        <Ionicons name='chevron-forward' color='#ef4444' size={64}/>
+                        <Ionicons name='chevron-forward-circle-outline' color='#ef4444' size={72}/>
                     </Pressable>
                 </View>
             ) : currentPage === "FoodDay" ? (

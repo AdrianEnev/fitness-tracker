@@ -147,18 +147,6 @@ const AddWorkoutPage = ({ navigation }: any) => {
                                 return (
                                     <View key={exercise.id} style={tw`w-full`}>
 
-                                        <View style={tw`flex flex-row justify-between mx-3 w-[95%]`}>
-                                            <TouchableOpacity style={tw`w-22 h-10 bg-[#2fc766] shadow-md rounded-xl flex justify-center items-center`} onPress={() => setIsCreateWorkoutModalVisible(true)}>
-                                                <Text style={tw`text-white font-medium text-base`}>Запази</Text>
-                                            </TouchableOpacity>
-
-                                            
-                                            <TouchableOpacity style={tw`w-22 h-10 bg-blue-500 rounded-xl flex justify-center items-center`} onPress={() => addSet(exercise.id)}>
-                                                <Text style={tw`text-base font-medium text-white`}>+ Серия</Text>
-                                            </TouchableOpacity>
-                                            
-                                        </View>
-
                                         <TextInput 
                                             style={textInputStyle}
                                             keyboardType='default'
@@ -173,35 +161,52 @@ const AddWorkoutPage = ({ navigation }: any) => {
                                         />
                                             
                                         <ScrollView style={tw`mb-10`}>
-                                            {exercise.sets.map((set, setIndex) => (
+                                            {exercise.sets.map((set, mapIndex) => (
                                                 <View key={set.id} style={tw`ml-3`}>
                                                     <View style={tw`flex flex-row gap-x-2`}>
-                                                        <View style={tw`w-10 h-10 bg-neutral-100 rounded-xl flex items-center justify-center`}>
-                                                            <Text style={tw`text-base ml-5 absolute font-medium`}>{setIndex + 1}</Text>
+                                                        
+                                                        <View style={tw`flex flex-col`}>
+                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+
+                                                            <View style={tw`w-10 h-10 bg-neutral-100 rounded-xl flex items-center justify-center ${mapIndex != 0 ? '' : ''}`}>
+                                                                <Text style={tw`text-base font-medium`}>{mapIndex + 1}</Text>
+                                                            </View>
                                                         </View>
 
                                                         <View style={tw`flex flex-row gap-x-2 mb-3`}>
-                                                            <TextInput
-                                                                style={tw`bg-neutral-100 rounded-2xl p-2 w-32 h-10`}
-                                                                keyboardType='number-pad'
-                                                                maxLength={4}
-                                                                placeholder='Повторения'
-                                                                value={set.reps.toString()}
-                                                                onChangeText={(value) => updateSet(exercise.id, set.id, 'reps', value)}
-                                                            />
 
-                                                            <TextInput
-                                                                style={tw`bg-neutral-100 rounded-2xl p-2 w-32 h-10`}
-                                                                keyboardType='number-pad'
-                                                                maxLength={4}
-                                                                placeholder='KG'
-                                                                value={set.weight.toString()}
-                                                                onChangeText={(value) => updateSet(exercise.id, set.id, 'weight', value)}
-                                                            />
+                                                            <View style={tw`w-[39.3%]`}>
 
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повт.</Text>
 
-                                                            <TouchableOpacity style={tw`bg-red-500 rounded-2xl w-20 h-10 flex items-center justify-center`} onPress={() => removeSet(exercise.id, set.id)}>
-                                                                <Text style={tw`text-white`}>Изтрий</Text>
+                                                                <TextInput
+                                                                    style={tw`bg-neutral-100 rounded-2xl p-2 w-full h-10`}
+                                                                    keyboardType='number-pad'
+                                                                    maxLength={4}
+                                                                    placeholder='Повторения'
+                                                                    value={set.reps.toString()}
+                                                                    onChangeText={(value) => updateSet(exercise.id, set.id, 'reps', value)}
+                                                                />
+
+                                                            </View>
+
+                                                            <View style={tw`w-[39.3%]`}>
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
+
+                                                                <TextInput
+                                                                    style={tw`bg-neutral-100 rounded-2xl p-2 w-full h-10`}
+                                                                    keyboardType='number-pad'
+                                                                    maxLength={4}
+                                                                    placeholder='KG'
+                                                                    value={set.weight.toString()}
+                                                                    onChangeText={(value) => updateSet(exercise.id, set.id, 'weight', value)}
+                                                                />
+                                                            </View>
+
+                                                            <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
+                                                            onPress={() => removeSet(exercise.id, set.id)}
+                                                            >
+                                                                <Ionicons name='close' size={36} color='white' />
                                                             </TouchableOpacity>
 
                                                         </View>
@@ -227,6 +232,8 @@ const AddWorkoutPage = ({ navigation }: any) => {
                 currentPage='AddWorkout' 
                 forwardButton={nextExercise}
                 backButton={previousExercise}
+                addWorkoutButton={() => setIsCreateWorkoutModalVisible(true)}
+                addSetButton={() => addSet(exercises[pageIndex - 1].id)}
             />
             
         </>
