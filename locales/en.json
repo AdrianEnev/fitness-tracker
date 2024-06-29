@@ -64,6 +64,10 @@
     "log-out": "Log out",
     "change-username": "Change Username",
     "delete-account": "Delete Account",
-    "set-daily-goals": "Set your daily goals:"
+    "set-daily-goals": "Set your daily goals:",
+    "no-saved-workouts": "Saved workouts will be shown here",
+    "no-saved-foods": "Added foods will be shown here",
+    "set-language": "Set language",
+    "language": "Language"
 
 }

@@ -11,6 +11,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalContext from '../../GlobalContext';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import ProfilePicture from '../components/ProfilePicture';
+import LanguageModal from '../components/LanguageModal';
+import { BlurView } from 'expo-blur';
 
 const Settings = ({navigation}: any) => {
 
@@ -89,8 +91,23 @@ const Settings = ({navigation}: any) => {
 
     }
 
+    const [isLanguageModalVisible, setIsLanguageModalVisible] = useState(false);
+
     return (
         <View style={tw`h-full`}>
+            
+            { isLanguageModalVisible && (
+                <BlurView
+                    style={tw`absolute w-full h-full z-10`}
+                    intensity={50}
+                    tint='dark'
+                />
+            )}   
+
+            <LanguageModal 
+                isLanguageModalVisible={isLanguageModalVisible} 
+                setIsLanguageModalVisible={setIsLanguageModalVisible}
+            />
 
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('settings')}</Text>
@@ -113,6 +130,26 @@ const Settings = ({navigation}: any) => {
 
                 {button('Настройки-Статистика', 'stats-chart-outline', '#eab308', 'yellow-300', t('stats'))}
                 {button('Запазени-Тренировки', 'cloud-outline', '#ec4899', 'pink-300', t('saved-workouts'))}
+
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => setIsLanguageModalVisible(true)}>
+                    <View style={tw`flex flex-row justify-between`}>
+
+                        <View style={tw`flex flex-row`}>
+                            <View style={tw`w-10 h-10 bg-indigo-300 rounded-full flex items-center justify-center mr-2`}>
+                                <Ionicons name='globe-outline' size={28} color='#8b5cf6' />
+                            </View>
+                            
+                            <View style={tw`flex justify-center`}>
+                                <Text style={tw`text-lg font-medium`}>{t('language')}</Text>
+                            </View>
+                        </View>
+
+                        <View style={tw`flex justify-center`}>
+                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
+                        </View>
+
+                    </View>
+                </Pressable>
 
 
             </View>

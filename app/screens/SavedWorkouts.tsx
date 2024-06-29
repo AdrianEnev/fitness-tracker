@@ -94,11 +94,13 @@ const Workouts = ({navigation}: any) => {
         )
     }
 
+    const {t} = useTranslation();
+
     return (
         <View style={tw`w-full h-full bg-white`}>
 
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
-                <Text style={tw`text-3xl font-medium text-black m-3`}>Запазени Тренировки</Text>
+                <Text style={tw`text-3xl font-medium text-black m-3`}>{t('workouts')}</Text>
             </View>
 
             <View style={tw`w-full h-[72%] bg-white pt-3 pb-3`}>
@@ -109,8 +111,8 @@ const Workouts = ({navigation}: any) => {
                     showsVerticalScrollIndicator={false}
                     ListEmptyComponent=
                     {
-                        <Text style={tw`text-xl text-center font-medium text-blue-500`} numberOfLines={2}>
-                            Нямаш запазени тренировки
+                        <Text style={tw`text-xl font-medium text-blue-500 ml-3`} numberOfLines={2}>
+                            {t('no-saved-workouts')}
                         </Text>
                     }
                 />

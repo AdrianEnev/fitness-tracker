@@ -191,6 +191,8 @@ const FoodDay = ({route, navigation}: any) => {
             };
         }, [])
     );
+
+    const {t} = useTranslation();
     
     return (
         <SafeAreaView style={tw`flex-1 bg-white`}>
@@ -214,7 +216,7 @@ const FoodDay = ({route, navigation}: any) => {
                     renderItem={({ item }) => <RenderAddedFood item={item} onDelete={() => handleDeleteFood(item)} />} 
                     showsVerticalScrollIndicator={false} 
                     ListEmptyComponent={
-                        <Text style={tw`text-xl font-medium text-center mt-2`}>Нямаш добавени храни!</Text>
+                        <Text style={tw`text-xl font-medium text-center mt-2`}>{t('no-saved-foods')}</Text>
                     }
                 />
 

@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { collection, doc, onSnapshot } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from 'twrnc'
+import { useTranslation } from 'react-i18next';
 
 const Statistics = () => {
 
@@ -24,12 +25,14 @@ const Statistics = () => {
         // Cleanup function
         return () => unsubscribe();
     }, []);
+
+    const {t} = useTranslation();
     
     return (
         <View style={tw`h-full`}>
 
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
-                <Text style={tw`text-4xl font-medium text-black m-3`}>Статистика</Text>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>{t('stats')}</Text>
             </View>
 
             <View style={tw`h-full w-full bg-white`}>
