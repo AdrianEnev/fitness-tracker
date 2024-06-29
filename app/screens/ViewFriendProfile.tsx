@@ -6,14 +6,18 @@ import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { FIREBASE_AUTH, FIREBASE_STORAGE, FIRESTORE_DB } from '../../firebaseConfig';
 import { useFocusEffect } from '@react-navigation/native';
 import { collection, doc, getDoc, onSnapshot } from 'firebase/firestore';
+import BottomNavigationBar from '../components/BottomNavigationBar';
+import removeFriend from '../use/useRemoveFriend';
 
-const ViewFriendProfile = ({route}: any) => {
+const ViewFriendProfile = ({route, navigation}: any) => {
 
     const {friend_info} = route.params;
 
     const [profilePicture, setProfilePicture] = useState('');
     const [weightLifted, setWeightLifted] = useState(0);
     const [friendRegistrationDate, setFriendRegistrationDate] = useState<React.ReactNode | null>(null);
+
+    const [workoutsFinished, setWorkoutsFinished] = useState(0);
 
     const getFriendProfilePicture = async () => {
 
@@ -40,6 +44,7 @@ const ViewFriendProfile = ({route}: any) => {
 
         const unsubscribe = onSnapshot(userWeightLiftedDocRef, (doc) => {
             setWeightLifted(doc.data()?.weight);
+            setWorkoutsFinished(doc.data()?.finishedWorkouts || 0);
         });
 
         // Cleanup function
@@ -79,6 +84,11 @@ const ViewFriendProfile = ({route}: any) => {
         getFriendRegistrationDate();
     })
 
+    const deleteFriend = async () => {
+        removeFriend(friend_info);
+        navigation.navigate('Приятели')
+    }
+
     return (
         <SafeAreaView style={tw`w-full h-full`}>
 
@@ -117,7 +127,11 @@ const ViewFriendProfile = ({route}: any) => {
 
             
             <Text style={tw`text-lg m-2`}>Подвигната тежест: {weightLifted || 0} КГ</Text>
+            <Text style={tw`text-lg m-2`}>Брой Тренировки: {workoutsFinished}</Text>
             {friendRegistrationDate}
+
+
+            <BottomNavigationBar currentPage='ViewFriendProfile' navigation={navigation} removeFriend={deleteFriend}/>
 
         </SafeAreaView>
     )

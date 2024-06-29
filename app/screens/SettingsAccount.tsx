@@ -11,6 +11,7 @@ import GlobalContext from '../../GlobalContext'
 import ProfilePicture from '../components/ProfilePicture'
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
 import BottomNavigationBar from '../components/BottomNavigationBar'
+import { useTranslation } from 'react-i18next'
 
 const SettingsAccount = ({navigation}: any) => {
 
@@ -18,7 +19,7 @@ const SettingsAccount = ({navigation}: any) => {
     const user = auth.currentUser;
     const email = user?.email;
 
-    const { username, setUsername, profilePicture, setProfilePicture } = useContext(GlobalContext);
+    const { username, setUsername } = useContext(GlobalContext);
 
     const logOut = () => {
 
@@ -119,7 +120,7 @@ const SettingsAccount = ({navigation}: any) => {
         );
     }
 
-    const button = (title: String, icon: any, background: string, iconColor: any, iconSize: number, action: any) => {
+    const button = (title: any, icon: any, background: string, iconColor: any, iconSize: number, action: any) => {
         return (
             <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={action}>
                 <View style={tw`flex flex-row justify-between`}>
@@ -142,6 +143,8 @@ const SettingsAccount = ({navigation}: any) => {
             </Pressable>
         )
     }
+
+    const {t} = useTranslation();
 
     return (
         <SafeAreaView style={tw`w-full h-full bg-white`}>
@@ -166,10 +169,10 @@ const SettingsAccount = ({navigation}: any) => {
                 <View style={tw`h-[2px] w-[94%] bg-gray-300 rounded-full mx-2`}></View>
 
                 {/* Icons */}
-                {button('Изход', 'log-out-outline', 'blue-300', '#3b82f6', 28, () => logOut())}
-                {button('Смяна на име', 'text-outline', 'yellow-300', '#eab308', 24, () => changeUsername())}
-                {button('Изтриване на акаунт', 'close-outline', 'red-300', '#ef4444', 34, () => deleteAccount(email, user))}
-                {button('Промяна на парола', 'create-outline', 'green-300', '#22c55e', 26, () => changePassword(email, user, auth))}
+                {button(t('log-out'), 'log-out-outline', 'blue-300', '#3b82f6', 28, () => logOut())}
+                {button(t('change-username'), 'text-outline', 'yellow-300', '#eab308', 24, () => changeUsername())}
+                {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, () => deleteAccount(email, user))}
+                {button(t('change-password'), 'create-outline', 'green-300', '#22c55e', 26, () => changePassword(email, user, auth))}
                
             </View>
 

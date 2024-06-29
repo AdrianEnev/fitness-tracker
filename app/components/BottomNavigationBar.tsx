@@ -30,7 +30,9 @@ const BottomNavigationBar = (
         saveCustomFood,
         displayFoods,
         workout,
-        viewWorkoutNumberOfExercises
+        viewWorkoutNumberOfExercises,
+        friendsListUsername,
+        removeFriend
     }: 
     {
         currentPage: string, navigation: any,
@@ -40,7 +42,9 @@ const BottomNavigationBar = (
         saveCustomFood?: () => void,
         displayFoods?: () => void,
         workout?: any,
-        viewWorkoutNumberOfExercises?: number
+        viewWorkoutNumberOfExercises?: number,
+        friendsListUsername?: string,
+        removeFriend?: () => void
     }
 ) => {
 
@@ -142,6 +146,26 @@ const BottomNavigationBar = (
                     
                     <Pressable onPress={forwardButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
                         <Ionicons name='chevron-forward-circle-outline' color='#3b82f6' size={72}/>
+                    </Pressable>
+                </View>
+            ) : currentPage === 'FriendsList' ? (
+                <View style={tw`flex flex-row justify-around w-full items-center`}>
+                    <Pressable onPress={() => navigation.navigate('Приятели-Покани-Изпратени', {username: friendsListUsername})}>
+                        <Ionicons name="navigate-circle-outline" size={72} color="#ef4444"/>
+                    </Pressable>
+
+                    <Pressable onPress={() => navigation.navigate('Приятели-Добави', {username: friendsListUsername})}>
+                        <Ionicons name="add-circle-outline" size={72} color="#ef4444"/>
+                    </Pressable>
+
+                    <Pressable onPress={() => navigation.navigate('Приятели-Покани-Получени', {username: friendsListUsername})}>
+                        <Ionicons name="notifications-circle-outline" size={72} color="#ef4444"/>
+                    </Pressable>
+                </View>
+            ) : currentPage === "ViewFriendProfile" ? (
+                <View>
+                    <Pressable onPress={removeFriend}>
+                        <Ionicons name='trash-outline' color='#ef4444' size={64}/>
                     </Pressable>
                 </View>
             ) : (

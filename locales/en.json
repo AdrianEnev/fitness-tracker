@@ -3,6 +3,7 @@
     "calories": "Calories",
     "protein": "Protein",
     "carbs": "Carbs",
+    "carbs-short": "Carbs",
     "fat": "Fat",
     "account": "Account",
     "set": "Set",
@@ -46,6 +47,23 @@
     "good-evening": "Good Evening",
     "login": "Login",
     "register": "Register",
-    "slogan": "Log your workouts and diet & connect with friends"
+    "slogan": "Log your workouts and diet & connect with friends",
+    "forgot-password": "Forgot password?",
+    "password": "Password",
+    "email": "Email",
+    "example-email": "example@gmail.com",
+    "enter-password": "Enter your password",
+    "confirm-password": "Confirm password",
+    "username": "Username",
+    "new-password": "New Password",
+    "change-password": "Change Password",
+    "send": "Send",
+    "settings": "Settings",
+    "friends": "Friends",
+    "stats": "Stats",
+    "log-out": "Log out",
+    "change-username": "Change Username",
+    "delete-account": "Delete Account",
+    "set-daily-goals": "Set your daily goals:"
 
 }

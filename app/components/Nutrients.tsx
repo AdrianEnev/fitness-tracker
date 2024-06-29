@@ -4,6 +4,7 @@ import tw from 'twrnc'
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import GlobalContext from '../../GlobalContext';
 import getCurrentDate from '../use/useGetCurrentDate';
+import { t } from 'i18next';
 
 type RenderNutrientsProps = {
     currentNutrients: any;
@@ -93,7 +94,7 @@ const Nutrients = ({ currentNutrients, navigation, currentPage, formattedDate, r
                 <View style={tw`flex flex-row justify-between`}>
 
                     <View style={tw`flex flex-col`}>
-                        <Text style={tw`text-2xl font-medium`}>Калории</Text>
+                        <Text style={tw`text-2xl font-medium`}>{t('calories')}</Text>
                         <Text style={tw`text-lg text-gray-600 mt-[-5px]`}>{regularDate}</Text>
                     </View>
 
@@ -124,9 +125,9 @@ const Nutrients = ({ currentNutrients, navigation, currentPage, formattedDate, r
 
                 <View style={tw`flex flex-row gap-x-3 mt-1`}>
                         
-                    {progressElement(currentProtein, goalProtein, 'Протеин')}
-                    {progressElement(currentCarbs, goalCarbs, 'Въглех.  ')}
-                    {progressElement(currentFat, goalFat, 'Мазнини')}
+                    {progressElement(currentProtein, goalProtein, t('protein'))}
+                    {progressElement(currentCarbs, goalCarbs, t('carbs-short'))}
+                    {progressElement(currentFat, goalFat, t('fat'))}
 
                 </View>
                 

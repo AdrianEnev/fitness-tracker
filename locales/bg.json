@@ -3,6 +3,7 @@
     "calories": "Калории",
     "protein": "Протеин",
     "carbs": "Въглехидрати",
+    "carbs-short": "Въглех.",
     "fat": "Мазнини",
     "account": "Профил",
     "set": "Сет",
@@ -46,6 +47,23 @@
     "good-evening": "Добър Вечер",
     "login": "Вход",
     "register": "Регистрация",
-    "slogan": "Не знам още какъв слоган да сложа на български"
+    "slogan": "Не знам още какъв слоган да сложа на български",
+    "forgot-password": "Забравена парола?",
+    "password": "Парола",
+    "email": "Имейл",
+    "example-email": "пример@gmail.com",
+    "enter-password": "Въведи парола",
+    "confirm-password": "Потвърди парола",
+    "username": "Потребителско име",
+    "new-password": "Нова парола",
+    "change-password": "Смяна на парола",
+    "send": "Изпрати",
+    "settings": "Настройки",
+    "friends": "Приятели",
+    "stats": "Статистика",
+    "log-out": "Изход",
+    "change-username": "Смяна на име",
+    "delete-account": "Изтриване на акаунт",
+    "set-daily-goals": "Задай дневните си цели:"
 
 }

@@ -112,12 +112,14 @@ const AddFriends = ({route, navigation}: any) => {
 
                 </View>
 
+                <Text style={tw`text-xl font-medium text-center mt-2`}>Suggestions:</Text>
+
                 {searchingAnimation ? (
                     <View style={tw`flex items-center mt-3`}>
                         <ActivityIndicator size="large" color="#007AFF" />
                     </View>
                 ) : suggestedFriends.length === 0 ? (
-                    <Text style={tw`text-lg font-medium text-center mt-3`}>празно</Text>
+                    <Text style={tw`text-lg font-medium text-center mt-3`}>none</Text>
                 ) : (
                     <FlatList 
                         data={suggestedFriends}
@@ -129,9 +131,10 @@ const AddFriends = ({route, navigation}: any) => {
                                 await sendFriendRequest(item, username, navigation)
                                 setFriendRequestButtonDisabled(false);
                             }}>
-                                <View style={tw`w-full h-14 bg-white p-3 mb-2 mt-3`}>
+                                <View style={tw`w-[94%] h-14 bg-white mb-2 mt-3 mx-3 rounded-xl flex flex-row justify-between items-center px-2`}>
                                     
                                     <Text style={tw`text-lg font-medium`}>{item.username}</Text>
+                                    <Ionicons name='add-circle-outline' size={42} color='#16a34a'/>
 
                                 </View>
                             </Pressable>

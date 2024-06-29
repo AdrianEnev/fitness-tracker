@@ -65,7 +65,7 @@ const Setup = ({route}: any) => {
 
                     <Text style={tw`text-3xl font-medium text-center my-2 mt-5`}>Welcome to Lunge!</Text>
 
-                    <Text style={tw`text-2xl font-medium text-center mt-[-4px]`}>Set your daily goals:</Text>
+                    <Text style={tw`text-2xl font-medium text-center mt-[-4px]`}>{t('set-daily-goals')}</Text>
 
                     <View style={tw`flex flex-row flex-wrap w-full gap-x-3 gap-y-3 mt-6`}>
                     
@@ -74,6 +74,8 @@ const Setup = ({route}: any) => {
                             <TextInput 
                                 style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] pb-[6px] pl-3 text-white font-medium text-xl`} 
                                 keyboardType='number-pad' 
+                                placeholder='Kcal'
+                                placeholderTextColor='#d1d5db'
                                 maxLength={4} 
                                 onChangeText={setCalories} 
                                 
@@ -85,6 +87,8 @@ const Setup = ({route}: any) => {
                             <TextInput 
                                 style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] pb-[6px] pl-3 text-white font-medium text-xl`} 
                                 keyboardType='number-pad' 
+                                placeholder={t('grams')}
+                                placeholderTextColor='#d1d5db'
                                 maxLength={4} 
                                 onChangeText={setProtein} 
                             />
@@ -95,6 +99,8 @@ const Setup = ({route}: any) => {
                             <TextInput 
                                 style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] pb-[6px] pl-3 text-white font-medium text-xl`} 
                                 keyboardType='number-pad' 
+                                placeholder={t('grams')}
+                                placeholderTextColor='#d1d5db'
                                 maxLength={4} 
                                 onChangeText={setCarbs} 
                             />
@@ -105,6 +111,8 @@ const Setup = ({route}: any) => {
                             <TextInput 
                                 style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] pb-[6px] pl-3 text-white font-medium text-xl`} 
                                 keyboardType='number-pad' 
+                                placeholder={t('grams')}
+                                placeholderTextColor='#d1d5db'
                                 maxLength={4} 
                                 onChangeText={setFat} 
                             />

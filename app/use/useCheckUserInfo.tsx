@@ -5,10 +5,6 @@ export const checkUserDocument = async (userDocRef: any, user: any, userInfoColl
         const userDocSnapshot = await getDoc(userDocRef);
         if (!userDocSnapshot.exists()) {
             await setDoc(userDocRef, { userID: user.uid, lastLogin: new Date(), registrationDate: new Date() });
-
-            addDoc(userInfoCollectionRef, {
-                status: 'online',
-            });
         } else {
             await setDoc(userDocRef, { userID: user.uid, lastLogin: new Date() }, { merge: true });
         }

@@ -92,23 +92,25 @@ const Register = () => {
         setConfirmPasswordCharacters(65 - confirmPassword.length);
 
     }, [password, confirmPassword])
+    
+    const { t } = useTranslation();
 
     return (
         <SafeAreaView style={tw`flex-1 bg-white`}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={tw`flex-1 mx-5`}>
 
-                    <Text style={tw`text-4xl text-center text-[#fd1c47] font-bold my-2`}>Регистрация</Text>
+                    <Text style={tw`text-4xl text-center text-[#fd1c47] font-bold my-2`}>{t('register')}</Text>
 
                     <KeyboardAvoidingView behavior='padding'>
                         
                         <View style={tw`flex-col gap-y-2 my-5`}>
 
                             <View style={tw`mb-2`}>
-                                <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>Имейл</Text>
+                                <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('email')}</Text>
                                 <TextInput 
                                     style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
-                                    placeholder='пример@gmail.com'
+                                    placeholder={t('example-email')}
                                     onChangeText={(text: string) => setEmail(text)} 
                                     value={email} 
                                     autoCapitalize='none'
@@ -117,10 +119,10 @@ const Register = () => {
                             </View>
 
                             <View style={tw`mb-2`}>
-                                <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>Потребителско име</Text>
+                                <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('username')}</Text>
                                 <TextInput 
                                     style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
-                                    placeholder='Гошо Иванов'
+                                    placeholder={t('username')}
                                     onChangeText={(text: string) => setUsername(text)} 
                                     value={username} 
                                     autoCapitalize='none' 
@@ -131,13 +133,13 @@ const Register = () => {
                             <View style={tw`mb-2`}>
                                 
                                 <View style={tw`flex flex-row justify-between`}>
-                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>Парола</Text>
+                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('password')}</Text>
                                     <Text style={tw`font-medium text-gray-400 mb-1 mr-2`}>{passwordCharacters}</Text>
                                 </View>
 
                                 <TextInput 
                                     style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
-                                    placeholder='Въведи парола'
+                                    placeholder={t('password')}
                                     onChangeText={(text: string) => setPassword(text)} 
                                     value={password} 
                                     autoCapitalize='none'
@@ -148,13 +150,13 @@ const Register = () => {
                             <View style={tw`mb-2`}>
 
                                 <View style={tw`flex flex-row justify-between`}>
-                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>Потвърди парола</Text>
+                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('confirm-password')}</Text>
                                     <Text style={tw`font-medium text-gray-400 mb-1 mr-2`}>{confirmPasswordCharacters}</Text>
                                 </View>
 
                                 <TextInput 
                                     style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
-                                    placeholder='Потвърди парола'
+                                    placeholder={t('confirm-password')}
                                     onChangeText={(text: string) => setConfirmPassword(text)} 
                                     value={confirmPassword} 
                                     autoCapitalize='none'
@@ -168,7 +170,7 @@ const Register = () => {
                                     signUp()
                                 }}>
 
-                                <Text style={tw`text-2xl text-white`}>Регистрация</Text>
+                                <Text style={tw`text-2xl text-white`}>{t('register')}</Text>
 
                             </TouchableOpacity>
 

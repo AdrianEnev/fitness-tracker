@@ -1,6 +1,8 @@
 import { View, Text, Pressable } from 'react-native';
 import React, { useEffect, useState } from 'react';
 import tw from 'twrnc';
+import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 const HorizontalCalendar = ({navigation}: any) => {
 
@@ -18,22 +20,31 @@ const HorizontalCalendar = ({navigation}: any) => {
     };
 
     const formatDate = (date: Date, format: string) => {
-
-        const weekDaysBG = ['Нед', 'Пон', 'Вт', 'Ср', 'Чет', 'Пет', 'Съб'];
-        //const weekDaysEN = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-
+        let weekDays;
+        let monthNames;
+    
+        if (currentLanguage === 'bg') {
+            weekDays = ['Нед', 'Пон', 'Вт', 'Ср', 'Чет', 'Пет', 'Съб'];
+            monthNames = ['Яну', 'Фев', 'Мар', 'Апр', 'Май', 'Юни', 'Юли', 'Авг', 'Сеп', 'Окт', 'Ное', 'Дек'];
+        } else { // Default to English if not Bulgarian
+            weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        }
+    
         switch (format) {
             case 'ddd':
-                // Assuming this returns the day of the week in a short format (e.g., Mon, Tue)
                 const dayOfWeek = date.getDay();
-                return weekDaysBG[dayOfWeek];
+                return weekDays[dayOfWeek];
             case 'DD.MM':
-                // Manually constructing the date string in DD.MM format
                 const day = date.getDate().toString().padStart(2, '0');
-                const month = (date.getMonth() + 1).toString().padStart(2, '0'); // getMonth() is 0-indexed
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
                 return `${day}.${month}`;
+            case 'DD MMM':
+                const dayOfMonth = date.getDate().toString().padStart(2, '0');
+                const monthName = monthNames[date.getMonth()];
+                return `${dayOfMonth} ${monthName}`;
             default:
-                return date.toLocaleDateString('bg-BG');
+                return date.toLocaleDateString(currentLanguage);
         }
     };
 
@@ -48,6 +59,15 @@ const HorizontalCalendar = ({navigation}: any) => {
         const dates = getDatesRange();
         setDates(dates);
     }, [startDate]);
+
+    const [currentLanguage, setCurrentLanguage] = useState('');
+
+    useEffect(() => {
+        const currentLang = i18next.language;
+        setCurrentLanguage(currentLang);
+    }, []);
+
+    const {t} = useTranslation();
 
     return (
         <View>

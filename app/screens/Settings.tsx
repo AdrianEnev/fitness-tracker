@@ -14,13 +14,14 @@ import ProfilePicture from '../components/ProfilePicture';
 
 const Settings = ({navigation}: any) => {
 
+    const { friendRequestsNumber } = useContext(GlobalContext);
+
     // opciq za smenq na ezika koqto zadava neshto v bazata danni i ot tam se izvlicha ezikut za cqlata aplikaciq
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
     const [selectedLanguage, setSelectedLanguage] = useState('en');
-    const { friendRequestsNumber, profilePicture, setProfilePicture, username } = useContext(GlobalContext);
 
     const { t } = useTranslation();
 
@@ -92,16 +93,26 @@ const Settings = ({navigation}: any) => {
         <View style={tw`h-full`}>
 
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
-                <Text style={tw`text-4xl font-medium text-black m-3`}>Настройки</Text>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>{t('settings')}</Text>
             </View>
 
             <View style={tw`bg-white h-full`}>
 
-                {button('Настройки-Акаунт', 'person-outline', '#3b82f6', 'blue-300', 'Профил')}
-                {button('Настройки-Макронутриенти', 'flame-outline', '#d97706', 'orange-300', 'Макронутриенти')}
-                {button('Приятели', 'people-outline', '#22c55e', 'green-300', 'Приятели')}
-                {button('Настройки-Статистика', 'stats-chart-outline', '#eab308', 'yellow-300', 'Статистика')}
-                {button('Запазени-Тренировки', 'cloud-outline', '#ec4899', 'pink-300', 'Запазени Тренировки')}
+                {button('Настройки-Акаунт', 'person-outline', '#3b82f6', 'blue-300', t('account'))}
+                {button('Настройки-Макронутриенти', 'flame-outline', '#d97706', 'orange-300', t('macronutrients'))}
+
+                <View>
+                    {button('Приятели', 'people-outline', '#22c55e', 'green-300', t('friends'))}
+                    {friendRequestsNumber >= "1" && 
+                        <View style={tw`w-6 h-6 bg-red-500 rounded-full absolute top-1 left-9 flex justify-center items-center`}>
+                            <Text style={tw`text-white`}>{friendRequestsNumber}</Text>
+                        </View>
+                    }
+                </View>
+
+
+                {button('Настройки-Статистика', 'stats-chart-outline', '#eab308', 'yellow-300', t('stats'))}
+                {button('Запазени-Тренировки', 'cloud-outline', '#ec4899', 'pink-300', t('saved-workouts'))}
 
 
             </View>

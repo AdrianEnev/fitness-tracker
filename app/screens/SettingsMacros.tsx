@@ -6,6 +6,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import i18next from '../../services/i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import BottomNavigationBar from '../components/BottomNavigationBar';
+import { useTranslation } from 'react-i18next';
 
 const Settings = ({navigation}: any) => {
 
@@ -72,9 +73,11 @@ const Settings = ({navigation}: any) => {
         </View>
     );
 
+    const {t} = useTranslation();
+
     return (
         <SafeAreaView style={tw`w-full h-full bg-white`}>
-            <Text style={tw`text-2xl font-medium text-center mt-1 mb-4`}>Цели за Деня</Text>
+            <Text style={tw`text-2xl font-medium text-center mt-1 mb-4`}>{t('set-daily-goals')}</Text>
 
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={tw`flex-1`}>
@@ -88,7 +91,7 @@ const Settings = ({navigation}: any) => {
                         style={tw`w-[94.5%] h-14 bg-[#fd1c47] shadow-md rounded-2xl flex justify-center items-center mx-3 mt-3`}
                         onPress={saveNutrients}
                     >
-                        <Text style={tw`text-2xl text-white`}>Запазване</Text>
+                        <Text style={tw`text-2xl text-white`}>{t('save')}</Text>
                     </TouchableOpacity>
                 </View>
             </TouchableWithoutFeedback>
