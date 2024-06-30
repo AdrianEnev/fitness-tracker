@@ -14,26 +14,33 @@ const RenderAddedFood = ({ item, onDelete }: { item: any, onDelete: (item: any) 
     const protein = Number(item?.protein ?? 0).toFixed(0);
     const carbs = Number(item?.carbs ?? 0).toFixed(0);
     const fat = Number(item?.fat ?? 0).toFixed(0);
-    const date = item?.date ? item.date.toDate().toLocaleTimeString() : '';
+    const dateOptions = { hour: '2-digit', minute: '2-digit' };
+    const date = item?.date ? item.date.toDate().toLocaleTimeString([], dateOptions) : '';
+
+    const getInitials = (name: string) => {
+        return name.split(' ').map(word => word[0]).join('').substring(0, 3).toUpperCase();
+    }
 
     return (
 
-        <View style={tw`bg-white shadow-md rounded-lg w-full h-[200px] my-2 pt-2 pl-3`}>
+        <View style={tw`bg-[#fd2e5b] shadow-md rounded-2xl w-full h-full my-2 pt-2 pl-3`}>
 
-            <View style={tw`flex flex-row gap-x-3`}>
-                <Text style={tw`text-black text-lg`}>{item.title}  -</Text>
-                <Text style={tw`text-black text-lg pr-3`}>{item.grams} {t('grams')}  -</Text>
-                <Text style={tw`text-black text-lg`}>{date}</Text>
+            <View style={tw`flex flex-row h-[30%]`}>
+                
+                {/* Logo */}
+                <View style={tw`h-full py-2`}>
+                    <View style={tw`w-16 h-16 rounded-lg bg-white flex items-center justify-center`}>
+                        <Text style={tw`text-3xl font-medium text-black`}>{getInitials(item.title)}</Text>
+                    </View>
+                </View>
+
+                {/* Food Name + Grams */}
+                <View style={tw`flex flex-col ml-2`}>
+                    <Text style={tw`text-white text-2xl font-medium`}>{item.title}</Text>
+                    <Text style={tw`text-white text-lg font-medium`}>{item.grams} {t('grams')}</Text>
+                </View>
+
             </View>
-            
-            <Text style={tw`text-black text-lg`}>{calories} {t('calories')}</Text>
-            <Text style={tw`text-black text-lg`}>{protein}г. {t('protein')}</Text>
-            <Text style={tw`text-black text-lg`}>{carbs}г. {t('carbs')}</Text>
-            <Text style={tw`text-black text-lg`}>{fat}г. {t('fat')}</Text>
-            
-
-            <Button title={t('delete')} onPress={() => onDelete(item)}/>
-
         </View>
     )
 }

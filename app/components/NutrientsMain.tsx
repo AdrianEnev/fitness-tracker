@@ -9,12 +9,11 @@ import { t } from 'i18next';
 type RenderNutrientsProps = {
     currentNutrients: any;
     navigation: any;
-    currentPage: string;
     formattedDate: any;
     regularDate: any
 };
 
-const Nutrients = ({ currentNutrients, navigation, currentPage, formattedDate, regularDate}: RenderNutrientsProps) => {
+const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate}: RenderNutrientsProps) => {
 
     const { goalNutrients } = useContext(GlobalContext);
     
@@ -84,12 +83,12 @@ const Nutrients = ({ currentNutrients, navigation, currentPage, formattedDate, r
     // key v animatedcircularprogress sluji da updateva stoinostta na fill zashtoto purvonachalno e 0 dokato ne se predade ot main kum nutrients
     return (
         <Pressable style={tw`mt-3 mx-2 w-full h-full`} onPress={() => {
-            if (currentPage == 'Main'){
-                navigation.navigate("Хранене-Ден", {date: formattedDate});
-            }
+            
+            navigation.navigate("Хранене-Ден", {date: formattedDate});
+           
         }}>
 
-            <View style={tw`${currentPage === 'Main' ? 'h-[33%] shadow-lg pt-2 pl-3 w-[96.5%]' : 'h-[31%] w-full px-1 mt-[-10px]'} bg-white rounded-lg`}>
+            <View style={tw`h-[33%] shadow-lg pt-2 pl-3 w-[96.5%] bg-white rounded-lg`}>
                 
                 <View style={tw`flex flex-row justify-between`}>
 

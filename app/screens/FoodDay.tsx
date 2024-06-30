@@ -10,7 +10,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Nutrients from '../components/Nutrients';
+import Nutrients from '../components/NutrientsFoodDay';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import getCurrentDate from '../use/useGetCurrentDate';
 
@@ -193,32 +193,53 @@ const FoodDay = ({route, navigation}: any) => {
     );
 
     const {t} = useTranslation();
+
+    const clearDay = async () => {
+        try {
+            const data = await getDocs(foodDayCollectionRef);
+            data.docs.forEach(async (doc) => {
+                await deleteDoc(doc.ref);
+            });
+
+            const updatedNutrients = {
+                calories: 0,
+                protein: 0,
+                carbs: 0,
+                fat: 0
+            };
+
+            await updateDoc(foodDayDocRef, updatedNutrients);
+            updateCurrentFoods();
+            updateCurrentNutrients();
+        } catch (err) {
+            console.error(err);
+        }
+    }
     
     return (
         <SafeAreaView style={tw`flex-1 bg-white`}>
 
-            <View style={tw`w-[99.2%]`}>
+            <View style={tw`w-full h-full flex flex-col`}>
 
                 <Nutrients 
                     currentNutrients={currentNutrients} 
                     navigation={navigation} 
                     regularDate={getDate()} 
                     formattedDate={date} 
-                    currentPage='FoodDay'
                 />
 
-            </View>
+                <View style={tw`mx-2 mt-5 w-[96%] h-[30%] bg-white rounded-lg`}>
 
-            <View style={tw`mx-2 mt-[-570px] w-[96%] h-[56%] bg-white rounded-lg`}>
+                    <FlatList 
+                        data={currentFoods}
+                        renderItem={({ item }) => <RenderAddedFood item={item} onDelete={() => handleDeleteFood(item)} />} 
+                        showsVerticalScrollIndicator={false} 
+                        ListEmptyComponent={
+                            <Text style={tw`text-xl font-medium text-center mt-2`}>{t('no-saved-foods')}</Text>
+                        }
+                    />
 
-                <FlatList 
-                    data={currentFoods}
-                    renderItem={({ item }) => <RenderAddedFood item={item} onDelete={() => handleDeleteFood(item)} />} 
-                    showsVerticalScrollIndicator={false} 
-                    ListEmptyComponent={
-                        <Text style={tw`text-xl font-medium text-center mt-2`}>{t('no-saved-foods')}</Text>
-                    }
-                />
+                </View>
 
             </View>
 
@@ -226,6 +247,7 @@ const FoodDay = ({route, navigation}: any) => {
                 currentPage='FoodDay' 
                 navigation={navigation} 
                 foodDayDate={date}
+                clearDay={clearDay}
             />
 
         </SafeAreaView>

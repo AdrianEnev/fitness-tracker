@@ -18,7 +18,7 @@ import getFriendRequests from '../use/useGetFriendRequestsRecieved';
 import GlobalContext from '../../GlobalContext';
 import HorizontalCalendar from '../components/HorizontalCalendar';
 import WorkoutFoodButtons from '../components/WorkoutFoodButtons';
-import Nutrients from '../components/Nutrients';
+import Nutrients from '../components/NutrientsMain';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import ProfilePicture from '../components/ProfilePicture';
 
@@ -167,7 +167,6 @@ const Main = ({navigation}: any) => {
                         navigation={navigation} 
                         formattedDate={currentFormattedDate} 
                         regularDate={getCurrentDate(true)} 
-                        currentPage='Main'
                     />
                     
                 </View>

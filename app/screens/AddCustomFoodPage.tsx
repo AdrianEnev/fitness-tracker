@@ -66,7 +66,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
 
     const saveFood = async () => {
 
-        if (!name || !calories || !protein || !carbs || !fat || !grams) {
+        if (!name) {
             return;
         }
 
@@ -130,7 +130,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
 
             <TextInput 
                 style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] px-3 pb-2 text-white font-medium text-xl`} 
-                keyboardType={title === t('food') ? 'default' : 'numeric'} 
+                keyboardType={title === t('food') ? 'default' : 'number-pad'} 
                 maxLength={title === t('food') ? 20 : 5} 
                 onChangeText={(text) => setNutrient(text, identifier)}
             />

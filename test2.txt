@@ -1,3 +1,16 @@
- <Pressable onPress={() => navigation.navigate("Тренировка-Добави")}>
-                    <Ionicons name="add-circle-outline" size={64} color="#ef4444"/>
-                </Pressable>
+<Text style={tw`text-white text-lg`}>{calories} {t('calories')}</Text>
+<Text style={tw`text-white text-lg`}>{protein}г. {t('protein')}</Text>
+<Text style={tw`text-white text-lg`}>{carbs}г. {t('carbs')}</Text>
+<Text style={tw`text-white text-lg`}>{fat}г. {t('fat')}</Text>
+
+
+<Button title={t('delete')} onPress={() => onDelete(item)}/>
+
+
+
+{/* Digital Clock */}
+<View style={tw`w-[30%] h-full ml-5 py-[10px]`}>
+    <View style={tw`w-full h-full bg-white rounded-2xl flex items-center justify-center`}>
+        <Text style={tw`text-black text-2xl font-medium`}>{date}ч.</Text>
+    </View>
+</View>

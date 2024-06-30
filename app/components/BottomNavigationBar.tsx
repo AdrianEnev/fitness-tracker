@@ -26,7 +26,7 @@ const BottomNavigationBar = (
         currentPage, navigation, 
         forwardButton, backButton,
         deleteSavedWorkout, toggleEndWorkoutModal,
-        foodDayDate,
+        foodDayDate, clearDay,
         saveCustomFood,
         displayFoods,
         workout,
@@ -39,7 +39,7 @@ const BottomNavigationBar = (
         currentPage: string, navigation: any,
         forwardButton?: () => void, backButton?: () => void
         deleteSavedWorkout?: () => void, toggleEndWorkoutModal?: () => void,
-        foodDayDate?: any,
+        foodDayDate?: any, clearDay?: () => void,
         saveCustomFood?: () => void,
         displayFoods?: () => void,
         workout?: any,
@@ -110,7 +110,7 @@ const BottomNavigationBar = (
                         <Ionicons name="add-circle-outline" size={72} color="#ef4444"/>
                     </Pressable>
 
-                    <Pressable onPress={() => console.log('delete all foods')} style={tw``}>
+                    <Pressable onPress={clearDay} style={tw``}>
                         <Ionicons name="refresh-circle-outline" size={72} color="#ef4444"/>
                     </Pressable>
 

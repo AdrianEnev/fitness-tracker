@@ -83,3 +83,6 @@
  - keyboardType='number-pad' 
 
  - aktivna trenirovka status
+
+ - delete profile picture when profile is deleted or handle profile pictures differently
+ - be careful of file upload limit
