@@ -121,9 +121,12 @@ const FoodDay = ({route, navigation}: any) => {
         }, [])
     );
 
-    const {t} = useTranslation();
-
     const clearDay = async () => {
+
+        if (currentFoods.length === 0) {
+            return;
+        }
+
         try {
             const data = await getDocs(foodDayCollectionRef);
             data.docs.forEach(async (doc) => {
@@ -145,6 +148,8 @@ const FoodDay = ({route, navigation}: any) => {
         }
     }
     
+    const {t} = useTranslation();
+
     return (
         <SafeAreaView style={tw`flex-1 bg-white`}>
 

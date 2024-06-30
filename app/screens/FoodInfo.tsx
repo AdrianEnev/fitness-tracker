@@ -29,12 +29,13 @@ const FoodInfo = ({route}: any) => {
     return (
         <SafeAreaView style={tw`h-full w-full bg-white`}>
             <Text style={tw`text-black text-2xl font-medium`}>{food.title}</Text>
+            <Text style={tw`text-black text-xl font-medium`}>{date}ч.</Text>
             <Text>{calories} fat</Text>
             <Text>{protein} fat</Text>
             <Text>{carbs} fat</Text>
             <Text>{fat} fat</Text>
             <Text>{food.grams} grams</Text>
-            <Text style={tw`text-white text-xl font-medium`}>{date}ч.</Text>
+            
 
 
             <BottomNavigationBar currentPage='FoodInfo' navigation={navigation} deleteFood={removeFood}/>

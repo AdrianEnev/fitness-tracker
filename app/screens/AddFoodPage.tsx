@@ -5,7 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlatList } from 'react-native-gesture-handler';
 import { addDoc, collection, doc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
-import { Food } from './FoodDay';
+import { Food } from '../../interfaces';
 import getNutrients from '../use/useGetNutrients';
 import { useTranslation } from 'react-i18next';
 import BottomNavigationBar from '../components/BottomNavigationBar';
@@ -20,6 +20,7 @@ const AddFoodPage = ({route, navigation}: any) => {
     const [searchQuery, setSearchQuery] = useState('');
     const [grams, setGrams] = useState('');
     const [loading, setLoading] = useState(false);
+    const [noResults, setNoResults] = useState(false);
 
     // izpolzva se za da predodvrati spamene pri dobavqne na hrana
     const [itemAdded, setItemAdded] = useState(false);
@@ -39,13 +40,30 @@ const AddFoodPage = ({route, navigation}: any) => {
         fat: number | undefined; 
     }[] | undefined>([]);
 
+
     const displayFoods = async () => {
 
+        setNoResults(false);
+        setFoods([]);
         setLoading(true);
+
+        if (!searchQuery) {
+            setLoading(false);
+            return;
+        }
+
+        if (grams === '0' || grams === '') {
+            setGrams('100');
+        }
 
         const results = await getNutrients(searchQuery, grams);
         
         setFoods(results);
+        
+        if (results.length === 0) {
+            setNoResults(true);
+        }
+
         setLoading(false);
         
     }
@@ -134,7 +152,7 @@ const AddFoodPage = ({route, navigation}: any) => {
 
         return (
 
-            <Pressable style={tw`bg-blue-500 w-full min-h-52 my-1 pt-2 pl-3 rounded-xl`} onPress={() => addItem(item)}>
+            <Pressable style={tw`bg-[#fc2d42] w-full min-h-43 my-1 pt-2 pl-3 rounded-xl`} onPress={() => addItem(item)}>
 
                 <View style={tw`flex flex-row justify-between`}>
                     <Text style={tw`text-white text-lg`}>{foodTitle}</Text>
@@ -150,20 +168,26 @@ const AddFoodPage = ({route, navigation}: any) => {
         )
     }
 
+    const clearSearchList = () => {
+        setFoods([]);
+        setSearchQuery('');
+        setGrams('');
+    }
+
     return (
         <SafeAreaView style={tw`bg-white h-full w-full`}>
 
             <View style={tw`flex flex-row justify-between mt-4 mx-2`}>
 
                 <TextInput
-                    style={tw`text-2xl w-[200px] h-16 bg-blue-500 text-white rounded-lg p-3`}
+                    style={tw`w-[75%] h-13 bg-white text-black font-medium text-lg shadow-md rounded-xl pl-4 pb-2 z-10`}
                     maxLength={20}
                     placeholder={t('food')}
                     value={searchQuery}
                     onChangeText={setSearchQuery}
                 />
                 <TextInput
-                    style={tw`text-2xl w-[100px] h-16 bg-blue-500 text-white rounded-lg p-3 ml-2`}
+                    style={tw`w-[20%] h-13 bg-white text-black font-medium text-lg shadow-md rounded-xl text-center pb-2 z-10`}
                     keyboardType='number-pad'
                     placeholder={t('grams')}
                     maxLength={4}
@@ -176,12 +200,8 @@ const AddFoodPage = ({route, navigation}: any) => {
             <View style={tw`mt-2 mx-3 w-[94.5%] h-[80%] mb-5`}>
                 <FlatList data={foods} renderItem={({item}) => renderSearchedFoods(item)} showsVerticalScrollIndicator={false}/>
             </View>
-
-            {loading && 
-                <ActivityIndicator size="large" color="blue" style={tw`flex items-center justify-center flex-1`}/>
-            }
-
-            <BottomNavigationBar currentPage='AddFoodPage' navigation={navigation} displayFoods={displayFoods}/>
+           
+            <BottomNavigationBar currentPage='AddFoodPage' navigation={navigation} displayFoods={displayFoods} clearSearchFoodSuggestionList={clearSearchList}/>
 
            
         </SafeAreaView>

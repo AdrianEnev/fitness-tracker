@@ -34,7 +34,8 @@ const BottomNavigationBar = (
         friendsListUsername,
         removeFriend,
         addSetButton, addWorkoutButton,
-        deleteFood
+        deleteFood,
+        clearSearchFoodSuggestionList
     }: 
     {
         currentPage: string, navigation: any,
@@ -48,7 +49,8 @@ const BottomNavigationBar = (
         friendsListUsername?: string,
         removeFriend?: () => void,
         addSetButton?: () => void, addWorkoutButton?: () => void,
-        deleteFood?: () => void
+        deleteFood?: () => void,
+        clearSearchFoodSuggestionList?: () => void
     }
 ) => {
 
@@ -112,7 +114,7 @@ const BottomNavigationBar = (
                         <Ionicons name="add-circle-outline" size={72} color="#ef4444"/>
                     </Pressable>
 
-                    <Pressable onPress={clearDay} style={tw``}>
+                    <Pressable onPress={clearDay}>
                         <Ionicons name="refresh-circle-outline" size={72} color="#ef4444"/>
                     </Pressable>
 
@@ -127,10 +129,14 @@ const BottomNavigationBar = (
                     </Pressable>
                 </View>
             ) : currentPage === "AddFoodPage" ? (
-                <View style={tw`flex items-center justify-center`}>
+                <View style={tw`flex flex-row justify-around w-full`}>
+                    <Pressable onPress={clearSearchFoodSuggestionList}>
+                        <Ionicons name="refresh-circle-outline" size={72} color="#ef4444"/>
+                    </Pressable>
+
                     <Pressable onPress={displayFoods}>
                         <Ionicons name="search-circle-outline" size={72} color="#ef4444"/>
-                    </Pressable>
+                    </Pressable>  
                 </View>
             ) : currentPage === 'Workouts' ? (
                 <View style={tw`flex flex-row justify-around items-center w-full h-full`}>

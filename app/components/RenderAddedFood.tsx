@@ -18,7 +18,7 @@ const RenderAddedFood = ({item, navigation}: any) => {
 
     return (
 
-        <Pressable style={tw`bg-[#fd2e5b] shadow-md rounded-2xl w-full h-24 my-2 pt-2 pl-3 flex flex-row justify-between`}
+        <Pressable style={tw`bg-[#fc2d42] shadow-md rounded-2xl w-full h-24 my-2 pt-2 pl-3 flex flex-row justify-between`}
             onPress={() => navigation.navigate("Храна-Подробности", {food: item, date: date, unformattedDate: item.date})}
         >
 
