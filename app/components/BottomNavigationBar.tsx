@@ -33,7 +33,8 @@ const BottomNavigationBar = (
         viewWorkoutNumberOfExercises,
         friendsListUsername,
         removeFriend,
-        addSetButton, addWorkoutButton
+        addSetButton, addWorkoutButton,
+        deleteFood
     }: 
     {
         currentPage: string, navigation: any,
@@ -46,7 +47,8 @@ const BottomNavigationBar = (
         viewWorkoutNumberOfExercises?: number,
         friendsListUsername?: string,
         removeFriend?: () => void,
-        addSetButton?: () => void, addWorkoutButton?: () => void
+        addSetButton?: () => void, addWorkoutButton?: () => void,
+        deleteFood?: () => void
     }
 ) => {
 
@@ -175,6 +177,12 @@ const BottomNavigationBar = (
             ) : currentPage === "ViewFriendProfile" ? (
                 <View>
                     <Pressable onPress={removeFriend}>
+                        <Ionicons name='trash-outline' color='#ef4444' size={64}/>
+                    </Pressable>
+                </View>
+            ) : currentPage === "FoodInfo" ? (
+                <View>
+                    <Pressable onPress={deleteFood}>
                         <Ionicons name='trash-outline' color='#ef4444' size={64}/>
                     </Pressable>
                 </View>

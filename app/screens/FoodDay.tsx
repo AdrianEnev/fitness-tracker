@@ -13,17 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import Nutrients from '../components/NutrientsFoodDay';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import getCurrentDate from '../use/useGetCurrentDate';
-
-export interface Food {
-    title: string;
-    date?: any;
-    calories?: number;
-    protein?: number;
-    carbs?: number;
-    fat?: number;
-    grams?: number;
-    id: any;
-}
+import { Food } from '../../interfaces';
 
 const FoodDay = ({route, navigation}: any) => {
 
@@ -112,67 +102,6 @@ const FoodDay = ({route, navigation}: any) => {
         }
     }
 
-    const handleDeleteFood = async (item: any) => {
-        
-        try {
-            // Iztriva natisnatata hrana
-            const foodDocRef = doc(foodDayCollectionRef, item.id);
-            await deleteDoc(foodDocRef);
-    
-            // aktualizira lista s hrani sled iztrivane na 1 ot tqh
-            await updateCurrentFoods();
-
-            // aktualizira dannite za makronutrienti
-            const data = await getDocs(foodDaysCollectionRef);
-            const matchingDoc = data.docs.find((doc) => doc.id === `${date.day}-${date.month}-${date.year}`);
-            if (matchingDoc) {
-                
-                try {
-                    const data = await getDocs(foodDayCollectionRef);
-        
-                    if (data.empty) {
-                        const updatedNutrients = {
-                            calories: 0,
-                            protein: 0,
-                            carbs: 0,
-                            fat: 0
-                        };
-            
-                        await updateDoc(foodDayDocRef, updatedNutrients);
-                    }
-        
-                    let totalCalories = 0;
-                    let totalProtein = 0;
-                    let totalCarbs = 0;
-                    let totalFat = 0;
-        
-                    data.forEach((doc) => {
-                        const food = doc.data() as Food;
-                        totalCalories += food.calories || 0;
-                        totalProtein += food.protein || 0;
-                        totalCarbs += food.carbs || 0;
-                        totalFat += food.fat || 0;
-                    });
-        
-                    const updatedNutrients = {
-                        calories: totalCalories,
-                        protein: totalProtein,
-                        carbs: totalCarbs,
-                        fat: totalFat
-                    };
-        
-                    await updateDoc(foodDayDocRef, updatedNutrients);
-                    updateCurrentNutrients();
-                } catch (err) {
-                    console.error(err);
-                }
-            }
-            
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
     // runs when the screen is opened
     useFocusEffect(
         React.useCallback(() => {
@@ -232,7 +161,7 @@ const FoodDay = ({route, navigation}: any) => {
 
                     <FlatList 
                         data={currentFoods}
-                        renderItem={({ item }) => <RenderAddedFood item={item} onDelete={() => handleDeleteFood(item)} />} 
+                        renderItem={({ item }) => <RenderAddedFood item={item} navigation={navigation} />} 
                         showsVerticalScrollIndicator={false} 
                         ListEmptyComponent={
                             <Text style={tw`text-xl font-medium text-center mt-2`}>{t('no-saved-foods')}</Text>

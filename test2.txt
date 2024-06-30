@@ -2,6 +2,7 @@
 <Text style={tw`text-white text-lg`}>{protein}г. {t('protein')}</Text>
 <Text style={tw`text-white text-lg`}>{carbs}г. {t('carbs')}</Text>
 <Text style={tw`text-white text-lg`}>{fat}г. {t('fat')}</Text>
+<Text style={tw`text-white text-lg font-medium`}>{item.grams} {t('grams')}</Text>
 
 
 <Button title={t('delete')} onPress={() => onDelete(item)}/>

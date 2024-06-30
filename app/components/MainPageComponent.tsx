@@ -19,6 +19,7 @@ import FriendRequestsRecieved from "../screens/FriendRequestsRecieved";
 import ViewSavedWorkout from "../screens/ViewSavedWorkout";
 import Statistics from "../screens/Statistics";
 import ViewFriendProfile from "../screens/ViewFriendProfile";
+import FoodInfo from "../screens/FoodInfo";
 
 const Stack = createNativeStackNavigator();
 /* 
@@ -133,6 +134,13 @@ const MainPageComponent = () => {
           <Stack.Screen
               name="Храна-Добави"
               component={AddCustomFoodPage}
+              options={{
+                  headerShown: false,
+              }}
+          />
+          <Stack.Screen
+              name="Храна-Подробности"
+              component={FoodInfo}
               options={{
                   headerShown: false,
               }}

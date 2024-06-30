@@ -86,3 +86,5 @@
 
  - delete profile picture when profile is deleted or handle profile pictures differently
  - be careful of file upload limit
+
+ - textinput style za liniikata deto se pokazva do texta
