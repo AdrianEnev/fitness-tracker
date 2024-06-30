@@ -6,6 +6,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { FlatList } from 'react-native-gesture-handler';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { Friend } from '../../interfaces';
+import { useTranslation } from 'react-i18next';
 
 const FriendRequestsSent = ({route}: any) => {
 
@@ -80,9 +81,13 @@ const FriendRequestsSent = ({route}: any) => {
         
     }
 
+    const {t} = useTranslation();
+
     return (
-        <SafeAreaView>
-            <Text style={tw`m-3 text-xl text-center font-medium`}>Изпратени покани</Text>
+        <View style={tw`w-full h-full bg-white`}>
+            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>{t('sent-requests')}</Text>
+            </View>
 
                 <FlatList 
                     data={sentFriendRequests}
@@ -99,10 +104,10 @@ const FriendRequestsSent = ({route}: any) => {
                         </View>
                     )}
                     ListEmptyComponent={() => (
-                        <Text style={tw`m-3 text-lg text-center`}>Нямаш изпратени покани</Text>
+                        <Text style={tw`m-3 text-lg text-center`}>{t('no-sent-requests')}</Text>
                     )}
                 />
-        </SafeAreaView>
+        </View>
     )
 }
 

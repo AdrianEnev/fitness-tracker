@@ -5,6 +5,8 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { Friend } from '../../interfaces';
+import { useTranslation } from 'react-i18next';
+import BottomNavigationBar from '../components/BottomNavigationBar';
 
 const FriendRequestsRecieved = ({route, navigation}: any) => {
 
@@ -125,37 +127,43 @@ const FriendRequestsRecieved = ({route, navigation}: any) => {
         }
     }
 
+    const {t} = useTranslation();
+
     return (
-        <SafeAreaView>
-            <Text style={tw`m-3 text-xl text-center font-medium`}>Получени покани</Text>
+        <View style={tw`w-full h-full bg-white`}>
+            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>{t('received-requests')}</Text>
+            </View>
 
-                <FlatList 
-                    data={receivedFriendRequests}
-                    keyExtractor={(item) => item.id}
-                    renderItem={({item}) => (
-                        <View style={tw`w-full h-14 bg-white mb-2 mt-3 px-4 py-3 flex flex-row justify-between`}>
+            <FlatList 
+                data={receivedFriendRequests}
+                keyExtractor={(item) => item.id}
+                renderItem={({item}) => (
+                    <View style={tw`w-full h-14 bg-white mb-2 mt-3 px-4 py-3 flex flex-row justify-between`}>
+                        
+                        <Text style={tw`text-lg font-medium`}>{item.username}</Text>
+
+                        <View style={tw`flex flex-row gap-x-2`}>
+
+                            <Pressable onPress={() => declineRequest(item)}>
+                                <Ionicons name="logo-xbox" size={32} color='red' />
+                            </Pressable>
+
+                            <Pressable onPress={() => acceptRequest(item)}>
+                                <Ionicons name="checkmark-circle" size={32} color='green' />
+                            </Pressable>
                             
-                            <Text style={tw`text-lg font-medium`}>{item.username}</Text>
-
-                            <View style={tw`flex flex-row gap-x-2`}>
-
-                                <Pressable onPress={() => declineRequest(item)}>
-                                    <Ionicons name="logo-xbox" size={32} color='red' />
-                                </Pressable>
-
-                                <Pressable onPress={() => acceptRequest(item)}>
-                                    <Ionicons name="checkmark-circle" size={32} color='green' />
-                                </Pressable>
-                                
-                            </View>
-
                         </View>
-                    )}
-                    ListEmptyComponent={() => (
-                        <Text style={tw`m-3 text-lg text-center`}>Нямаш получени покани</Text>
-                    )}
-                />
-        </SafeAreaView>
+
+                    </View>
+                )}
+                ListEmptyComponent={() => (
+                    <Text style={tw`m-3 text-lg text-center`}>{t('no-received-requests')}</Text>
+                )}
+            />
+
+            <BottomNavigationBar currentPage='Settings' navigation={navigation}/>
+        </View>
     )
 }
 

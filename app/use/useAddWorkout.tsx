@@ -5,18 +5,6 @@ import generateRandomColour from './useGenerateColour';
 
 const addWorkout = async (exercises: any, navigation: any, workoutTitle: string) => {
 
-    // check if workout is empty
-    // check if workout is empty
-    // check if workout is empty
-    // check if workout is empty
-    // check if workout is empty
-    // check if workout is empty
-    // check if workout is empty
-    // check if workout is empty
-    // check if workout is empty
-
-
-
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");

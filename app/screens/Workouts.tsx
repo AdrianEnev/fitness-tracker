@@ -131,8 +131,8 @@ const Workouts = ({navigation}: any) => {
                     <Ionicons name='arrow-back-outline' size={30} color='white'/>
                 </Pressable>
 
-                <View style={tw`flex justify-center`}>
-                    <Text style={tw`font-medium text-2xl`}>Тренировки</Text>
+                <View style={tw`flex justify-center w-auto h-13 bg-[#fa1148] rounded-xl px-3`}>
+                    <Text style={tw`font-medium text-2xl text-white`}>Тренировки</Text>
                 </View>
 
                 <Pressable style={tw`w-13 h-13 bg-[#fa1148] rounded-2xl flex items-center justify-center`} onPress={() => navigation.navigate("Тренировка-Добави")}>

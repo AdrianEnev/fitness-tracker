@@ -75,6 +75,8 @@ const ViewWorkout = ({route, navigation}: any) => {
         const data = await getDocs(workoutInfoCollectionRef);
         const exercisesData: any[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
 
+        navigation.navigate('Тренировки');
+
         for (let exercise of exercisesData) {
             const setsCollectionRef = collection(workoutInfoCollectionRef, exercise.id, "sets");
             const setsData = await getDocs(setsCollectionRef);
@@ -149,8 +151,6 @@ const ViewWorkout = ({route, navigation}: any) => {
             }
 
         }
-
-        navigation.navigate('Тренировки');
         
     }
 

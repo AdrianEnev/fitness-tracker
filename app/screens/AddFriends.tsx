@@ -101,7 +101,7 @@ const AddFriends = ({route, navigation}: any) => {
 
                     <TextInput
                         placeholder="Потърси някого..."
-                        style={tw`w-[80%] h-12 bg-white shadow-sm rounded-xl pl-4`}
+                        style={tw`w-[80%] h-12 bg-white shadow-md rounded-xl pl-4`}
                         value={searchQuery}
                         onChangeText={setSearchQuery}
                     />
