@@ -88,3 +88,5 @@
  - be careful of file upload limit
 
  - textinput style za liniikata deto se pokazva do texta
+
+ - settings macros da premestq save buttona v bottom navigation bar

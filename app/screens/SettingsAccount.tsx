@@ -169,10 +169,10 @@ const SettingsAccount = ({navigation}: any) => {
                 <View style={tw`h-[2px] w-[94%] bg-gray-300 rounded-full mx-2`}></View>
 
                 {/* Icons */}
-                {button(t('log-out'), 'log-out-outline', 'blue-300', '#3b82f6', 28, () => logOut())}
                 {button(t('change-username'), 'text-outline', 'yellow-300', '#eab308', 24, () => changeUsername())}
-                {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, () => deleteAccount(email, user))}
                 {button(t('change-password'), 'create-outline', 'green-300', '#22c55e', 26, () => changePassword(email, user, auth))}
+                {button(t('log-out'), 'log-out-outline', 'blue-300', '#3b82f6', 28, () => logOut())}
+                {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, () => deleteAccount(email, user))}
                
             </View>
 

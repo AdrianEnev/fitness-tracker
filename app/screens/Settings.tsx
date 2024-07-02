@@ -116,7 +116,9 @@ const Settings = ({navigation}: any) => {
             <View style={tw`bg-white h-full`}>
 
                 {button('Настройки-Акаунт', 'person-outline', '#3b82f6', 'blue-300', t('account'))}
+                {button('Настройки-Защита', 'lock-closed-outline', '#ef4444', 'red-300', t('security'))}
                 {button('Настройки-Макронутриенти', 'flame-outline', '#d97706', 'orange-300', t('macronutrients'))}
+                {button('Запазени-Тренировки', 'cloud-outline', '#ec4899', 'pink-300', t('saved-workouts'))}
 
                 <View>
                     {button('Приятели', 'people-outline', '#22c55e', 'green-300', t('friends'))}
@@ -129,7 +131,6 @@ const Settings = ({navigation}: any) => {
 
 
                 {button('Настройки-Статистика', 'stats-chart-outline', '#eab308', 'yellow-300', t('stats'))}
-                {button('Запазени-Тренировки', 'cloud-outline', '#ec4899', 'pink-300', t('saved-workouts'))}
 
                 <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => setIsLanguageModalVisible(true)}>
                     <View style={tw`flex flex-row justify-between`}>

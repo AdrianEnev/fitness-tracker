@@ -41,8 +41,11 @@ const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate}: 
             const progressRatio = currentProgress / goalProgress;
             redWidthPercentage = Math.min(100, progressRatio * 100); // Ensure it does not exceed 100%
             
-            if (redWidthPercentage <= 10 && redWidthPercentage > 0) {
+            if (redWidthPercentage <= 5 && redWidthPercentage > 0) {
                 redWidthPercentage = 3; // Set to a minimum visible width, e.g., 20%
+            }
+            if (redWidthPercentage >= 10 && redWidthPercentage > 0) {
+                redWidthPercentage = 4; // Set to a minimum visible width, e.g., 20%
             }
             blueWidthPercentage = 100 - redWidthPercentage;
 
