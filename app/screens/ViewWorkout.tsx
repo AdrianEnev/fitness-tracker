@@ -145,7 +145,8 @@ const ViewWorkout = ({route, navigation}: any) => {
                     setDoc(workoutDocRef, {
                         title: newWorkoutTitle.trim(),
                         created: workout.created,
-                        colour: workout.colour
+                        colour: workout.colour,
+                        numberOfExercises: workout.numberOfExercises
                     });
                 }
             }
