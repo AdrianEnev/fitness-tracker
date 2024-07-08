@@ -86,17 +86,10 @@ const Settings = ({navigation}: any) => {
                             <FlatList data={[tempNutrients]} renderItem={renderNutrients} />
                         </View>
                     </View>
-
-                    <TouchableOpacity 
-                        style={tw`w-[94.5%] h-14 bg-[#fd1c47] shadow-md rounded-2xl flex justify-center items-center mx-3 mt-3`}
-                        onPress={saveNutrients}
-                    >
-                        <Text style={tw`text-2xl text-white`}>{t('save')}</Text>
-                    </TouchableOpacity>
                 </View>
             </TouchableWithoutFeedback>
 
-            <BottomNavigationBar currentPage='Settings' navigation={navigation}/>
+            <BottomNavigationBar currentPage='Settings-Macronutrients' navigation={navigation} saveSettingsMacrosButton={saveNutrients}/>
         </SafeAreaView>
     );
 };

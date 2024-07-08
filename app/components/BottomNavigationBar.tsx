@@ -35,7 +35,8 @@ const BottomNavigationBar = (
         removeFriend,
         addSetButton, addWorkoutButton,
         deleteFood,
-        clearSearchFoodSuggestionList
+        clearSearchFoodSuggestionList,
+        saveSettingsMacrosButton
     }: 
     {
         currentPage: string, navigation: any,
@@ -50,15 +51,18 @@ const BottomNavigationBar = (
         removeFriend?: () => void,
         addSetButton?: () => void, addWorkoutButton?: () => void,
         deleteFood?: () => void,
-        clearSearchFoodSuggestionList?: () => void
+        clearSearchFoodSuggestionList?: () => void,
+        saveSettingsMacrosButton?: () => void
     }
 ) => {
+    //AddCustomFood
 
     return (
         <View style={tw`
-            absolute w-[96.5%] h-20 bg-white shadow-lg bottom-8 mx-2 rounded-2xl flex flex-row justify-around items-center
+            absolute w-[96.5%] h-20 shadow-lg bottom-8 mx-2 rounded-2xl flex flex-row justify-around items-center
+            ${(currentPage === 'Settings-Macronutrients' || currentPage === 'AddCustomFood') ? 'bg-[#fd1c47]' : 'bg-white'}
         `}>
-            
+        
             {currentPage === 'ActiveWorkout' ? (
                 <View style={tw`flex flex-row justify-between w-full`}>
 
@@ -125,7 +129,7 @@ const BottomNavigationBar = (
             ) : currentPage === "AddCustomFood" ? (
                 <View style={tw`flex items-center justify-center`}>
                     <Pressable onPress={saveCustomFood}>
-                        <Ionicons name='checkmark-done' color='#ef4444' size={64}/>
+                        <Ionicons name='checkmark-done' color='white' size={64}/>
                     </Pressable>
                 </View>
             ) : currentPage === "AddFoodPage" ? (
@@ -190,6 +194,12 @@ const BottomNavigationBar = (
                 <View>
                     <Pressable onPress={deleteFood}>
                         <Ionicons name='trash-outline' color='#ef4444' size={64}/>
+                    </Pressable>
+                </View>
+            ) : currentPage === "Settings-Macronutrients" ? (
+                <View>
+                    <Pressable onPress={saveSettingsMacrosButton}>
+                        <Ionicons name='checkmark-done' color='white' size={64}/>
                     </Pressable>
                 </View>
             ) : (

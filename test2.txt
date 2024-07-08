@@ -15,3 +15,24 @@
         <Text style={tw`text-black text-2xl font-medium`}>{date}ч.</Text>
     </View>
 </View>
+
+
+<View style={tw`border-b border-gray-200`}>   
+                <View style={tw`flex flex-row justify-between mx-3 mb-2`}>
+
+                    <View style={tw`flex flex-row gap-x-2`}>
+                        <Pressable style={tw`w-13 h-13 rounded-2xl flex items-center justify-center`} onPress={() => navigation.goBack()}>
+                            <Ionicons name='chevron-back-outline' size={48} color='black'/>
+                        </Pressable>
+
+                        
+                        <Text style={tw`font-medium text-3xl text-black`}>Тренировки</Text>
+                        
+                    </View>
+
+                    <Pressable style={tw`w-13 h-13 bg-[#fa1148] rounded-2xl flex items-center justify-center`} onPress={() => navigation.navigate("Тренировка-Добави")}>
+                        <Ionicons name='add' size={40} color='white'/>
+                    </Pressable>
+                </View>
+
+            </View>

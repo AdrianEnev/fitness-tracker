@@ -68,6 +68,9 @@ const FriendsList = ({navigation, route}: any) => {
 
                         </View>
                     )}
+                    ListEmptyComponent={() => (
+                        <Text style={tw`text-xl font-medium text-blue-500`}>{t('no-friends')}</Text>
+                    )}
                 />
             </View>
 
