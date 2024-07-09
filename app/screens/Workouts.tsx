@@ -106,7 +106,7 @@ const Workouts = ({navigation}: any) => {
                         
                         <View style={tw`flex flex-col ml-3 justify-center w-full`}>
                             <Text style={tw`text-xl font-medium w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.title}</Text>
-                            <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{exercisesCount ? exercisesCount : '?'} {exercisesCount === 1 ? 'упражнение' : t('exercises-rhahsgdg')}</Text>
+                            <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{exercisesCount ? exercisesCount : '?'} {exercisesCount === 1 ? t('exercise-djhjd') : t('exercises-rhahsgdg')}</Text>
                         </View>
 
                     </View>
@@ -145,7 +145,8 @@ const Workouts = ({navigation}: any) => {
             </View>
             
 
-            <View style={tw`w-full h-full mt-4 mx-2`}>
+            <View style={tw`w-full h-[82%] mt-4 mx-2`}>
+
                 <FlatList
                     data={workouts}
                     renderItem={({item}: any) => renderWorkout(item)}

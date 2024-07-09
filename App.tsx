@@ -176,7 +176,7 @@ const UnauthenticatedTabNavigator = () => (
         if (loading || checkingSetup) { // Modified condition to include checkingSetup
             return (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                    <ActivityIndicator size="large" color="#007AFF" />
+                    <ActivityIndicator size="large" color="#fd3e6b" />
                 </View>
             );
         }
