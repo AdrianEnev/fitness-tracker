@@ -5,6 +5,8 @@ import { addDoc, collection, deleteDoc, doc, getDocs, runTransaction, setDoc } f
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { Ionicons } from '@expo/vector-icons';
+import generateID from '../use/useGenerateID';
+import saveWorkoutEdits from '../use/useSaveWorkoutEdits';
 
 const ViewWorkout = ({route, navigation}: any) => {
 
@@ -18,11 +20,6 @@ const ViewWorkout = ({route, navigation}: any) => {
         ...exercise,
         sets: exercise.sets.map((set: any) => ({...set, reps: set.reps, weight: set.weight}))
     })));
-
-    const generateID = () => {
-        // generate ID that would resemble what firebase would generate
-        return Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15);
-    }
 
     const addSet = () => {
         const updatedExercises = [...newExercises];
@@ -64,140 +61,11 @@ const ViewWorkout = ({route, navigation}: any) => {
         }
     }
 
-    const saveWorkout = async () => {
-        
-        const usersCollectionRef = collection(FIRESTORE_DB, "users");
-        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
-        const workoutDocRef = doc(userWorkoutsCollectionRef, workout.id);
-        const workoutInfoCollectionRef = collection(workoutDocRef, "info");
-
-        const data = await getDocs(workoutInfoCollectionRef);
-        const exercisesData: any[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-
+    const saveChanges = async () => {
+        await saveWorkoutEdits(workout, userInputs, newExercises, newWorkoutTitle);
         navigation.navigate('Тренировки');
-
-        for (let exercise of exercisesData) {
-            const setsCollectionRef = collection(workoutInfoCollectionRef, exercise.id, "sets");
-            const setsData = await getDocs(setsCollectionRef);
-            const sets: any[] = setsData.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
-            exercise.sets = sets;
-
-            const currentExercise = userInputs.find((input: any) => input.id === exercise.id);
-            if (currentExercise) {
-               
-                for (let set of exercise.sets) {
-                    const currentSet = currentExercise.sets.find((inputSet: any) => inputSet.id === set.id);
-                    if (currentSet) {
-                        setDoc(doc(setsCollectionRef, set.id), {
-                            reps: currentSet.reps,
-                            weight: currentSet.weight,
-                            setIndex: currentSet.setIndex
-                        });
-                    }
-                }
-
-                // Adding new sets
-                const addedSets = currentExercise.sets.filter((set: any) => !sets.some((dbSet: any) => dbSet.id === set.id));
-                let nextIndex = sets.length; // Start indexing for new sets after the existing ones
-                for (let addedSet of addedSets) {
-                    const newSetRef = doc(setsCollectionRef);
-                    setDoc(newSetRef, {
-                        reps: addedSet.reps,
-                        weight: addedSet.weight,
-                        setIndex: nextIndex + 1
-                    });
-                    nextIndex++;
-                }
-
-                // Check if any sets were removed (and not added)
-                const removedSetsExist = sets.length > currentExercise.sets.length;
-                if (removedSetsExist) {
-                    // First, delete all existing sets in Firestore to start fresh
-                    for (let set of sets) {
-                        const setDocRef = doc(setsCollectionRef, set.id);
-                        deleteDoc(setDocRef);
-                    }
-
-                    // Then, add back all current sets with new indexes
-                    currentExercise.sets.forEach((set: any, index: number) => {
-                        const newSetRef = doc(setsCollectionRef, set.id ? set.id : generateID()); // Use existing ID or generate a new one
-                        setDoc(newSetRef, {
-                            reps: set.reps,
-                            weight: set.weight,
-                            setIndex: index + 1 // Re-index starting from 1
-                        });
-                    });
-                }
-
-                // check if any of the exercise titles have been updated
-                const currentExerciseTitle = newExercises.find((ex: any) => ex.id === exercise.id);
-                if (currentExerciseTitle) {
-                    setDoc(doc(workoutInfoCollectionRef, exercise.id), {
-                        title: currentExerciseTitle.title,
-                        exerciseIndex: currentExerciseTitle.exerciseIndex
-                    });
-                }
-            }
-
-        }
-
-        // check if any new exercises have been added to the workout
-        const addedExercises = userInputs.filter((input: any) => !exercisesData.some((dbExercise: any) => dbExercise.id === input.id));
-        let nextIndex = exercisesData.length;
-
-        for (let addedExercise of addedExercises) {
-            // Generate title if empty, similar to useAddWorkout.tsx logic
-            if (addedExercise.title === '') {
-                addedExercise.title = "Упражнение " + (nextIndex + 1);
-            }
-
-            const newExerciseRef = doc(workoutInfoCollectionRef, (nextIndex + 1).toString());
-            await setDoc(newExerciseRef, {
-                title: addedExercise.title.trim(),
-                exerciseIndex: nextIndex + 1
-            });
-
-            const setsCollectionRef = collection(newExerciseRef, "sets");
-            let setIndex = 1;
-            for (let set of addedExercise.sets) {
-                await addDoc(setsCollectionRef, {
-                    reps: set.reps,
-                    weight: set.weight,
-                    setIndex: setIndex
-                });
-                setIndex++;
-            }
-            nextIndex++;
-        }
-
-        if (newWorkoutTitle === '') {
-            setDoc(workoutDocRef, {
-                title: workout.title,
-                created: workout.created,
-                colour: workout.colour,
-                numberOfExercises: nextIndex
-            });
-            return;
-        }
-        setDoc(workoutDocRef, {
-            title: newWorkoutTitle,
-            created: workout.created,
-            colour: workout.colour,
-            numberOfExercises: nextIndex
-        });
     }
-
-    const deleteExercise = (exerciseIndex: number) => {
-
-        const updatedExercises = newExercises.filter((exercise: any) => exercise.exerciseIndex !== exerciseIndex);
-        const updatedUserInputs = userInputs.filter((input: any) => input.exerciseIndex !== exerciseIndex);
-        setNewExercises(updatedExercises);
-        setUserInputs(updatedUserInputs);
-
-        setCurrentIndex(currentIndex - 1);
-    }
-
+    
     const addExercise = () => {
         const newSet = {
             id: generateID(),
@@ -214,9 +82,10 @@ const ViewWorkout = ({route, navigation}: any) => {
     
         setNewExercises([...newExercises, newExercise]);
         setUserInputs([...userInputs, { ...newExercise, sets: [newSet] }]);
-
+    
+        // Update currentIndex to the newly added exercise
         setCurrentIndex(newExercises.length);
-    }
+    };
 
     const deleteWorkout = async () => {
         // delete the workout from the database
@@ -269,10 +138,9 @@ const ViewWorkout = ({route, navigation}: any) => {
             <SafeAreaView style={tw`w-full h-full bg-white`}>
 
                 <View style={tw`flex flex-row justify-between mx-3 w-[95%]`}>
-                    <TouchableOpacity style={tw`w-22 h-10 bg-[#2fc766] shadow-md rounded-xl flex justify-center items-center`} onPress={saveWorkout}>
+                    <TouchableOpacity style={tw`w-22 h-10 bg-[#2fc766] shadow-md rounded-xl flex justify-center items-center`} onPress={saveChanges}>
                         <Text style={tw`text-white font-medium text-base`}>Запази</Text>
                     </TouchableOpacity>
-
                     
                     <TouchableOpacity style={tw`w-22 h-10 bg-blue-500 rounded-xl flex justify-center items-center`} onPress={addSet}>
                         <Text style={tw`text-base font-medium text-white`}>+ Серия</Text>
@@ -310,8 +178,6 @@ const ViewWorkout = ({route, navigation}: any) => {
                                         onChangeText={(text) => updateExerciseTitle(exercise.id, text)}
                                         onContentSizeChange={handleContentSizeChange}
                                     />
-
-                                    {currentIndex > 0 ? <Button title='delete' onPress={() => deleteExercise(exercise.exerciseIndex)} /> : null}
                                 
                                     <ScrollView style={tw`h-[75%] mb-3`}>
                                         {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (

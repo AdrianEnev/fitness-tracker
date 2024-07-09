@@ -92,3 +92,5 @@
  - settings macros da premestq save buttona v bottom navigation bar
 
  - useGenerateColor po dobri cvetove
+
+ - da dobavq limit ot 9 uprajneniq ili neshto takova
