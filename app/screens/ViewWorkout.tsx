@@ -1,7 +1,7 @@
-import { View, Text, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput, Pressable, Button } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
-import { collection, deleteDoc, doc, getDocs, setDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, runTransaction, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { Ionicons } from '@expo/vector-icons';
@@ -138,21 +138,84 @@ const ViewWorkout = ({route, navigation}: any) => {
                         exerciseIndex: currentExerciseTitle.exerciseIndex
                     });
                 }
-
-                if (newWorkoutTitle === '') {
-                    return;
-                }else{
-                    setDoc(workoutDocRef, {
-                        title: newWorkoutTitle.trim(),
-                        created: workout.created,
-                        colour: workout.colour,
-                        numberOfExercises: workout.numberOfExercises
-                    });
-                }
             }
 
         }
-        
+
+        // check if any new exercises have been added to the workout
+        const addedExercises = userInputs.filter((input: any) => !exercisesData.some((dbExercise: any) => dbExercise.id === input.id));
+        let nextIndex = exercisesData.length;
+
+        for (let addedExercise of addedExercises) {
+            // Generate title if empty, similar to useAddWorkout.tsx logic
+            if (addedExercise.title === '') {
+                addedExercise.title = "Упражнение " + (nextIndex + 1);
+            }
+
+            const newExerciseRef = doc(workoutInfoCollectionRef, (nextIndex + 1).toString());
+            await setDoc(newExerciseRef, {
+                title: addedExercise.title.trim(),
+                exerciseIndex: nextIndex + 1
+            });
+
+            const setsCollectionRef = collection(newExerciseRef, "sets");
+            let setIndex = 1;
+            for (let set of addedExercise.sets) {
+                await addDoc(setsCollectionRef, {
+                    reps: set.reps,
+                    weight: set.weight,
+                    setIndex: setIndex
+                });
+                setIndex++;
+            }
+            nextIndex++;
+        }
+
+        if (newWorkoutTitle === '') {
+            setDoc(workoutDocRef, {
+                title: workout.title,
+                created: workout.created,
+                colour: workout.colour,
+                numberOfExercises: nextIndex
+            });
+            return;
+        }
+        setDoc(workoutDocRef, {
+            title: newWorkoutTitle,
+            created: workout.created,
+            colour: workout.colour,
+            numberOfExercises: nextIndex
+        });
+    }
+
+    const deleteExercise = (exerciseIndex: number) => {
+
+        const updatedExercises = newExercises.filter((exercise: any) => exercise.exerciseIndex !== exerciseIndex);
+        const updatedUserInputs = userInputs.filter((input: any) => input.exerciseIndex !== exerciseIndex);
+        setNewExercises(updatedExercises);
+        setUserInputs(updatedUserInputs);
+
+        setCurrentIndex(currentIndex - 1);
+    }
+
+    const addExercise = () => {
+        const newSet = {
+            id: generateID(),
+            reps: "", 
+            weight: "" 
+        };
+    
+        const newExercise = {
+            id: generateID(),
+            title: "Упражнение " + (newExercises.length + 1),
+            exerciseIndex: newExercises.length + 1,
+            sets: [newSet]
+        };
+    
+        setNewExercises([...newExercises, newExercise]);
+        setUserInputs([...userInputs, { ...newExercise, sets: [newSet] }]);
+
+        setCurrentIndex(newExercises.length);
     }
 
     const deleteWorkout = async () => {
@@ -233,7 +296,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                     {newExercises.map((exercise: any, index: any) => {
                         if (exercise.exerciseIndex === currentIndex + 1) {
                             return (
-                                <View key={exercise.id} style={tw`w-full`}>
+                                <View key={exercise.id} style={tw`w-full h-[82%]`}>
 
                                     <TextInput 
                                         style={textInputStyle}
@@ -247,6 +310,8 @@ const ViewWorkout = ({route, navigation}: any) => {
                                         onChangeText={(text) => updateExerciseTitle(exercise.id, text)}
                                         onContentSizeChange={handleContentSizeChange}
                                     />
+
+                                    {currentIndex > 0 ? <Button title='delete' onPress={() => deleteExercise(exercise.exerciseIndex)} /> : null}
                                 
                                     <ScrollView style={tw`h-[75%] mb-3`}>
                                         {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
@@ -314,6 +379,15 @@ const ViewWorkout = ({route, navigation}: any) => {
                         }
                     })}
                 </View>
+
+                <Pressable style={tw`
+                    absolute w-[96.5%] h-16 shadow-lg bottom-30 mx-2 rounded-2xl flex flex-row justify-around items-center
+                    bg-[#fd1c47]
+                `}
+                onPress={addExercise}
+                >
+                    <Text style={tw`text-white text-3xl font-medium`}>+ Упражнение</Text>
+                </Pressable>
 
                 <BottomNavigationBar
                     currentPage='ViewWorkout'
