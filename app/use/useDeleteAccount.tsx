@@ -1,6 +1,7 @@
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
+import { FIREBASE_AUTH, FIREBASE_STORAGE, FIRESTORE_DB } from '../../firebaseConfig'
 import { deleteUser, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
 import { collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
+import { deleteObject, getStorage, ref } from 'firebase/storage';
 import { Alert } from 'react-native';
 
 const changeUsername = async (user: any) => {
@@ -97,9 +98,16 @@ const deleteAccount = async (email: any, user: any) => {
                             console.log(error);
                         });
 
-                        
-            
-                        
+                        const storage = getStorage();
+                        const desertRef = ref(storage, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
+
+                        deleteObject(desertRef).then(() => {
+                            console.log("File deleted successfully");
+                        }).catch((error) => {
+                            console.log("Uh-oh, an error occurred!"); 
+                        });
+
+                    
                     }
                 }).catch((error) => {
                     console.log(error);

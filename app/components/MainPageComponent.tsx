@@ -20,7 +20,6 @@ import ViewSavedWorkout from "../screens/ViewSavedWorkout";
 import Statistics from "../screens/Statistics";
 import ViewFriendProfile from "../screens/ViewFriendProfile";
 import FoodInfo from "../screens/FoodInfo";
-import Security from "../screens/Security";
 
 const Stack = createNativeStackNavigator();
 /* 
@@ -175,13 +174,6 @@ const MainPageComponent = () => {
           <Stack.Screen
               name="Настройки-Статистика"
               component={Statistics}
-              options={{
-                  headerShown: false,
-              }}
-          />
-          <Stack.Screen
-              name="Настройки-Защита"
-              component={Security}
               options={{
                   headerShown: false,
               }}

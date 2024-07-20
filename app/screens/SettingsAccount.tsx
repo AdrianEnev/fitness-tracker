@@ -1,4 +1,4 @@
-import { View, Text, Button, Pressable, Image, Alert } from 'react-native'
+import { View, Text, Button, Pressable, Image, Alert, Switch } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 import tw from 'twrnc'
@@ -12,6 +12,7 @@ import ProfilePicture from '../components/ProfilePicture'
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
 import BottomNavigationBar from '../components/BottomNavigationBar'
 import { useTranslation } from 'react-i18next'
+import { deleteObject, getStorage, ref } from 'firebase/storage'
 
 const SettingsAccount = ({navigation}: any) => {
 
@@ -144,6 +145,63 @@ const SettingsAccount = ({navigation}: any) => {
         )
     }
 
+    const [isFaceIdEnabled, setIsFaceIdEnabled] = useState(false);
+    const toggleFaceIdSwitch = () => setIsFaceIdEnabled(previousState => !previousState);
+
+    const [isReceiveFriendRequestsEnabled, setIsReceiveFriendRequestsEnabled] = useState(true);
+    const toggleReceiveFriendRequestsSwitch = () => setIsReceiveFriendRequestsEnabled(previousState => !previousState);
+
+    const [is2FAEnabled, setIs2FAEnabled] = useState(false);
+    const toggle2FASwitch = () => setIs2FAEnabled(previousState => !previousState);
+
+    const switchButton = (title: any, icon: any, background: string, iconColor: any, iconSize: number) => {
+        return (
+            <View style={tw`w-full h-14 bg-white p-3 mb-1`}>
+                <View style={tw`flex flex-row justify-between`}>
+
+                    <View style={tw`flex flex-row`}>
+                        <View style={tw`w-10 h-10 bg-${background} rounded-full flex items-center justify-center mr-2`}>
+                            <Ionicons name={icon} size={iconSize} color={iconColor} />
+                        </View>
+                        
+                        <View style={tw`flex justify-center`}>
+                            <Text style={tw`text-lg font-medium`}>{title}</Text>
+                        </View>
+                    </View>
+
+                    <View style={tw`flex justify-center`}>
+                        <Switch
+                            trackColor={{ false: "#ef4444", true: "#81b0ff" }}
+                            thumbColor={
+                                title === 'face-id' ? (isFaceIdEnabled ? "#f5dd4b" : "#f4f3f4") :
+                                title === 'receive-friend-requests' ? (isReceiveFriendRequestsEnabled ? "#f5dd4b" : "#f4f3f4") : 
+                                title === '2FA' ? (is2FAEnabled ? "#f5dd4b" : "#f4f3f4") : 
+                                "#f4f3f4"
+                            }
+                            ios_backgroundColor="#3e3e3e"
+                            onValueChange={
+                                title === 'face-id' ? toggleFaceIdSwitch :
+                                title === 'receive-friend-requests' ? toggleReceiveFriendRequestsSwitch : 
+                                title === '2FA' ? toggle2FASwitch : 
+                                () => {
+                                    console.log('Switch button not working');
+                                }
+                            }
+                            value=
+                            {
+                                title === 'face-id' ? isFaceIdEnabled :
+                                title === 'receive-friend-requests' ? isReceiveFriendRequestsEnabled : 
+                                title === '2FA' ? is2FAEnabled : 
+                                false
+                            }
+                        />
+                    </View>
+
+                </View>
+            </View>
+        )
+    }
+
     const {t} = useTranslation();
 
     return (
@@ -173,7 +231,11 @@ const SettingsAccount = ({navigation}: any) => {
                 {button(t('change-password'), 'create-outline', 'green-300', '#22c55e', 26, () => changePassword(email, user, auth))}
                 {button(t('log-out'), 'log-out-outline', 'blue-300', '#3b82f6', 28, () => logOut())}
                 {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, () => deleteAccount(email, user))}
-               
+
+                {switchButton('face-id', 'eye-outline', 'blue-300', '#3b82f6', 30)}
+                {switchButton('receive-friend-requests', 'notifications-outline', 'purple-300', '#8b5cf6', 24)}
+                {switchButton('2FA', 'lock-closed-outline', 'green-300', '#22c55e', 24)}
+
             </View>
 
             <BottomNavigationBar currentPage='Settings' navigation={navigation}/>
