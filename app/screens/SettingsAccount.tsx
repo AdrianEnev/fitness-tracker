@@ -20,7 +20,7 @@ const SettingsAccount = ({navigation}: any) => {
     const user = auth.currentUser;
     const email = user?.email;
 
-    const { username, setUsername } = useContext(GlobalContext);
+    const { username, setUsername, receiveFriendRequests } = useContext(GlobalContext);
 
     const logOut = () => {
 
@@ -148,7 +148,7 @@ const SettingsAccount = ({navigation}: any) => {
     const [isFaceIdEnabled, setIsFaceIdEnabled] = useState(false);
     const toggleFaceIdSwitch = () => setIsFaceIdEnabled(previousState => !previousState);
 
-    const [isReceiveFriendRequestsEnabled, setIsReceiveFriendRequestsEnabled] = useState(true);
+    const [isReceiveFriendRequestsEnabled, setIsReceiveFriendRequestsEnabled] = useState(receiveFriendRequests);
     const toggleReceiveFriendRequestsSwitch = () => setIsReceiveFriendRequestsEnabled(previousState => !previousState);
 
     const [is2FAEnabled, setIs2FAEnabled] = useState(false);

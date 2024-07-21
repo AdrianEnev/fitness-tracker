@@ -6,7 +6,7 @@ const getLanguage = async (userInfoCollectionRef: any) => {
         const docSnapshot = await getDoc(doc(userInfoCollectionRef, 'language'));
         if (docSnapshot.exists()) {
             const language = docSnapshot.data().language;
-            console.log(language)
+            //console.log(language)
             await i18next.changeLanguage(language);
            
         } else {

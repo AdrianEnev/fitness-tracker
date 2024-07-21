@@ -18,6 +18,7 @@ import getFriendRequests from './app/use/useGetFriendRequestsRecieved';
 import ChangePassword from './app/screens/ChangePassword';
 import { checkUserDocument, checkLanguageDocument, checkUserInfoCollection } from './app/use/useCheckUserInfo';
 import { GoalNutrients } from './interfaces';
+import checkReceiveFriendRequests from './app/use/useCheckReceiveFriendRequests';
 
 const Stack = createStackNavigator();
 
@@ -132,6 +133,8 @@ const UnauthenticatedTabNavigator = () => (
         const [username, setUsername] = useState('');
         const [profilePicture, setProfilePicture] = useState('');
         const [friendRequestsNumber, setFriendRequestsNumber] = useState("");
+
+        const [receiveFriendRequests, setReceiveFriendRequests] = useState(false);
     
         React.useEffect(() => {
             const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
@@ -158,6 +161,9 @@ const UnauthenticatedTabNavigator = () => (
                         } else {
                             setFriendRequestsNumber("9+");
                         }
+
+                        const receiveFriendRequests = await checkReceiveFriendRequests(); // boolean
+                        setReceiveFriendRequests(receiveFriendRequests);
     
                         setCheckingSetup(false); // Setup check completed
                     };
@@ -182,7 +188,10 @@ const UnauthenticatedTabNavigator = () => (
         }
     
         return (
-            <GlobalContext.Provider value={{ setupRan, setSetupRan, username, profilePicture, goalNutrients, setUsername, setProfilePicture, friendRequestsNumber, setGoalNutrients }}>
+            <GlobalContext.Provider value={{ 
+                setupRan, setSetupRan, username, profilePicture, goalNutrients, 
+                setUsername, setProfilePicture, friendRequestsNumber, setGoalNutrients, receiveFriendRequests
+            }}>
                 <GestureHandlerRootView style={{flex: 1}}>
                     <StatusBar barStyle='dark-content'/>
                     <NavigationContainer>

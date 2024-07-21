@@ -21,6 +21,7 @@ import WorkoutFoodButtons from '../components/WorkoutFoodButtons';
 import Nutrients from '../components/NutrientsMain';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import ProfilePicture from '../components/ProfilePicture';
+import { use } from 'i18next';
 
 //bg-[#fd3e6b]
 
