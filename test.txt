@@ -94,3 +94,6 @@
  - useGenerateColor po dobri cvetove
 
  - da dobavq limit ot 9 uprajneniq ili neshto takova
+
+
+ - ako sum lognat v "user 1" i vlqza v "user 2", izliza profila na "user 1" za nqkolko sekundi dokato ne loadne informaciqta za "user 2"

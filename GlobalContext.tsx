@@ -8,6 +8,8 @@ interface GlobalContextType {
     friendRequestsNumber: string;
     goalNutrients: GoalNutrients | null; // Changed to a single object or null
     receiveFriendRequests: boolean;
+    faceIdEnabled: boolean;
+    setReceiveFriendRequests: (value: boolean) => void;
     setUsername: (username: string) => void;
     setProfilePicture: (profilePicture: string) => void;
     setSetupRan: (value: boolean) => void;
@@ -21,6 +23,8 @@ const defaultValues: GlobalContextType = {
     friendRequestsNumber: "",
     goalNutrients: null,
     receiveFriendRequests: false,
+    faceIdEnabled: false,
+    setReceiveFriendRequests: () => {},
     setUsername: () => {},
     setProfilePicture: () => {},
     setSetupRan: () => {},

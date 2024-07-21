@@ -16,11 +16,15 @@ import { deleteObject, getStorage, ref } from 'firebase/storage'
 
 const SettingsAccount = ({navigation}: any) => {
 
+    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+    const userInfoCollectionRef = collection(userDocRef, 'user_info');
+
     const auth = getAuth();
     const user = auth.currentUser;
     const email = user?.email;
 
-    const { username, setUsername, receiveFriendRequests } = useContext(GlobalContext);
+    const { username, setUsername, receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled } = useContext(GlobalContext);
 
     const logOut = () => {
 
@@ -145,14 +149,22 @@ const SettingsAccount = ({navigation}: any) => {
         )
     }
 
-    const [isFaceIdEnabled, setIsFaceIdEnabled] = useState(false);
-    const toggleFaceIdSwitch = () => setIsFaceIdEnabled(previousState => !previousState);
+    const [isFaceIdEnabled, setIsFaceIdEnabled] = useState(faceIdEnabled);
+    const toggleFaceIdSwitch = () => {
+        setIsFaceIdEnabled(previousState => !previousState)
+    };
 
     const [isReceiveFriendRequestsEnabled, setIsReceiveFriendRequestsEnabled] = useState(receiveFriendRequests);
-    const toggleReceiveFriendRequestsSwitch = () => setIsReceiveFriendRequestsEnabled(previousState => !previousState);
+    const toggleReceiveFriendRequestsSwitch = async () => {
+        setIsReceiveFriendRequestsEnabled(previousState => !previousState)
+        setReceiveFriendRequests(!isReceiveFriendRequestsEnabled);
 
-    const [is2FAEnabled, setIs2FAEnabled] = useState(false);
-    const toggle2FASwitch = () => setIs2FAEnabled(previousState => !previousState);
+        // update the value of receiveFriendRequests inside the database
+        
+        await setDoc(doc(userInfoCollectionRef, 'receiveFriendRequests'), { receiveFriendRequests: !isReceiveFriendRequestsEnabled });
+
+    };
+
 
     const switchButton = (title: any, icon: any, background: string, iconColor: any, iconSize: number) => {
         return (
@@ -175,14 +187,12 @@ const SettingsAccount = ({navigation}: any) => {
                             thumbColor={
                                 title === 'face-id' ? (isFaceIdEnabled ? "#f5dd4b" : "#f4f3f4") :
                                 title === 'receive-friend-requests' ? (isReceiveFriendRequestsEnabled ? "#f5dd4b" : "#f4f3f4") : 
-                                title === '2FA' ? (is2FAEnabled ? "#f5dd4b" : "#f4f3f4") : 
                                 "#f4f3f4"
                             }
                             ios_backgroundColor="#3e3e3e"
                             onValueChange={
                                 title === 'face-id' ? toggleFaceIdSwitch :
                                 title === 'receive-friend-requests' ? toggleReceiveFriendRequestsSwitch : 
-                                title === '2FA' ? toggle2FASwitch : 
                                 () => {
                                     console.log('Switch button not working');
                                 }
@@ -191,7 +201,6 @@ const SettingsAccount = ({navigation}: any) => {
                             {
                                 title === 'face-id' ? isFaceIdEnabled :
                                 title === 'receive-friend-requests' ? isReceiveFriendRequestsEnabled : 
-                                title === '2FA' ? is2FAEnabled : 
                                 false
                             }
                         />
@@ -203,6 +212,8 @@ const SettingsAccount = ({navigation}: any) => {
     }
 
     const {t} = useTranslation();
+
+    //{switchButton('2FA', 'lock-closed-outline', 'green-300', '#22c55e', 24)}
 
     return (
         <SafeAreaView style={tw`w-full h-full bg-white`}>
@@ -234,7 +245,7 @@ const SettingsAccount = ({navigation}: any) => {
 
                 {switchButton('face-id', 'eye-outline', 'blue-300', '#3b82f6', 30)}
                 {switchButton('receive-friend-requests', 'notifications-outline', 'purple-300', '#8b5cf6', 24)}
-                {switchButton('2FA', 'lock-closed-outline', 'green-300', '#22c55e', 24)}
+                
 
             </View>
 

@@ -66,6 +66,7 @@ const Setup = ({route}: any) => {
                     <Text style={tw`text-3xl font-medium text-center my-2 mt-5`}>Welcome to Lunge!</Text>
 
                     <Text style={tw`text-2xl font-medium text-center mt-[-4px]`}>{t('set-daily-goals')}</Text>
+                    <Text style={tw`text-2xl font-medium text-center mt-[-4px]`}>YOU-CAN-CHANGE-THIS-LATER</Text>
 
                     <View style={tw`flex flex-row flex-wrap w-full gap-x-3 gap-y-3 mt-6`}>
                     

@@ -55,6 +55,8 @@ const sendFriendRequest = async (user: Friend, loggedInUserUsername: string, nav
 
     const loggedInUser = FIREBASE_AUTH.currentUser;
 
+   
+
     if (loggedInUser) {
         try {
 

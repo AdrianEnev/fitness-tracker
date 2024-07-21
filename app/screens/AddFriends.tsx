@@ -35,6 +35,28 @@ const AddFriends = ({route, navigation}: any) => {
         });
     }
 
+    const userDisabledFriendRequests = async (checkUser: any) => {
+
+        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+        const userDocRef = doc(usersCollectionRef, checkUser.id);
+        const userInfoCollectionRef = collection(userDocRef, 'user_info');
+        const receiveFriendRequestsDocRef = doc(userInfoCollectionRef, 'receiveFriendRequests');
+        const receiveFriendRequestsDoc = await getDoc(receiveFriendRequestsDocRef);
+    
+        if (receiveFriendRequestsDoc.data()) {
+            const friendRequestsEnabled = receiveFriendRequestsDoc.data()?.receiveFriendRequests;
+
+            if (friendRequestsEnabled === false) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        
+    }
+
     const isFriendAlready = async (checkUser: any) => {
 
         const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -75,11 +97,12 @@ const AddFriends = ({route, navigation}: any) => {
             if (user.username !== username) {
                 const alreadyFriend = await isFriendAlready(user);
                 const requestPending = await isRequestPending(user);
-                if (!alreadyFriend && !requestPending) {
+                const friendRequestsDisabled = await userDisabledFriendRequests(user);
+                if (!alreadyFriend && !requestPending && !friendRequestsDisabled) {
                     console.log('Added', user.username, 'to suggestions');
                     return user;
                 } else {
-                    console.log(user.username, 'is already a friend or has a pending request, not adding to suggestions');
+                    console.log(user.username, 'is already a friend or has a pending request or has disabled friend requests, not adding to suggestions');
                     return null;
                 }
             } else {
@@ -87,7 +110,7 @@ const AddFriends = ({route, navigation}: any) => {
                 return null;
             }
         }));
-    
+
         setSuggestedFriends(suggestions.filter(user => user !== null));
         setSearchingAnimation(false);
     }

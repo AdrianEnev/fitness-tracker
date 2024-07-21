@@ -19,6 +19,7 @@ import ChangePassword from './app/screens/ChangePassword';
 import { checkUserDocument, checkLanguageDocument, checkUserInfoCollection } from './app/use/useCheckUserInfo';
 import { GoalNutrients } from './interfaces';
 import checkReceiveFriendRequests from './app/use/useCheckReceiveFriendRequests';
+import checkFaceIdEnabled from './app/use/useCheckFaceIdEnabled';
 
 const Stack = createStackNavigator();
 
@@ -135,6 +136,8 @@ const UnauthenticatedTabNavigator = () => (
         const [friendRequestsNumber, setFriendRequestsNumber] = useState("");
 
         const [receiveFriendRequests, setReceiveFriendRequests] = useState(false);
+
+        const [faceIdEnabled, setFaceIdEnabled] = useState(false);
     
         React.useEffect(() => {
             const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
@@ -164,6 +167,9 @@ const UnauthenticatedTabNavigator = () => (
 
                         const receiveFriendRequests = await checkReceiveFriendRequests(); // boolean
                         setReceiveFriendRequests(receiveFriendRequests);
+
+                        const isFaceIdEnabled = await checkFaceIdEnabled();
+                        setFaceIdEnabled(isFaceIdEnabled);
     
                         setCheckingSetup(false); // Setup check completed
                     };
@@ -190,7 +196,8 @@ const UnauthenticatedTabNavigator = () => (
         return (
             <GlobalContext.Provider value={{ 
                 setupRan, setSetupRan, username, profilePicture, goalNutrients, 
-                setUsername, setProfilePicture, friendRequestsNumber, setGoalNutrients, receiveFriendRequests
+                setUsername, setProfilePicture, friendRequestsNumber, setGoalNutrients, 
+                receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled
             }}>
                 <GestureHandlerRootView style={{flex: 1}}>
                     <StatusBar barStyle='dark-content'/>
