@@ -67,7 +67,6 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
-
                 {exercises.length === 0 ? (
                     <View style={tw`flex-1 justify-center items-center`}>
                         <ActivityIndicator size='large' color="#fd3e6b" />
@@ -94,25 +93,43 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
                                                 {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
                                                     <View key={set.id} style={tw`ml-3`}>
                                                         <View style={tw`flex flex-row gap-x-2`}>
-                                                            <View style={tw`w-10 h-10 bg-white rounded-xl flex items-center justify-center`}>
-                                                                <Text style={tw`text-base ml-5 absolute font-medium`}>{mapIndex + 1}</Text>
+
+                                                            <View style={tw`flex flex-col`}>
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+
+                                                                <View style={tw`w-10 h-10 bg-white rounded-xl flex items-center justify-center`}>
+                                                                    <Text style={tw`text-base ml-5 absolute font-medium`}>{mapIndex + 1}</Text>
+                                                                </View>
+
                                                             </View>
 
                                                             <View style={tw`flex flex-row gap-x-2 mb-3 w-full`}>
 
-                                                                <View style={tw`w-1/3 h-10 bg-white rounded-2xl flex items-start justify-center`}>
-                                                                    <Text style={tw`ml-3`}>{set.reps === "" ? '0 Повторения' : set.reps.toString() + ' Повторения'}</Text>
+                                                                <View style={tw`w-[30%]`}>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повторения</Text>
+
+                                                                    <View style={tw`w-full h-10 bg-white rounded-2xl flex items-start justify-center`}>
+                                                                        <Text style={tw`ml-3`}>{set.reps === "" ? '0' : set.reps.toString()}</Text>
+                                                                    </View>
                                                                 </View>
+                                                              
+                                                                <View style={tw`w-[26%]`}>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
 
-                                                                <View style={tw`w-1/3 h-10 bg-white rounded-2xl flex items-start justify-center`}>
-                                                                    <Text style={tw`ml-3`}>{set.weight === "" ? '0 KG' : set.weight.toString() + ' KG'}</Text>
+                                                                    <View style={tw`w-full h-10 bg-white rounded-2xl flex items-start justify-center`}>
+                                                                        <Text style={tw`ml-3`}>{set.weight === "" ? '0' : set.weight.toString()}</Text>
+                                                                    </View>
                                                                 </View>
-
-                                                                <View style={tw`w-1/3 h-10 bg-white rounded-2xl flex items-start justify-center`}>
-                                                                    <Text style={tw`ml-3`}>{set.rpe === "" ? '0 KG' : set.rpe.toString() + ' KG'}</Text>
+                                                                
+                                                                <View style={tw`w-[26%]`}>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>RPE</Text>
+                                                                   
+                                                                    <View style={tw`w-full h-10 bg-white rounded-2xl flex items-start justify-center`}>
+                                                                        <Text style={tw`ml-3`}>{set.rpe === "" ? '0' : set.rpe.toString()}</Text>
+                                                                    </View>
+ 
                                                                 </View>
-
-
+                                        
                                                             </View>
                                                         </View>
                                                     </View>
