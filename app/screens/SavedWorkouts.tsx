@@ -61,6 +61,30 @@ const Workouts = ({navigation}: any) => {
 
     }
 
+    /**
+     * 
+     *<Pressable style={tw`w-full h-14 bg-white py-1`} onPress={() => viewWorkout(savedWorkout, formattedDate, formattedTime)} disabled={viewWorkoutButtonDisabled}>
+            <View style={tw`flex flex-row justify-between`}>
+
+                <View style={tw`flex flex-row`}>
+
+                    <View style={tw`w-16 h-10 bg-[#fd3e54] rounded-xl flex items-center justify-center mr-2`}>
+                        <Text style={tw`text-lg font-medium text-white`} ellipsizeMode='tail' numberOfLines={1}>{date}</Text>
+                    </View>
+                    
+                    <View style={tw`flex flex-row justify-start items-center max-w-[75%]`}>
+                        <Text style={tw`text-lg font-medium`} ellipsizeMode='tail' numberOfLines={1}>{savedWorkout.title}</Text>
+                    </View>
+                </View>
+
+                <View style={tw`flex justify-center`}>
+                    <Ionicons name='chevron-forward' size={24} color='#6b7280' />
+                </View>
+
+            </View>
+        </Pressable>
+     */
+
     // <Ionicons name='close' size={40} color='white' onPress={() => deleteWorkout(savedWorkout.id)}/>
 
     const renderSavedWorkout = (savedWorkout: any) => {
@@ -70,27 +94,26 @@ const Workouts = ({navigation}: any) => {
         const formattedTime = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + 'ч.';
 
         return (
-            <Pressable style={tw`w-[94%] h-24 bg-[#fd1c47] shadow-lg rounded-2xl p-3 mb-2 mx-3`} 
-                onPress={() => viewWorkout(savedWorkout, formattedDate, formattedTime)} disabled={viewWorkoutButtonDisabled}
-            >
+            <Pressable style={tw`w-[96.5%] h-14 bg-white mx-2 py-1`} onPress={() => viewWorkout(savedWorkout, formattedDate, formattedTime)} disabled={viewWorkoutButtonDisabled}>
                 <View style={tw`flex flex-row justify-between`}>
-
-                    <View style={tw`w-[88%] flex flex-col`}>
-                        <Text style={tw`text-2xl font-medium text-white`} ellipsizeMode='tail' numberOfLines={1}>{savedWorkout.title}</Text>
-                        <Text style={tw`text-2xl font-medium text-white`} ellipsizeMode='tail' numberOfLines={1}>{formattedDate} - {formattedTime}</Text>
-                    </View>
-
-                    <View style={tw`flex flex-row gap-x-1`}>
-                        
-                        <View style={tw`flex justify-center`}>
-                            <Ionicons name='chevron-forward' size={24} color='white' />
+                    
+                    <View style={tw`flex flex-row`}>
+                        <View style={tw`w-28 h-10 bg-[#fd3e54] rounded-xl flex items-center justify-center mr-2`}>
+                            <Text style={tw`text-lg font-medium text-white`} ellipsizeMode='tail' numberOfLines={1}>{formattedDate}</Text>
                         </View>
+
+                        <View style={tw`flex flex-row justify-start items-center max-w-[66%]`}>
+                            <Text style={tw`text-lg font-medium`} ellipsizeMode='tail' numberOfLines={1}>{savedWorkout.title}</Text>
+                        </View>
+                    </View>
+                    
+                    <View style={tw`flex justify-center`}>
+                        <Ionicons name='chevron-forward' size={24} color='#6b7280' />
                     </View>
 
                 </View>
-
-               
             </Pressable>
+            
         )
     }
 
@@ -103,7 +126,7 @@ const Workouts = ({navigation}: any) => {
                 <Text style={tw`text-3xl font-medium text-black m-3`}>{t('workouts')}</Text>
             </View>
 
-            <View style={tw`w-full h-[72%] bg-white pt-3 pb-3`}>
+            <View style={tw`w-full h-[72%] bg-white py-3`}>
                 <FlatList
                     data={savedWorkouts}
                     renderItem={({item}: any) => renderSavedWorkout(item)}

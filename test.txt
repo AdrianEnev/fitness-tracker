@@ -15,13 +15,10 @@
 
 - da proverq na koi iphone raboti prilojenieto i taka da opredelq razmerite na nqkoi neshta
 
-- workout opisanie
 
-- kolko trenirovki e izpulnil chovek da se sledi
 
 - autoCapitalize start
 
-- smqna na parola pri akaunt v koito ne e lognat choveka
 
 - custom trenirovki s izkustven intelekt 
 
@@ -43,7 +40,6 @@
 
 - dokato neshto se promenq v bazata danni da ne moje usera da izleze ot priloejnieto i da go prekusne, da se uverq che imat stabilen internet i ne sa izlezli predi vsichkko da bude svursheno (moje bi s Promise)
 
-- disable receiving friend requests
 
 - email verification
 
@@ -51,15 +47,10 @@
 
 - da moje opredelena hrana da se zapazva v list sus saved foods
 - add to current day buton v star den
-- schedule food za budeshti dni
-
--> FoodDay ima element sus margin top - [-500px]. Da se uverq che nqma da suzdade problemi v budeshte
 
 
 
 
-
-- da pomislq dali da napravq currentNutrients global variable
 
 - da ne moje endWorkout i drugi butoni da runvat 2 puti ednovremenno
 - timera ne raboti kato izlqza ot prilojenieto (moga da vzema chasa kogato e izlqzul nqkoi ot prilojenieto i da vzema chasa kato pak vleze i da dobavq razlikata kum timera)
