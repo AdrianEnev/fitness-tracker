@@ -67,24 +67,26 @@ const ViewWorkout = ({route, navigation}: any) => {
     }
     
     const addExercise = () => {
-        const newSet = {
-            id: generateID(),
-            reps: "", 
-            weight: "" 
-        };
-    
-        const newExercise = {
-            id: generateID(),
-            title: "Упражнение " + (newExercises.length + 1),
-            exerciseIndex: newExercises.length + 1,
-            sets: [newSet]
-        };
-    
-        setNewExercises([...newExercises, newExercise]);
-        setUserInputs([...userInputs, { ...newExercise, sets: [newSet] }]);
-    
-        // Update currentIndex to the newly added exercise
-        setCurrentIndex(newExercises.length);
+        if (newExercises.length < 9) {
+            const newSet = {
+                id: generateID(),
+                reps: "", 
+                weight: "" 
+            };
+        
+            const newExercise = {
+                id: generateID(),
+                title: "Упражнение " + (newExercises.length + 1),
+                exerciseIndex: newExercises.length + 1,
+                sets: [newSet]
+            };
+        
+            setNewExercises([...newExercises, newExercise]);
+            setUserInputs([...userInputs, { ...newExercise, sets: [newSet] }]);
+        
+            // Update currentIndex to the newly added exercise
+            setCurrentIndex(newExercises.length);
+        }
     };
 
     const deleteWorkout = async () => {
@@ -245,15 +247,18 @@ const ViewWorkout = ({route, navigation}: any) => {
                         }
                     })}
                 </View>
-
-                <Pressable style={tw`
+                
+                {newExercises.length < 9 ? (
+                     <Pressable style={tw`
                     absolute w-[96.5%] h-16 shadow-lg bottom-30 mx-2 rounded-2xl flex flex-row justify-around items-center
                     bg-[#fd1c47]
-                `}
-                onPress={addExercise}
-                >
-                    <Text style={tw`text-white text-3xl font-medium`}>+ Упражнение</Text>
-                </Pressable>
+                    `}
+                    onPress={addExercise}
+                    >
+                        <Text style={tw`text-white text-3xl font-medium`}>+ Упражнение</Text>
+                    </Pressable>
+                ): null}
+               
 
                 <BottomNavigationBar
                     currentPage='ViewWorkout'

@@ -54,10 +54,10 @@ const AddWorkoutPage = ({ navigation }: any) => {
     };
 
     const nextExercise = () => {
-        if (pageIndex < exercises.length) {
+        if (pageIndex < exercises.length && exercises.length < 9) {
             // Move to the next existing exercise
             setPageIndex(pageIndex + 1);
-        } else {
+        } else if (exercises.length < 9) {
             // Create a new exercise
             const newExercise: Exercise = {
                 title: '',
