@@ -197,7 +197,7 @@ const UnauthenticatedTabNavigator = () => (
             <GlobalContext.Provider value={{ 
                 setupRan, setSetupRan, username, profilePicture, goalNutrients, 
                 setUsername, setProfilePicture, friendRequestsNumber, setGoalNutrients, 
-                receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled
+                receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled
             }}>
                 <GestureHandlerRootView style={{flex: 1}}>
                     <StatusBar barStyle='dark-content'/>

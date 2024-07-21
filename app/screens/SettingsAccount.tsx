@@ -24,7 +24,7 @@ const SettingsAccount = ({navigation}: any) => {
     const user = auth.currentUser;
     const email = user?.email;
 
-    const { username, setUsername, receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled } = useContext(GlobalContext);
+    const { username, setUsername, receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled } = useContext(GlobalContext);
 
     const logOut = () => {
 
@@ -150,16 +150,17 @@ const SettingsAccount = ({navigation}: any) => {
     }
 
     const [isFaceIdEnabled, setIsFaceIdEnabled] = useState(faceIdEnabled);
-    const toggleFaceIdSwitch = () => {
+    const toggleFaceIdSwitch = async () => {
         setIsFaceIdEnabled(previousState => !previousState)
+        setFaceIdEnabled(!isFaceIdEnabled);
+
+        await setDoc(doc(userInfoCollectionRef, 'faceIdEnabled'), { faceIdEnabled: !isFaceIdEnabled });
     };
 
     const [isReceiveFriendRequestsEnabled, setIsReceiveFriendRequestsEnabled] = useState(receiveFriendRequests);
     const toggleReceiveFriendRequestsSwitch = async () => {
         setIsReceiveFriendRequestsEnabled(previousState => !previousState)
         setReceiveFriendRequests(!isReceiveFriendRequestsEnabled);
-
-        // update the value of receiveFriendRequests inside the database
         
         await setDoc(doc(userInfoCollectionRef, 'receiveFriendRequests'), { receiveFriendRequests: !isReceiveFriendRequestsEnabled });
 
