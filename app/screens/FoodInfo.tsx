@@ -27,19 +27,27 @@ const FoodInfo = ({route}: any) => {
     const navigation = useNavigation();
 
     return (
-        <SafeAreaView style={tw`h-full w-full bg-white`}>
-            <Text style={tw`text-black text-2xl font-medium`}>{food.title}</Text>
-            <Text style={tw`text-black text-xl font-medium`}>{date}ч.</Text>
-            <Text>{calories} fat</Text>
-            <Text>{protein} fat</Text>
-            <Text>{carbs} fat</Text>
-            <Text>{fat} fat</Text>
-            <Text>{food.grams} grams</Text>
+        <View style={tw`h-full w-full bg-white`}>
+
+
+            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>{t('niggers-')}</Text>
+            </View>
+
+            <View style={tw`mx-3 my-2`}>
+
+                <Text style={tw`text-black text-2xl font-medium`}>{food.title}</Text>
+                <Text style={tw`text-black text-xl font-medium`}>{date}ч.</Text>
+                <Text>{calories} cals</Text>
+                <Text>{protein} protein</Text>
+                <Text>{carbs} carbs</Text>
+                <Text>{fat} fat</Text>
+                <Text>{food.grams} grams</Text>
+                
+            </View>
             
-
-
             <BottomNavigationBar currentPage='FoodInfo' navigation={navigation} deleteFood={removeFood}/>
-        </SafeAreaView>
+        </View>
     )
 }
 

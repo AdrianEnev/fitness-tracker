@@ -12,36 +12,25 @@ const RenderAddedFood = ({item, navigation}: any) => {
     const dateOptions = { hour: '2-digit', minute: '2-digit' };
     const date = item?.date ? item.date.toDate().toLocaleTimeString([], dateOptions) : '';
 
-    const getInitials = (name: string) => {
-        return name.split(' ').map(word => word[0]).join('').substring(0, 3).toUpperCase();
-    }
-
     return (
+        <Pressable style={tw`w-full h-14 bg-white py-1`} onPress={() => navigation.navigate("Храна-Подробности", {food: item, date: date, unformattedDate: item.date})}>
+            <View style={tw`flex flex-row justify-between`}>
 
-        <Pressable style={tw`bg-[#fc2d42] shadow-md rounded-2xl w-full h-24 my-2 pt-2 pl-3 flex flex-row justify-between`}
-            onPress={() => navigation.navigate("Храна-Подробности", {food: item, date: date, unformattedDate: item.date})}
-        >
+                <View style={tw`flex flex-row`}>
 
-            <View style={tw`flex flex-row h-[80%]`}>
-                
-                {/* Logo */}
-                <View style={tw`h-full py-2`}>
-                    <View style={tw`w-16 h-16 rounded-lg bg-white flex items-center justify-center`}>
-                        <Text style={tw`text-3xl font-medium text-black`}>{getInitials(item.title)}</Text>
+                    <View style={tw`w-16 h-10 bg-[#fd3e54] rounded-xl flex items-center justify-center mr-2`}>
+                        <Text style={tw`text-lg font-medium text-white`} ellipsizeMode='tail' numberOfLines={1}>{date}</Text>
+                    </View>
+                    
+                    <View style={tw`flex flex-row justify-start items-center max-w-[75%]`}>
+                        <Text style={tw`text-lg font-medium`} ellipsizeMode='tail' numberOfLines={1}>{item.title}</Text>
                     </View>
                 </View>
 
-                {/* Food Name + Grams */}
-                <View style={tw`flex flex-col ml-2 h-full mt-[7px] max-w-[72%]`}>
-                    <Text style={tw`text-white text-2xl font-medium`} ellipsizeMode='tail' numberOfLines={1}>{item.title}</Text>
-                    <Text style={tw`text-white text-xl font-medium`} ellipsizeMode='tail' numberOfLines={1}>{item.calories} {t('calories')}</Text>
-                    
+                <View style={tw`flex justify-center`}>
+                    <Ionicons name='chevron-forward' size={24} color='#6b7280' />
                 </View>
 
-            </View>
-
-            <View style={tw`flex justify-center mr-2`}>
-                <Ionicons name='chevron-forward-outline' size={40} color='white' />
             </View>
         </Pressable>
     )

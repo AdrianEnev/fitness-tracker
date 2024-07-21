@@ -84,16 +84,8 @@
 
  - aktivna trenirovka status
 
- - delete profile picture when profile is deleted or handle profile pictures differently
  - be careful of file upload limit
 
  - textinput style za liniikata deto se pokazva do texta
-
- - settings macros da premestq save buttona v bottom navigation bar
-
- - useGenerateColor po dobri cvetove
-
- - da dobavq limit ot 9 uprajneniq ili neshto takova
-
 
  - ako sum lognat v "user 1" i vlqza v "user 2", izliza profila na "user 1" za nqkolko sekundi dokato ne loadne informaciqta za "user 2"

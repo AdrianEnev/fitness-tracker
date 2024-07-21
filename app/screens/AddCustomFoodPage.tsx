@@ -131,7 +131,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
             <TextInput 
                 style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] px-3 pb-2 text-white font-medium text-xl`} 
                 keyboardType={title === t('food') ? 'default' : 'number-pad'} 
-                maxLength={title === t('food') ? 20 : 5} 
+                maxLength={title === t('food') ? 40 : 5} 
                 onChangeText={(text) => setNutrient(text, identifier)}
             />
 

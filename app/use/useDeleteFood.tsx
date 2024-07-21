@@ -3,9 +3,8 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import { Food } from "../../interfaces";
 
 const deleteFood = async (item: any, date: any) => {
-    
-    const timestamp = {"nanoseconds": 816000000, "seconds": 1719743541};
-    const milliseconds = timestamp.seconds * 1000;
+
+    const milliseconds = date.seconds * 1000;
     const newDate = new Date(milliseconds);
     const day = newDate.getDate(); 
     const month = newDate.getMonth() + 1; 

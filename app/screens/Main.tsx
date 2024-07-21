@@ -24,6 +24,7 @@ import ProfilePicture from '../components/ProfilePicture';
 import { use } from 'i18next';
 
 //bg-[#fd3e6b]
+//bg-[#3d5875]
 
 const Main = ({navigation}: any) => {
 

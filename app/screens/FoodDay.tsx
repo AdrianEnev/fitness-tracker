@@ -162,7 +162,7 @@ const FoodDay = ({route, navigation}: any) => {
                     formattedDate={date} 
                 />
 
-                <View style={tw`mx-2 mt-5 w-[96%] h-[30%] bg-white rounded-lg`}>
+                <View style={tw`mx-2 mt-5 w-[96%] h-[56%] bg-white rounded-lg`}>
 
                     <FlatList 
                         data={currentFoods}
