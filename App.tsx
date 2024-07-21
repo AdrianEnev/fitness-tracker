@@ -171,7 +171,8 @@ const UnauthenticatedTabNavigator = () => (
                         const isFaceIdEnabled = await checkFaceIdEnabled();
                         setFaceIdEnabled(isFaceIdEnabled);
     
-                        setCheckingSetup(false); // Setup check completed
+                        setCheckingSetup(false); 
+                       
                     };
     
                     fetchData().then(() => setLoading(false));
@@ -185,7 +186,7 @@ const UnauthenticatedTabNavigator = () => (
             return () => unsubscribe();
         }, []);
     
-        if (loading || checkingSetup) { // Modified condition to include checkingSetup
+        if (loading || checkingSetup) { 
             return (
                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                     <ActivityIndicator size="large" color="#fd3e6b" />

@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalContext from '../../GlobalContext'
 import ProfilePicture from '../components/ProfilePicture'
-import { collection, doc, getDocs, setDoc } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore'
 import BottomNavigationBar from '../components/BottomNavigationBar'
 import { useTranslation } from 'react-i18next'
 import { deleteObject, getStorage, ref } from 'firebase/storage'
@@ -50,6 +50,23 @@ const SettingsAccount = ({navigation}: any) => {
     }
 
     const changeUsername = async () => {
+
+
+        const usernameDocRef = doc(userInfoCollectionRef, 'username');
+        // get the date property inside the usernameDocRef and check the difference between the timestamp property and the current date
+        const usernameDoc = await getDoc(usernameDocRef);
+        const usernameData = usernameDoc.data();
+        const date = usernameData?.date.toDate();
+        const currentDate = new Date();
+        const difference = currentDate.getTime() - date.getTime();
+        const daysDifference = difference / (1000 * 3600 * 24);
+
+        // if 7 days haven't passed since the last username change, alert the user that there is still a cooldown
+        if (daysDifference < 7) {
+            alert('Можете да смените потребителското си име отново след ' + (7 - Math.floor(daysDifference)) + ' дни!');
+            return;
+        }
+
         Alert.prompt(
             'Смяна на име',
             'Моля въведи ново потребителско име',
