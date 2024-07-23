@@ -119,6 +119,10 @@ const ActiveWorkout = ({route, navigation}: any) => {
         }
     };
 
+    const getWorkoutDuration = () => {
+       
+        return time;
+    }
 
     return (
         <>
@@ -147,6 +151,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                         navigation={navigation}
                         exercises={userInputs}
                         workoutTitle={workoutTitle}
+                        duration={getWorkoutDuration()}
                     />
                     
 

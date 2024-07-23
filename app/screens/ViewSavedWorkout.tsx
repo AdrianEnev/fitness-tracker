@@ -79,6 +79,7 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
                             <Text style={tw`text-2xl font-medium`}>{workoutTitle}</Text>
                             <Text style={tw`text-2xl font-medium`}>{date}</Text>
                             <Text style={tw`text-2xl font-medium`}>{time}</Text>
+                            <Text style={tw`text-2xl font-medium`}>{workout.duration}</Text>
                         </View>
 
                         <View style={tw`flex flex-col gap-y-1`}>

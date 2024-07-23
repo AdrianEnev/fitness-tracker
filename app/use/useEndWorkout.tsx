@@ -2,7 +2,9 @@ import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc } from "fireba
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import generateRandomColour from "./useGenerateColour";
 
-const endWorkout = async (navigation: any, exercises: any, workoutTitle: string) => {
+const endWorkout = async (navigation: any, exercises: any, workoutTitle: string, duration: any) => {
+
+    console.log('endWorkout.tsx: ', duration);
 
     if (!exercises.length || exercises.every((exercise: any) => 
         !exercise.sets || 
@@ -23,6 +25,7 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string)
     const savedWorkoutDocRef = await addDoc(userSavedWorkoutsCollectionRef, {
         title: workoutTitle,
         created: serverTimestamp(),
+        duration: duration,
     });
 
     let totalWeight = 0;

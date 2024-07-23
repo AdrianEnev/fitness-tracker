@@ -63,8 +63,19 @@ const SettingsAccount = ({navigation}: any) => {
 
         // if 7 days haven't passed since the last username change, alert the user that there is still a cooldown
         if (daysDifference < 7) {
-            alert('Можете да смените потребителското си име отново след ' + (7 - Math.floor(daysDifference)) + ' дни!');
-            return;
+            Alert.alert(
+                'Смяна на име',
+                'Можете да смените потребителското си име отново след ' + (7 - Math.floor(daysDifference)) + ' дни!',
+                [
+                    {
+                        text: 'Разбрах',
+                        style: 'cancel',
+                    },
+                ],
+            );
+
+            return
+            
         }
 
         Alert.prompt(
@@ -73,7 +84,7 @@ const SettingsAccount = ({navigation}: any) => {
             [
                 {
                     text: 'Отказ',
-                    style: 'default',
+                    style: 'destructive',
                 },
                 {
                     text: 'Смяна',
@@ -165,6 +176,8 @@ const SettingsAccount = ({navigation}: any) => {
             </Pressable>
         )
     }
+
+
 
     const [isFaceIdEnabled, setIsFaceIdEnabled] = useState(faceIdEnabled);
     const toggleFaceIdSwitch = async () => {
