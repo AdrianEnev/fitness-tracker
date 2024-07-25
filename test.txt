@@ -80,3 +80,5 @@
  - textinput style za liniikata deto se pokazva do texta
 
  - ako sum lognat v "user 1" i vlqza v "user 2", izliza profila na "user 1" za nqkolko sekundi dokato ne loadne informaciqta za "user 2"
+
+ - da mojesh da vidish akaunta na nqkogo predi da pratish pokana za priqtelstvo (moje bi)

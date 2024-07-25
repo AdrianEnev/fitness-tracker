@@ -93,7 +93,7 @@ const Workouts = ({navigation}: any) => {
         const exercisesCount = workout.numberOfExercises;
 
         return (
-            <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-md rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
+            <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-lg rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
                 
                 <View style={tw`flex flex-row justify-between`}>
                     <View style={tw`flex-1 flex-row`}>
@@ -127,16 +127,9 @@ const Workouts = ({navigation}: any) => {
 
             <View style={tw`flex flex-row justify-between mx-3`}>
 
-                <View style={tw`flex flex-row gap-x-2`}>
-                    <Pressable style={tw`w-13 h-13 bg-white shadow-lg rounded-2xl flex items-center justify-center`} onPress={() => navigation.goBack()}>
-                        <Ionicons name='arrow-back-outline' size={36} color='#fa1148'/>
-                    </Pressable>
-
-                    <View style={tw`flex justify-center w-auto h-13 rounded-2xl px-1`}>
-                        <Text style={tw`font-medium text-2xl text-black`}>{t('workouts')}</Text>
-                    </View>
-
-                </View>
+                <Pressable style={tw`w-13 h-13 bg-white shadow-lg rounded-2xl flex items-center justify-center`} onPress={() => navigation.goBack()}>
+                    <Ionicons name='arrow-back-outline' size={36} color='#fa1148'/>
+                </Pressable>
 
                 <Pressable style={tw`w-13 h-13 bg-white shadow-lg rounded-2xl flex items-center justify-center`} onPress={() => navigation.navigate("Тренировка-Добави")}>
                     <Ionicons name='add' size={44} color='#fa1148'/>
