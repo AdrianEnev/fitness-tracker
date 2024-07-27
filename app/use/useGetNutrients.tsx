@@ -40,9 +40,12 @@ const getNutrients = async (search: any, inputedGrams: any) => {
               fat: fat,
               grams: inputedGrams
             };
-          });
+        });
+
+        nutrients.sort((a: any, b: any) => a.title.length - b.title.length);
 
         return nutrients;
+        
     } catch (error) {
         console.error('Error getting nutrients:', error);
         throw error; // Rethrow error to handle it outside

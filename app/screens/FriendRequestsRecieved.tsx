@@ -135,32 +135,34 @@ const FriendRequestsRecieved = ({route, navigation}: any) => {
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('received-requests')}</Text>
             </View>
 
-            <FlatList 
-                data={receivedFriendRequests}
-                keyExtractor={(item) => item.id}
-                renderItem={({item}) => (
-                    <View style={tw`w-full h-14 bg-white mb-2 mt-3 px-4 py-3 flex flex-row justify-between`}>
-                        
-                        <Text style={tw`text-lg font-medium`}>{item.username}</Text>
-
-                        <View style={tw`flex flex-row gap-x-2`}>
-
-                            <Pressable onPress={() => declineRequest(item)}>
-                                <Ionicons name="logo-xbox" size={32} color='red' />
-                            </Pressable>
-
-                            <Pressable onPress={() => acceptRequest(item)}>
-                                <Ionicons name="checkmark-circle" size={32} color='green' />
-                            </Pressable>
+            <View style={tw`m-3`}>
+                <FlatList 
+                    data={receivedFriendRequests}
+                    keyExtractor={(item) => item.id}
+                    renderItem={({item}) => (
+                        <View style={tw`w-full h-14 bg-white mb-2 mt-3 px-4 py-3 flex flex-row justify-between`}>
                             
-                        </View>
+                            <Text style={tw`text-lg font-medium`}>{item.username}</Text>
 
-                    </View>
-                )}
-                ListEmptyComponent={() => (
-                    <Text style={tw`m-3 text-lg text-center`}>{t('no-received-requests')}</Text>
-                )}
-            />
+                            <View style={tw`flex flex-row gap-x-2`}>
+
+                                <Pressable onPress={() => declineRequest(item)}>
+                                    <Ionicons name="logo-xbox" size={32} color='red' />
+                                </Pressable>
+
+                                <Pressable onPress={() => acceptRequest(item)}>
+                                    <Ionicons name="checkmark-circle" size={32} color='green' />
+                                </Pressable>
+                                
+                            </View>
+
+                        </View>
+                    )}
+                    ListEmptyComponent={() => (
+                        <Text style={tw`text-xl font-medium text-blue-500`}>{t('no-received-requests')}</Text>
+                    )}
+                />
+            </View>
 
             <BottomNavigationBar currentPage='Settings' navigation={navigation}/>
         </View>

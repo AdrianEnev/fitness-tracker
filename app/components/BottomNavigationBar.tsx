@@ -67,37 +67,37 @@ const BottomNavigationBar = (
                 <View style={tw`flex flex-row justify-between w-full`}>
 
                     <Pressable onPress={backButton}>
-                        <Ionicons name='chevron-back' color='#ef4444' size={64}/>
+                        <Ionicons name='chevron-back' color='#fd1c47' size={64}/>
                     </Pressable>
 
                     <Pressable onPress={toggleEndWorkoutModal}>
-                        <Ionicons name='stop-outline' color='#ef4444' size={64}/>
+                        <Ionicons name='stop-outline' color='#fd1c47' size={64}/>
                     </Pressable>
 
                     <Pressable onPress={forwardButton}>
-                        <Ionicons name='chevron-forward' color='#ef4444' size={64}/>
+                        <Ionicons name='chevron-forward' color='#fd1c47' size={64}/>
                     </Pressable>
                 </View>
             ) : currentPage === 'SavedWorkout' ? (
                 <View style={tw`flex flex-row justify-between w-full`}>
 
                     <Pressable onPress={backButton}>
-                        <Ionicons name='chevron-back' color='#ef4444' size={64}/>
+                        <Ionicons name='chevron-back' color='#fd1c47' size={64}/>
                     </Pressable>
 
                     <Pressable onPress={deleteSavedWorkout}>
-                        <Ionicons name='trash-outline' color='#ef4444' size={64}/>
+                        <Ionicons name='trash-outline' color='#fd1c47' size={64}/>
                     </Pressable>
 
                     <Pressable onPress={forwardButton}>
-                        <Ionicons name='chevron-forward' color='#ef4444' size={64}/>
+                        <Ionicons name='chevron-forward' color='#fd1c47' size={64}/>
                     </Pressable>
                 </View>
             ) : currentPage === 'AddWorkout' ? (
                 <View style={tw`flex flex-row justify-around w-full`}>
 
                     <Pressable onPress={backButton}>
-                        <Ionicons name='chevron-back-circle-outline' color='#ef4444' size={72}/>
+                        <Ionicons name='chevron-back-circle-outline' color='#fd1c47' size={72}/>
                     </Pressable>
 
                     <Pressable onPress={addSetButton}>
@@ -109,21 +109,21 @@ const BottomNavigationBar = (
 
 
                     <Pressable onPress={forwardButton}>
-                        <Ionicons name='chevron-forward-circle-outline' color='#ef4444' size={72}/>
+                        <Ionicons name='chevron-forward-circle-outline' color='#fd1c47' size={72}/>
                     </Pressable>
                 </View>
             ) : currentPage === "FoodDay" ? (
                 <View style={tw`flex flex-row justify-around w-full items-center`}>
                     <Pressable onPress={() => navigation.navigate("Храна-Добави", { date: foodDayDate })}>
-                        <Ionicons name="add-circle-outline" size={72} color="#ef4444"/>
+                        <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
                     <Pressable onPress={clearDay}>
-                        <Ionicons name="refresh-circle-outline" size={72} color="#ef4444"/>
+                        <Ionicons name="refresh-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
                     <Pressable onPress={() => navigation.navigate("Храна-Потърси", { date: foodDayDate })}>
-                        <Ionicons name="search-circle-outline" size={72} color="#ef4444"/>
+                        <Ionicons name="search-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
                 </View>
             ) : currentPage === "AddCustomFood" ? (
@@ -135,11 +135,11 @@ const BottomNavigationBar = (
             ) : currentPage === "AddFoodPage" ? (
                 <View style={tw`flex flex-row justify-around w-full`}>
                     <Pressable onPress={clearSearchFoodSuggestionList}>
-                        <Ionicons name="refresh-circle-outline" size={72} color="#ef4444"/>
+                        <Ionicons name="refresh-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
                     <Pressable onPress={displayFoods}>
-                        <Ionicons name="search-circle-outline" size={72} color="#ef4444"/>
+                        <Ionicons name="search-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>  
                 </View>
             ) : currentPage === 'Workouts' ? (
@@ -159,7 +159,7 @@ const BottomNavigationBar = (
                     </Pressable>
 
                     <Pressable onPress={deleteSavedWorkout}>
-                        <Ionicons name='close-circle-outline' color='#ef4444' size={72}/>
+                        <Ionicons name='close-circle-outline' color='#fd1c47' size={72}/>
                     </Pressable>
 
                     <Pressable onPress={() => startWorkout(workout, navigation)}>
@@ -173,27 +173,27 @@ const BottomNavigationBar = (
             ) : currentPage === 'FriendsList' ? (
                 <View style={tw`flex flex-row justify-around w-full items-center`}>
                     <Pressable onPress={() => navigation.navigate('Приятели-Покани-Изпратени', {username: friendsListUsername})}>
-                        <Ionicons name="navigate-circle-outline" size={72} color="#ef4444"/>
+                        <Ionicons name="navigate-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
                     <Pressable onPress={() => navigation.navigate('Приятели-Добави', {username: friendsListUsername})}>
-                        <Ionicons name="add-circle-outline" size={72} color="#ef4444"/>
+                        <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
                     <Pressable onPress={() => navigation.navigate('Приятели-Покани-Получени', {username: friendsListUsername})}>
-                        <Ionicons name="notifications-circle-outline" size={72} color="#ef4444"/>
+                        <Ionicons name="notifications-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
                 </View>
             ) : currentPage === "ViewFriendProfile" ? (
                 <View>
                     <Pressable onPress={removeFriend}>
-                        <Ionicons name='trash-outline' color='#ef4444' size={64}/>
+                        <Ionicons name='trash-outline' color='#fd1c47' size={64}/>
                     </Pressable>
                 </View>
             ) : currentPage === "FoodInfo" ? (
                 <View>
                     <Pressable onPress={deleteFood}>
-                        <Ionicons name='trash-outline' color='#ef4444' size={64}/>
+                        <Ionicons name='trash-outline' color='#fd1c47' size={64}/>
                     </Pressable>
                 </View>
             ) : currentPage === "Settings-Macronutrients" ? (

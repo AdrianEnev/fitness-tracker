@@ -1,8 +1,8 @@
-import { View, Text, TextInput, Pressable, ActivityIndicator, Button } from 'react-native'
+import { View, Text, TextInput, Pressable, ActivityIndicator, Button, Keyboard } from 'react-native'
 import React, { useState } from 'react'
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { FlatList } from 'react-native-gesture-handler';
+import { FlatList, TouchableWithoutFeedback } from 'react-native-gesture-handler';
 import { addDoc, collection, doc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Food } from '../../interfaces';
@@ -159,7 +159,7 @@ const AddFoodPage = ({route, navigation}: any) => {
                 
                 <Text style={tw`text-black text-xl font-medium text-center`}>{foodTitle}</Text>
 
-                <View style={tw`pl-2 mt-2`}>
+                <View style={tw`pl-2 mt-[2px]`}>
                     
                     
                     <Text style={tw`text-black text-lg pr-3`}>{foodGrams || 0} {t('grams')}</Text>
@@ -177,12 +177,12 @@ const AddFoodPage = ({route, navigation}: any) => {
         setFoods([]);
         setSearchQuery('');
         setGrams('');
-        setSearchText('Потърси нещо (english only)...');
+        setSearchText('Search-food-in-english...');
         setLoading(false);
         setNoResults(false);
     }
 
-    const [searchText, setSearchText] = useState('Потърси нещо (english only)...');
+    const [searchText, setSearchText] = useState('Search-food-in-english...');
 
     return (
         <SafeAreaView style={tw`bg-white h-full w-full`}>
@@ -208,33 +208,32 @@ const AddFoodPage = ({route, navigation}: any) => {
 
             </View>
 
-            <View style={tw`w-[96%] h-[82.5%] mx-2 my-2 bg-white shadow-lg border border-gray-200 rounded-lg`}>
-                
-                {!loading && searchText ? (
-                    <Text style={tw`text-lg font-medium text-center mt-3`}>{searchText}</Text>
-                ): null}
-                
-                {loading ? (
+            <Pressable style={tw`w-[96%] h-[82.5%] mx-2 my-2 bg-white shadow-lg border border-gray-200 rounded-lg`} onPress={() => Keyboard.dismiss()}>
 
-                    <View style={tw`flex-1 items-center justify-center mt-3`}>
-                        <ActivityIndicator size="large" color="#fa1148" />
-                    </View>
+                    {!loading && searchText ? (
+                        <Text style={tw`text-lg font-medium text-center mt-3`}>{searchText}</Text>
+                    ): null}
+                    
+                    {loading ? (
 
-                ) : noResults ? (
-                    <View>
-                        <Text style={tw`text-lg font-medium text-center mt-3`}>Няма резултати...</Text>
-                    </View>
-                ) : (
-                    <View style={tw`w-[96%] mx-2 mt-2`}>
-                        <FlatList data={foods} renderItem={({item}) => renderSearchedFoods(item)} showsVerticalScrollIndicator={false}/>
-                    </View>
-                )}
+                        <View style={tw`flex-1 items-center justify-center mt-3`}>
+                            <ActivityIndicator size="large" color="#fa1148" />
+                        </View>
 
-            </View>
+                    ) : noResults ? (
+                        <View>
+                            <Text style={tw`text-lg font-medium text-center mt-3`}>Няма резултати...</Text>
+                        </View>
+                    ) : (
+                        <View style={tw`w-[96%] mx-2 mt-2`}>
+                            <FlatList data={foods} renderItem={({item}) => renderSearchedFoods(item)} showsVerticalScrollIndicator={false}/>
+                        </View>
+                    )}
+                     
+            </Pressable>
            
             <BottomNavigationBar currentPage='AddFoodPage' navigation={navigation} displayFoods={displayFoods} clearSearchFoodSuggestionList={clearSearchList}/>
 
-           
         </SafeAreaView>
     )
 }

@@ -7,8 +7,9 @@ import { FlatList } from 'react-native-gesture-handler';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { Friend } from '../../interfaces';
 import { useTranslation } from 'react-i18next';
+import BottomNavigationBar from '../components/BottomNavigationBar';
 
-const FriendRequestsSent = ({route}: any) => {
+const FriendRequestsSent = ({route, navigation}: any) => {
 
     const {username} = route.params;
 
@@ -89,24 +90,29 @@ const FriendRequestsSent = ({route}: any) => {
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('sent-requests')}</Text>
             </View>
 
+            <View style={tw`m-3`}>
                 <FlatList 
                     data={sentFriendRequests}
                     keyExtractor={(item) => item.id}
                     renderItem={({item}) => (
-                        <View style={tw`w-full h-14 bg-white mb-2 mt-3 px-4 py-3 flex flex-row justify-between`}>
+                        <View style={tw`w-[96.5%] h-14 bg-white shadow-md border border-gray-200 rounded-xl mb-[2px] mt-3 mx-2 px-2 py-3 flex flex-row justify-between`}>
                             
-                            <Text style={tw`text-lg font-medium`}>{item.username}</Text>
+                            <Text style={tw`text-lg font-medium max-w-[90%]`} ellipsizeMode='tail' numberOfLines={1}>{item.username}</Text>
 
                             <Pressable onPress={() => deleteRequest(item)}>
-                                <Ionicons name="trash-bin-outline" size={24} color='red' />
+                                <Ionicons name="close-circle-outline" size={32} color='red' />
                             </Pressable>
 
                         </View>
                     )}
                     ListEmptyComponent={() => (
-                        <Text style={tw`m-3 text-lg text-center`}>{t('no-sent-requests')}</Text>
+                        <Text style={tw`text-xl font-medium text-blue-500`}>{t('no-sent-requests')}</Text>
                     )}
                 />
+            </View>
+
+
+            <BottomNavigationBar currentPage='Settings' navigation={navigation}/>
         </View>
     )
 }
