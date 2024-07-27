@@ -52,16 +52,18 @@ const AddFoodPage = ({route, navigation}: any) => {
             return;
         }
 
-        if (grams === '0' || grams === '') {
+        if (grams === '0' || grams === '00' || grams === '000' || grams === '0000' || grams === '') {
             setGrams('100');
         }
 
         const results = await getNutrients(searchQuery, grams);
-        
+
         setFoods(results);
-        
+
         if (results.length === 0) {
             setNoResults(true);
+        }else {
+            setSearchText('');
         }
 
         setLoading(false);
@@ -152,17 +154,20 @@ const AddFoodPage = ({route, navigation}: any) => {
 
         return (
 
-            <Pressable style={tw`bg-[#fc2d42] w-full min-h-43 my-1 pt-2 pl-3 rounded-xl`} onPress={() => addItem(item)}>
+            <Pressable style={tw`bg-white shadow-md border border-gray-200 w-full min-h-43 my-1 pt-2 pb-2 rounded-xl`} onPress={() => addItem(item)}>
 
-                <View style={tw`flex flex-row justify-between`}>
-                    <Text style={tw`text-white text-lg`}>{foodTitle}</Text>
-                    <Text style={tw`text-white text-lg pr-3`}>{foodGrams || 0} {t('grams')}</Text>
-                </View>
                 
-                <Text style={tw`text-white text-lg`}>{foodCalories} {t('calories')}</Text>
-                <Text style={tw`text-white text-lg`}>{foodProtein}г. {t('protein')}</Text>
-                <Text style={tw`text-white text-lg`}>{foodCarbs}г. {t('carbs')}</Text>
-                <Text style={tw`text-white text-lg`}>{foodFat}г. {t('fat')}</Text>
+                <Text style={tw`text-black text-xl font-medium text-center`}>{foodTitle}</Text>
+
+                <View style={tw`pl-2 mt-2`}>
+                    
+                    
+                    <Text style={tw`text-black text-lg pr-3`}>{foodGrams || 0} {t('grams')}</Text>
+                    <Text style={tw`text-black text-lg`}>{foodCalories} {t('calories')}</Text>
+                    <Text style={tw`text-black text-lg`}>{foodProtein}г. {t('protein')}</Text>
+                    <Text style={tw`text-black text-lg`}>{foodCarbs}г. {t('carbs')}</Text>
+                    <Text style={tw`text-black text-lg`}>{foodFat}г. {t('fat')}</Text>
+                </View>
 
             </Pressable>
         )
@@ -172,24 +177,30 @@ const AddFoodPage = ({route, navigation}: any) => {
         setFoods([]);
         setSearchQuery('');
         setGrams('');
+        setSearchText('Потърси нещо (english only)...');
+        setLoading(false);
+        setNoResults(false);
     }
+
+    const [searchText, setSearchText] = useState('Потърси нещо (english only)...');
 
     return (
         <SafeAreaView style={tw`bg-white h-full w-full`}>
 
-            <View style={tw`flex flex-row justify-between mt-4 mx-2`}>
+            <View style={tw`flex flex-row justify-between mt-1 mx-2 gap-x-2 w-[95.5%]`}>
 
                 <TextInput
-                    style={tw`w-[75%] h-13 bg-white text-black font-medium text-lg shadow-md rounded-xl pl-4 pb-2 z-10`}
+                    style={tw`w-[75%] h-13 bg-white shadow-md rounded-xl border border-gray-200 font-medium text-lg pb-2 pl-3`}
                     maxLength={20}
                     placeholder={t('food')}
                     value={searchQuery}
                     onChangeText={setSearchQuery}
                 />
+
                 <TextInput
-                    style={tw`w-[20%] h-13 bg-white text-black font-medium text-lg shadow-md rounded-xl text-center pb-2 z-10`}
+                    style={tw`w-[22%] h-13 bg-white shadow-md rounded-xl border border-gray-200 font-medium text-lg pb-2 pl-2`}
                     keyboardType='number-pad'
-                    placeholder={t('grams')}
+                    placeholder='Грамаж'
                     maxLength={4}
                     value={grams}
                     onChangeText={setGrams}
@@ -197,8 +208,28 @@ const AddFoodPage = ({route, navigation}: any) => {
 
             </View>
 
-            <View style={tw`mt-2 mx-3 w-[94.5%] h-[80%] mb-5`}>
-                <FlatList data={foods} renderItem={({item}) => renderSearchedFoods(item)} showsVerticalScrollIndicator={false}/>
+            <View style={tw`w-[96%] h-[82.5%] mx-2 my-2 bg-white shadow-lg border border-gray-200 rounded-lg`}>
+                
+                {!loading && searchText ? (
+                    <Text style={tw`text-lg font-medium text-center mt-3`}>{searchText}</Text>
+                ): null}
+                
+                {loading ? (
+
+                    <View style={tw`flex-1 items-center justify-center mt-3`}>
+                        <ActivityIndicator size="large" color="#fa1148" />
+                    </View>
+
+                ) : noResults ? (
+                    <View>
+                        <Text style={tw`text-lg font-medium text-center mt-3`}>Няма резултати...</Text>
+                    </View>
+                ) : (
+                    <View style={tw`w-[96%] mx-2 mt-2`}>
+                        <FlatList data={foods} renderItem={({item}) => renderSearchedFoods(item)} showsVerticalScrollIndicator={false}/>
+                    </View>
+                )}
+
             </View>
            
             <BottomNavigationBar currentPage='AddFoodPage' navigation={navigation} displayFoods={displayFoods} clearSearchFoodSuggestionList={clearSearchList}/>

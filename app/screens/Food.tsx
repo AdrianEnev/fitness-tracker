@@ -69,7 +69,7 @@ const Food = ({navigation}: any) => {
                     pastScrollRange={6}
                     futureScrollRange={6}
                     scrollEnabled={true}
-                    onDayPress={day => {
+                    onDayPress={(day: any) => {
                         navigation.navigate("Хранене-Ден", {date: day});
                     }}
                     markedDates={{
