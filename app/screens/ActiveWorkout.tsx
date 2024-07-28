@@ -30,18 +30,24 @@ const ActiveWorkout = ({route, navigation}: any) => {
     
         const currentExerciseIndex = updatedExercises.findIndex((exercise: any) => exercise.exerciseIndex === currentIndex + 1);
         if (currentExerciseIndex !== -1) {
-            const newSet = {
-                id: Math.random().toString(),
-                reps: "",
-                weight: ""
-            };
+            // Check if the current number of sets is less than 20
+            if (updatedExercises[currentExerciseIndex].sets.length < 15) {
+                const newSet = {
+                    id: Math.random().toString(),
+                    reps: "",
+                    weight: ""
+                };
     
-            // Update both exercises and userInputs
-            updatedExercises[currentExerciseIndex].sets.push(newSet);
-            updatedUserInputs[currentExerciseIndex].sets.push({...newSet}); // Clone newSet for userInputs
+                // Update both exercises and userInputs
+                updatedExercises[currentExerciseIndex].sets.push(newSet);
+                updatedUserInputs[currentExerciseIndex].sets.push({...newSet}); // Clone newSet for userInputs
     
-            setNewExercises(updatedExercises);
-            setUserInputs(updatedUserInputs); // Update userInputs to reflect the new set
+                setNewExercises(updatedExercises);
+                setUserInputs(updatedUserInputs); // Update userInputs to reflect the new set
+            } else {
+                // Optionally, you can show a message to the user indicating the max limit has been reached
+                console.log("Maximum number of sets reached");
+            }
         }
     }
 
@@ -186,7 +192,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                             </Pressable>
                                         </View>
 
-                                        <ScrollView style={tw``}>
+                                        <ScrollView style={tw`h-[75%] mb-3`}>
                                             {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
                                                 <View key={set.id} style={tw`ml-3`}>
                                                     <View style={tw`flex flex-row gap-x-2`}>
@@ -242,7 +248,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                                     style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
                                                                     keyboardType='number-pad'
                                                                     maxLength={2}
-                                                                    placeholder=''
+                                                                    placeholder='RPE'
                                                                     value={userInputs[index].sets[mapIndex].rpe}
                                                                     onChangeText={(text) => {
                                                                         let updatedInputs = [...userInputs];

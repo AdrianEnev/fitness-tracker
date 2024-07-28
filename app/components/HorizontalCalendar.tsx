@@ -22,8 +22,9 @@ const HorizontalCalendar = ({navigation}: any) => {
     const formatDate = (date: Date, format: string) => {
         let weekDays;
         let monthNames;
+
     
-        if (currentLanguage === 'bg') {
+        if (i18next.language === 'bg') {
             weekDays = ['Нед', 'Пон', 'Вт', 'Ср', 'Чет', 'Пет', 'Съб'];
             monthNames = ['Яну', 'Фев', 'Мар', 'Апр', 'Май', 'Юни', 'Юли', 'Авг', 'Сеп', 'Окт', 'Ное', 'Дек'];
         } else { // Default to English if not Bulgarian
@@ -44,7 +45,7 @@ const HorizontalCalendar = ({navigation}: any) => {
                 const monthName = monthNames[date.getMonth()];
                 return `${dayOfMonth} ${monthName}`;
             default:
-                return date.toLocaleDateString(currentLanguage);
+                return date.toLocaleDateString(i18next.language);
         }
     };
 
@@ -59,13 +60,6 @@ const HorizontalCalendar = ({navigation}: any) => {
         const dates = getDatesRange();
         setDates(dates);
     }, [startDate]);
-
-    const [currentLanguage, setCurrentLanguage] = useState('');
-
-    useEffect(() => {
-        const currentLang = i18next.language;
-        setCurrentLanguage(currentLang);
-    }, []);
 
     const {t} = useTranslation();
 

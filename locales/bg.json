@@ -68,6 +68,9 @@
     "no-saved-workouts": "Нямаш запазени тренировки",
     "no-saved-foods": "Нямаш добавени храни",
     "set-language": "Задай език",
-    "language": "Език"
+    "language": "Език",
+    "face-id": "Face ID",
+    "receive-friend-requests": "Покани за приятелство",
+    "total-weight-lifted": "Общо вдигнато тегло"
 
 }

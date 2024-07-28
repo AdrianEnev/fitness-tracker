@@ -68,6 +68,9 @@
     "no-saved-workouts": "Saved workouts will be shown here",
     "no-saved-foods": "Added foods will be shown here",
     "set-language": "Set language",
-    "language": "Language"
+    "language": "Language",
+    "face-id": "Face ID",
+    "receive-friend-requests": "Friend requests",
+    "total-weight-lifted": "Total weight lifted"
 
 }

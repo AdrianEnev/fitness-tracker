@@ -214,10 +214,10 @@ const SettingsAccount = ({navigation}: any) => {
 
                     <View style={tw`flex justify-center`}>
                         <Switch
-                            trackColor={{ false: "#ef4444", true: "#81b0ff" }}
+                            trackColor={{ false: "#ef4444", true: "#4ade80" }}
                             thumbColor={
-                                title === 'face-id' ? (isFaceIdEnabled ? "#f5dd4b" : "#f4f3f4") :
-                                title === 'receive-friend-requests' ? (isReceiveFriendRequestsEnabled ? "#f5dd4b" : "#f4f3f4") : 
+                                title === 'face-id' ? (isFaceIdEnabled ? "#ffffff" : "#f4f3f4") :
+                                title === 'receive-friend-requests' ? (isReceiveFriendRequestsEnabled ? "#ffffff" : "#f4f3f4") : 
                                 "#f4f3f4"
                             }
                             ios_backgroundColor="#3e3e3e"
@@ -274,8 +274,8 @@ const SettingsAccount = ({navigation}: any) => {
                 {button(t('log-out'), 'log-out-outline', 'blue-300', '#3b82f6', 28, () => logOut())}
                 {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, () => deleteAccount(email, user))}
 
-                {switchButton('face-id', 'eye-outline', 'blue-300', '#3b82f6', 30)}
-                {switchButton('receive-friend-requests', 'notifications-outline', 'purple-300', '#8b5cf6', 24)}
+                {switchButton(t('face-id'), 'eye-outline', 'orange-300', '#d97706', 30)}
+                {switchButton(t('receive-friend-requests'), 'notifications-outline', 'purple-300', '#8b5cf6', 24)}
                 
 
             </View>

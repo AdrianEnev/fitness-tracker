@@ -27,16 +27,20 @@ const ViewWorkout = ({route, navigation}: any) => {
         const currentExerciseIndex = updatedExercises.findIndex((exercise: any) => exercise.exerciseIndex === currentIndex + 1);
         
         if (currentExerciseIndex !== -1) {
-            const newSet = {
-                id: generateID(),
-                reps: "",
-                weight: ""
-            };
-            updatedExercises[currentExerciseIndex].sets.push(newSet);
-            updatedUserInputs[currentExerciseIndex].sets.push({...newSet}); // Clone newSet to avoid direct reference
-            
-            setNewExercises(updatedExercises);
-            setUserInputs(updatedUserInputs); // Ensure userInputs is also updated
+            if (updatedExercises[currentExerciseIndex].sets.length < 15) { // Check if the number of sets is less than 20
+                const newSet = {
+                    id: generateID(),
+                    reps: "",
+                    weight: ""
+                };
+                updatedExercises[currentExerciseIndex].sets.push(newSet);
+                updatedUserInputs[currentExerciseIndex].sets.push({...newSet}); // Clone newSet to avoid direct reference
+                
+                setNewExercises(updatedExercises);
+                setUserInputs(updatedUserInputs); // Ensure userInputs is also updated
+            } else {
+                console.log("Maximum number of sets reached");
+            }
         }
     }
 
@@ -107,10 +111,10 @@ const ViewWorkout = ({route, navigation}: any) => {
     
         if (lines >= 2) {
           // If content spans 2 or more lines, add bottom margin
-          setTextInputStyle(tw`text-xl text-blue-500 font-medium max-w-[85%] min-h-16 max-h-32 ml-3 mt-3 mb-3`);
+          setTextInputStyle(tw`text-xl text-blue-500 font-medium max-w-[85%] min-h-16 max-h-32 ml-3 mb-3`);
         } else {
           // No bottom margin needed for single line
-          setTextInputStyle(tw`text-xl text-blue-500 font-medium max-w-[85%] min-h-16 max-h-32 ml-3 mt-3 mb-[-10px]`);
+          setTextInputStyle(tw`text-xl text-blue-500 font-medium max-w-[85%] min-h-16 max-h-32 ml-3 mb-[-10px]`);
         }
     };
 
@@ -181,66 +185,67 @@ const ViewWorkout = ({route, navigation}: any) => {
                                         onContentSizeChange={handleContentSizeChange}
                                     />
                                 
-                                    <ScrollView style={tw`h-[75%] mb-3`}>
-                                        {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
-                                            <View key={set.id} style={tw`ml-3`}>
-                                                <View style={tw`flex flex-row gap-x-2`}>
-                                                    
-                                                    <View style={tw`flex flex-col`}>
-                                                        <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+                                    <ScrollView style={tw`h-[75%] w-full mb-3`}>
+                                        <View style={tw`flex-1`}>
+                                            {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
+                                                <View key={set.id} style={tw`ml-3`}>
+                                                    <View style={tw`flex flex-row gap-x-2`}>
+                                                        
+                                                        <View style={tw`flex flex-col`}>
+                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
 
-                                                        <View style={tw`w-10 h-10 bg-neutral-100 rounded-xl flex items-center justify-center ${mapIndex != 0 ? '' : ''}`}>
-                                                            <Text style={tw`text-base font-medium`}>{mapIndex + 1}</Text>
-                                                        </View>
-                                                    </View>
-
-                                                    <View style={tw`flex flex-row gap-x-2 mb-3`}>
-
-                                                        <View style={tw`w-[39%]`}>
-                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повт.</Text>
-
-                                                            <TextInput
-                                                                style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
-                                                                keyboardType='number-pad'
-                                                                maxLength={4}
-                                                                placeholder={set.reps === "" ? 'Повторения' : set.reps.toString()}
-                                                                value={userInputs[index].sets[mapIndex].reps}
-                                                                onChangeText={(text) => {
-                                                                    let updatedInputs = [...userInputs];
-                                                                    updatedInputs[index].sets[mapIndex].reps = text;
-                                                                    setUserInputs(updatedInputs);
-                                                                }}
-                                                            />
+                                                            <View style={tw`w-10 h-10 bg-neutral-100 rounded-xl flex items-center justify-center ${mapIndex != 0 ? '' : ''}`}>
+                                                                <Text style={tw`text-base font-medium`}>{mapIndex + 1}</Text>
+                                                            </View>
                                                         </View>
 
-                                                        <View style={tw`w-[39%]`}>
-                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
+                                                        <View style={tw`flex flex-row gap-x-2 mb-3`}>
 
-                                                            <TextInput
-                                                                style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
-                                                                keyboardType='number-pad'
-                                                                maxLength={4}
-                                                                placeholder={set.weight === "" ? 'Килограми' : set.weight.toString()}
-                                                                value={userInputs[index].sets[mapIndex].weight}
-                                                                onChangeText={(text) => {
-                                                                    let updatedInputs = [...userInputs];
-                                                                    updatedInputs[index].sets[mapIndex].weight = text;
-                                                                    setUserInputs(updatedInputs);
-                                                                }}
-                                                            />
+                                                            <View style={tw`w-[39%]`}>
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повт.</Text>
+
+                                                                <TextInput
+                                                                    style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
+                                                                    keyboardType='number-pad'
+                                                                    maxLength={4}
+                                                                    placeholder={set.reps === "" ? 'Повторения' : set.reps.toString()}
+                                                                    value={userInputs[index].sets[mapIndex].reps}
+                                                                    onChangeText={(text) => {
+                                                                        let updatedInputs = [...userInputs];
+                                                                        updatedInputs[index].sets[mapIndex].reps = text;
+                                                                        setUserInputs(updatedInputs);
+                                                                    }}
+                                                                />
+                                                            </View>
+
+                                                            <View style={tw`w-[39%]`}>
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
+
+                                                                <TextInput
+                                                                    style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
+                                                                    keyboardType='number-pad'
+                                                                    maxLength={4}
+                                                                    placeholder={set.weight === "" ? 'Килограми' : set.weight.toString()}
+                                                                    value={userInputs[index].sets[mapIndex].weight}
+                                                                    onChangeText={(text) => {
+                                                                        let updatedInputs = [...userInputs];
+                                                                        updatedInputs[index].sets[mapIndex].weight = text;
+                                                                        setUserInputs(updatedInputs);
+                                                                    }}
+                                                                />
+                                                            </View>
+
+                                                            <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
+                                                                onPress={() => removeSet(exercise.exerciseIndex, set.id)}
+                                                                >
+                                                                    <Ionicons name='close' size={36} color='white' />
+                                                                </TouchableOpacity>
+
                                                         </View>
-
-                                                        <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
-                                                            onPress={() => removeSet(exercise.exerciseIndex, set.id)}
-                                                            >
-                                                                <Ionicons name='close' size={36} color='white' />
-                                                            </TouchableOpacity>
-
                                                     </View>
                                                 </View>
-                                            </View>
-                                        ))}
-
+                                            ))}
+                                        </View>
                                     </ScrollView>
                                 </View>
                             );

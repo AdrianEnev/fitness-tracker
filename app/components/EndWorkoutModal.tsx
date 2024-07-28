@@ -14,7 +14,7 @@ interface EndWorkoutModalProps {
 
 const EndWorkoutModal: React.FC<EndWorkoutModalProps> = ({ isEndWorkoutModalVisible, setIsEndWorkoutModalVisible, navigation, exercises, workoutTitle, duration }) => { 
     
-    console.log('EndWorkoutModal.tsx: ', duration);
+    //console.log('EndWorkoutModal.tsx: ', duration);
     
     return (
         <Modal

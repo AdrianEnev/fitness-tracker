@@ -4,7 +4,7 @@ import generateRandomColour from "./useGenerateColour";
 
 const endWorkout = async (navigation: any, exercises: any, workoutTitle: string, duration: any) => {
 
-    console.log('endWorkout.tsx: ', duration);
+    //console.log('endWorkout.tsx: ', duration);
 
     if (!exercises.length || exercises.every((exercise: any) => 
         !exercise.sets || 
