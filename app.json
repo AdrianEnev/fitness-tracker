@@ -15,7 +15,11 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSFaceIDUsageDescription": "This app uses FaceID to secure your data. (app.json - ios)",
+        "NSPhotoLibraryUsageDescription": "This app uses the photo library to save your photos. (app.json - ios)"
+      }
     },
     "android": {
       "adaptiveIcon": {

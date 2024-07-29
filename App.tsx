@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StatusBar, View, Text, Image } from 'react-native';
+import { StatusBar, View, Text, Image, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { FIREBASE_AUTH, FIRESTORE_DB } from './firebaseConfig';
@@ -23,6 +23,7 @@ import checkFaceIdEnabled from './app/use/useCheckFaceIdEnabled';
 import LottieView from 'lottie-react-native';
 import tw from 'twrnc';
 import { useTranslation } from 'react-i18next';
+import * as LocalAuthentication from 'expo-local-authentication';
 
 const logoWatchUpscaled = require('./assets/logo_watch_upscaled.png');
 
@@ -92,10 +93,39 @@ const UnauthenticatedTabNavigator = () => (
 
 const App = () => {
 
+    const onAuthenticate = async () => {
+        const auth = await LocalAuthentication.authenticateAsync({
+            promptMessage: 'Аутентикация с биометрия',
+            cancelLabel: 'Отказ',
+            fallbackLabel: 'Използвайте парола'
+        });
+
+        if (auth.success) {
+            setIsAuthenticated(true);
+            console.log(auth);
+        } else {
+            console.log('Authentication failed or cancelled');
+            
+            
+        }
+    };
+
+    const BiometricsFailed = () => {
+        return (
+            <View style={tw`flex-1 justify-center items-center bg-red-500`}>
+                <Text style={tw`text-2xl font-bold text-white`}>Biometrics Failed</Text>
+                <Button title='Retry' onPress={() => onAuthenticate()} />
+            </View>
+        );
+    }
+
+    const [isBiometricSupported, setIsBiometricSupported] = useState(false);
+    const [isAuthenticated, setIsAuthenticated] = useState(false);
+
     const {t} = useTranslation();
 
     const [user, setUser] = useState<User | null>(null);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(false);
     const [setupRan, setSetupRan] = useState(false);
     const [checkingSetup, setCheckingSetup] = useState(true);
     const [goalNutrients, setGoalNutrients] = useState<GoalNutrients | null>(null);
@@ -106,9 +136,20 @@ const App = () => {
     const [faceIdEnabled, setFaceIdEnabled] = useState(false);
 
     React.useEffect(() => {
-        const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, (user) => {
+        const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
             setUser(user);
+
+            const compatible = await LocalAuthentication.hasHardwareAsync();
+            setIsBiometricSupported(compatible);
+
+            if (compatible) {
+                await onAuthenticate();
+            }
+
             if (user) {
+
+                setLoading(true);
+
                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');
                 const userDocRef = doc(usersCollectionRef, user.uid);
                 const userInfoCollectionRef = collection(userDocRef, 'user_info');
@@ -151,7 +192,7 @@ const App = () => {
 
     if (loading || checkingSetup) {
         return (
-            <View style={tw`flex-1 justify-center items-center`}>
+            <View style={tw`flex-1 justify-center items-center bg-red-500`}>
 
                 <LottieView
                     style={{ width: 350, height: 350 }}
@@ -161,7 +202,17 @@ const App = () => {
                     loop
                 />
 
-                <Text style={tw`text-2xl font-bold text-gray-700 mt-4`}>{t('loading-----')}...</Text>
+                <View style={tw`flex flex-row`}>
+                    <Text style={tw`text-2xl font-bold text-white mt-4`}>{t('loading')}</Text>
+
+                    <LottieView
+                            style={tw`w-24 h-24 mt-[-6px] ml-[-22px]`}
+                            source={require('./assets/loading_animation_white_dots.json')}
+                            speed={0.8}
+                            autoPlay
+                            loop
+                        />
+                </View>
             </View>
         );
     }
@@ -175,7 +226,15 @@ const App = () => {
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />
                 <NavigationContainer>
-                    {user ? (setupRan ? <AuthenticatedTabNavigator /> : <SetupPage />) : <UnauthenticatedTabNavigator />}
+                    {
+                        user ? 
+                        (
+                            setupRan && isAuthenticated ? <AuthenticatedTabNavigator /> : 
+                            setupRan && !isAuthenticated ? <BiometricsFailed /> :
+                            <SetupPage />
+                        ) : 
+                        <UnauthenticatedTabNavigator />
+                    }
                 </NavigationContainer>
             </GestureHandlerRootView>
         </GlobalContext.Provider>

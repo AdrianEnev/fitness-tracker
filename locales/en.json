@@ -71,6 +71,7 @@
     "language": "Language",
     "face-id": "Face ID",
     "receive-friend-requests": "Friend requests",
-    "total-weight-lifted": "Total weight lifted"
+    "total-weight-lifted": "Total weight lifted",
+    "loading": "Loading"
 
 }

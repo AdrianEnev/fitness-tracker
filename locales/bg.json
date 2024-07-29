@@ -71,6 +71,7 @@
     "language": "Език",
     "face-id": "Face ID",
     "receive-friend-requests": "Покани за приятелство",
-    "total-weight-lifted": "Общо вдигнато тегло"
+    "total-weight-lifted": "Общо вдигнато тегло",
+    "loading": "Един момент"
 
 }

@@ -6,6 +6,7 @@ import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
 import { BarChart, LineChart, PieChart, PopulationPyramid } from "react-native-gifted-charts";
 import { ScrollView } from 'react-native-gesture-handler';
+import CaloriesBurnt from '../components/CaloriesBurnt';
 
 const Statistics = () => {
 
@@ -220,19 +221,9 @@ const Statistics = () => {
 
             <View style={tw`h-full w-full bg-white px-3 pt-3`}>
 
-                <BarChart
-                    barWidth={22}
-                    noOfSections={3}
-                    barBorderRadius={4}
-                    frontColor="lightgray"
-                    data={barData1}
-                    yAxisThickness={0}
-                    xAxisThickness={0}
-                />
+                <CaloriesBurnt />
                     
             </View>
-
-            
 
         </View>
     )
