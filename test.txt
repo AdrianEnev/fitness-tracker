@@ -84,3 +84,5 @@
  - da mojesh da vidish akaunta na nqkogo predi da pratish pokana za priqtelstvo (moje bi)
 
  - ako searchna "banana" rezultatite da izlqzat sortirani spored duljinata na title-a taka che nai kratkite da sa v nachaloto
+
+ - question mark next to faceId in settings that explains how it works and why sometimes it might fall back to password or touch id

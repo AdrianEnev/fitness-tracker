@@ -105,6 +105,12 @@ const SettingsAccount = ({navigation}: any) => {
                                 alert('Потребителското име не може да бъде същото като предишното!');
                                 return;
                             }
+
+                            const weirdCharPattern = /[^a-zA-Z0-9@#$£€%^&*()"'-/|.,?![]{}+=_~<>¥]/;
+                            if (weirdCharPattern.test(newUsername)) {
+                                alert('Името не може да съдържа емоджитa!');
+                                return;
+                            }
                         
                             let isUsernameTaken = false;
                         
@@ -209,6 +215,7 @@ const SettingsAccount = ({navigation}: any) => {
                         
                         <View style={tw`flex justify-center`}>
                             <Text style={tw`text-lg font-medium`}>{title}</Text>
+                            
                         </View>
                     </View>
 
@@ -216,22 +223,22 @@ const SettingsAccount = ({navigation}: any) => {
                         <Switch
                             trackColor={{ false: "#ef4444", true: "#4ade80" }}
                             thumbColor={
-                                title === 'face-id' ? (isFaceIdEnabled ? "#ffffff" : "#f4f3f4") :
-                                title === 'receive-friend-requests' ? (isReceiveFriendRequestsEnabled ? "#ffffff" : "#f4f3f4") : 
+                                title === t('face-id') ? (isFaceIdEnabled ? "#ffffff" : "#f4f3f4") :
+                                title === t('receive-friend-requests') ? (isReceiveFriendRequestsEnabled ? "#ffffff" : "#f4f3f4") : 
                                 "#f4f3f4"
                             }
                             ios_backgroundColor="#3e3e3e"
                             onValueChange={
-                                title === 'face-id' ? toggleFaceIdSwitch :
-                                title === 'receive-friend-requests' ? toggleReceiveFriendRequestsSwitch : 
+                                title === t('face-id') ? toggleFaceIdSwitch :
+                                title === t('receive-friend-requests') ? toggleReceiveFriendRequestsSwitch : 
                                 () => {
                                     console.log('Switch button not working');
                                 }
                             }
                             value=
                             {
-                                title === 'face-id' ? isFaceIdEnabled :
-                                title === 'receive-friend-requests' ? isReceiveFriendRequestsEnabled : 
+                                title === t('face-id') ? isFaceIdEnabled :
+                                title === t('receive-friend-requests') ? isReceiveFriendRequestsEnabled : 
                                 false
                             }
                         />

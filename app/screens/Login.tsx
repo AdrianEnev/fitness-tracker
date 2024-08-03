@@ -19,6 +19,12 @@ const Login = ({navigation}: any) => {
             return;
         }
 
+        const weirdCharPattern = /[^a-zA-Z0-9@#$£€%^&*()"'-/|.,?![]{}+=_~<>¥]/;
+        if (weirdCharPattern.test(password)) {
+            alert('Паролата не може да съдържа емоджитa!');
+            return;
+        }
+
 
         try{
             const user = await signInWithEmailAndPassword(auth, email, password);

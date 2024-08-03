@@ -13,10 +13,8 @@ const checkForBiometrics = async () => {
         const data = faceIdEnabledDoc.data();
         
         if (data.faceIdEnabled) {
-            console.log(data.faceIdEnabled)
             return true
         }else{
-            console.log(data.faceIdEnabled)
             return false
         }
     }
