@@ -24,6 +24,7 @@ import LottieView from 'lottie-react-native';
 import tw from 'twrnc';
 import { useTranslation } from 'react-i18next';
 import * as LocalAuthentication from 'expo-local-authentication';
+import checkForBiometrics from './app/use/useCheckForBiometrics';
 
 const logoWatchUpscaled = require('./assets/logo_watch_upscaled.png');
 
@@ -139,11 +140,15 @@ const App = () => {
         const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
             setUser(user);
 
-            const compatible = await LocalAuthentication.hasHardwareAsync();
-            setIsBiometricSupported(compatible);
-
-            if (compatible) {
-                await onAuthenticate();
+            if (await checkForBiometrics()) {
+                const compatible = await LocalAuthentication.hasHardwareAsync();
+                setIsBiometricSupported(compatible);
+    
+                if (compatible) {
+                    await onAuthenticate();
+                }
+            }else{
+                setIsAuthenticated(true)
             }
 
             if (user) {
