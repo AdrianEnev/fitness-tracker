@@ -20,21 +20,37 @@ const HorizontalCalendar = ({navigation}: any) => {
     };
 
     const formatDate = (date: Date, format: string) => {
+
         let weekDays;
         let monthNames;
 
-    
         if (i18next.language === 'bg') {
             weekDays = ['Нед', 'Пон', 'Вт', 'Ср', 'Чет', 'Пет', 'Съб'];
             monthNames = ['Яну', 'Фев', 'Мар', 'Апр', 'Май', 'Юни', 'Юли', 'Авг', 'Сеп', 'Окт', 'Ное', 'Дек'];
-        } else { // Default to English if not Bulgarian
+        } else if (i18next.language === 'en') { // Default to English if not Bulgarian
             weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        }else if (i18next.language === 'de') {
+
+            weekDays = ['Son', 'Mon', 'Die', 'Mit', 'Don', 'Fre', 'Sam'];
+            monthNames = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
+
+        }else if (i18next.language === 'fr') {
+
+            weekDays = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
+            monthNames = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août ', 'Sep', 'Oct', 'Nov', 'Déc'];
+
+        }else if (i18next.language === 'ru') {
+            
+            weekDays = ['Вос', 'Пон', 'Вт', 'Ср', 'Чет', 'Пят', 'Суб'];
+            monthNames = ['Янв', 'Фев', 'Март', 'Апр', 'Май', 'Июнь', 'Июль', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
+
         }
     
         switch (format) {
             case 'ddd':
                 const dayOfWeek = date.getDay();
+                if (weekDays)
                 return weekDays[dayOfWeek];
             case 'DD.MM':
                 const day = date.getDate().toString().padStart(2, '0');
@@ -42,8 +58,10 @@ const HorizontalCalendar = ({navigation}: any) => {
                 return `${day}.${month}`;
             case 'DD MMM':
                 const dayOfMonth = date.getDate().toString().padStart(2, '0');
-                const monthName = monthNames[date.getMonth()];
-                return `${dayOfMonth} ${monthName}`;
+                if (monthNames) {
+                    const monthName = monthNames[date.getMonth()];
+                    return `${dayOfMonth} ${monthName}`;
+                }
             default:
                 return date.toLocaleDateString(i18next.language);
         }
