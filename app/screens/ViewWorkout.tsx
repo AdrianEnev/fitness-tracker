@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput, Pressable, Button } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput, Pressable, Button, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { addDoc, collection, deleteDoc, doc, getDocs, runTransaction, setDoc } from 'firebase/firestore';
@@ -7,6 +7,7 @@ import BottomNavigationBar from '../components/BottomNavigationBar';
 import { Ionicons } from '@expo/vector-icons';
 import generateID from '../use/useGenerateID';
 import saveWorkoutEdits from '../use/useSaveWorkoutEdits';
+import startWorkout from '../use/useStartWorkout';
 
 const ViewWorkout = ({route, navigation}: any) => {
 
@@ -139,17 +140,24 @@ const ViewWorkout = ({route, navigation}: any) => {
 
     const [textInputStyle, setTextInputStyle] = useState({});
 
+    const [saveButtonDisabled, setSaveButtonDisabled] = useState(false);
+
+    const getDimensions = () => {
+        const {width} = Dimensions.get('window')
+        return width;
+    }
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <SafeAreaView style={tw`w-full h-full bg-white`}>
 
                 <View style={tw`flex flex-row justify-between mx-3 w-[95%]`}>
                     <TouchableOpacity style={tw`w-22 h-10 bg-[#2fc766] shadow-md rounded-xl flex justify-center items-center`} onPress={saveChanges}>
-                        <Text style={tw`text-white font-medium text-base`}>Запази</Text>
+                        <Text style={tw`text-white font-medium text-base`}>Назад</Text>
                     </TouchableOpacity>
                     
-                    <TouchableOpacity style={tw`w-22 h-10 bg-blue-500 rounded-xl flex justify-center items-center`} onPress={addSet}>
-                        <Text style={tw`text-base font-medium text-white`}>+ Серия</Text>
+                    <TouchableOpacity style={tw`w-22 h-10 bg-blue-500 rounded-xl flex justify-center items-center`} onPress={() => startWorkout(workout, navigation)}>
+                        <Text style={tw`text-base font-medium text-white`}>Старт</Text>
                     </TouchableOpacity>
                     
                 </View>
@@ -202,7 +210,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                                                         <View style={tw`flex flex-row gap-x-2 mb-3`}>
 
                                                             <View style={tw`w-[39%]`}>
-                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повт.</Text>
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{getDimensions() > 400 ? 'Повторения' : 'Повт.'}</Text>
 
                                                                 <TextInput
                                                                     style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
@@ -252,18 +260,6 @@ const ViewWorkout = ({route, navigation}: any) => {
                         }
                     })}
                 </View>
-                
-                {newExercises.length < 9 ? (
-                     <Pressable style={tw`
-                    absolute w-[96.5%] h-16 shadow-lg bottom-30 mx-2 rounded-2xl flex flex-row justify-around items-center
-                    bg-[#fd1c47]
-                    `}
-                    onPress={addExercise}
-                    >
-                        <Text style={tw`text-white text-3xl font-medium`}>+ Упражнение</Text>
-                    </Pressable>
-                ): null}
-               
 
                 <BottomNavigationBar
                     currentPage='ViewWorkout'

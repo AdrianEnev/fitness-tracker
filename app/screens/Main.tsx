@@ -6,22 +6,22 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { GoalNutrients } from '../../interfaces';
 import { collection, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
-import i18next from '../../services/i18next';
+
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import getLanguage from '../use/useGetLanguage';
-import getUsername from '../use/useGetUsername';
+
 import getCurrentDate from '../use/useGetCurrentDate';
-import getProfilePicture from '../use/useGetProfilePicture';
+
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import getFriendRequests from '../use/useGetFriendRequestsRecieved';
+
 import GlobalContext from '../../GlobalContext';
 import HorizontalCalendar from '../components/HorizontalCalendar';
 import WorkoutFoodButtons from '../components/WorkoutFoodButtons';
 import Nutrients from '../components/NutrientsMain';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import ProfilePicture from '../components/ProfilePicture';
-import { use } from 'i18next';
+
 
 //bg-[#fd3e6b]
 //bg-[#3d5875]

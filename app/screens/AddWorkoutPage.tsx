@@ -6,7 +6,7 @@ import addWorkout from '../use/useAddWorkout';
 import { Ionicons } from '@expo/vector-icons';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { BlurView } from 'expo-blur';
-import {LinearGradient} from 'expo-linear-gradient';
+import { Dimensions } from 'react-native';
 import CreateWorkoutModal from '../components/CreateWorkoutModal';
 
 const AddWorkoutPage = ({ navigation }: any) => {
@@ -26,11 +26,17 @@ const AddWorkoutPage = ({ navigation }: any) => {
     const [workoutTitle, setWorkoutTitle] = useState('' as string);
 
     const addSet = (exerciseId: string) => {
-        setExercises(exercises.map(exercise => 
-            exercise.id === exerciseId 
-            ? { ...exercise, sets: [...exercise.sets, { reps: '', weight: '', id: Math.random().toString() }] } 
-            : exercise
-        ));
+
+        exercises.map(exercise => {
+            if (exercise.exerciseIndex == pageIndex - 1 && exercise.sets.length < 15) {
+                setExercises(exercises.map(exercise => 
+                    exercise.id === exerciseId 
+                    ? { ...exercise, sets: [...exercise.sets, { reps: '', weight: '', id: Math.random().toString() }] } 
+                    : exercise
+                ));
+            }
+        })
+       
     };
 
     const removeSet = (exerciseId: string, setId: string) => {
@@ -116,6 +122,11 @@ const AddWorkoutPage = ({ navigation }: any) => {
 
     const [saveButtonDisabled, setSaveButtonDisabled] = useState(false);
 
+    const getDimensions = () => {
+        const {width} = Dimensions.get('window')
+        return width;
+    }
+
     return (
         <>
             
@@ -160,7 +171,7 @@ const AddWorkoutPage = ({ navigation }: any) => {
                                             onContentSizeChange={handleContentSizeChange}
                                         />
                                             
-                                        <ScrollView style={tw`mb-10`}>
+                                        <ScrollView style={tw`mb-13`}>
                                             {exercise.sets.map((set, mapIndex) => (
                                                 <View key={set.id} style={tw`ml-3`}>
                                                     <View style={tw`flex flex-row gap-x-2`}>
@@ -177,13 +188,12 @@ const AddWorkoutPage = ({ navigation }: any) => {
 
                                                             <View style={tw`w-[39.3%]`}>
 
-                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повт.</Text>
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{getDimensions() > 400 ? 'Повторения' : 'Повт.'}</Text>
 
                                                                 <TextInput
                                                                     style={tw`bg-neutral-100 rounded-2xl p-2 w-full h-10`}
                                                                     keyboardType='number-pad'
                                                                     maxLength={4}
-                                                                    placeholder='Повторения'
                                                                     value={set.reps.toString()}
                                                                     onChangeText={(value) => updateSet(exercise.id, set.id, 'reps', value)}
                                                                 />
@@ -197,7 +207,6 @@ const AddWorkoutPage = ({ navigation }: any) => {
                                                                     style={tw`bg-neutral-100 rounded-2xl p-2 w-full h-10`}
                                                                     keyboardType='number-pad'
                                                                     maxLength={4}
-                                                                    placeholder='KG'
                                                                     value={set.weight.toString()}
                                                                     onChangeText={(value) => updateSet(exercise.id, set.id, 'weight', value)}
                                                                 />
@@ -225,8 +234,9 @@ const AddWorkoutPage = ({ navigation }: any) => {
                     </View>
                 </SafeAreaView>
             </TouchableWithoutFeedback>
-            
 
+            
+            
             <BottomNavigationBar 
                 navigation={navigation} 
                 currentPage='AddWorkout' 

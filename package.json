@@ -46,6 +46,7 @@
     "react-native-screens": "3.31.1",
     "react-native-svg": "15.2.0",
     "react-native-svg-circular-progress": "^1.0.4",
+    "react-native-wheel-scrollview-picker": "^2.0.4",
     "string-similarity": "^4.0.4",
     "twrnc": "^3.6.7"
   },
