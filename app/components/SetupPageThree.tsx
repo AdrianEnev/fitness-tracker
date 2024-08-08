@@ -44,8 +44,8 @@ const SetupPageThree = () => {
                 <Text style={tw`text-gray-500 text-xl font-medium ${weightType === "KG" ? "mt-[12px]" : "mt-[14px]"}`}>{weightType.toLowerCase()}</Text>
             </View>
 
-            <View style={tw`mx-3 mt-3 w-[94.5%] h-full`}>
-                <View style={tw`w-full h-[20%] bg-gray-200 rounded-[47px]`}>
+            <View style={tw`mx-3 mt-5 w-[94.5%] h-full`}>
+                <View style={tw`w-full h-[18%] bg-gray-200 rounded-[47px]`}>
 
                 </View>
 
