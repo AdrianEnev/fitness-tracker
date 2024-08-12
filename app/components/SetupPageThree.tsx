@@ -1,11 +1,8 @@
-import { View, Text, Pressable } from 'react-native'
+import { View, Text, Pressable, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import tw from 'twrnc'
 
-const SetupPageThree = () => {
-
-    const [weightType, setWeightType] = useState('KG');
-    const [weight, setWeight] = useState(60);
+const SetupPageThree = ({weight, weightType, setWeight, setWeightType}: any) => {
 
     return (
         <View style={tw`flex flex-col mt-[15%] h-full`}>
@@ -47,9 +44,13 @@ const SetupPageThree = () => {
             <View style={tw`mx-3 mt-5 w-[94.5%] h-full`}>
                 <View style={tw`w-full h-[18%] bg-gray-200 rounded-[47px]`}>
 
+                   
                 </View>
 
             </View>
+
+            
+
             
 
         </View>

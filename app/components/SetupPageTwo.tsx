@@ -1,8 +1,9 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
+import { Picker } from 'react-native-wheel-pick';
 
-const SetupPageTwo = () => {
+const SetupPageTwo = ({age, setAge}: any) => {
 
     const ages = [
         1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
@@ -27,7 +28,12 @@ const SetupPageTwo = () => {
             <View style={tw`flex-1 items-center mt-[5%]`}>
                 <View style={tw`w-[37%] h-[60%] bg-gray-200 rounded-[47px] flex items-center pt-3`}>
 
-                    
+                    <Picker
+                        style={tw`h-1/2 w-full bg-gray-200 rounded-[47px] mt-[50%]`}
+                        selectedValue={age}
+                        pickerData={ages}
+                        onValueChange={(value: any) => { setAge(value) }}
+                    />
 
                 </View>
             </View>
