@@ -2,7 +2,7 @@ import { View, Text, Pressable, ScrollView } from 'react-native'
 import React, { useState } from 'react'
 import tw from 'twrnc'
 
-const SetupPageThree = ({weight, weightType, setWeight, setWeightType}: any) => {
+const SetupPageThree = ({weight, weightType, setWeight, setWeightType, setHeightType, setHeight, height}: any) => {
 
     return (
         <View style={tw`flex flex-col mt-[15%] h-full`}>
@@ -20,6 +20,9 @@ const SetupPageThree = ({weight, weightType, setWeight, setWeightType}: any) => 
 
                     setWeightType('KG')
                     setWeight(Math.round(weight / 2.20462))
+
+                    setHeightType('CM')
+                    setHeight(Math.round(height / 0.0328084))
                 }}>
                     <Text style={tw`font-medium text-xl ${weightType === 'KG' ? 'text-[#fd3e4b]' : 'text-black'}`}>KG</Text>
                 </Pressable>
@@ -31,6 +34,9 @@ const SetupPageThree = ({weight, weightType, setWeight, setWeightType}: any) => 
 
                     setWeightType('LB')
                     setWeight(Math.round(weight * 2.20462))
+
+                    setHeightType('FT')
+                    setHeight(Math.round(height * 0.0328084))
                 }}>
                     <Text style={tw`font-medium text-xl ${weightType === 'LB' ? 'text-[#fd3e4b]' : 'text-black'}`}>LB</Text>
                 </Pressable>
@@ -44,7 +50,7 @@ const SetupPageThree = ({weight, weightType, setWeight, setWeightType}: any) => 
             <View style={tw`mx-3 mt-5 w-[94.5%] h-full`}>
                 <View style={tw`w-full h-[18%] bg-gray-200 rounded-[47px]`}>
 
-                    
+
                    
                 </View>
 

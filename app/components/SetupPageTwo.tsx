@@ -28,6 +28,9 @@ const SetupPageTwo = ({age, setAge}: any) => {
             <View style={tw`flex-1 items-center mt-[5%]`}>
                 <View style={tw`w-[37%] h-[60%] bg-gray-200 rounded-[47px] flex items-center pt-3`}>
 
+                    <Text style={tw`font-medium text-3xl mt-3`}>{age}</Text>
+                    <View style={tw`w-full h-[2px] rounded-full bg-gray-300 mt-3`}></View>
+
                     <Picker
                         style={tw`h-1/2 w-full bg-gray-200 rounded-[47px] mt-[50%]`}
                         selectedValue={age}

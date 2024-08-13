@@ -97,17 +97,23 @@ const Setup = ({route}: any) => {
 
             
         }else{
-
             finishSetup();
-
         }
     }
 
-    const finishSetup = () => {
-        const w = weight;
-        const h = height;
-        const a = age;
-        const g = gender;
+    const calculateCalories = (units: string) => {
+
+        let w = weight;
+        let h = height;
+        let a = age;
+        let g = gender
+
+        if (units != "metric") {
+            w = weight * 0.453592;
+            h = height * 2.54;
+            a = age;
+            g = gender;
+        }
 
         if (g == 'male') {
 
@@ -133,11 +139,10 @@ const Setup = ({route}: any) => {
             }
 
             const initBMR = (10 * w) + (6.25 * h) - (5 * a) + 5;
-            const finalBMR = initBMR * additionalCalories;
-
-            console.log(Math.round(finalBMR), w, h, a, activityLevel)
-
+            const finalBMR = Math.round(initBMR * additionalCalories);
             setBMR(finalBMR);
+
+            return finalBMR
             
         }else{
 
@@ -163,12 +168,18 @@ const Setup = ({route}: any) => {
             }
 
             const initBMR = (10 * w) + (6.25 * h) - (5 * a) - 161;
-            const finalBMR = initBMR * additionalCalories;
-
-            console.log(Math.round(finalBMR), w, h, a, activityLevel)
-
+            const finalBMR = Math.round(initBMR * additionalCalories);
             setBMR(finalBMR);
+
+            return finalBMR
         }
+
+    }
+
+    const finishSetup = async () => {
+
+        const cals = calculateCalories("metric")
+        console.log(cals)
         
     }
 
@@ -227,9 +238,9 @@ const Setup = ({route}: any) => {
                             ) : currentPage === 2 ? (
                                 <SetupPageTwo age={age} setAge={setAge}/>
                             ) : currentPage === 3 ? (
-                                <SetupPageThree weight={weight} weightType={weightType} setWeight={setWeight} setWeightType={setWeightType} />
+                                <SetupPageThree weight={weight} weightType={weightType} setWeight={setWeight} setWeightType={setWeightType} setHeightType={setHeightType} setHeight={setHeight} height={height}/>
                             ) : currentPage === 4 ? (
-                                <SetupPageFour height={height} setHeight={setHeight} heightType={heightType} setHeightType={setHeightType}/>
+                                <SetupPageFour height={height} setHeight={setHeight} heightType={heightType} setHeightType={setHeightType} setWeightType={setWeightType} setWeight={setWeight} weight={weight}/>
                             ) : currentPage === 5 ? (
                                 <SetupPageFive activityLevel={activityLevel} setActivityLevel={setActivityLevel}/>
                             ) : null}
