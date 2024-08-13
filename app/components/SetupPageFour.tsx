@@ -2,9 +2,8 @@ import { View, Text, Pressable } from 'react-native'
 import React, { useState } from 'react'
 import tw from 'twrnc'
 
-const SetupPageFour = () => {
-    const [heightType, setheightType] = useState('CM');
-    const [height, setheight] = useState(170);
+const SetupPageFour = ({heightType, setHeightType, height, setHeight}: any) => {
+    
 
     return (
         <View style={tw`flex flex-col mt-[15%] h-full`}>
@@ -20,8 +19,8 @@ const SetupPageFour = () => {
                         return;
                     }
 
-                    setheightType('CM')
-                    setheight(Math.round(height / 0.0328084))
+                    setHeightType('CM')
+                    setHeight(Math.round(height / 0.0328084))
                 }}>
                     <Text style={tw`font-medium text-xl ${heightType === 'CM' ? 'text-[#fd3e4b]' : 'text-black'}`}>CM</Text>
                 </Pressable>
@@ -31,8 +30,8 @@ const SetupPageFour = () => {
                         return;
                     }
 
-                    setheightType('FT')
-                    setheight(Math.round(height * 0.0328084))
+                    setHeightType('FT')
+                    setHeight(Math.round(height * 0.0328084))
                 }}>
                     <Text style={tw`font-medium text-xl ${heightType === 'FT' ? 'text-[#fd3e4b]' : 'text-black'}`}>FT</Text>
                 </Pressable>

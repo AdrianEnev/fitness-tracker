@@ -44,14 +44,11 @@ const SetupPageThree = ({weight, weightType, setWeight, setWeightType}: any) => 
             <View style={tw`mx-3 mt-5 w-[94.5%] h-full`}>
                 <View style={tw`w-full h-[18%] bg-gray-200 rounded-[47px]`}>
 
+                    
                    
                 </View>
 
             </View>
-
-            
-
-            
 
         </View>
     )

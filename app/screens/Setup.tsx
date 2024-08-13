@@ -96,7 +96,80 @@ const Setup = ({route}: any) => {
             }
 
             
+        }else{
+
+            finishSetup();
+
         }
+    }
+
+    const finishSetup = () => {
+        const w = weight;
+        const h = height;
+        const a = age;
+        const g = gender;
+
+        if (g == 'male') {
+
+            let additionalCalories = 0;
+
+            if (activityLevel == 1) {
+                additionalCalories = 1.2;
+            }
+            else if (activityLevel == 2) {
+                additionalCalories = 1.375;
+            }
+            else if (activityLevel == 3) {
+                additionalCalories = 1.465;
+            }
+            else if (activityLevel == 4) {
+                additionalCalories = 1.55;
+            }
+            else if (activityLevel == 5) {
+                additionalCalories = 1.725;
+            }
+            else if (activityLevel == 6) {
+                additionalCalories = 1.9;
+            }
+
+            const initBMR = (10 * w) + (6.25 * h) - (5 * a) + 5;
+            const finalBMR = initBMR * additionalCalories;
+
+            console.log(Math.round(finalBMR), w, h, a, activityLevel)
+
+            setBMR(finalBMR);
+            
+        }else{
+
+            let additionalCalories = 0;
+
+            if (activityLevel == 1) {
+                additionalCalories = 1.2;
+            }
+            else if (activityLevel == 2) {
+                additionalCalories = 1.375;
+            }
+            else if (activityLevel == 3) {
+                additionalCalories = 1.465;
+            }
+            else if (activityLevel == 4) {
+                additionalCalories = 1.55;
+            }
+            else if (activityLevel == 5) {
+                additionalCalories = 1.725;
+            }
+            else if (activityLevel == 6) {
+                additionalCalories = 1.9;
+            }
+
+            const initBMR = (10 * w) + (6.25 * h) - (5 * a) - 161;
+            const finalBMR = initBMR * additionalCalories;
+
+            console.log(Math.round(finalBMR), w, h, a, activityLevel)
+
+            setBMR(finalBMR);
+        }
+        
     }
 
     const previousPage = () => {
@@ -115,6 +188,13 @@ const Setup = ({route}: any) => {
 
     const [weightType, setWeightType] = useState('KG');
     const [weight, setWeight] = useState(60);
+
+    const [heightType, setHeightType] = useState('CM');
+    const [height, setHeight] = useState(170);
+
+    const [BMR, setBMR] = useState(0);
+    const [activityLevel, setActivityLevel] = useState(0)
+    //const [additionalCalories, setAdditionalCalories] = useState(0);
 
     const setGenderButton = (input: string) => {
 
@@ -149,9 +229,9 @@ const Setup = ({route}: any) => {
                             ) : currentPage === 3 ? (
                                 <SetupPageThree weight={weight} weightType={weightType} setWeight={setWeight} setWeightType={setWeightType} />
                             ) : currentPage === 4 ? (
-                                <SetupPageFour />
+                                <SetupPageFour height={height} setHeight={setHeight} heightType={heightType} setHeightType={setHeightType}/>
                             ) : currentPage === 5 ? (
-                                <SetupPageFive />
+                                <SetupPageFive activityLevel={activityLevel} setActivityLevel={setActivityLevel}/>
                             ) : null}
 
                         </View>
@@ -169,11 +249,7 @@ const Setup = ({route}: any) => {
                 </Pressable>
 
                 <Pressable style={tw`bg-white rounded-2xl w-[50%] h-[55%] flex flex-row pl-4 pr-2 items-center justify-between mb-2`} onPress={() => {
-                    if (currentPage != 5) {
-                        nextPage()
-                    }else {
-                        console.log('finished setup')
-                    }
+                    nextPage();
                 }}>
                     <Text style={tw`font-medium text-xl`}>{currentPage === 5 ? 'Finish' : 'Next'}</Text>
                     <Ionicons name='arrow-forward-outline' size={32}/>

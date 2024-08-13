@@ -3,9 +3,7 @@ import React, { useState } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
 
-const SetupPageFive = () => {
-
-    const [activityLevel, setActivityLevel] = useState(0)
+const SetupPageFive = ({activityLevel, setActivityLevel}: any) => {
 
     return (
         <View style={tw`flex flex-col mt-[15%] h-full`}>
