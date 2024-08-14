@@ -4,6 +4,17 @@ import tw from 'twrnc'
 
 const SetupPageThree = ({weight, weightType, setWeight, setWeightType, setHeightType, setHeight, height}: any) => {
 
+    const cmToFeetInches = (cm: any) => {
+        const totalInches = cm * 0.393701;
+        const feet = Math.floor(totalInches / 12);
+        const inches = Math.round(totalInches % 12);
+        return { feet, inches };
+    };
+
+    const feetInchesToCm = (feet: any, inches: any) => {
+        return Math.round((feet * 12 + inches) * 2.54);
+    };
+
     return (
         <View style={tw`flex flex-col mt-[15%] h-full`}>
             <View style={tw`mx-5`}>
@@ -21,8 +32,9 @@ const SetupPageThree = ({weight, weightType, setWeight, setWeightType, setHeight
                     setWeightType('KG')
                     setWeight(Math.round(weight / 2.20462))
 
-                    setHeightType('CM')
-                    setHeight(Math.round(height / 0.0328084))
+                    setHeightType('CM');
+                    const { feet, inches } = height; 
+                    setHeight(feetInchesToCm(feet, inches));
                 }}>
                     <Text style={tw`font-medium text-xl ${weightType === 'KG' ? 'text-[#fd3e4b]' : 'text-black'}`}>KG</Text>
                 </Pressable>
@@ -35,8 +47,9 @@ const SetupPageThree = ({weight, weightType, setWeight, setWeightType, setHeight
                     setWeightType('LB')
                     setWeight(Math.round(weight * 2.20462))
 
-                    setHeightType('FT')
-                    setHeight(Math.round(height * 0.0328084))
+                    setHeightType('FT');
+                    const convertedHeight = cmToFeetInches(height);
+                    setHeight(convertedHeight);
                 }}>
                     <Text style={tw`font-medium text-xl ${weightType === 'LB' ? 'text-[#fd3e4b]' : 'text-black'}`}>LB</Text>
                 </Pressable>

@@ -1,8 +1,21 @@
 import { View, Text, Pressable } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import tw from 'twrnc';
+import { Picker } from 'react-native-wheel-pick';
 
 const SetupPageFour = ({ heightType, setHeightType, height, setHeight, setWeightType, setWeight, weight }: any) => {
+
+    const [pickerData, setPickerData] = useState<number[]>([]);
+
+    const [tempHeight, setTempHeight] = useState(170);
+
+    useEffect(() => {
+        const data: number[] = [];
+        for (let i = 120; i <= 220; i++) {
+            data.push(i);
+        }
+        setPickerData(data);
+    }, []); 
     
     const cmToFeetInches = (cm: any) => {
         const totalInches = cm * 0.393701;
@@ -11,9 +24,9 @@ const SetupPageFour = ({ heightType, setHeightType, height, setHeight, setWeight
         return { feet, inches };
     };
 
-    const feetInchesToCm = (feet: any, inches: any) => {
+    /*const feetInchesToCm = (feet: any, inches: any) => {
         return Math.round((feet * 12 + inches) * 2.54);
-    };
+    };*/
 
     return (
         <View style={tw`flex flex-col mt-[15%] h-full`}>
@@ -31,9 +44,9 @@ const SetupPageFour = ({ heightType, setHeightType, height, setHeight, setWeight
                         if (heightType === "CM") {
                             return;
                         }
+
                         setHeightType('CM');
-                        const { feet, inches } = height;  // Use the object format
-                        setHeight(feetInchesToCm(feet, inches));
+                        setHeight(tempHeight)
                         setWeightType('KG');
                         setWeight(Math.round(weight / 2.20462));
                     }}
@@ -74,7 +87,15 @@ const SetupPageFour = ({ heightType, setHeightType, height, setHeight, setWeight
 
             <View style={tw`flex-1 items-center mt-[5%]`}>
                 <View style={tw`w-[37%] h-[60%] bg-gray-200 rounded-[47px] flex items-center pt-3`}>
-                    {/* Additional UI elements can be added here */}
+                    <Picker
+                        style={tw`h-1/2 w-full bg-gray-200 rounded-[47px] mt-[50%]`}
+                        selectedValue={height}
+                        pickerData={pickerData}
+                        onValueChange={(value: any) => { 
+                            setHeight(value)
+                            setTempHeight(value)
+                        }}
+                    />
                 </View>
             </View>
         </View>
