@@ -29,41 +29,9 @@ const Setup = ({route}: any) => {
 
     const { t } = useTranslation();
 
-    const [calories, setCalories] = useState("");
-    const [protein, setProtein] = useState("");
-    const [carbs, setCarbs] = useState("");
-    const [fat, setFat] = useState("");
-
     useEffect(() => {
         getLanguage(userInfoCollectionRef);
     }, [])
-
-    const setNutrients = async () => {
-        try {
-
-            if (calories !== "" && protein !== "" && carbs !== "" && fat !== "") {
-                    if (calories !== "0" && protein !== "0" && carbs !== "0" && fat !== "0") {
-
-                    const nutrients = {
-                        calories: calories,
-                        protein: protein,
-                        carbs: carbs,
-                        fat: fat
-                    }
-
-                    await setDoc(nutrientsDocRef, nutrients, { merge: true });
-                    setSetupRan(true);
-                }else{
-                    console.log('Please fill all fields');
-                }
-            }else{
-                console.log('Please fill all fields');
-            }
-            
-        } catch (err) {
-            console.error(err);
-        }
-    }
 
     const [currentPage, setCurrentPage] = useState(1)
 
@@ -178,9 +146,25 @@ const Setup = ({route}: any) => {
 
     const finishSetup = async () => {
 
-        const cals = calculateCalories("metric")
-        console.log(cals)
+        const calories = calculateCalories("metric")
+
+        const ratios = { protein: 0.2, carbs: 0.5, fats: 0.3 };
+        const caloriesPerGram = { protein: 4, carbs: 4, fats: 9 };
+    
+        const proteinGrams = (calories * ratios.protein) / caloriesPerGram.protein;
+        const carbsGrams = (calories * ratios.carbs) / caloriesPerGram.carbs;
+        const fatsGrams = (calories * ratios.fats) / caloriesPerGram.fats;
+    
+        const nutrients = {
+            calories: calories,
+            protein: Math.round(proteinGrams),
+            carbs: Math.round(carbsGrams),
+            fat: Math.round(fatsGrams)
+        }
         
+        await setDoc(nutrientsDocRef, nutrients, { merge: true });
+        setSetupRan(true);
+
     }
 
     const previousPage = () => {
