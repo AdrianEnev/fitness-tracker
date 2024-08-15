@@ -150,6 +150,8 @@ const Settings = ({navigation}: any) => {
                     </View>
                 </Pressable>
 
+                {button('Дарения', 'wallet-outline', '#ec4899', 'pink-300', t('donate'))}
+
 
             </View>
 

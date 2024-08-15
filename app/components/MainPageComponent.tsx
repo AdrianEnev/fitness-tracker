@@ -20,6 +20,8 @@ import ViewSavedWorkout from "../screens/ViewSavedWorkout";
 import Statistics from "../screens/Statistics";
 import ViewFriendProfile from "../screens/ViewFriendProfile";
 import FoodInfo from "../screens/FoodInfo";
+import Donate from "../screens/Donate";
+import DonateScreen from "../screens/DonateScreen";
 
 const Stack = createNativeStackNavigator();
 /* 
@@ -178,6 +180,23 @@ const MainPageComponent = () => {
                   headerShown: false,
               }}
           />
+
+          <Stack.Screen
+              name="Дарения"
+              component={Donate}
+              options={{
+                  headerShown: false,
+              }}
+          />
+          <Stack.Screen
+              name="Дарение"
+              component={DonateScreen}
+              options={{
+                  headerShown: false,
+              }}
+          />
+
+
 
           <Stack.Screen
               name="Приятели"
