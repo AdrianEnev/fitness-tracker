@@ -12,15 +12,14 @@ const Statistics = () => {
 
     const [weightLifted, setWeightLifted] = useState(0);
     const [workoutsFinished, setWorkoutsFinished] = useState(0);
+    const [formattedTotalWorkoutsDuration, setFormattedTotalWorkoutsDuration] = useState("");
+    const [formattedAverageWorkoutDuration, setFormattedAverageWorkoutDuration] = useState("");
+    const [formattedLastWorkoutDate, setFormattedLastWorkoutDate] = useState("");
 
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userInfoCollectionRef = collection(userDocRef, "user_info");
     const statisticsDocRef = doc(userInfoCollectionRef, "statistics");
-
-    const [formattedTotalWorkoutsDuration, setFormattedTotalWorkoutsDuration] = useState("");
-    const [formattedAverageWorkoutDuration, setFormattedAverageWorkoutDuration] = useState("");
-    const [formattedLastWorkoutDate, setFormattedLastWorkoutDate] = useState("");
 
     const [getTotalWorkoutsDurationRan, setGetTotalWorkoutsDurationRan] = useState(false);
     const [getAverageWorkoutDurationRan, setGetAverageWorkoutDurationRan] = useState(false);

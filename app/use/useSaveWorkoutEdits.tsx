@@ -3,7 +3,6 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import generateID from "./useGenerateID";
 
 const saveWorkoutEdits = async (workout: any, userInputs: any, newExercises: any, newWorkoutTitle: any) => {
-        
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
@@ -21,15 +20,21 @@ const saveWorkoutEdits = async (workout: any, userInputs: any, newExercises: any
 
         const currentExercise = userInputs.find((input: any) => input.id === exercise.id);
         if (currentExercise) {
-           
             for (let set of exercise.sets) {
                 const currentSet = currentExercise.sets.find((inputSet: any) => inputSet.id === set.id);
                 if (currentSet) {
-                    setDoc(doc(setsCollectionRef, set.id), {
+                    const setDocData: any = {
                         reps: currentSet.reps,
                         weight: currentSet.weight,
-                        setIndex: currentSet.setIndex
-                    });
+                        setIndex: currentSet.setIndex,
+                    };
+
+                    // Include intensity if it exists
+                    if (currentSet.intensity) {
+                        setDocData.intensity = currentSet.intensity;
+                    }
+
+                    await setDoc(doc(setsCollectionRef, set.id), setDocData);
                 }
             }
 
@@ -38,11 +43,18 @@ const saveWorkoutEdits = async (workout: any, userInputs: any, newExercises: any
             let nextIndex = sets.length; // Start indexing for new sets after the existing ones
             for (let addedSet of addedSets) {
                 const newSetRef = doc(setsCollectionRef);
-                setDoc(newSetRef, {
+                const newSetDocData: any = {
                     reps: addedSet.reps,
                     weight: addedSet.weight,
-                    setIndex: nextIndex + 1
-                });
+                    setIndex: nextIndex + 1,
+                };
+
+                // Include intensity if it exists
+                if (addedSet.intensity) {
+                    newSetDocData.intensity = addedSet.intensity;
+                }
+
+                await setDoc(newSetRef, newSetDocData);
                 nextIndex++;
             }
 
@@ -52,30 +64,36 @@ const saveWorkoutEdits = async (workout: any, userInputs: any, newExercises: any
                 // First, delete all existing sets in Firestore to start fresh
                 for (let set of sets) {
                     const setDocRef = doc(setsCollectionRef, set.id);
-                    deleteDoc(setDocRef);
+                    await deleteDoc(setDocRef);
                 }
 
                 // Then, add back all current sets with new indexes
-                currentExercise.sets.forEach((set: any, index: number) => {
+                currentExercise.sets.forEach(async (set: any, index: number) => {
                     const newSetRef = doc(setsCollectionRef, set.id ? set.id : generateID()); // Use existing ID or generate a new one
-                    setDoc(newSetRef, {
+                    const newSetDocData: any = {
                         reps: set.reps,
                         weight: set.weight,
-                        setIndex: index + 1 // Re-index starting from 1
-                    });
+                        setIndex: index + 1, // Re-index starting from 1
+                    };
+
+                    // Include intensity if it exists
+                    if (set.intensity) {
+                        newSetDocData.intensity = set.intensity;
+                    }
+
+                    await setDoc(newSetRef, newSetDocData);
                 });
             }
 
             // check if any of the exercise titles have been updated
             const currentExerciseTitle = newExercises.find((ex: any) => ex.id === exercise.id);
             if (currentExerciseTitle) {
-                setDoc(doc(workoutInfoCollectionRef, exercise.id), {
+                await setDoc(doc(workoutInfoCollectionRef, exercise.id), {
                     title: currentExerciseTitle.title,
                     exerciseIndex: currentExerciseTitle.exerciseIndex
                 });
             }
         }
-
     }
 
     // check if any new exercises have been added to the workout
@@ -97,31 +115,38 @@ const saveWorkoutEdits = async (workout: any, userInputs: any, newExercises: any
         const setsCollectionRef = collection(newExerciseRef, "sets");
         let setIndex = 1;
         for (let set of addedExercise.sets) {
-            await addDoc(setsCollectionRef, {
+            const newSetDocData: any = {
                 reps: set.reps,
                 weight: set.weight,
-                setIndex: setIndex
-            });
+                setIndex: setIndex,
+            };
+
+            // Include intensity if it exists
+            if (set.intensity) {
+                newSetDocData.intensity = set.intensity;
+            }
+
+            await addDoc(setsCollectionRef, newSetDocData);
             setIndex++;
         }
         nextIndex++;
     }
 
     if (newWorkoutTitle === '') {
-        setDoc(workoutDocRef, {
+        await setDoc(workoutDocRef, {
             title: workout.title,
             created: workout.created,
             colour: workout.colour,
             numberOfExercises: userInputs.length
         });
-        return;
+    } else {
+        await setDoc(workoutDocRef, {
+            title: newWorkoutTitle,
+            created: workout.created,
+            colour: workout.colour,
+            numberOfExercises: userInputs.length
+        });
     }
-    setDoc(workoutDocRef, {
-        title: newWorkoutTitle,
-        created: workout.created,
-        colour: workout.colour,
-        numberOfExercises: userInputs.length
-    });
-}
+};
 
 export default saveWorkoutEdits;

@@ -3,6 +3,7 @@ import { Timestamp } from "firebase/firestore";
 export interface Set {
     reps: string;
     weight: string;
+    intensity: number;
     id: string;
 }
 
