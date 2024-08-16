@@ -202,7 +202,7 @@ const ViewWorkout = ({route, navigation}: any) => {
 
                     <View style={tw`flex flex-row justify-between mx-3 w-[95%]`}>
                         <TouchableOpacity style={tw`w-22 h-10 bg-[#2fc766] shadow-md rounded-xl flex justify-center items-center`} onPress={saveChanges}>
-                            <Text style={tw`text-white font-medium text-base`}>Назад</Text>
+                            <Text style={tw`text-white font-medium text-base`}>Запази</Text>
                         </TouchableOpacity>
                         
                         <TouchableOpacity style={tw`w-22 h-10 bg-blue-500 rounded-xl flex justify-center items-center`} onPress={() => startWorkout(workout, navigation)}>

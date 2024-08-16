@@ -118,13 +118,9 @@ const saveWorkoutEdits = async (workout: any, userInputs: any, newExercises: any
             const newSetDocData: any = {
                 reps: set.reps,
                 weight: set.weight,
+                intensity: set.intensity,
                 setIndex: setIndex,
             };
-
-            // Include intensity if it exists
-            if (set.intensity) {
-                newSetDocData.intensity = set.intensity;
-            }
 
             await addDoc(setsCollectionRef, newSetDocData);
             setIndex++;
