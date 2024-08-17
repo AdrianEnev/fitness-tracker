@@ -199,20 +199,9 @@ const ViewWorkout = ({route, navigation}: any) => {
                         setSetIntensity={setSetIntensity}
 
                     />
-
-                    <View style={tw`flex flex-row justify-between mx-3 w-[95%]`}>
-                        <TouchableOpacity style={tw`w-22 h-10 bg-[#2fc766] shadow-md rounded-xl flex justify-center items-center`} onPress={saveChanges}>
-                            <Text style={tw`text-white font-medium text-base`}>Запази</Text>
-                        </TouchableOpacity>
-                        
-                        <TouchableOpacity style={tw`w-22 h-10 bg-blue-500 rounded-xl flex justify-center items-center`} onPress={() => startWorkout(workout, navigation)}>
-                            <Text style={tw`text-base font-medium text-white`}>Старт</Text>
-                        </TouchableOpacity>
-                        
-                    </View>
                     
                     <TextInput 
-                        style={tw`text-2xl font-bold mx-3 my-5`}
+                        style={tw`text-2xl font-bold mx-3 mb-5`}
                         keyboardType='default'
                         multiline={true}
                         numberOfLines={2}
@@ -338,19 +327,20 @@ const ViewWorkout = ({route, navigation}: any) => {
                         })}
                     </View>
                     
-                    {newExercises.length > 1 ? (
-                        <BottomNavigationBar
-                            currentPage='ViewWorkout'
-                            navigation={navigation}
-                            deleteSavedWorkout={deleteWorkout}
-                            workout={workout}
-                            forwardButton={() => setCurrentIndex((currentIndex + 1) % newExercises.length)}
-                            backButton={() => setCurrentIndex((currentIndex - 1 + newExercises.length) % exercises.length)}
-                            viewWorkoutNumberOfExercises={newExercises.length}
-                        />
-                    ) : null}
                     
-
+                    <BottomNavigationBar
+                        currentPage='ViewWorkout'
+                        navigation={navigation}
+                        deleteSavedWorkout={deleteWorkout}
+                        addSetButton={addSet}
+                        workout={workout}
+                        forwardButton={() => setCurrentIndex((currentIndex + 1) % newExercises.length)}
+                        backButton={() => setCurrentIndex((currentIndex - 1 + newExercises.length) % newExercises.length)}
+                        viewWorkoutNumberOfExercises={newExercises.length}
+                        saveViewWorkoutChanges={saveChanges}
+                        viewWorkoutAddExercise={addExercise}
+                    />
+                    
                 </SafeAreaView>
             </TouchableWithoutFeedback>
         </>

@@ -114,11 +114,13 @@ const saveWorkoutEdits = async (workout: any, userInputs: any, newExercises: any
 
         const setsCollectionRef = collection(newExerciseRef, "sets");
         let setIndex = 1;
+
         for (let set of addedExercise.sets) {
+
             const newSetDocData: any = {
                 reps: set.reps,
                 weight: set.weight,
-                intensity: set.intensity,
+                intensity: set.intensity ? set.intensity : null,
                 setIndex: setIndex,
             };
 

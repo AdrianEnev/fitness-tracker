@@ -37,7 +37,9 @@ const BottomNavigationBar = (
         deleteFood,
         clearSearchFoodSuggestionList,
         saveSettingsMacrosButton,
-        viewWorkoutAddExercise
+        viewWorkoutAddExercise,
+        saveViewWorkoutChanges,
+        addWorkoutPageCurrentExercise
     }: 
     {
         currentPage: string, navigation: any,
@@ -55,6 +57,8 @@ const BottomNavigationBar = (
         clearSearchFoodSuggestionList?: () => void,
         saveSettingsMacrosButton?: () => void,
         viewWorkoutAddExercise?: () => void,
+        saveViewWorkoutChanges?: () => void,
+        addWorkoutPageCurrentExercise?: number
     }
 ) => {
     //AddCustomFood
@@ -96,28 +100,39 @@ const BottomNavigationBar = (
                     </Pressable>
                 </View>
             ) : currentPage === 'AddWorkout' ? (
-                <View style={tw`flex flex-col`}>
 
-                    <View style={tw`w-full h-16 flex flex-row justify-between absolute bottom-18`}>
+                <View style={tw`flex flex-col w-full`}>
+
+                    <View style={tw`w-full h-16 flex gap-y-2 flex-row justify-between absolute bottom-18`}>
                         <Pressable style={tw`w-[49%] bg-blue-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addSetButton}>
                             <Text style={tw`text-white font-medium text-xl`}>+ Set</Text>
                         </Pressable>
                         <Pressable style={tw`w-[49%] bg-green-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addWorkoutButton}>
                             <Text style={tw`text-white font-medium text-xl`}>Done</Text>
                         </Pressable>
+                        
                     </View>
 
-                    <View style={tw`flex flex-row justify-between w-full`}>
+                    <View style={tw`w-full flex flex-row justify-around`}>
 
-                        <Pressable onPress={backButton}>
+                        <Pressable onPress={backButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
                             <Ionicons name='chevron-back-circle-outline' color='#fd1c47' size={72}/>
                         </Pressable>
 
-                        <Pressable onPress={forwardButton}>
+                        <View style={tw`mt-[6px] w-[60px] h-[60px] border-[5px] border-[#fd1c47] rounded-[30px] flex items-center justify-center`}>
+
+                            <Text style={tw`text-[#fd1c47] font-bold text-2xl`}>{addWorkoutPageCurrentExercise}</Text>
+
+                        </View>
+                        
+                        <Pressable onPress={forwardButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
                             <Ionicons name='chevron-forward-circle-outline' color='#fd1c47' size={72}/>
                         </Pressable>
                     </View>
                 </View>
+               
+                
+                
             ) : currentPage === "FoodDay" ? (
                 <View style={tw`flex flex-row justify-around w-full items-center`}>
                     <Pressable onPress={() => navigation.navigate("Храна-Добави", { date: foodDayDate })}>
@@ -158,30 +173,28 @@ const BottomNavigationBar = (
 
                 </View>
             ) : currentPage === 'ViewWorkout' ? (
-                <View style={tw`flex flex-col`}>
+                <View style={tw`flex flex-col w-full`}>
 
-                    <View style={tw`w-full h-16 flex flex-wrap gap-y-2 flex-row justify-between absolute bottom-32`}>
+                    <View style={tw`w-full h-16 flex gap-y-2 flex-row justify-between absolute bottom-18`}>
                         <Pressable style={tw`w-[49%] bg-blue-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addSetButton}>
                             <Text style={tw`text-white font-medium text-xl`}>+ Set</Text>
                         </Pressable>
-                        <Pressable style={tw`w-[49%] bg-yellow-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={viewWorkoutAddExercise}>
+                        <Pressable style={tw`w-[49%] bg-yellow-400 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={viewWorkoutAddExercise}>
                             <Text style={tw`text-white font-medium text-xl`}>+ Exercise</Text>
-                        </Pressable>
-
-                        <Pressable style={tw`w-[49%] bg-red-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={deleteSavedWorkout}>
-                            <Text style={tw`text-white font-medium text-xl`}>Delete</Text>
-                        </Pressable>
-
-                        <Pressable style={tw`w-[49%] bg-green-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addSetButton}>
-                            <Text style={tw`text-white font-medium text-xl`}>Save</Text>
                         </Pressable>
                         
                     </View>
 
-                    <View style={tw`flex flex-row ${viewWorkoutNumberOfExercises === 1 ? 'justify-around' : 'justify-between'} w-full`}>
+                    <View style={tw`w-full flex flex-row ${viewWorkoutNumberOfExercises === 1 ? 'justify-around' : 'justify-between'}`}>
 
                         <Pressable onPress={backButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
                             <Ionicons name='chevron-back-circle-outline' color='#fd1c47' size={72}/>
+                        </Pressable>
+                        <Pressable onPress={deleteSavedWorkout} style={tw``}>
+                            <Ionicons name='close-circle-outline' color='#fb923c' size={72}/>
+                        </Pressable>
+                        <Pressable onPress={saveViewWorkoutChanges} style={tw``}>
+                            <Ionicons name='checkmark-circle-outline' color='#22c55e' size={72}/>
                         </Pressable>
                         
                         <Pressable onPress={forwardButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>

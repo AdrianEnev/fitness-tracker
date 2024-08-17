@@ -34,7 +34,7 @@ const addWorkout = async (exercises: any, navigation: any, workoutTitle: string)
                 await addDoc(exerciseSets, {
                     reps: set.reps,
                     weight: set.weight,
-                    intensity: set.intensity,
+                    intensity: set.intensity ? set.intensity : null,
                     setIndex: index + 1
                 });
                 

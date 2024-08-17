@@ -30,17 +30,17 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
             }}
             >
                 <View style={tw`flex-1 justify-center items-center mx-3`}>
-                    <Pressable style={tw`bg-white w-full h-[29%] rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
+                    <Pressable style={tw`bg-gray-50 w-full h-[29%] rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
 
                         <Text style={tw`text-lg text-center font-medium mt-1`}>Запазване на тренировка</Text>
                         <Text style={tw`text-lg text-center text-gray-500 font-medium my-2`}>Моля въведи име за тази тренировка!</Text>
 
 
                         <TextInput
-                            style={tw`w-full h-12 rounded-xl bg-[#4C9AFF] my-1 text-white font-medium pl-3`}
+                            style={tw`w-full h-12 rounded-xl bg-white shadow-md my-1 text-black font-medium pl-3`}
                             maxLength={30}
-                            placeholder='Крака'
-                            placeholderTextColor='#e5e7eb'
+                            placeholder='Име на тренировка'
+                            placeholderTextColor='#6b7280'
                             onChangeText={(text) => setWorkoutTitle(text)}
                         />
 
@@ -67,8 +67,8 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
                         </View>
 
                         <View style={tw`flex items-center mt-2`}>
-                            <Pressable style={tw`bg-[#E0E0E0] w-full h-10 rounded-xl flex items-center justify-center`} onPress={() => setIsCreateWorkoutModalVisible(false)}>
-                                <Text style={tw`text-black text-lg font-medium`}>Назад</Text>
+                            <Pressable style={tw`bg-[#e83d50] w-full h-10 rounded-xl flex items-center justify-center`} onPress={() => setIsCreateWorkoutModalVisible(false)}>
+                                <Text style={tw`text-white text-lg font-medium`}>Назад</Text>
                             </Pressable>
                         </View>
                         

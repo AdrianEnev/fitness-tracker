@@ -78,7 +78,7 @@ const AddWorkoutPage = ({ navigation }: any) => {
 
         // before moving to the next exercise, check if the current one does not have any of its inputs filled and if so delete it
         const currentExercise = exercises[pageIndex - 1];
-        let isCurrentExerciseEmpty = currentExercise.sets.every((set) => set.reps === '' && set.weight === '' && currentExercise.title === '');
+        let isCurrentExerciseEmpty = currentExercise.sets.every((set) => set.reps === '' && set.weight === '' && currentExercise.title === '') && currentExercise.sets.length === 1;
     
         if (isCurrentExerciseEmpty) {
             setExercises(exercises.filter((exercise) => exercise.id !== currentExercise.id));
@@ -94,6 +94,8 @@ const AddWorkoutPage = ({ navigation }: any) => {
             : exercise
         ));
     };
+
+    // dont remove set if set number == 1
 
     //colors={['#FFEFBA', '#FF7F7F']}
 
@@ -242,6 +244,7 @@ const AddWorkoutPage = ({ navigation }: any) => {
                                                                         style={tw`bg-neutral-100 rounded-2xl p-2 w-full h-10`}
                                                                         keyboardType='number-pad'
                                                                         maxLength={4}
+                                                                        placeholder='Повторения'
                                                                         value={set.reps.toString()}
                                                                         onChangeText={(value) => updateSet(exercise.id, set.id, 'reps', value)}
                                                                     />
@@ -252,6 +255,7 @@ const AddWorkoutPage = ({ navigation }: any) => {
                                                                         style={tw`bg-neutral-100 rounded-2xl p-2 w-full h-10`}
                                                                         keyboardType='number-pad'
                                                                         maxLength={4}
+                                                                        placeholder='Тежест'
                                                                         value={set.weight.toString()}
                                                                         onChangeText={(value) => updateSet(exercise.id, set.id, 'weight', value)}
                                                                     />
@@ -279,8 +283,6 @@ const AddWorkoutPage = ({ navigation }: any) => {
                 </SafeAreaView>
             </TouchableWithoutFeedback>
 
-            
-            
             <BottomNavigationBar 
                 navigation={navigation} 
                 currentPage='AddWorkout' 
@@ -288,6 +290,7 @@ const AddWorkoutPage = ({ navigation }: any) => {
                 backButton={previousExercise}
                 addWorkoutButton={() => setIsCreateWorkoutModalVisible(true)}
                 addSetButton={() => addSet(exercises[pageIndex - 1].id)}
+                addWorkoutPageCurrentExercise={pageIndex}
             />
             
         </>
