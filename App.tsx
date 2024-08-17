@@ -25,6 +25,7 @@ import tw from 'twrnc';
 import { useTranslation } from 'react-i18next';
 import * as LocalAuthentication from 'expo-local-authentication';
 import checkForBiometrics from './app/use/useCheckForBiometrics';
+import NetInfo from "@react-native-community/netinfo";
 
 const logoWatchUpscaled = require('./assets/logo_watch_upscaled.png');
 
@@ -136,6 +137,8 @@ const App = () => {
     const [receiveFriendRequests, setReceiveFriendRequests] = useState(false);
     const [faceIdEnabled, setFaceIdEnabled] = useState(false);
 
+    const [isConnected, setIsConnected] = useState(false)
+
     React.useEffect(() => {
         const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
             setUser(user);
@@ -192,6 +195,13 @@ const App = () => {
             }
         });
 
+        const netListener = NetInfo.addEventListener(state => {
+            console.log("Connection type", state.type);
+            console.log("Is connected?", state.isConnected);
+            setIsConnected(state.isConnected ?? false)
+        })
+
+        netListener();
         return () => unsubscribe();
     }, []);
 
@@ -232,13 +242,19 @@ const App = () => {
                 <StatusBar barStyle='dark-content' />
                 <NavigationContainer>
                     {
-                        user ? 
-                        (
-                            setupRan && isAuthenticated ? <AuthenticatedTabNavigator /> : 
-                            setupRan && !isAuthenticated ? <BiometricsFailed /> :
-                            <SetupPage />
-                        ) : 
-                        <UnauthenticatedTabNavigator />
+                        isConnected ? (
+                            user ? 
+                            (
+                                setupRan && isAuthenticated ? <AuthenticatedTabNavigator /> : 
+                                setupRan && !isAuthenticated ? <BiometricsFailed /> :
+                                <SetupPage />
+                            ) : 
+                            <UnauthenticatedTabNavigator />
+                        ) : (
+                            <View style={tw`flex-1 justify-center items-center bg-red-500`}>
+                                <Text style={tw`text-2xl font-bold text-white`}>No Internet Connection</Text>
+                            </View>
+                        )
                     }
                 </NavigationContainer>
             </GestureHandlerRootView>

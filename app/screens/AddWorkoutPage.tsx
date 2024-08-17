@@ -8,6 +8,7 @@ import BottomNavigationBar from '../components/BottomNavigationBar';
 import { BlurView } from 'expo-blur';
 import { Dimensions } from 'react-native';
 import CreateWorkoutModal from '../components/CreateWorkoutModal';
+import SetIntensityModal from '../components/SetIntensityModal';
 
 const AddWorkoutPage = ({ navigation }: any) => {
 
@@ -26,17 +27,11 @@ const AddWorkoutPage = ({ navigation }: any) => {
     const [workoutTitle, setWorkoutTitle] = useState('' as string);
 
     const addSet = (exerciseId: string) => {
-
-        exercises.map(exercise => {
-            if (exercise.exerciseIndex == pageIndex - 1 && exercise.sets.length < 15) {
-                setExercises(exercises.map(exercise => 
-                    exercise.id === exerciseId 
-                    ? { ...exercise, sets: [...exercise.sets, { reps: '', weight: '', id: Math.random().toString() }] } 
-                    : exercise
-                ));
-            }
-        })
-       
+        setExercises(exercises.map(exercise => 
+            exercise.id === exerciseId && exercise.sets.length < 15
+            ? { ...exercise, sets: [...exercise.sets, { reps: '', weight: '', id: Math.random().toString(), intensity: 0 }] }
+            : exercise
+        ));
     };
 
     const removeSet = (exerciseId: string, setId: string) => {
@@ -67,7 +62,7 @@ const AddWorkoutPage = ({ navigation }: any) => {
             // Create a new exercise
             const newExercise: Exercise = {
                 title: '',
-                sets: [{ reps: "", weight: "", id: Math.random().toString() }],
+                sets: [{ reps: "", weight: "", id: Math.random().toString(), intensity: 0 }],
                 exerciseIndex: exerciseIndex,
                 id: Math.random().toString(),
             };
@@ -127,10 +122,34 @@ const AddWorkoutPage = ({ navigation }: any) => {
         return width;
     }
 
+    
+    const [isSetIntensityModalVisible, setIsSetIntensityModalVisible] = useState(false)
+    const [currentSelectedSet, setCurrentSelectedSet] = useState(0)
+    const [intensityBoxSelected, setIntensityBoxSelected] = useState(0)
+    
+    const setSetIntensity = (setIntensityNumber: number) => {
+        console.log('setSetIntensity called with:', setIntensityNumber);
+        console.log('currentSelectedSet:', currentSelectedSet);
+        console.log('pageIndex:', pageIndex);
+    
+        setExercises(exercises.map((exercise, exerciseIndex) => 
+            exerciseIndex === pageIndex - 1
+            ? { 
+                ...exercise, 
+                sets: exercise.sets.map((set, setIndex) => 
+                    setIndex === currentSelectedSet - 1
+                    ? { ...set, intensity: setIntensityNumber }
+                    : set
+                )
+            }
+            : exercise
+        ));
+    };
+
     return (
         <>
             
-            { isCreateWorkoutModalVisible && (
+            { (isCreateWorkoutModalVisible || isSetIntensityModalVisible) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -140,6 +159,15 @@ const AddWorkoutPage = ({ navigation }: any) => {
 
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <SafeAreaView style={tw`w-full h-full bg-white`}>
+
+                    <SetIntensityModal
+                        isSetIntensityModalVisible={isSetIntensityModalVisible}
+                        setIsSetIntensityModalVisible={setIsSetIntensityModalVisible}
+                        setNumber={currentSelectedSet}
+                        intensityBoxSelected={intensityBoxSelected}
+                        setIntensityBoxSelected={setIntensityBoxSelected}
+                        setSetIntensity={setSetIntensity}
+                    />
 
                     <CreateWorkoutModal
                         isCreateWorkoutModalVisible={isCreateWorkoutModalVisible}
@@ -172,57 +200,73 @@ const AddWorkoutPage = ({ navigation }: any) => {
                                         />
                                             
                                         <ScrollView style={tw`mb-13`}>
-                                            {exercise.sets.map((set, mapIndex) => (
-                                                <View key={set.id} style={tw`ml-3`}>
-                                                    <View style={tw`flex flex-row gap-x-2`}>
-                                                        
-                                                        <View style={tw`flex flex-col`}>
-                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+                                            {exercise.sets.map((set, mapIndex) => {
+                                                // Get the intensity value
+                                                const intensity = set.intensity;
 
-                                                            <View style={tw`w-10 h-10 bg-neutral-100 rounded-xl flex items-center justify-center ${mapIndex != 0 ? '' : ''}`}>
-                                                                <Text style={tw`text-base font-medium`}>{mapIndex + 1}</Text>
+                                                // Determine the background color based on the intensity value
+                                                let backgroundColor = 'bg-neutral-100';
+                                                let textColor = 'text-black';
+                                                if (intensity === 1) {
+                                                    backgroundColor = 'bg-green-500';
+                                                    textColor = 'text-white';
+                                                } else if (intensity === 2) {
+                                                    backgroundColor = 'bg-yellow-400';
+                                                    textColor = 'text-white';
+                                                } else if (intensity === 3) {
+                                                    backgroundColor = 'bg-red-500';
+                                                    textColor = 'text-white';
+                                                }
+
+                                                return (
+                                                    <View key={set.id} style={tw`ml-3`}>
+                                                        <View style={tw`flex flex-row gap-x-2`}>
+                                                            <View style={tw`flex flex-col`}>
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+                                                                <Pressable
+                                                                    style={tw`w-10 h-10 ${backgroundColor} rounded-xl flex items-center justify-center`}
+                                                                    onPress={() => {
+                                                                        setIsSetIntensityModalVisible(true);
+                                                                        setCurrentSelectedSet(mapIndex + 1);
+                                                                        setIntensityBoxSelected(0);
+
+                                                                    }}
+                                                                >
+                                                                    <Text style={tw`text-base font-medium ${textColor}`}>{mapIndex + 1}</Text>
+                                                                </Pressable>
                                                             </View>
-                                                        </View>
-
-                                                        <View style={tw`flex flex-row gap-x-2 mb-3`}>
-
-                                                            <View style={tw`w-[39.3%]`}>
-
-                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{getDimensions() > 400 ? 'Повторения' : 'Повт.'}</Text>
-
-                                                                <TextInput
-                                                                    style={tw`bg-neutral-100 rounded-2xl p-2 w-full h-10`}
-                                                                    keyboardType='number-pad'
-                                                                    maxLength={4}
-                                                                    value={set.reps.toString()}
-                                                                    onChangeText={(value) => updateSet(exercise.id, set.id, 'reps', value)}
-                                                                />
-
+                                                            <View style={tw`flex flex-row gap-x-2 mb-3`}>
+                                                                <View style={tw`w-[39.3%]`}>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{getDimensions() > 400 ? 'Повторения' : 'Повт.'}</Text>
+                                                                    <TextInput
+                                                                        style={tw`bg-neutral-100 rounded-2xl p-2 w-full h-10`}
+                                                                        keyboardType='number-pad'
+                                                                        maxLength={4}
+                                                                        value={set.reps.toString()}
+                                                                        onChangeText={(value) => updateSet(exercise.id, set.id, 'reps', value)}
+                                                                    />
+                                                                </View>
+                                                                <View style={tw`w-[39.3%]`}>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
+                                                                    <TextInput
+                                                                        style={tw`bg-neutral-100 rounded-2xl p-2 w-full h-10`}
+                                                                        keyboardType='number-pad'
+                                                                        maxLength={4}
+                                                                        value={set.weight.toString()}
+                                                                        onChangeText={(value) => updateSet(exercise.id, set.id, 'weight', value)}
+                                                                    />
+                                                                </View>
+                                                                <TouchableOpacity
+                                                                    style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`}
+                                                                    onPress={() => removeSet(exercise.id, set.id)}
+                                                                >
+                                                                    <Ionicons name='close' size={36} color='white' />
+                                                                </TouchableOpacity>
                                                             </View>
-
-                                                            <View style={tw`w-[39.3%]`}>
-                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
-
-                                                                <TextInput
-                                                                    style={tw`bg-neutral-100 rounded-2xl p-2 w-full h-10`}
-                                                                    keyboardType='number-pad'
-                                                                    maxLength={4}
-                                                                    value={set.weight.toString()}
-                                                                    onChangeText={(value) => updateSet(exercise.id, set.id, 'weight', value)}
-                                                                />
-                                                            </View>
-
-                                                            <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
-                                                            onPress={() => removeSet(exercise.id, set.id)}
-                                                            >
-                                                                <Ionicons name='close' size={36} color='white' />
-                                                            </TouchableOpacity>
-
                                                         </View>
                                                     </View>
-                                                </View>
-                                            ))}
-
+                                                );
+                                            })}
                                         </ScrollView>
 
                                         
