@@ -56,9 +56,9 @@ const SettingsAccount = ({navigation}: any) => {
         // get the date property inside the usernameDocRef and check the difference between the timestamp property and the current date
         const usernameDoc = await getDoc(usernameDocRef);
         const usernameData = usernameDoc.data();
-        const date = usernameData?.date.toDate();
+        const date = usernameData?.date?.toDate(); // add a check for undefined date
         const currentDate = new Date();
-        const difference = currentDate.getTime() - date.getTime();
+        const difference = currentDate.getTime() - (date?.getTime() || 0); // use 0 if date is undefined
         const daysDifference = difference / (1000 * 3600 * 24);
 
         // if 7 days haven't passed since the last username change, alert the user that there is still a cooldown

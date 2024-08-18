@@ -69,7 +69,10 @@ const ViewWorkout = ({route, navigation}: any) => {
     }
 
     const saveChanges = async () => {
+
+        console.log('saving')
         await saveWorkoutEdits(workout, userInputs, newExercises, newWorkoutTitle);
+        console.log('saved')
         navigation.navigate('Тренировки');
     }
     

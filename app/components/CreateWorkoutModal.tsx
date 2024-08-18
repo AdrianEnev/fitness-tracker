@@ -3,6 +3,7 @@ import React from 'react'
 import tw from 'twrnc'
 import addWorkout from '../use/useAddWorkout';
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import addWorkoutLocally from '../use/useAddWorkoutLocally';
 
 interface CreateWorkoutModalProps {
     exercises: any;
@@ -59,7 +60,8 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
                                         return
                                     }
 
-                                    addWorkout(exercises, navigation, workoutTitle)
+                                    addWorkout(exercises, navigation, workoutTitle);
+                                    addWorkoutLocally(exercises, workoutTitle);
                                 }}
                             >
                                 <Text style={tw`text-white text-lg font-medium`}>Запазване</Text>

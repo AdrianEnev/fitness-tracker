@@ -1,4 +1,4 @@
-import { View, Text, Button, SafeAreaView, TouchableOpacity, FlatList, Pressable, Alert, TextInput } from 'react-native'
+import { View, Text, Button, SafeAreaView, TouchableOpacity, FlatList, Pressable, Alert, TextInput } from 'react-native'  
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import i18next from '../../services/i18next';
@@ -10,6 +10,8 @@ import getWorkoutInfo from '../use/useGetWorkoutInfo';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import generateRandomColour from '../use/useGenerateColour';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import getWorkoutInfoLocally from '../use/useGetWorkoutInfoLocally';
 
 const Workouts = ({navigation}: any) => {
 
@@ -20,14 +22,45 @@ const Workouts = ({navigation}: any) => {
     const [workouts, setWorkouts] = useState<Workout[]>([]);
     const [viewWorkoutButtonDisabled, setViewWorkoutButtonDisabled] = useState(false);
 
-    const getWorkouts = async () => {
+    /*const getWorkouts = async () => {
         try {
             const data = await getDocs(query(userWorkoutsCollectionRef, orderBy("created", "desc")));
       
             const filteredData: Workout[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Workout));
       
             setWorkouts(filteredData);
+
+            console.log('-----------------------------------------')
+            console.log('database')
+            console.log(filteredData);
+            console.log('-----------------------------------------')
             
+        } catch (err) {
+            console.error(err);
+        }
+    }*/
+
+    const getWorkoutsLocally = async () => {
+        try {
+            const data = await AsyncStorage.getItem('workouts');
+            let workouts = data ? JSON.parse(data) : [];
+
+            workouts.reverse();
+
+            setWorkouts(workouts);
+            /*console.log('-----------------------------------------')
+            console.log('local')
+            console.log(workouts)
+            console.log('-----------------------------------------')*/
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const clearAllLocalWorkouts = async () => {
+        try {
+            await AsyncStorage.removeItem('workouts');
+            console.log('All workouts cleared locally');
         } catch (err) {
             console.error(err);
         }
@@ -35,8 +68,12 @@ const Workouts = ({navigation}: any) => {
 
     useEffect(() => {
         onSnapshot(userWorkoutsCollectionRef, (_snapshot) => {
-            getWorkouts();
+            //getWorkouts();
+            
         });
+
+        //clearAllLocalWorkouts();
+        getWorkoutsLocally();
     }, [])
 
     const changeWorkoutName = async (workoutID: string, workoutTitle: string) => {
@@ -69,7 +106,8 @@ const Workouts = ({navigation}: any) => {
 
         setViewWorkoutButtonDisabled(true);
 
-        const workoutInfo = await getWorkoutInfo(workout.id);
+        //const workoutInfo = await getWorkoutInfo(workout.id);
+        const workoutInfo = await getWorkoutInfoLocally(workout.id);
         if (workoutInfo) {
 
             const { exercisesData, workoutTitle } = workoutInfo;

@@ -20,6 +20,7 @@ export interface Workout {
     id: string;
     colour: string;
     numberOfExercises: number;
+    created: Timestamp;
 }
 
 export interface Split {
