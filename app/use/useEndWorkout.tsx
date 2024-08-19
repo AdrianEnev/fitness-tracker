@@ -2,7 +2,7 @@ import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc } from "fireba
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import generateRandomColour from "./useGenerateColour";
 
-const endWorkout = async (navigation: any, exercises: any, workoutTitle: string, duration: any) => {
+const endWorkout = async (exercises: any, workoutTitle: string, duration: any, id: any) => {
 
     //console.log('endWorkout.tsx: ', duration);
 
@@ -11,18 +11,16 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string,
         exercise.sets.length === 0 || 
         exercise.sets.every((set: any) => set.reps === ''))) {
         
-        navigation.navigate('Главна Страница');
         return;
     }
-
-    navigation.navigate('Главна Страница');
 
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userSavedWorkoutsCollectionRef = collection(userDocRef, "saved_workouts");
     const userInfoCollectionRef = collection(userDocRef, "user_info");
 
-    const savedWorkoutDocRef = await addDoc(userSavedWorkoutsCollectionRef, {
+    const savedWorkoutDocRef = doc(userSavedWorkoutsCollectionRef, id);
+    await setDoc(savedWorkoutDocRef, {
         title: workoutTitle,
         created: serverTimestamp(),
         duration: duration,
@@ -62,7 +60,6 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string,
         }));
     
         // Ensure totalWeight is a number before updating the document
-        // Ensure totalWeight is a number before updating the document
         if (!isNaN(totalWeight)) {
             // Update the document with totalWeight
             const statisticsDocRef = doc(userInfoCollectionRef, "statistics");
@@ -87,6 +84,8 @@ const endWorkout = async (navigation: any, exercises: any, workoutTitle: string,
                 weightLifted: totalWeight,
                 finishedWorkouts: finishedWorkouts
             });
+
+            console.log('Workout saved in database');
         } else {
             console.error('Total weight is NaN');
         }

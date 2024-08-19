@@ -10,7 +10,6 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalContext from '../../GlobalContext';
 import BottomNavigationBar from '../components/BottomNavigationBar';
-import ProfilePicture from '../components/ProfilePicture';
 import LanguageModal from '../components/LanguageModal';
 import { BlurView } from 'expo-blur';
 
@@ -44,7 +43,7 @@ const Settings = ({navigation}: any) => {
         }
     }
 
-    const changeLanguage = async (language: string) => {
+    /*const changeLanguage = async (language: string) => {
         try {
             await i18next.changeLanguage(language);
             setSelectedLanguage(language);
@@ -53,7 +52,7 @@ const Settings = ({navigation}: any) => {
         } catch (err) {
             console.error(err);
         }
-    }
+    }*/
 
     useFocusEffect(
         React.useCallback(() => {

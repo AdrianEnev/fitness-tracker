@@ -2,6 +2,8 @@ import { View, Text, Modal, Pressable, Keyboard, TextInput } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
 import endWorkout from '../use/useEndWorkout';
+import endWorkoutLocally from '../use/useEndWorkoutLocally';
+import generateID from '../use/useGenerateID';
 
 interface EndWorkoutModalProps {
     navigation: any;
@@ -10,9 +12,12 @@ interface EndWorkoutModalProps {
     isEndWorkoutModalVisible: boolean;
     setIsEndWorkoutModalVisible: (isVisible: boolean) => void;
     duration: any;
+    internetConnected: boolean;
 }
 
-const EndWorkoutModal: React.FC<EndWorkoutModalProps> = ({ isEndWorkoutModalVisible, setIsEndWorkoutModalVisible, navigation, exercises, workoutTitle, duration }) => { 
+const EndWorkoutModal: React.FC<EndWorkoutModalProps> = ({ 
+    isEndWorkoutModalVisible, setIsEndWorkoutModalVisible, navigation, exercises, workoutTitle, duration, internetConnected 
+}) => { 
     
     //console.log('EndWorkoutModal.tsx: ', duration);
     
@@ -32,7 +37,18 @@ const EndWorkoutModal: React.FC<EndWorkoutModalProps> = ({ isEndWorkoutModalVisi
                         <Text style={tw`text-lg text-center text-gray-500 font-medium my-2`}>Сигурен ли си, че искаш да приключиш тази тренировка?</Text>
 
                         <View style={tw`flex items-center mt-2`}>
-                            <Pressable style={tw`bg-[#e83d50] w-full h-10 rounded-xl flex items-center justify-center`} onPress={() => endWorkout(navigation, exercises, workoutTitle, duration)}>
+                            <Pressable style={tw`bg-[#e83d50] w-full h-10 rounded-xl flex items-center justify-center`} onPress={() => {
+
+                                const id = generateID();
+
+                                if (internetConnected) {
+                                    endWorkout(exercises, workoutTitle, duration, id);
+                                }
+
+                                endWorkoutLocally(exercises, workoutTitle, duration, id);
+
+                                navigation.navigate('Главна Страница');
+                            }}>
                                 <Text style={tw`text-white text-lg font-medium`}>Приключване и Запазване</Text>
                             </Pressable>
                         </View>

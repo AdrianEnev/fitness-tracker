@@ -8,32 +8,10 @@ import getSavedWorkoutInfo from '../use/useGetSavedWorkoutInfo';
 
 const ViewSavedWorkout = ({navigation, route}: any) => {
 
-    const { workout, date, time } = route.params;
-
-    const getExercises = async () => {
-
-        const savedWorkoutInfo = await getSavedWorkoutInfo(workout.id);
-        if (savedWorkoutInfo) {
-
-            const { exercisesData, workoutTitle } = savedWorkoutInfo;
-            setExercises(exercisesData);
-            setWorkoutTitle(workoutTitle);
-        }
-    }
+    const { exercises, workoutTitle, date, time, workout } = route.params;
 
     const [currentIndex, setCurrentIndex] = useState(0);
-
-    const [exercises, setExercises] = useState<any>([]); 
-    const [newExercises, setNewExercises] = useState<any>([]); 
-    const [workoutTitle, setWorkoutTitle] = useState('');
-
-    useEffect(() => {
-        getExercises();
-    }, []);
-
-    useEffect(() => {
-        setNewExercises([...exercises]);
-    }, [exercises]);
+    const [newExercises, setNewExercises] = useState<any>([...exercises]);
 
     const deleteSavedWorkout = async () => {
 

@@ -202,7 +202,6 @@ const SettingsAccount = ({navigation}: any) => {
 
     };
 
-
     const switchButton = (title: any, icon: any, background: string, iconColor: any, iconSize: number) => {
         return (
             <View style={tw`w-full h-14 bg-white p-3 mb-1`}>

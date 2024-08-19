@@ -15,6 +15,10 @@ const ViewWorkout = ({route, navigation}: any) => {
 
     const { exercises, workout, workoutTitle } = route.params;
 
+    useEffect(() => {
+        console.log(workout)
+    }, []);
+
     const [newWorkoutTitle, setNewWorkoutTitle] = useState('');
 
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -214,6 +218,8 @@ const ViewWorkout = ({route, navigation}: any) => {
                         defaultValue={workoutTitle}
                         onChangeText={(text) => setNewWorkoutTitle(text)}
                     />
+
+                    <Button title='start' onPress={() => startWorkout(workout, navigation)} />
 
                     <View style={tw`flex flex-col gap-y-1`}>
                         {newExercises.map((exercise: any, index: any) => {

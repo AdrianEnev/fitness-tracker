@@ -1,16 +1,18 @@
 import { View, Text, SafeAreaView, TextInput, TouchableWithoutFeedback, Pressable, TouchableOpacity, ScrollView, Keyboard, Modal } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { BlurView } from 'expo-blur';
 import NoteModal from '../components/NoteModal';
 import EndWorkoutModal from '../components/EndWorkoutModal';
+import GlobalContext from '../../GlobalContext';
 
 const ActiveWorkout = ({route, navigation}: any) => {
 
-    const { exercises } = route.params;
-    const { workoutTitle } = route.params;
+    const { exercises, workoutTitle } = route.params;
+
+    const {internetConnected} = useContext(GlobalContext);
 
     const [currentIndex, setCurrentIndex] = useState(0);
     const [newExercises, setNewExercises] = useState<any>([...exercises]); // newExercises = copy of exercises
@@ -158,6 +160,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                         exercises={userInputs}
                         workoutTitle={workoutTitle}
                         duration={getWorkoutDuration()}
+                        internetConnected={internetConnected}
                     />
                     
 

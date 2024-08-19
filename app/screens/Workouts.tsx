@@ -110,6 +110,8 @@ const Workouts = ({navigation}: any) => {
         const workoutInfo = await getWorkoutInfoLocally(workout.id);
         if (workoutInfo) {
 
+
+
             const { exercisesData, workoutTitle } = workoutInfo;
             navigation.navigate('Тренировка-Детайли', {exercises: exercisesData, workoutTitle: workoutTitle, workout: workout});
 

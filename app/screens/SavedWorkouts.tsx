@@ -2,12 +2,13 @@ import { View, Text, Button, SafeAreaView, TouchableOpacity, FlatList, Pressable
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
-import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, setDoc, Timestamp, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
 import getSavedWorkoutInfo from '../use/useGetSavedWorkoutInfo';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import BottomNavigationBar from '../components/BottomNavigationBar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Workouts = ({navigation}: any) => {
 
@@ -32,13 +33,49 @@ const Workouts = ({navigation}: any) => {
         }
     };
 
+    const getWorkoutsLocally = async () => {
+        try {
+            const savedWorkouts = await AsyncStorage.getItem('savedWorkouts');
+            const savedWorkoutsArray = savedWorkouts ? JSON.parse(savedWorkouts) : [];
+    
+            const convertedWorkouts = savedWorkoutsArray.map((workout: any) => {
+                const createdDate = new Date(workout.created);
+                const seconds = Math.floor(createdDate.getTime() / 1000);
+                const nanoseconds = (createdDate.getTime() % 1000) * 1000000;
+    
+                return {
+                    ...workout,
+                    created: {
+                        seconds: seconds,
+                        nanoseconds: nanoseconds
+                    }
+                };
+            });
+    
+            setSavedWorkouts(convertedWorkouts);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const clearAllLocalSavedWorkouts = async () => {
+        try {
+            await AsyncStorage.removeItem('savedWorkouts');
+            setSavedWorkouts([]);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     useEffect(() => {
         onSnapshot(userSavedWorkoutsCollectionRef, (_snapshot) => {
-            getWorkouts();
+            //getWorkouts();
         });
-    }, [])
 
-    //onPress={() => navigation.navigate('Тренировка-Детайли', {workout})}
+        //clearAllLocalSavedWorkouts();
+        getWorkoutsLocally();
+        
+    }, [])
 
     /*const deleteWorkout = async (id: string) => {
         const workoutDocRef = doc(userSavedWorkoutsCollectionRef, id);
@@ -52,8 +89,16 @@ const Workouts = ({navigation}: any) => {
     const viewWorkout = async (workout: Workout, date: any, time: any) => {
 
         setViewWorkoutButtonDisabled(true);
+
+        const workoutInfo = await getSavedWorkoutInfo(workout.id);
+        if (workoutInfo) {
+
+            const { exercisesData, workoutTitle } = workoutInfo;
+            navigation.navigate('Виж-Запазенa-Тренировка', {exercises: exercisesData, workoutTitle: workoutTitle, date: date, time: time, workout: workout});
+
+        }
         
-        await navigation.navigate('Виж-Запазенa-Тренировка', { workout: workout, date: date, time: time});
+        //await navigation.navigate('Виж-Запазенa-Тренировка', { workout: workout, date: date, time: time });
 
         setTimeout(() => {
             setViewWorkoutButtonDisabled(false);
@@ -61,61 +106,35 @@ const Workouts = ({navigation}: any) => {
 
     }
 
-    /**
-     * 
-     *<Pressable style={tw`w-full h-14 bg-white py-1`} onPress={() => viewWorkout(savedWorkout, formattedDate, formattedTime)} disabled={viewWorkoutButtonDisabled}>
-            <View style={tw`flex flex-row justify-between`}>
-
-                <View style={tw`flex flex-row`}>
-
-                    <View style={tw`w-16 h-10 bg-[#fd3e54] rounded-xl flex items-center justify-center mr-2`}>
-                        <Text style={tw`text-lg font-medium text-white`} ellipsizeMode='tail' numberOfLines={1}>{date}</Text>
-                    </View>
-                    
-                    <View style={tw`flex flex-row justify-start items-center max-w-[75%]`}>
-                        <Text style={tw`text-lg font-medium`} ellipsizeMode='tail' numberOfLines={1}>{savedWorkout.title}</Text>
-                    </View>
-                </View>
-
-                <View style={tw`flex justify-center`}>
-                    <Ionicons name='chevron-forward' size={24} color='#6b7280' />
-                </View>
-
-            </View>
-        </Pressable>
-     */
-
-    // <Ionicons name='close' size={40} color='white' onPress={() => deleteWorkout(savedWorkout.id)}/>
-
     const renderSavedWorkout = (savedWorkout: any) => {
-
-        const date = savedWorkout.created.toDate();
+        console.log(savedWorkout.created);
+    
+        // Convert the created property to a Firestore Timestamp object
+        const timestamp = new Timestamp(savedWorkout.created.seconds, savedWorkout.created.nanoseconds);
+        const date = timestamp.toDate();
         const formattedDate = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
         const formattedTime = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + 'ч.';
-
+    
         return (
-            <Pressable style={tw`w-[96.5%] h-14 bg-white mx-2 py-1`} onPress={() => viewWorkout(savedWorkout, formattedDate, formattedTime)} disabled={viewWorkoutButtonDisabled}>
+            <Pressable style={tw`w-[96.5%] h-14 bg-white mx-2 py-1`} onPress={() => {
+                viewWorkout(savedWorkout, formattedDate, formattedTime);
+            }} disabled={viewWorkoutButtonDisabled}>
                 <View style={tw`flex flex-row justify-between`}>
-                    
                     <View style={tw`flex flex-row`}>
                         <View style={tw`w-28 h-10 bg-[#fd3e54] rounded-xl flex items-center justify-center mr-2`}>
                             <Text style={tw`text-lg font-medium text-white`} ellipsizeMode='tail' numberOfLines={1}>{formattedDate}</Text>
                         </View>
-
                         <View style={tw`flex flex-row justify-start items-center max-w-[66%]`}>
                             <Text style={tw`text-lg font-medium`} ellipsizeMode='tail' numberOfLines={1}>{savedWorkout.title}</Text>
                         </View>
                     </View>
-                    
                     <View style={tw`flex justify-center`}>
                         <Ionicons name='chevron-forward' size={24} color='#6b7280' />
                     </View>
-
                 </View>
             </Pressable>
-            
-        )
-    }
+        );
+    };
 
     const {t} = useTranslation();
 
