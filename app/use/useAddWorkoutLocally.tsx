@@ -16,7 +16,7 @@ interface ExerciseInfo {
     sets: SetInfo[];
 }
 
-const addWorkoutLocally = async (exercises: any, workoutTitle: string) => {
+const addWorkoutLocally = async (exercises: any, workoutTitle: string, id: any) => {
     try {
         // Get existing workouts from local storage
         const existingWorkouts = await AsyncStorage.getItem('workouts');
@@ -24,7 +24,7 @@ const addWorkoutLocally = async (exercises: any, workoutTitle: string) => {
 
         // Create new workout object
         const newWorkout = {
-            id: Math.random().toString(),
+            id: id,
             title: workoutTitle.trim(),
             created: new Date().toISOString(),
             colour: generateRandomColour(),

@@ -1,14 +1,14 @@
-
 import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import generateRandomColour from './useGenerateColour';
 
-const addWorkout = async (exercises: any, navigation: any, workoutTitle: string) => {
+const addWorkout = async (exercises: any, workoutTitle: string, id: any) => {
 
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
-    const workoutDocRef = await addDoc(userWorkoutsCollectionRef, {
+    const workoutDocRef = doc(userWorkoutsCollectionRef, id); // Use the provided id here
+    await setDoc(workoutDocRef, {
         title: workoutTitle.trim(),
         created: serverTimestamp(),
         colour: generateRandomColour(),
@@ -25,10 +25,10 @@ const addWorkout = async (exercises: any, navigation: any, workoutTitle: string)
                 }
 
                 const exerciseDocRef = doc(workoutInfoCollectionRef, (exercise.exerciseIndex + 1).toString());
-                setDoc(exerciseDocRef, {
+                await setDoc(exerciseDocRef, {
                     title: exercise.title.trim(),
                     exerciseIndex: exercise.exerciseIndex + 1,
-                })
+                });
 
                 const exerciseSets = collection(exerciseDocRef, "sets");
                 await addDoc(exerciseSets, {
@@ -41,10 +41,8 @@ const addWorkout = async (exercises: any, navigation: any, workoutTitle: string)
             });
             
         });
-
-        navigation.navigate('Тренировки');
         
-    }catch (err) {
+    } catch (err) {
         console.error(err);
     }
     

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard, Pressable, ScrollView } from 'react-native';
 import tw from 'twrnc';
 import { Exercise, Set } from '../../interfaces';
@@ -9,8 +9,11 @@ import { BlurView } from 'expo-blur';
 import { Dimensions } from 'react-native';
 import CreateWorkoutModal from '../components/CreateWorkoutModal';
 import SetIntensityModal from '../components/SetIntensityModal';
+import GlobalContext from '../../GlobalContext';
 
 const AddWorkoutPage = ({ navigation }: any) => {
+
+    const {internetConnected} = useContext(GlobalContext);
 
     const newExercise: any = {
         title: '',
@@ -180,6 +183,7 @@ const AddWorkoutPage = ({ navigation }: any) => {
                         setWorkoutTitle={setWorkoutTitle}
                         saveButtonDisabled={saveButtonDisabled}
                         setSaveButtonDisabled={setSaveButtonDisabled}
+                        internetConnected={internetConnected}
                     />
 
                     <View style={tw`flex flex-col gap-y-1 max-h-[82%]`}>

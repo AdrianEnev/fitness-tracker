@@ -195,9 +195,6 @@ const MainPageComponent = () => {
                   headerShown: false,
               }}
           />
-
-
-
           <Stack.Screen
               name="Приятели"
               component={FriendsList}

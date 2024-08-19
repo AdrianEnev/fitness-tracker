@@ -4,6 +4,7 @@ import tw from 'twrnc'
 import addWorkout from '../use/useAddWorkout';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import addWorkoutLocally from '../use/useAddWorkoutLocally';
+import generateID from '../use/useGenerateID';
 
 interface CreateWorkoutModalProps {
     exercises: any;
@@ -14,11 +15,12 @@ interface CreateWorkoutModalProps {
     setSaveButtonDisabled: any;
     isCreateWorkoutModalVisible: boolean;
     setIsCreateWorkoutModalVisible: (isVisible: boolean) => void;
+    internetConnected: boolean;
 }
 
 const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({ 
     isCreateWorkoutModalVisible, setIsCreateWorkoutModalVisible, exercises, navigation, workoutTitle, setWorkoutTitle,
-    setSaveButtonDisabled, saveButtonDisabled
+    setSaveButtonDisabled, saveButtonDisabled, internetConnected
 }) => { 
     
     return (
@@ -60,8 +62,16 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
                                         return
                                     }
 
-                                    addWorkout(exercises, navigation, workoutTitle);
-                                    addWorkoutLocally(exercises, workoutTitle);
+                                    const id = generateID();
+
+                                    addWorkoutLocally(exercises, workoutTitle, id);
+                                    
+                                    if (internetConnected) {
+                                        addWorkout(exercises, workoutTitle, id);
+                                        console.log('Internet connected, added workout to database as well as locally')
+                                    }
+                                    
+                                    navigation.navigate('Главна Страница');
                                 }}
                             >
                                 <Text style={tw`text-white text-lg font-medium`}>Запазване</Text>

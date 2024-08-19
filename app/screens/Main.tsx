@@ -21,6 +21,7 @@ import WorkoutFoodButtons from '../components/WorkoutFoodButtons';
 import Nutrients from '../components/NutrientsMain';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import ProfilePicture from '../components/ProfilePicture';
+import syncWorkouts from '../use/syncWorkouts';
 
 
 //bg-[#fd3e6b]
@@ -30,7 +31,7 @@ const Main = ({navigation}: any) => {
 
     //const [steps, setSteps] = useState(0);
 
-    const { setGoalNutrients } = useContext(GlobalContext);
+    const { setGoalNutrients, internetConnected } = useContext(GlobalContext);
 
     const { t } = useTranslation();
 
@@ -63,6 +64,11 @@ const Main = ({navigation}: any) => {
             }
 
             setCurrentFormattedDate(formattedDate)
+
+            if (internetConnected) {
+                console.log('established internet connection inside Main, syncing workouts...');
+                syncWorkouts();
+            }
             
         }, [])
     );

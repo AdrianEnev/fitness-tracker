@@ -198,6 +198,7 @@ const App = () => {
         const netListener = NetInfo.addEventListener(state => {
             console.log("Connection type", state.type);
             console.log("Is connected?", state.isConnected);
+            console.log("Connection details:", state.details);
             setIsConnected(state.isConnected ?? false)
         })
 
@@ -236,7 +237,8 @@ const App = () => {
         <GlobalContext.Provider value={{
             setupRan, setSetupRan, username, profilePicture, goalNutrients,
             setUsername, setProfilePicture, friendRequestsNumber, setGoalNutrients,
-            receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled
+            receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
+            internetConnected: isConnected
         }}>
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />
