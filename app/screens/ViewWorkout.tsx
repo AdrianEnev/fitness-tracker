@@ -1,7 +1,7 @@
 import { View, Text, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput, Pressable, Button, Dimensions } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
-import { addDoc, collection, deleteDoc, doc, getDocs, runTransaction, setDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, runTransaction, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { Ionicons } from '@expo/vector-icons';
@@ -10,6 +10,7 @@ import saveWorkoutEdits from '../use/useSaveWorkoutEdits';
 import startWorkout from '../use/useStartWorkout';
 import { BlurView } from 'expo-blur';
 import SetIntensityModal from '../components/SetIntensityModal';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ViewWorkout = ({route, navigation}: any) => {
 
@@ -104,14 +105,43 @@ const ViewWorkout = ({route, navigation}: any) => {
     };
 
     const deleteWorkout = async () => {
-        // delete the workout from the database
+        console.log('deleteWorkout function called');
+    
+        // Check if the workout document exists before deleting it
         const usersCollectionRef = collection(FIRESTORE_DB, "users");
         const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
         const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
         const workoutDocRef = doc(userWorkoutsCollectionRef, workout.id);
-
-        await deleteDoc(workoutDocRef);
-        navigation.navigate('Тренировки');
+    
+        try {
+            const workoutDocSnapshot = await getDoc(workoutDocRef);
+            if (workoutDocSnapshot.exists()) {
+                console.log('Workout document exists, deleting from Firestore');
+                await deleteDoc(workoutDocRef);
+            } else {
+                console.log('Workout document does not exist in Firestore');
+            }
+        } catch (error) {
+            console.error('Error deleting workout from Firestore: ', error);
+        }
+    
+        // Delete the workout from AsyncStorage
+        try {
+            const workouts = await AsyncStorage.getItem('workouts');
+            const workoutsArray = workouts ? JSON.parse(workouts) : [];
+            console.log('Retrieved workouts from AsyncStorage:', workoutsArray);
+    
+            const updatedWorkoutsArray = workoutsArray.filter((w: any) => w.id !== workout.id);
+            console.log('Updated workouts array after deletion:', updatedWorkoutsArray);
+    
+            await AsyncStorage.setItem('workouts', JSON.stringify(updatedWorkoutsArray));
+            console.log('Updated workouts saved to AsyncStorage');
+        } catch (err) {
+            console.error('Error deleting workout from local storage: ', err);
+        }
+    
+        navigation.navigate('Главна Страница');
+        console.log('Navigated to Главна Страница');
     }
 
     const handleContentSizeChange = (event: any) => {

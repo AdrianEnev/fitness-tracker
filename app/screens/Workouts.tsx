@@ -45,13 +45,10 @@ const Workouts = ({navigation}: any) => {
             const data = await AsyncStorage.getItem('workouts');
             let workouts = data ? JSON.parse(data) : [];
 
-            workouts.reverse();
+            workouts = workouts.reverse();
 
             setWorkouts(workouts);
-            /*console.log('-----------------------------------------')
-            console.log('local')
-            console.log(workouts)
-            console.log('-----------------------------------------')*/
+            
         } catch (err) {
             console.error(err);
         }
@@ -65,6 +62,7 @@ const Workouts = ({navigation}: any) => {
             console.error(err);
         }
     }
+
 
     useEffect(() => {
         onSnapshot(userWorkoutsCollectionRef, (_snapshot) => {

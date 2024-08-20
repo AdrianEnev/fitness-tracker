@@ -12,7 +12,7 @@ const endWorkoutLocally = async (exercises: any, workoutTitle: string, duration:
         return;
     }
 
-    const workout = {
+    const workoutObj = {
         id: id,
         title: workoutTitle,
         created: new Date().toISOString(),
@@ -37,7 +37,7 @@ const endWorkoutLocally = async (exercises: any, workoutTitle: string, duration:
         const savedWorkoutsArray = savedWorkouts ? JSON.parse(savedWorkouts) : [];
 
         // Add new workout to the array
-        savedWorkoutsArray.push(workout);
+        savedWorkoutsArray.push(workoutObj);
 
         // Save updated workouts array back to AsyncStorage
         await AsyncStorage.setItem('savedWorkouts', JSON.stringify(savedWorkoutsArray));

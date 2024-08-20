@@ -9,6 +9,7 @@ import getSavedWorkoutInfo from '../use/useGetSavedWorkoutInfo';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import getSavedWorkoutInfoLocally from '../use/useGetSavedWorkoutInfoLocally';
 
 const Workouts = ({navigation}: any) => {
 
@@ -38,7 +39,7 @@ const Workouts = ({navigation}: any) => {
             const savedWorkouts = await AsyncStorage.getItem('savedWorkouts');
             const savedWorkoutsArray = savedWorkouts ? JSON.parse(savedWorkouts) : [];
     
-            const convertedWorkouts = savedWorkoutsArray.map((workout: any) => {
+            let convertedWorkouts = savedWorkoutsArray.map((workout: any) => {
                 const createdDate = new Date(workout.created);
                 const seconds = Math.floor(createdDate.getTime() / 1000);
                 const nanoseconds = (createdDate.getTime() % 1000) * 1000000;
@@ -51,6 +52,8 @@ const Workouts = ({navigation}: any) => {
                     }
                 };
             });
+
+            convertedWorkouts = convertedWorkouts.reverse();
     
             setSavedWorkouts(convertedWorkouts);
         } catch (err) {
@@ -90,7 +93,8 @@ const Workouts = ({navigation}: any) => {
 
         setViewWorkoutButtonDisabled(true);
 
-        const workoutInfo = await getSavedWorkoutInfo(workout.id);
+        //const workoutInfo = await getSavedWorkoutInfo(workout.id);
+        const workoutInfo = await getSavedWorkoutInfoLocally(workout.id);
         if (workoutInfo) {
 
             const { exercisesData, workoutTitle } = workoutInfo;

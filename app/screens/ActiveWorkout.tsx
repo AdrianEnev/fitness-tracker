@@ -10,7 +10,7 @@ import GlobalContext from '../../GlobalContext';
 
 const ActiveWorkout = ({route, navigation}: any) => {
 
-    const { exercises, workoutTitle } = route.params;
+    const { exercises, workoutTitle, workout } = route.params;
 
     const {internetConnected} = useContext(GlobalContext);
 
@@ -52,6 +52,12 @@ const ActiveWorkout = ({route, navigation}: any) => {
             }
         }
     }
+
+    useEffect(() => {
+        if (exercises.length > 0) {
+            setNewExercises([...exercises]);
+        }
+    }, [exercises]);
 
     const removeSet = (exerciseIndex: number, setId: string) => {
         // Update newExercises
@@ -99,11 +105,26 @@ const ActiveWorkout = ({route, navigation}: any) => {
     }, []);
 
     const forwardButton = () => {
-        setCurrentIndex((currentIndex + 1) % newExercises.length);
-    }
 
+       
+
+        if (workout.numberOfExercises > 1) {
+            setCurrentIndex((currentIndex + 1) % newExercises.length);
+        } else {
+            setCurrentIndex(0);
+        }
+        
+    }
+    
     const backButton = () => {
-        setCurrentIndex((currentIndex - 1 + newExercises.length) % newExercises.length);
+       
+
+        if (workout.numberOfExercises > 1) {
+            setCurrentIndex((currentIndex - 1 + newExercises.length) % newExercises.length);
+        } else {
+            setCurrentIndex(0);
+        }
+        
     }
 
     const handleEndWorkoutVisibility = () => {
