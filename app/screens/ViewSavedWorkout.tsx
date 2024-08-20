@@ -55,6 +55,14 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
        
     }
 
+    const formatTime = (seconds: number) => {
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const remainingSeconds = seconds % 60;
+        const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        return timeString;
+    }
+
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
@@ -68,9 +76,9 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
                 
                         <View style={tw`flex flex-col mx-3 mb-3`}>
                             <Text style={tw`text-2xl font-medium`}>{workoutTitle}</Text>
-                            <Text style={tw`text-2xl font-medium`}>{date}</Text>
-                            <Text style={tw`text-2xl font-medium`}>{time}</Text>
-                            <Text style={tw`text-2xl font-medium`}>{workout.duration}</Text>
+                            <Text style={tw`text-2xl font-medium`}>data: {date}</Text>
+                            <Text style={tw`text-2xl font-medium`}>krai: {time}</Text>
+                            <Text style={tw`text-2xl font-medium`}>{formatTime(workout.duration)}</Text>
                         </View>
 
                         <View style={tw`flex flex-col gap-y-1`}>
