@@ -27,8 +27,6 @@ import * as LocalAuthentication from 'expo-local-authentication';
 import checkForBiometrics from './app/use/useCheckForBiometrics';
 import NetInfo from "@react-native-community/netinfo";
 
-const logoWatchUpscaled = require('./assets/logo_watch_upscaled.png');
-
 const Stack = createStackNavigator();
 
 const SetupPage = () => {

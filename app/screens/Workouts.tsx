@@ -12,6 +12,7 @@ import BottomNavigationBar from '../components/BottomNavigationBar';
 import generateRandomColour from '../use/useGenerateColour';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getWorkoutInfoLocally from '../use/useGetWorkoutInfoLocally';
+import getEmail from '../use/useGetEmail';
 
 const Workouts = ({navigation}: any) => {
 
@@ -40,28 +41,34 @@ const Workouts = ({navigation}: any) => {
         }
     }*/
 
-    const getWorkoutsLocally = async () => {
-        try {
-            const data = await AsyncStorage.getItem('workouts');
-            let workouts = data ? JSON.parse(data) : [];
+        const getWorkoutsLocally = async () => {
+            try {
+                const email = await getEmail();
+                if (!email) return;
+        
+                const data = await AsyncStorage.getItem(`workouts_${email}`);
+                let workouts = data ? JSON.parse(data) : [];
+        
+                workouts = workouts.reverse();
+        
+                setWorkouts(workouts);
+                
+            } catch (err) {
+                console.error(err);
+            }
+        };
 
-            workouts = workouts.reverse();
-
-            setWorkouts(workouts);
-            
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    const clearAllLocalWorkouts = async () => {
-        try {
-            await AsyncStorage.removeItem('workouts');
-            console.log('All workouts cleared locally');
-        } catch (err) {
-            console.error(err);
-        }
-    }
+        const clearAllLocalWorkouts = async () => {
+            try {
+                const email = await getEmail();
+                if (!email) return;
+        
+                await AsyncStorage.removeItem(`workouts_${email}`);
+                console.log('All workouts cleared locally');
+            } catch (err) {
+                console.error(err);
+            }
+        };
 
 
     useEffect(() => {

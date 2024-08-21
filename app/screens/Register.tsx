@@ -1,11 +1,13 @@
 import { View, TextInput, Button, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from "twrnc";
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
+import GlobalContext from '../../GlobalContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Register = () => {
 
@@ -14,9 +16,16 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
+    const {internetConnected} = useContext(GlobalContext);
+
     const auth = FIREBASE_AUTH;
 
     const signUp = async() => {
+
+        if (!internetConnected) {
+            alert('Няма интернет връзка!');
+            return
+        }
         
         const trimmedUsername = username.trim();
         const trimmedEmail = email.trim();
@@ -76,6 +85,10 @@ const Register = () => {
     
             // add a document inside userInfoCollectionRef and call that document "username"
             await setDoc(doc(userInfoCollectionRef, 'username'), { username: trimmedUsername });
+
+
+            // save username locally using AsyncStorage
+            await AsyncStorage.setItem('email', trimmedEmail);
         } catch(err: any) {
             alert(err);
         }

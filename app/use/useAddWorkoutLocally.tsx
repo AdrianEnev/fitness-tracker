@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import generateRandomColour from './useGenerateColour';
+import getEmail from './useGetEmail';
 
 interface SetInfo {
     id: string;
@@ -18,8 +19,11 @@ interface ExerciseInfo {
 
 const addWorkoutLocally = async (exercises: any, workoutTitle: string, id: any) => {
     try {
-        // Get existing workouts from local storage
-        const existingWorkouts = await AsyncStorage.getItem('workouts');
+
+        const email = await getEmail();
+        if (!email) return;
+
+        const existingWorkouts = await AsyncStorage.getItem(`workouts_${email}`);
         const workouts = existingWorkouts ? JSON.parse(existingWorkouts) : [];
 
         // Create new workout object
@@ -59,7 +63,7 @@ const addWorkoutLocally = async (exercises: any, workoutTitle: string, id: any) 
         workouts.push(newWorkout);
 
         // Save updated workouts list to local storage
-        await AsyncStorage.setItem('workouts', JSON.stringify(workouts));
+        await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(workouts));
 
         console.log('Workout saved locally:', newWorkout);
     } catch (err) {

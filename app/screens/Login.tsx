@@ -1,19 +1,28 @@
 import { View, TextInput, Button, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity, Pressable } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_AUTH } from '../../firebaseConfig';
 import tw from "twrnc";
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Login = ({navigation}: any) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
+    const {internetConnected} = useContext(GlobalContext);
+
     const auth = FIREBASE_AUTH;
 
     const signIn = async() => {
+
+        if (!internetConnected) {
+            alert('Няма интернет връзка!');
+            return
+        }
 
         if (email.length <= 0 || password.length <= 0) {    
             return;
@@ -25,9 +34,13 @@ const Login = ({navigation}: any) => {
             return;
         }
 
+        const trimmedEmail = email.trim();
 
         try{
-            const user = await signInWithEmailAndPassword(auth, email, password);
+            const user = await signInWithEmailAndPassword(auth, trimmedEmail, password);
+
+            // save username locally using AsyncStorage
+            await AsyncStorage.setItem('email', trimmedEmail);
 
         }catch(err: any){
             alert(err);

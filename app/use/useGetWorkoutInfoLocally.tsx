@@ -1,21 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import getEmail from './useGetEmail';
 
 const getWorkoutInfoLocally = async (workoutId: string) => {
     try {
-        console.log('Fetching workout info locally...');
-        
-        // Retrieve workouts from local storage
-        const data = await AsyncStorage.getItem('workouts');
+        const email = await getEmail();
+        if (!email) return null;
+
+        const data = await AsyncStorage.getItem(`workouts_${email}`);
         const workouts = data ? JSON.parse(data) : [];
 
-        // Ensure each workout has a unique key
-        workouts.forEach((workout: any, index: number) => {
-            if (!workout.key) {
-                workout.key = workout.id || index.toString();
-            }
-        });
-
-        // Find the specific workout by ID
         const workout = workouts.find((w: any) => w.id === workoutId);
 
         if (workout) {
@@ -27,6 +20,7 @@ const getWorkoutInfoLocally = async (workoutId: string) => {
     } catch (err) {
         console.error('Error fetching workout info locally: ' + err);
     }
-}
+    return null;
+};
 
 export default getWorkoutInfoLocally;

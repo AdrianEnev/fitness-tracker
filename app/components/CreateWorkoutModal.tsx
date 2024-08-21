@@ -68,7 +68,6 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
                                     
                                     if (internetConnected) {
                                         addWorkout(exercises, workoutTitle, id);
-                                        console.log('Internet connected, added workout to database as well as locally')
                                     }
                                     
                                     navigation.navigate('Главна Страница');
