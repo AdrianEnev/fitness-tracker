@@ -240,84 +240,105 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                         </View>
 
                                         <ScrollView style={tw`h-[75%] mb-3`}>
-                                            {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => (
-                                                <View key={set.id} style={tw`ml-3`}>
-                                                    <View style={tw`flex flex-row gap-x-2`}>
+                                            {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => 
+                                                {
+
+                                                    // Get the intensity value
+                                                    const intensity = set.intensity;  // Assuming you want to get the intensity from newExercises or userInputs
+
+                                                    // Determine the background color based on the intensity value
+                                                    let backgroundColor = 'bg-neutral-100';
+                                                    let textColor = 'text-black';
+                                                    if (intensity === 1) {
+                                                        backgroundColor = 'bg-green-500';
+                                                        textColor = 'text-white';
+                                                    } else if (intensity === 2) {
+                                                        backgroundColor = 'bg-yellow-400';
+                                                        textColor = 'text-white';
+                                                    } else if (intensity === 3) {
+                                                        backgroundColor = 'bg-red-500';
+                                                        textColor = 'text-white';
+                                                    }
+
+                                                    return (
                                                         
-                                                        <View style={tw`flex flex-col`}>
-                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+                                                        <View key={set.id} style={tw`ml-3`}>
+                                                            <View style={tw`flex flex-row gap-x-2`}>
+                                                                
+                                                                <View style={tw`flex flex-col`}>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
 
-                                                            <View style={tw`w-10 h-10 bg-neutral-100 rounded-xl flex items-center justify-center ${mapIndex != 0 ? '' : ''}`}>
-                                                                <Text style={tw`text-base font-medium`}>{mapIndex + 1}</Text>
+                                                                    <View style={tw`w-10 h-10 ${backgroundColor} rounded-xl flex items-center justify-center ${mapIndex != 0 ? '' : ''}`}>
+                                                                        <Text style={tw`text-base font-medium ${textColor}`}>{mapIndex + 1}</Text>
+                                                                    </View>
+                                                                </View>
+                                                            
+                                                                <View style={tw`flex flex-row gap-x-2 mb-3`}>
+
+                                                                    <View style={tw`w-[30.3%]`}>
+                                                                        <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повт.</Text>
+
+                                                                        <TextInput
+                                                                            style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
+                                                                            keyboardType='number-pad'
+                                                                            maxLength={4}
+                                                                            placeholder={set.reps === "" ? 'Повторения' : set.reps.toString()}
+                                                                            value={userInputs[index].sets[mapIndex].reps}
+                                                                            onChangeText={(text) => {
+                                                                                let updatedInputs = [...userInputs];
+                                                                                updatedInputs[index].sets[mapIndex].reps = text;
+                                                                                setUserInputs(updatedInputs);
+                                                                            }}
+                                                                        />
+                                                                    </View>
+                                                                    
+                                                                    <View style={tw`w-[30.3%]`}>
+                                                                        <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
+
+                                                                        <TextInput
+                                                                            style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
+                                                                            keyboardType='number-pad'
+                                                                            maxLength={4}
+                                                                            placeholder={set.weight === "" ? 'Килограми' : set.weight.toString()}
+                                                                            value={userInputs[index].sets[mapIndex].weight}
+                                                                            onChangeText={(text) => {
+                                                                                let updatedInputs = [...userInputs];
+                                                                                updatedInputs[index].sets[mapIndex].weight = text;
+                                                                                setUserInputs(updatedInputs);
+                                                                            }}
+                                                                        />
+                                                                    </View>
+                                                                    
+                                                                    <View style={tw`w-16`}>
+                                                                        <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>RPE</Text>
+
+                                                                        <TextInput
+                                                                            style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
+                                                                            keyboardType='number-pad'
+                                                                            maxLength={2}
+                                                                            placeholder='RPE'
+                                                                            value={userInputs[index].sets[mapIndex].rpe}
+                                                                            onChangeText={(text) => {
+                                                                                let updatedInputs = [...userInputs];
+                                                                                updatedInputs[index].sets[mapIndex].rpe = text;
+                                                                                setUserInputs(updatedInputs);
+                                                                            }}
+                                                                        />
+                                                                    </View>
+
+                                                                    <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
+                                                                    onPress={() => removeSet(exercise.exerciseIndex, set.id)}
+                                                                    >
+                                                                        <Ionicons name='close' size={36} color='white' />
+                                                                    </TouchableOpacity>
+
+                                                                </View>
                                                             </View>
                                                         </View>
-                                                    
-                                                        <View style={tw`flex flex-row gap-x-2 mb-3`}>
-
-                                                            <View style={tw`w-[30.3%]`}>
-                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повт.</Text>
-
-                                                                <TextInput
-                                                                    style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
-                                                                    keyboardType='number-pad'
-                                                                    maxLength={4}
-                                                                    placeholder={set.reps === "" ? 'Повторения' : set.reps.toString()}
-                                                                    value={userInputs[index].sets[mapIndex].reps}
-                                                                    onChangeText={(text) => {
-                                                                        let updatedInputs = [...userInputs];
-                                                                        updatedInputs[index].sets[mapIndex].reps = text;
-                                                                        setUserInputs(updatedInputs);
-                                                                    }}
-                                                                />
-                                                            </View>
-                                                            
-                                                            <View style={tw`w-[30.3%]`}>
-                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
-
-                                                                <TextInput
-                                                                    style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
-                                                                    keyboardType='number-pad'
-                                                                    maxLength={4}
-                                                                    placeholder={set.weight === "" ? 'Килограми' : set.weight.toString()}
-                                                                    value={userInputs[index].sets[mapIndex].weight}
-                                                                    onChangeText={(text) => {
-                                                                        let updatedInputs = [...userInputs];
-                                                                        updatedInputs[index].sets[mapIndex].weight = text;
-                                                                        setUserInputs(updatedInputs);
-                                                                    }}
-                                                                />
-                                                            </View>
-                                                            
-                                                            <View style={tw`w-16`}>
-                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>RPE</Text>
-
-                                                                <TextInput
-                                                                    style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
-                                                                    keyboardType='number-pad'
-                                                                    maxLength={2}
-                                                                    placeholder='RPE'
-                                                                    value={userInputs[index].sets[mapIndex].rpe}
-                                                                    onChangeText={(text) => {
-                                                                        let updatedInputs = [...userInputs];
-                                                                        updatedInputs[index].sets[mapIndex].rpe = text;
-                                                                        setUserInputs(updatedInputs);
-                                                                    }}
-                                                                />
-                                                            </View>
-
-                                                            <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
-                                                            onPress={() => removeSet(exercise.exerciseIndex, set.id)}
-                                                            >
-                                                                <Ionicons name='close' size={36} color='white' />
-                                                            </TouchableOpacity>
-
-                                                        </View>
-                                                    </View>
-                                                </View>
-                                            ))}
-
-                                        
-
+                                                        
+                                                    )
+                                                })
+                                            }
 
                                         </ScrollView>
                                     </View>

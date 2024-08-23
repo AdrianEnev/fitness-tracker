@@ -118,7 +118,7 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
                     >
                         <Image
                             source={{ uri: profilePicture }}
-                            style={tw`${page === 'Main' ? 'w-16 h-16' : 'w-22 h-22'} ${internetConnected && page === 'Main' ? 'border-2 border-[#32CD32]' : !internetConnected && page === 'Main' ? 'border-2 border-gray-400' : ''} rounded-full ml-2`}
+                            style={tw`${page === 'Main' ? 'w-16 h-16' : 'w-22 h-22'} border border-gray-300 rounded-full ml-2`}
                         />
                     </Pressable>
                 </View>

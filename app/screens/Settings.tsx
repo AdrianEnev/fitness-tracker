@@ -1,4 +1,4 @@
-import { View, Text, Button, TouchableOpacity, Pressable, Image } from 'react-native'
+import { View, Text, Button, TouchableOpacity, Pressable, Image, Vibration } from 'react-native'
 import React, { useContext, useState } from 'react'
 import tw from 'twrnc'
 import { Switch } from 'react-native';
@@ -64,10 +64,28 @@ const Settings = ({navigation}: any) => {
         }, [])
     );
 
+    const {internetConnected} = useContext(GlobalContext);
+
     const button = (navigationPath: string, icon: any, iconColor: any, background: string, title: string) => {
 
         return (
-            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => navigation.navigate(navigationPath)}>
+            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => {
+
+                if (title === t('stats') && !internetConnected) {
+                    Vibration.vibrate();
+                    return;
+                }
+                if (title === t('friends') && !internetConnected) {
+                    Vibration.vibrate();
+                    return;
+                }
+                if (title === t('account') && !internetConnected) {
+                    Vibration.vibrate();
+                    return;
+                }
+
+                navigation.navigate(navigationPath)
+            }}>
                 <View style={tw`flex flex-row justify-between`}>
 
                     <View style={tw`flex flex-row`}>
@@ -77,6 +95,9 @@ const Settings = ({navigation}: any) => {
                         
                         <View style={tw`flex justify-center`}>
                             <Text style={tw`text-lg font-medium`}>{title}</Text>
+                            {(title === t('stats') || title === t('friends') || title === t('account')) && (
+                                <Text style={tw`text-gray-500 mb-[8px]`}>Requires internet</Text>
+                            )}
                         </View>
                     </View>
 
@@ -115,8 +136,12 @@ const Settings = ({navigation}: any) => {
             <View style={tw`bg-white h-full`}>
 
                 {button('Настройки-Акаунт', 'person-outline', '#3b82f6', 'blue-300', t('account'))}
-                {button('Настройки-Статистика', 'stats-chart-outline', '#eab308', 'yellow-300', t('stats'))}
-                
+
+
+                <View style={tw`flex flex-row`}>
+                    {button('Настройки-Статистика', 'stats-chart-outline', '#eab308', 'yellow-300', t('stats'))}
+                </View>
+
                  <View>
                     {button('Приятели', 'people-outline', '#22c55e', 'green-300', t('friends'))}
                     {friendRequestsNumber >= "1" && 

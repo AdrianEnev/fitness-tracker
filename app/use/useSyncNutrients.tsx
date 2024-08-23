@@ -21,8 +21,16 @@ const syncNutrients = async () => {
         console.error('Error parsing local nutrients:', error);
     }
 
+    // Function to sort JSON object properties
+    const sortObject = (obj: { [key: string]: any }) => {
+        return Object.keys(obj).sort().reduce((result, key) => {
+            result[key as keyof typeof result] = obj[key];
+            return result;
+        }, {} as { [key: string]: any });
+    };
+
     // Compare local and remote nutrients
-    if (parsedLocalNutrients && (!remoteNutrients || JSON.stringify(parsedLocalNutrients) !== JSON.stringify(remoteNutrients))) {
+    if (parsedLocalNutrients && (!remoteNutrients || JSON.stringify(sortObject(parsedLocalNutrients)) !== JSON.stringify(sortObject(remoteNutrients)))) {
         // Sync local nutrients to Firestore
         await setDoc(nutrientsDocRef, parsedLocalNutrients, { merge: true });
         console.log('Nutrients synced');

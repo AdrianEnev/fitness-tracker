@@ -7,6 +7,7 @@ import i18next from '../../services/i18next';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { useTranslation } from 'react-i18next';
 import GlobalContext from '../../GlobalContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface Nutrient {
     key: string;
@@ -24,7 +25,7 @@ const Settings = ({navigation}: any) => {
 
     const {internetConnected} = useContext(GlobalContext)
 
-    const updateNutrients = async () => {
+    /*const updateNutrients = async () => {
         try {
             const docSnap = await getDoc(nutrientsDocRef);
             if (docSnap.exists()) {
@@ -37,7 +38,20 @@ const Settings = ({navigation}: any) => {
         } catch (err) {
             console.error(err);
         }
-    };
+    };*/
+
+    const updateNutrientsLocally = async () => {
+        try {
+            const localNutrients = await AsyncStorage.getItem('nutrients');
+            if (localNutrients) {
+                const parsedLocalNutrients = JSON.parse(localNutrients);
+                setNutrients(parsedLocalNutrients);
+                setTempNutrients(parsedLocalNutrients);
+            }
+        } catch (error) {
+            console.error('Error getting nutrients from AsyncStorage:', error);
+        }
+    }
 
     const setNutrient = (value: string, nutrientType: string) => {
         setTempNutrients(prevState => ({
@@ -57,15 +71,21 @@ const Settings = ({navigation}: any) => {
                 console.error(err);
             } 
         }
-
-        // save using asyncstorage
-
         
+        // save nutrients locally (nqma nujda da proverqvam dali sa razlichni ot predi shtoto taka ili inache otnema suvsem malko vreme da se savenat)
+        try {
+            const jsonNutrients = JSON.stringify(tempNutrients);
+            await AsyncStorage.setItem('nutrients', jsonNutrients);
+            console.log('saved successfuly (locally)')
+        } catch (error) {
+            console.log('Error saving nutrients to AsyncStorage:', error);
+        }
+
     };
 
     useEffect(() => {
         const unsubscribe = onSnapshot(userInfoCollectionRef, () => {
-            updateNutrients();
+            updateNutrientsLocally();
         });
         return () => unsubscribe(); // Cleanup the listener on component unmount
     }, []);

@@ -4,9 +4,6 @@ import { collection, doc, getDocs, onSnapshot } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
-import { BarChart, LineChart, PieChart, PopulationPyramid } from "react-native-gifted-charts";
-import { ScrollView } from 'react-native-gesture-handler';
-import CaloriesBurnt from '../components/CaloriesBurnt';
 
 const Statistics = () => {
 
@@ -100,9 +97,9 @@ const Statistics = () => {
             const averageDuration = totalDuration / workoutCount; // Calculate average duration
 
             // Convert averageDuration to hours, minutes, and seconds
-            const hours = Math.floor(averageDuration / 3600);
-            const minutes = Math.floor((averageDuration % 3600) / 60);
-            const seconds = averageDuration % 60;
+            const hours = Math.floor(averageDuration / 3600) || 0;
+            const minutes = Math.floor((averageDuration % 3600) / 60) || 0;
+            const seconds = averageDuration % 60 || 0;
 
             setFormattedAverageWorkoutDuration(
                 (() => {
@@ -151,6 +148,11 @@ const Statistics = () => {
         const savedWorkoutsCollectionRef = collection(userDocRef, "saved_workouts");
 
         getDocs(savedWorkoutsCollectionRef).then((querySnapshot) => {
+            if (querySnapshot.empty) {
+                setFormattedLastWorkoutDate("None");
+                return;
+            }
+
             let lastWorkoutDate = new Date(0); // Initialize a local variable to store the last workout date
             querySnapshot.forEach((doc) => {
                 const workoutDate = doc.data().created.toDate(); // Get the workout date
@@ -218,10 +220,14 @@ const Statistics = () => {
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('stats')}</Text>
             </View>
 
-            <View style={tw`h-full w-full bg-white px-3 pt-3`}>
-
-                <CaloriesBurnt />
-                    
+            <View style={tw`h-full w-full bg-white`}>
+                <Text style={tw`m-3 text-lg font-medium`}>Weight lifted: {weightLifted} KG</Text>
+                <Text style={tw`m-3 text-lg font-medium`}>Брой Тренировки: {workoutsFinished}</Text>
+                <Text style={tw`m-3 text-lg font-medium`}>Total-weight-lifted: {weightLifted} KG</Text>
+                <Text style={tw`m-3 text-lg font-medium`}>Number-of-workouts: {workoutsFinished}</Text>
+                <Text style={tw`m-3 text-lg font-medium`}>Total workouts duration: {formattedTotalWorkoutsDuration}</Text>
+                <Text style={tw`m-3 text-lg font-medium`}>Average workout duration: {formattedAverageWorkoutDuration}</Text>
+                <Text style={tw`m-3 text-lg font-medium`}>Last workout: {formattedLastWorkoutDate}</Text>
             </View>
 
         </View>
