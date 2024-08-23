@@ -7,6 +7,7 @@ import { useContext, useState } from 'react';
 import GlobalContext from '../../GlobalContext';
 import { FIREBASE_AUTH } from '../../firebaseConfig';
 import { NavigationProp } from "@react-navigation/native";
+import scanImage from "../use/useScanImage";
 
 interface ProfilePictureProps {
     page: any;
@@ -36,11 +37,21 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
         });
       
         if (!result.canceled) {
-    
+
             const blob = await uriToBlob(result.assets[0].uri);
+
+            // scan image
+            const scannedImage = await scanImage(blob);
+            
+            console.log(scannedImage[0].label, scannedImage[0].score)
+
+            if (scannedImage[0].label === 'nsfw'){
+                console.log('nsfw')
+                return
+            }
+           
             await uploadFile(blob, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
             alert('Snimkata be kachena uspeshno!')
-    
             setProfilePicture(result.assets[0].uri);
     
         }

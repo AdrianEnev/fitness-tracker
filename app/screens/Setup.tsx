@@ -11,11 +11,11 @@ import GlobalContext from '../../GlobalContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import getLanguage from '../use/useGetLanguage';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import SetupPageOne from '../components/SetupPageOne';
-import SetupPageTwo from '../components/SetupPageTwo';
-import SetupPageThree from '../components/SetupPageThree';
-import SetupPageFour from '../components/SetupPageFour';
-import SetupPageFive from '../components/SetupPageFive';
+import SetupPageOne from '../setupComponents/SetupPageOne';
+import SetupPageTwo from '../setupComponents/SetupPageTwo';
+import SetupPageThree from '../setupComponents/SetupPageThree';
+import SetupPageFour from '../setupComponents/SetupPageFour';
+import SetupPageFive from '../setupComponents/SetupPageFive';
 //import ScrollPicker from "react-native-wheel-scrollview-picker";
 
 const Setup = ({route}: any) => {

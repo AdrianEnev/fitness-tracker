@@ -22,6 +22,7 @@ import ViewFriendProfile from "../screens/ViewFriendProfile";
 import FoodInfo from "../screens/FoodInfo";
 import Donate from "../screens/Donate";
 import DonateScreen from "../screens/DonateScreen";
+import GenerateWorkoutPage from "../screens/GenerateWorkoutPage";
 
 const Stack = createNativeStackNavigator();
 /* 
@@ -62,6 +63,13 @@ const MainPageComponent = () => {
               component={Workouts}
               options={{
                   title: "Тренировки",
+                  headerShown: false,
+              }}
+          />
+          <Stack.Screen
+              name="Генериране-Тренировка"
+              component={GenerateWorkoutPage}
+              options={{
                   headerShown: false,
               }}
           />

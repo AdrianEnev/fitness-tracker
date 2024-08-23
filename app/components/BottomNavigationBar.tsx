@@ -39,7 +39,9 @@ const BottomNavigationBar = (
         saveSettingsMacrosButton,
         viewWorkoutAddExercise,
         saveViewWorkoutChanges,
-        addWorkoutPageCurrentExercise
+        addWorkoutPageCurrentExercise,
+        addActiveWorkoutSet,
+        addActiveWorkoutExercise
     }: 
     {
         currentPage: string, navigation: any,
@@ -58,7 +60,9 @@ const BottomNavigationBar = (
         saveSettingsMacrosButton?: () => void,
         viewWorkoutAddExercise?: () => void,
         saveViewWorkoutChanges?: () => void,
-        addWorkoutPageCurrentExercise?: number
+        addWorkoutPageCurrentExercise?: number,
+        addActiveWorkoutSet?: () => void,
+        addActiveWorkoutExercise?: () => void
     }
 ) => {
     //AddCustomFood
@@ -70,6 +74,18 @@ const BottomNavigationBar = (
         `}>
         
             {currentPage === 'ActiveWorkout' ? (
+                <View style={tw`flex flex-col w-full`}>
+
+                <View style={tw`w-full h-16 flex gap-y-2 flex-row justify-between absolute bottom-18`}>
+                    <Pressable style={tw`w-[49%] bg-blue-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addActiveWorkoutSet}>
+                        <Text style={tw`text-white font-medium text-xl`}>+ Set</Text>
+                    </Pressable>
+                    <Pressable style={tw`w-[49%] bg-yellow-400 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addActiveWorkoutExercise}>
+                        <Text style={tw`text-white font-medium text-xl`}>+ Exercise</Text>
+                    </Pressable>
+                    
+                </View>
+
                 <View style={tw`flex flex-row justify-between w-full`}>
 
                     <Pressable onPress={backButton}>
@@ -84,6 +100,7 @@ const BottomNavigationBar = (
                         <Ionicons name='chevron-forward' color='#fd1c47' size={64}/>
                     </Pressable>
                 </View>
+            </View>
             ) : currentPage === 'SavedWorkout' ? (
                 <View style={tw`flex flex-row justify-between w-full`}>
 
@@ -170,7 +187,9 @@ const BottomNavigationBar = (
                         <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
                     
-                    <Pressable style={tw`w-15 h-15 border-4 border-[#fd1c47] rounded-full flex items-center justify-center`}>
+                    <Pressable style={tw`w-15 h-15 border-4 border-[#fd1c47] rounded-full flex items-center justify-center`}
+                        onPress={() => navigation.navigate('Генериране-Тренировка')}
+                    >
                         <Ionicons name="flash-outline" size={40} color="#fd1c47"/>
                     </Pressable>
 

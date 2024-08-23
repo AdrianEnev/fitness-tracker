@@ -53,6 +53,29 @@ const ActiveWorkout = ({route, navigation}: any) => {
         }
     }
 
+    const addExercise = () => {
+        // Use newExercises for updates to ensure UI consistency
+        const updatedExercises = [...newExercises];
+        const updatedUserInputs = [...userInputs]; // Clone userInputs for updates
+    
+        const newExercise = {
+            id: Math.random().toString(),
+            title: "New Exercise",
+            sets: [{id: Math.random().toString(), reps: "", weight: ""}],
+            exerciseIndex: updatedExercises.length + 1
+        };
+    
+        updatedExercises.push(newExercise);
+        updatedUserInputs.push({
+            ...newExercise,
+            sets: [{id: Math.random().toString(), reps: "", weight: ""}],
+            note: ""
+        });
+    
+        setNewExercises(updatedExercises);
+        setUserInputs(updatedUserInputs);
+    }
+
     useEffect(() => {
         if (exercises.length > 0) {
             setNewExercises([...exercises]);
@@ -309,6 +332,8 @@ const ActiveWorkout = ({route, navigation}: any) => {
                         toggleEndWorkoutModal={handleEndWorkoutVisibility}
                         forwardButton={forwardButton}
                         backButton={backButton}
+                        addActiveWorkoutSet={addSet}
+                        addActiveWorkoutExercise={addExercise}
                     />
 
                 </SafeAreaView>
