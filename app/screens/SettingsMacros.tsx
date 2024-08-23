@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, FlatList, TouchableWithoutFeedback, Keyboard, TextInput, SafeAreaView } from 'react-native';
 import tw from "twrnc";
 import { collection, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
@@ -6,6 +6,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import i18next from '../../services/i18next';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
 
 interface Nutrient {
     key: string;
@@ -20,6 +21,8 @@ const Settings = ({navigation}: any) => {
 
     const [nutrients, setNutrients] = useState<Record<string, number>>({});
     const [tempNutrients, setTempNutrients] = useState<Record<string, number>>({});
+
+    const {internetConnected} = useContext(GlobalContext)
 
     const updateNutrients = async () => {
         try {
@@ -39,18 +42,25 @@ const Settings = ({navigation}: any) => {
     const setNutrient = (value: string, nutrientType: string) => {
         setTempNutrients(prevState => ({
             ...prevState,
-            [nutrientType]: parseFloat(value) || 0
+            [nutrientType]: value === '' ? 0 : parseFloat(value) || 0
         }));
     };
 
     const saveNutrients = async () => {
-        try {
-            await setDoc(nutrientsDocRef, tempNutrients, { merge: true });
-            setNutrients(tempNutrients); 
-            navigation.goBack();
-        } catch (err) {
-            console.error(err);
+
+        if (internetConnected) {
+            try {
+                await setDoc(nutrientsDocRef, tempNutrients, { merge: true });
+                setNutrients(tempNutrients); 
+                navigation.goBack();
+            } catch (err) {
+                console.error(err);
+            } 
         }
+
+        // save using asyncstorage
+
+        
     };
 
     useEffect(() => {
@@ -66,14 +76,18 @@ const Settings = ({navigation}: any) => {
             <TextInput 
                 style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] pb-2 pl-3 text-white font-medium text-xl`} 
                 keyboardType='number-pad' 
-                value={value}
+                value={value === '0' ? '' : value}
                 maxLength={4} 
                 onChangeText={(text) => setNutrient(text, title)} 
             />
         </View>
     );
 
-    const nutrientsArray: Nutrient[] = Object.entries(tempNutrients).map(([key, value]) => ({ key, value }));
+    const fixedOrderNutrients = ['calories', 'protein', 'carbs', 'fat'];
+    const nutrientsArray: Nutrient[] = fixedOrderNutrients.map(key => ({
+        key,
+        value: tempNutrients[key] || 0
+    }));
 
     const renderItem = ({ item }: { item: Nutrient }) => (
         nutrientBox(item.value.toString(), item.key)

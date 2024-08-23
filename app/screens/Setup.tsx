@@ -17,10 +17,11 @@ import SetupPageThree from '../setupComponents/SetupPageThree';
 import SetupPageFour from '../setupComponents/SetupPageFour';
 import SetupPageFive from '../setupComponents/SetupPageFive';
 //import ScrollPicker from "react-native-wheel-scrollview-picker";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Setup = ({route}: any) => {
 
-    const { setSetupRan } = useContext(GlobalContext);
+    const { setSetupRan, internetConnected } = useContext(GlobalContext);
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -161,8 +162,19 @@ const Setup = ({route}: any) => {
             carbs: Math.round(carbsGrams),
             fat: Math.round(fatsGrams)
         }
+
+        if (internetConnected) {
+            await setDoc(nutrientsDocRef, nutrients, { merge: true });
+        }
         
-        await setDoc(nutrientsDocRef, nutrients, { merge: true });
+        // nutrientite se dobavqt lokalno v telefona nezavisimo dali ima internet, ako ima internet se dobavqt i v bazata danni
+        try {
+            const jsonNutrients = JSON.stringify(nutrients);
+            await AsyncStorage.setItem('nutrients', jsonNutrients);
+        } catch (error) {
+            console.log('Error saving nutrients to AsyncStorage:', error);
+        }
+        
         setSetupRan(true);
 
     }

@@ -23,6 +23,7 @@ import BottomNavigationBar from '../components/BottomNavigationBar';
 import ProfilePicture from '../components/ProfilePicture';
 import syncWorkouts from '../use/syncWorkouts';
 import syncSavedWorkouts from '../use/syncSavedWorkouts';
+import syncNutrients from '../use/useSyncNutrients';
 
 
 //bg-[#fd3e6b]
@@ -69,6 +70,7 @@ const Main = ({navigation}: any) => {
             if (internetConnected) {
                 syncWorkouts();
                 syncSavedWorkouts();
+                syncNutrients();
             }
             
         }, [])

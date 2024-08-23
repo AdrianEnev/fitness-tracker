@@ -26,6 +26,9 @@ import { useTranslation } from 'react-i18next';
 import * as LocalAuthentication from 'expo-local-authentication';
 import checkForBiometrics from './app/use/useCheckForBiometrics';
 import NetInfo from "@react-native-community/netinfo";
+import syncWorkouts from './app/use/syncWorkouts';
+import syncSavedWorkouts from './app/use/syncSavedWorkouts';
+import syncNutrients from './app/use/useSyncNutrients';
 
 const Stack = createStackNavigator();
 
@@ -138,7 +141,7 @@ const App = () => {
     const [isConnected, setIsConnected] = useState(false)
 
     const fetchData = async (userDocRef: any, firebaseUser: any, userInfoCollectionRef: any) => {
-        console.log('Fetching data');
+        //console.log('Fetching data');
         try {
             await checkUserDocument(userDocRef, firebaseUser, userInfoCollectionRef);
             const setupHasRan = await checkUserInfoCollection(userInfoCollectionRef);
@@ -168,26 +171,26 @@ const App = () => {
 
     React.useEffect(() => {
         const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
-            console.log("Auth state changed:", user);
+            //console.log("Auth state changed:", user);
             setUser(user);
     
             try {
                 if (await checkForBiometrics()) {
-                    console.log("Biometrics check passed");
+                    //console.log("Biometrics check passed");
                     const compatible = await LocalAuthentication.hasHardwareAsync();
                     setIsBiometricSupported(compatible);
     
                     if (compatible) {
-                        console.log("Hardware is compatible, authenticating...");
+                        //console.log("Hardware is compatible, authenticating...");
                         await onAuthenticate();
                     }
                 } else {
-                    console.log("Biometrics check failed, setting isAuthenticated to true");
+                    //console.log("Biometrics check failed, setting isAuthenticated to true");
                     setIsAuthenticated(true);
                 }
     
                 if (user) {
-                    console.log("User is logged in:", user);
+                    //console.log("User is logged in:", user);
                     setLoading(true);
     
                     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -196,7 +199,7 @@ const App = () => {
     
                     fetchData(userDocRef, user, userInfoCollectionRef);
                 } else {
-                    console.log("No user is logged in");
+                    //console.log("No user is logged in");
                     setLoading(false);
                     setCheckingSetup(false);
                 }
@@ -208,9 +211,9 @@ const App = () => {
         });
     
         const netListener = NetInfo.addEventListener(state => {
-            console.log("Connection type", state.type);
-            console.log("Is connected?", state.isConnected);
-            console.log("Connection details:", state.details);
+            //console.log("Connection type", state.type);
+            //console.log("Is connected?", state.isConnected);
+            //console.log("Connection details:", state.details);
             setIsConnected(state.isConnected ?? false);
         });
     
