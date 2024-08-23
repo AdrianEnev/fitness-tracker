@@ -32,7 +32,7 @@ const Main = ({navigation}: any) => {
 
     //const [steps, setSteps] = useState(0);
 
-    const { setGoalNutrients, internetConnected } = useContext(GlobalContext);
+    const { setGoalNutrients } = useContext(GlobalContext);
 
     const { t } = useTranslation();
 
@@ -41,7 +41,7 @@ const Main = ({navigation}: any) => {
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
     const foodDaysCollectionRef = collection(userDocRef, 'food_days');
 
-    const { username } = useContext(GlobalContext);
+    const { username, internetConnected } = useContext(GlobalContext);
 
     const [currentFormattedDate, setCurrentFormattedDate] = useState<any>();
     const {friendRequestsNumber} = useContext(GlobalContext);
@@ -67,7 +67,6 @@ const Main = ({navigation}: any) => {
             setCurrentFormattedDate(formattedDate)
 
             if (internetConnected) {
-                console.log('established internet connection inside Main, syncing workouts...');
                 syncWorkouts();
                 syncSavedWorkouts();
             }
@@ -137,7 +136,9 @@ const Main = ({navigation}: any) => {
 
                     <View style={tw`flex flex-row`}>
                         
-                        <ProfilePicture navigation={navigation} page='Main'/>
+                        <View style={tw`z-20`}>
+                            <ProfilePicture navigation={navigation} page='Main'/>
+                        </View>
 
                         {/* Zdravei User */}
                         <View style={tw`flex flex-col ml-3`}>

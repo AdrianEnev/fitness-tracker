@@ -89,6 +89,7 @@ const Register = () => {
 
             // save username locally using AsyncStorage
             await AsyncStorage.setItem('email', trimmedEmail);
+            await AsyncStorage.setItem('username', trimmedUsername);
         } catch(err: any) {
             alert(err);
         }

@@ -168,20 +168,25 @@ const Workouts = ({navigation}: any) => {
     const { t } = useTranslation();
 
     return (
-        <SafeAreaView style={tw`w-full h-full bg-neutral-50`}>
+        <View style={tw`w-full h-full bg-neutral-50`}>
 
-            <View style={tw`flex flex-row justify-between mx-3`}>
+            {/* 
+                <View style={tw`flex flex-row justify-between mx-3`}>
 
-                <Pressable style={tw`w-13 h-13 bg-white shadow-lg rounded-2xl flex items-center justify-center`} onPress={() => navigation.goBack()}>
-                    <Ionicons name='arrow-back-outline' size={36} color='#fa1148'/>
-                </Pressable>
+                    <Pressable style={tw`w-13 h-13 bg-white shadow-lg rounded-2xl flex items-center justify-center`} onPress={() => navigation.goBack()}>
+                        <Ionicons name='arrow-back-outline' size={36} color='#fa1148'/>
+                    </Pressable>
 
-                <Pressable style={tw`w-13 h-13 bg-white shadow-lg rounded-2xl flex items-center justify-center`} onPress={() => navigation.navigate("Тренировка-Добави")}>
-                    <Ionicons name='add' size={44} color='#fa1148'/>
-                </Pressable>
+                    <Pressable style={tw`w-13 h-13 bg-white shadow-lg rounded-2xl flex items-center justify-center`} onPress={() => navigation.navigate("Тренировка-Добави")}>
+                        <Ionicons name='add' size={44} color='#fa1148'/>
+                    </Pressable>
 
-            </View>
+                </View>
+            */}
             
+            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>{t('workouts')}</Text>
+            </View>
 
             <View style={tw`w-full h-[82%] mt-4 mx-2`}>
 
@@ -195,7 +200,7 @@ const Workouts = ({navigation}: any) => {
 
             <BottomNavigationBar currentPage='Workouts' navigation={navigation}/>
             
-        </SafeAreaView>
+        </View>
     )
 }
 

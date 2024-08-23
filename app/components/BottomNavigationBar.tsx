@@ -166,10 +166,13 @@ const BottomNavigationBar = (
             ) : currentPage === 'Workouts' ? (
                 <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
 
-                    {Button({currentPage, navigation, icon: 'home-outline', navigationPage: 'Главна Страница', goalPage: 'Main'})}
-                    {Button({currentPage, navigation, icon: 'fitness-outline', navigationPage: 'Тренировки', goalPage: 'Workouts'})}
-                    {Button({currentPage, navigation, icon: 'calendar-clear-outline', navigationPage: 'Хранене', goalPage: 'Food'})}
-                    {Button({currentPage, navigation, icon: 'settings-outline', navigationPage: 'Настройки-Страница', goalPage: 'Settings'})}
+                    <Pressable onPress={() => navigation.navigate("Тренировка-Добави")}>
+                        <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
+                    </Pressable>
+                    
+                    <Pressable style={tw`w-15 h-15 border-4 border-[#fd1c47] rounded-full flex items-center justify-center`}>
+                        <Ionicons name="flash-outline" size={40} color="#fd1c47"/>
+                    </Pressable>
 
                 </View>
             ) : currentPage === 'ViewWorkout' ? (

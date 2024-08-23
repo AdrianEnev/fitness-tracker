@@ -105,6 +105,7 @@ const deleteAccount = async (email: any, user: any) => {
                             console.log("File deleted successfully");
                         }).catch((error) => {
                             console.log("Uh-oh, an error occurred!"); 
+                            console.log(error)
                         });
 
                     

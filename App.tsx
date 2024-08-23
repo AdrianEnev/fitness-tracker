@@ -137,69 +137,83 @@ const App = () => {
 
     const [isConnected, setIsConnected] = useState(false)
 
+    const fetchData = async (userDocRef: any, firebaseUser: any, userInfoCollectionRef: any) => {
+        console.log('Fetching data');
+        try {
+            await checkUserDocument(userDocRef, firebaseUser, userInfoCollectionRef);
+            const setupHasRan = await checkUserInfoCollection(userInfoCollectionRef);
+            setSetupRan(setupHasRan);
+            checkLanguageDocument(userInfoCollectionRef);
+    
+            const username = await getUsername(userInfoCollectionRef);
+            const profilePic = await getProfilePicture();
+            const friendRequests = await getFriendRequests();
+            const receiveFriendRequests = await checkReceiveFriendRequests();
+            const isFaceIdEnabled = await checkFaceIdEnabled();
+    
+            // Batch state updates to avoid multiple re-renders
+            setUsername(username);
+            setProfilePicture(profilePic || '');
+            setFriendRequestsNumber(friendRequests <= 9 ? friendRequests.toString() : "9+");
+            setReceiveFriendRequests(receiveFriendRequests);
+            setFaceIdEnabled(isFaceIdEnabled);
+            setCheckingSetup(false);
+        } catch (error) {
+            console.error("Error fetching user data:", error);
+            setCheckingSetup(false);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     React.useEffect(() => {
         const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
+            console.log("Auth state changed:", user);
             setUser(user);
-
-            if (await checkForBiometrics()) {
-                const compatible = await LocalAuthentication.hasHardwareAsync();
-                setIsBiometricSupported(compatible);
     
-                if (compatible) {
-                    await onAuthenticate();
-                }
-            }else{
-                setIsAuthenticated(true)
-            }
-
-            if (user) {
-
-                setLoading(true);
-
-                const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-                const userDocRef = doc(usersCollectionRef, user.uid);
-                const userInfoCollectionRef = collection(userDocRef, 'user_info');
-
-                const fetchData = async () => {
-                    await checkUserDocument(userDocRef, user, userInfoCollectionRef);
-                    const setupHasRan = await checkUserInfoCollection(userInfoCollectionRef);
-                    setSetupRan(setupHasRan);
-                    checkLanguageDocument(userInfoCollectionRef);
-
-                    setUsername(await getUsername(userInfoCollectionRef));
-                    const profilePic = await getProfilePicture();
-                    setProfilePicture(profilePic || '');
-
-                    const friendRequests = await getFriendRequests();
-                    if (friendRequests <= 9) {
-                        setFriendRequestsNumber(friendRequests.toString());
-                    } else {
-                        setFriendRequestsNumber("9+");
+            try {
+                if (await checkForBiometrics()) {
+                    console.log("Biometrics check passed");
+                    const compatible = await LocalAuthentication.hasHardwareAsync();
+                    setIsBiometricSupported(compatible);
+    
+                    if (compatible) {
+                        console.log("Hardware is compatible, authenticating...");
+                        await onAuthenticate();
                     }
-
-                    const receiveFriendRequests = await checkReceiveFriendRequests(); // boolean
-                    setReceiveFriendRequests(receiveFriendRequests);
-
-                    const isFaceIdEnabled = await checkFaceIdEnabled();
-                    setFaceIdEnabled(isFaceIdEnabled);
-
+                } else {
+                    console.log("Biometrics check failed, setting isAuthenticated to true");
+                    setIsAuthenticated(true);
+                }
+    
+                if (user) {
+                    console.log("User is logged in:", user);
+                    setLoading(true);
+    
+                    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+                    const userDocRef = doc(usersCollectionRef, user.uid);
+                    const userInfoCollectionRef = collection(userDocRef, 'user_info');
+    
+                    fetchData(userDocRef, user, userInfoCollectionRef);
+                } else {
+                    console.log("No user is logged in");
+                    setLoading(false);
                     setCheckingSetup(false);
-                };
-
-                fetchData().then(() => setLoading(false));
-            } else {
+                }
+            } catch (error) {
+                console.error("Error in onAuthStateChanged:", error);
                 setLoading(false);
                 setCheckingSetup(false);
             }
         });
-
+    
         const netListener = NetInfo.addEventListener(state => {
             console.log("Connection type", state.type);
             console.log("Is connected?", state.isConnected);
             console.log("Connection details:", state.details);
-            setIsConnected(state.isConnected ?? false)
-        })
-
+            setIsConnected(state.isConnected ?? false);
+        });
+    
         netListener();
         return () => unsubscribe();
     }, []);
