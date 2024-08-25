@@ -204,7 +204,9 @@ const App = () => {
                     setCheckingSetup(false);
                 }
             } catch (error) {
-                console.error("Error in onAuthStateChanged:", error);
+                if (error == '[FirebaseError: Function doc() cannot be called with an empty path.]') {
+                    console.log('No user is logged in');
+                }
                 setLoading(false);
                 setCheckingSetup(false);
             }

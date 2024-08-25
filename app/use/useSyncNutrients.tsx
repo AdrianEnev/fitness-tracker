@@ -13,7 +13,7 @@ const syncNutrients = async () => {
     const remoteNutrients = nutrientsDocSnapshot.exists() ? nutrientsDocSnapshot.data() : null;
 
     // Retrieve local nutrients
-    const localNutrients = await AsyncStorage.getItem('nutrients');
+    const localNutrients = await AsyncStorage.getItem(`goal_nutrients_${FIREBASE_AUTH.currentUser?.email}`);
     let parsedLocalNutrients = null;
     try {
         parsedLocalNutrients = localNutrients ? JSON.parse(localNutrients) : null;

@@ -86,10 +86,9 @@ const Register = () => {
             // add a document inside userInfoCollectionRef and call that document "username"
             await setDoc(doc(userInfoCollectionRef, 'username'), { username: trimmedUsername });
 
-
             // save username locally using AsyncStorage
-            await AsyncStorage.setItem('email', trimmedEmail);
-            await AsyncStorage.setItem('username', trimmedUsername);
+            await AsyncStorage.setItem(`email_${email}`, trimmedEmail);
+            await AsyncStorage.setItem(`username_${email}`, trimmedUsername);
         } catch(err: any) {
             alert(err);
         }
@@ -104,6 +103,20 @@ const Register = () => {
 
         setPasswordCharacters(65 - password.length);
         setConfirmPasswordCharacters(65 - confirmPassword.length);
+
+        // console log all asyncstorage items
+        /*AsyncStorage.getAllKeys().then(keys => {
+            console.log(keys)
+            return AsyncStorage.multiGet(keys)
+        }).then(keyValue => {
+                console.log(keyValue)
+        })*/
+
+        // clear all asyncstorage items
+        /*AsyncStorage.clear().then(() => {
+            console.log('cleared')
+        })*/
+
 
     }, [password, confirmPassword])
     

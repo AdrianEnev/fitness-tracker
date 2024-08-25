@@ -42,7 +42,7 @@ const Settings = ({navigation}: any) => {
 
     const updateNutrientsLocally = async () => {
         try {
-            const localNutrients = await AsyncStorage.getItem('nutrients');
+            const localNutrients = await AsyncStorage.getItem(`goal_nutrients_${FIREBASE_AUTH.currentUser?.email}`);
             if (localNutrients) {
                 const parsedLocalNutrients = JSON.parse(localNutrients);
                 setNutrients(parsedLocalNutrients);
@@ -75,7 +75,7 @@ const Settings = ({navigation}: any) => {
         // save nutrients locally (nqma nujda da proverqvam dali sa razlichni ot predi shtoto taka ili inache otnema suvsem malko vreme da se savenat)
         try {
             const jsonNutrients = JSON.stringify(tempNutrients);
-            await AsyncStorage.setItem('nutrients', jsonNutrients);
+            await AsyncStorage.setItem(`goal_nutrients_${FIREBASE_AUTH.currentUser?.email}`, jsonNutrients);
             console.log('saved successfuly (locally)')
         } catch (error) {
             console.log('Error saving nutrients to AsyncStorage:', error);

@@ -1,3 +1,4 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { FIREBASE_AUTH, FIREBASE_STORAGE, FIRESTORE_DB } from '../../firebaseConfig'
 import { deleteUser, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
 import { collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
@@ -108,6 +109,12 @@ const deleteAccount = async (email: any, user: any) => {
                             console.log(error)
                         });
 
+                        // delete asyncstorage account data
+                        AsyncStorage.removeItem(`username_${email}`)
+                        AsyncStorage.removeItem(`email_${email}`)
+                        AsyncStorage.removeItem(`workouts_${email}`)
+                        AsyncStorage.removeItem(`saved_workouts_${email}`)
+                        AsyncStorage.removeItem(`goal_nutrients_${email}`)
                     
                     }
                 }).catch((error) => {

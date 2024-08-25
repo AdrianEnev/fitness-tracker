@@ -170,7 +170,7 @@ const Setup = ({route}: any) => {
         // nutrientite se dobavqt lokalno v telefona nezavisimo dali ima internet, ako ima internet se dobavqt i v bazata danni
         try {
             const jsonNutrients = JSON.stringify(nutrients);
-            await AsyncStorage.setItem('nutrients', jsonNutrients);
+            await AsyncStorage.setItem(`goal_nutrients_${FIREBASE_AUTH.currentUser?.email}`, jsonNutrients);
         } catch (error) {
             console.log('Error saving nutrients to AsyncStorage:', error);
         }

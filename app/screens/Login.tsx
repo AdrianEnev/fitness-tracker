@@ -40,7 +40,7 @@ const Login = ({navigation}: any) => {
             const user = await signInWithEmailAndPassword(auth, trimmedEmail, password);
 
             // save username locally using AsyncStorage
-            await AsyncStorage.setItem('email', trimmedEmail);
+            await AsyncStorage.setItem(`email_${email}`, trimmedEmail);
 
         }catch(err: any){
             alert(err);
