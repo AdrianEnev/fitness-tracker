@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StatusBar, View, Text, Image, Button } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { onAuthStateChanged, User } from 'firebase/auth';
@@ -94,6 +94,14 @@ const UnauthenticatedTabNavigator = () => (
     </Stack.Navigator>
 );
 
+const EmailNotVerified = () => {
+    return (
+        <View style={tw`flex-1 justify-center items-center bg-red-500`}>
+            <Text style={tw`text-2xl font-bold text-white`}>Email Not Verified</Text>
+        </View>
+    );
+};
+
 const App = () => {
 
     const onAuthenticate = async () => {
@@ -140,6 +148,8 @@ const App = () => {
 
     const [isConnected, setIsConnected] = useState(false)
 
+    const [isEmailVerified, setIsEmailVerified] = useState(false);
+
     const fetchData = async (userDocRef: any, firebaseUser: any, userInfoCollectionRef: any) => {
         //console.log('Fetching data');
         try {
@@ -169,37 +179,38 @@ const App = () => {
         }
     };
 
-    React.useEffect(() => {
+    useEffect(() => {
         const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
-            //console.log("Auth state changed:", user);
             setUser(user);
     
             try {
-                if (await checkForBiometrics()) {
-                    //console.log("Biometrics check passed");
-                    const compatible = await LocalAuthentication.hasHardwareAsync();
-                    setIsBiometricSupported(compatible);
+                if (user) {
+                    setIsEmailVerified(user.emailVerified);
     
-                    if (compatible) {
-                        //console.log("Hardware is compatible, authenticating...");
-                        await onAuthenticate();
+                    if (await checkForBiometrics()) {
+                        const compatible = await LocalAuthentication.hasHardwareAsync();
+                        setIsBiometricSupported(compatible);
+    
+                        if (compatible) {
+                            await onAuthenticate();
+                        }
+                    } else {
+                        setIsAuthenticated(true);
+                    }
+    
+                    if (user.emailVerified) {
+                        setLoading(true);
+    
+                        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+                        const userDocRef = doc(usersCollectionRef, user.uid);
+                        const userInfoCollectionRef = collection(userDocRef, 'user_info');
+    
+                        fetchData(userDocRef, user, userInfoCollectionRef);
+                    } else {
+                        setLoading(false);
+                        setCheckingSetup(false);
                     }
                 } else {
-                    //console.log("Biometrics check failed, setting isAuthenticated to true");
-                    setIsAuthenticated(true);
-                }
-    
-                if (user) {
-                    //console.log("User is logged in:", user);
-                    setLoading(true);
-    
-                    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-                    const userDocRef = doc(usersCollectionRef, user.uid);
-                    const userInfoCollectionRef = collection(userDocRef, 'user_info');
-    
-                    fetchData(userDocRef, user, userInfoCollectionRef);
-                } else {
-                    //console.log("No user is logged in");
                     setLoading(false);
                     setCheckingSetup(false);
                 }
@@ -213,15 +224,26 @@ const App = () => {
         });
     
         const netListener = NetInfo.addEventListener(state => {
-            //console.log("Connection type", state.type);
-            //console.log("Is connected?", state.isConnected);
-            //console.log("Connection details:", state.details);
             setIsConnected(state.isConnected ?? false);
         });
     
         netListener();
         return () => unsubscribe();
     }, []);
+
+
+    // Timer code
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            if (user && !isEmailVerified) {
+                await user.reload();
+                setIsEmailVerified(user.emailVerified);
+            }
+        }, 1000); 
+
+        return () => clearInterval(interval);
+    }, [user, isEmailVerified]);
+    
 
     if (loading || checkingSetup) {
         return (
@@ -266,6 +288,7 @@ const App = () => {
                             (
                                 setupRan && isAuthenticated ? <AuthenticatedTabNavigator /> : 
                                 setupRan && !isAuthenticated ? <BiometricsFailed /> :
+                                !isEmailVerified ? <EmailNotVerified /> :
                                 <SetupPage />
                             ) : 
                             <UnauthenticatedTabNavigator />

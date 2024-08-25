@@ -1,6 +1,6 @@
 import { View, TextInput, Button, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
-import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from "twrnc";
 import i18next from '../../services/i18next';
@@ -89,6 +89,9 @@ const Register = () => {
             // save username locally using AsyncStorage
             await AsyncStorage.setItem(`email_${email}`, trimmedEmail);
             await AsyncStorage.setItem(`username_${email}`, trimmedUsername);
+
+            // send email verification
+            sendEmailVerification(after.user);
         } catch(err: any) {
             alert(err);
         }
