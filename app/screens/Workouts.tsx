@@ -194,6 +194,11 @@ const Workouts = ({navigation}: any) => {
                     data={workouts}
                     renderItem={({item}: any) => renderWorkout(item)}
                     keyExtractor={(workout: Workout) => workout.id}
+                    ListEmptyComponent={() => (
+                        <View style={tw`flex justify-center items-center mt-10`}>
+                            <Text style={tw`text-2xl font-medium text-gray-500`}>{t('no-workouts')}</Text>
+                        </View>
+                    )}
                    
                 />
             </View>

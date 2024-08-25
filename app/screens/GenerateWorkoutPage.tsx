@@ -32,6 +32,14 @@ const GenerateWorkoutPage = () => {
         }
     }
 
+    const [experienceLevel, setExperienceLevel] = useState(1);
+    const [primaryGoal, setPrimaryGoal] = useState('');
+    const [numberOfDays, setNumberOfDays] = useState(0);
+    const [workoutLocation, setWorkoutLocation] = useState('');
+    const [specificBodyparts, setSpecificBodyparts] = useState([]);
+    const [equipmentGroup, setEquipmentGroup] = useState(0);
+    const [equipment, setEquipment] = useState([]);
+
     return (
         <>
 
@@ -41,29 +49,28 @@ const GenerateWorkoutPage = () => {
 
                         <View style={tw`flex flex-row mx-3 gap-x-2`}>
 
-                            <View style={tw`w-[15.1%] h-2 ${currentPage > 1 ? 'bg-[#fd3e4b]' : 'bg-gray-300'} rounded-lg`}></View>
-                            <View style={tw`w-[15.1%] h-2 ${currentPage > 2 ? 'bg-[#fd3e4b]' : 'bg-gray-300'} rounded-lg`}></View>
-                            <View style={tw`w-[15.1%] h-2 ${currentPage > 3 ? 'bg-[#fd3e4b]' : 'bg-gray-300'} rounded-lg`}></View>
-                            <View style={tw`w-[15.1%] h-2 ${currentPage > 4 ? 'bg-[#fd3e4b]' : 'bg-gray-300'} rounded-lg`}></View>
-                            <View style={tw`w-[15.1%] h-2 ${currentPage > 5 ? 'bg-[#fd3e4b]' : 'bg-gray-300'} rounded-lg`}></View>
-                            <View style={tw`w-[15.1%] h-2 ${currentPage > 6 ? 'bg-[#fd3e4b]' : 'bg-gray-300'} rounded-lg`}></View>
+                            <View style={tw`w-[18.5%] h-2 ${currentPage > 1 ? 'bg-[#fd3e4b]' : 'bg-gray-300'} rounded-lg`}></View>
+                            <View style={tw`w-[18.5%] h-2 ${currentPage > 2 ? 'bg-[#fd3e4b]' : 'bg-gray-300'} rounded-lg`}></View>
+                            <View style={tw`w-[18.5%] h-2 ${currentPage > 3 ? 'bg-[#fd3e4b]' : 'bg-gray-300'} rounded-lg`}></View>
+                            <View style={tw`w-[18.5%] h-2 ${currentPage > 4 ? 'bg-[#fd3e4b]' : 'bg-gray-300'} rounded-lg`}></View>
+                            <View style={tw`w-[18.5%] h-2 ${currentPage > 5 ? 'bg-[#fd3e4b]' : 'bg-gray-300'} rounded-lg`}></View>
 
                         </View>
 
                         <View style={tw``}>
 
                             {currentPage === 1 ? (
-                                <PageOne/>
+                                <PageOne experienceLevel={experienceLevel} setExperienceLevel={setExperienceLevel}/>
                             ) : currentPage === 2 ? (
-                                <PageTwo/>      
+                                <PageTwo primaryGoal={primaryGoal} setPrimaryGoal={setPrimaryGoal}/>      
                             ) : currentPage === 3 ? (
-                                <PageThree/>
+                                <PageThree numberOfDays={numberOfDays} setNumberOfDays={setNumberOfDays}/>
                             ) : currentPage === 4 ? (
-                                <PageFour/>
+                                <PageFour workoutLocation={workoutLocation} setWorkoutLocation={setWorkoutLocation}/>
                             ) : currentPage === 5 ? (
-                                <PageFive/>
+                                <PageFive specificBodyparts={specificBodyparts} setSpecificBodyparts={setSpecificBodyparts}/>
                             ) : (
-                                <PageSix/>
+                                <PageSix equipment={equipment} setEquipment={setEquipment} equipmentGroup={equipmentGroup} setEquipmentGroup={setEquipmentGroup}/>
                             )}
 
                         </View>
