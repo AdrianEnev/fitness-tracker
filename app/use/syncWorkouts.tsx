@@ -5,6 +5,7 @@ import generateRandomColour from './useGenerateColour';
 import getEmail from "./useGetEmail";
 
 const syncWorkouts = async () => {
+
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userWorkoutsCollectionRef = collection(userDocRef, 'workouts');

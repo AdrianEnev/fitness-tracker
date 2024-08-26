@@ -29,6 +29,9 @@ import NetInfo from "@react-native-community/netinfo";
 import syncWorkouts from './app/use/syncWorkouts';
 import syncSavedWorkouts from './app/use/syncSavedWorkouts';
 import syncNutrients from './app/use/useSyncNutrients';
+import checkReceiveFriendRequestsLocally from './app/use/useCheckReceiveFriendRequestsLocally';
+import checkFaceIdEnabledLocally from './app/use/useCheckFaceIdEnabledLocally';
+import checkForBiometricsLocally from './app/use/checkForBiometricsLocally';
 
 const Stack = createStackNavigator();
 
@@ -140,7 +143,6 @@ const App = () => {
     const [setupRan, setSetupRan] = useState(false);
     const [checkingSetup, setCheckingSetup] = useState(true);
     const [goalNutrients, setGoalNutrients] = useState<GoalNutrients | null>(null);
-    const [username, setUsername] = useState('');
     const [profilePicture, setProfilePicture] = useState('');
     const [friendRequestsNumber, setFriendRequestsNumber] = useState("");
     const [receiveFriendRequests, setReceiveFriendRequests] = useState(false);
@@ -158,14 +160,12 @@ const App = () => {
             setSetupRan(setupHasRan);
             checkLanguageDocument(userInfoCollectionRef);
     
-            const username = await getUsername(userInfoCollectionRef);
             const profilePic = await getProfilePicture();
             const friendRequests = await getFriendRequests();
-            const receiveFriendRequests = await checkReceiveFriendRequests();
-            const isFaceIdEnabled = await checkFaceIdEnabled();
+            const receiveFriendRequests = await checkReceiveFriendRequestsLocally();
+            const isFaceIdEnabled = await checkFaceIdEnabledLocally();
     
             // Batch state updates to avoid multiple re-renders
-            setUsername(username);
             setProfilePicture(profilePic || '');
             setFriendRequestsNumber(friendRequests <= 9 ? friendRequests.toString() : "9+");
             setReceiveFriendRequests(receiveFriendRequests);
@@ -187,7 +187,7 @@ const App = () => {
                 if (user) {
                     setIsEmailVerified(user.emailVerified);
     
-                    if (await checkForBiometrics()) {
+                    if (await checkForBiometricsLocally()) {
                         const compatible = await LocalAuthentication.hasHardwareAsync();
                         setIsBiometricSupported(compatible);
     
@@ -274,8 +274,7 @@ const App = () => {
 
     return (
         <GlobalContext.Provider value={{
-            setupRan, setSetupRan, username, profilePicture, goalNutrients,
-            setUsername, setProfilePicture, friendRequestsNumber, setGoalNutrients,
+            setupRan, setSetupRan, profilePicture, goalNutrients, setProfilePicture, friendRequestsNumber, setGoalNutrients,
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
             internetConnected: isConnected
         }}>

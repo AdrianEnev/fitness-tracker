@@ -24,6 +24,8 @@ import ProfilePicture from '../components/ProfilePicture';
 import syncWorkouts from '../use/syncWorkouts';
 import syncSavedWorkouts from '../use/syncSavedWorkouts';
 import syncNutrients from '../use/useSyncNutrients';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import getEmail from '../use/useGetEmail';
 
 
 //bg-[#fd3e6b]
@@ -42,18 +44,25 @@ const Main = ({navigation}: any) => {
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
     const foodDaysCollectionRef = collection(userDocRef, 'food_days');
 
-    const { username, internetConnected } = useContext(GlobalContext);
+    const { internetConnected } = useContext(GlobalContext);
 
     const [currentFormattedDate, setCurrentFormattedDate] = useState<any>();
     const {friendRequestsNumber} = useContext(GlobalContext);
 
+    const [username, setUsername] = useState<string | null>(null);
+    
+    const getUsername = async () => {
+        const email = await getEmail()
+
+        const AsyncStorageUsername = await AsyncStorage.getItem(`username_${email}`);
+        setUsername(AsyncStorageUsername);
+    }
+
     useFocusEffect(
         React.useCallback(() => {
 
-            const fetch = async () => {
-                getLanguage(userInfoCollectionRef);
-            }
-            fetch();
+            getUsername();
+            getLanguage(userInfoCollectionRef);
             updateCurrentNutrients();
 
             const currentDate = getCurrentDate(false);
@@ -72,6 +81,21 @@ const Main = ({navigation}: any) => {
                 syncSavedWorkouts();
                 syncNutrients();
             }
+
+            
+             // console log all asyncstorage items
+            /*AsyncStorage.getAllKeys().then(keys => {
+                console.log(keys)
+                return AsyncStorage.multiGet(keys)
+            }).then(keyValue => {
+                    console.log(keyValue)
+            })*/
+
+            // clear all asyncstorage items
+            /*AsyncStorage.clear().then(() => {
+                console.log('cleared')
+            })*/
+
             
         }, [])
     );
@@ -109,6 +133,7 @@ const Main = ({navigation}: any) => {
             const matchingDoc = data.docs.find((doc) => doc.id === getCurrentDate(false));
             if (matchingDoc) {
                 setCurrentNutrients(matchingDoc.data() as GoalNutrients[]);
+                console.log(matchingDoc.data() as GoalNutrients[])
             }
 
         } catch (err) {

@@ -1,5 +1,6 @@
 import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const checkReceiveFriendRequests = async () => {
 
@@ -19,4 +20,5 @@ const checkReceiveFriendRequests = async () => {
     
 }
 
-export default checkReceiveFriendRequests;
+
+export default checkReceiveFriendRequests

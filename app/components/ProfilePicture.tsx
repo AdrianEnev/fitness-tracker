@@ -79,9 +79,13 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
                                 navigation?.navigate('Настройки-Акаунт')
                                 return;
                             }
-
-                            uploadProfilePicture();
+                            
+                            if (internetConnected) {
+                                uploadProfilePicture();
+                            }
+                            
                         }}
+                        
                     >
                         <Ionicons name='person-outline' 
                             size={40}
@@ -112,7 +116,11 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
                             return;
                         }
 
-                        uploadProfilePicture();
+                        if (internetConnected) {
+                            uploadProfilePicture();
+                        }
+
+                        
                     }}
                         onLongPress={() => setShowConnectionStatus(!showConnectionStatus)}
                     >

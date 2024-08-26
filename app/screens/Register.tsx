@@ -87,7 +87,7 @@ const Register = () => {
             await setDoc(doc(userInfoCollectionRef, 'username'), { username: trimmedUsername });
 
             // save username locally using AsyncStorage
-            await AsyncStorage.setItem(`email_${email}`, trimmedEmail);
+            await AsyncStorage.setItem(`email`, trimmedEmail);
             await AsyncStorage.setItem(`username_${email}`, trimmedUsername);
 
             // send email verification

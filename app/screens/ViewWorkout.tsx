@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput, Pressable, Button, Dimensions } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, runTransaction, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
@@ -11,14 +11,14 @@ import startWorkout from '../use/useStartWorkout';
 import { BlurView } from 'expo-blur';
 import SetIntensityModal from '../components/SetIntensityModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import saveWorkoutEditsLocally from '../use/useSaveWorkoutEditsLocally';
+import GlobalContext from '../../GlobalContext';
 
 const ViewWorkout = ({route, navigation}: any) => {
 
     const { exercises, workout, workoutTitle } = route.params;
 
-    useEffect(() => {
-        console.log(workout)
-    }, []);
+    const {internetConnected} = useContext(GlobalContext)
 
     const [newWorkoutTitle, setNewWorkoutTitle] = useState('');
 
@@ -75,9 +75,13 @@ const ViewWorkout = ({route, navigation}: any) => {
 
     const saveChanges = async () => {
 
-        console.log('saving')
-        await saveWorkoutEdits(workout, userInputs, newExercises, newWorkoutTitle);
-        console.log('saved')
+        if (internetConnected) {
+            await saveWorkoutEdits(workout, userInputs, newExercises, newWorkoutTitle);
+        }
+
+        saveWorkoutEditsLocally(workout, userInputs, newExercises, newWorkoutTitle);
+        
+        
         navigation.navigate('Тренировки');
     }
     

@@ -3,6 +3,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import generateID from "./useGenerateID";
 
 const saveWorkoutEdits = async (workout: any, userInputs: any, newExercises: any, newWorkoutTitle: any) => {
+    
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");

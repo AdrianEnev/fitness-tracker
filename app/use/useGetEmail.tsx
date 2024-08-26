@@ -1,9 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { FIREBASE_AUTH } from "../../firebaseConfig";
 
 const getEmail = async () => {
     try {
-        const email = await AsyncStorage.getItem(`email_${FIREBASE_AUTH.currentUser?.uid}`);
+
+        const email = await AsyncStorage.getItem(`email`);
         //console.log(email)
         return email;
     } catch (err) {

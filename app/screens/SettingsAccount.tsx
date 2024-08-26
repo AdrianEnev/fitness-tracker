@@ -1,5 +1,5 @@
-import { View, Text, Button, Pressable, Image, Alert, Switch } from 'react-native'
-import React, { useContext, useState } from 'react'
+import { View, Text, Button, Pressable, Image, Alert, Switch, Vibration } from 'react-native'
+import React, { useContext, useEffect, useState } from 'react'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 import tw from 'twrnc'
 import { getAuth } from 'firebase/auth'
@@ -13,18 +13,12 @@ import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore'
 import BottomNavigationBar from '../components/BottomNavigationBar'
 import { useTranslation } from 'react-i18next'
 import { deleteObject, getStorage, ref } from 'firebase/storage'
+import getEmail from '../use/useGetEmail'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const SettingsAccount = ({navigation}: any) => {
 
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const userInfoCollectionRef = collection(userDocRef, 'user_info');
-
-    const auth = getAuth();
-    const user = auth.currentUser;
-    const email = user?.email;
-
-    const { username, setUsername, receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled } = useContext(GlobalContext);
+    const { receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled, internetConnected } = useContext(GlobalContext);
 
     const logOut = () => {
 
@@ -51,6 +45,9 @@ const SettingsAccount = ({navigation}: any) => {
 
     const changeUsername = async () => {
 
+        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+        const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
         const usernameDocRef = doc(userInfoCollectionRef, 'username');
         // get the date property inside the usernameDocRef and check the difference between the timestamp property and the current date
@@ -144,6 +141,8 @@ const SettingsAccount = ({navigation}: any) => {
                                 await setDoc(doc(userInfoCollectionRef, 'username'), { username: trimmedUsername, date: new Date()});
                                 setUsername(trimmedUsername);
 
+                                AsyncStorage.setItem(`username_${await getEmail()}`, trimmedUsername)
+
                                 alert('Името ви успешно беше сменено на ' + trimmedUsername);
                             } catch(err: any) {
                                 alert(err);
@@ -171,6 +170,9 @@ const SettingsAccount = ({navigation}: any) => {
                         
                         <View style={tw`flex justify-center`}>
                             <Text style={tw`text-lg font-medium`}>{title}</Text>
+                            {(title === t('change-username') || title === t('change-password') || title === t('delete-account')) && (
+                                <Text style={tw`text-gray-500 mb-[8px]`}>Requires internet</Text>
+                            )}
                         </View>
                     </View>
 
@@ -187,18 +189,21 @@ const SettingsAccount = ({navigation}: any) => {
 
     const [isFaceIdEnabled, setIsFaceIdEnabled] = useState(faceIdEnabled);
     const toggleFaceIdSwitch = async () => {
+
         setIsFaceIdEnabled(previousState => !previousState)
         setFaceIdEnabled(!isFaceIdEnabled);
 
-        await setDoc(doc(userInfoCollectionRef, 'faceIdEnabled'), { faceIdEnabled: !isFaceIdEnabled });
+        AsyncStorage.setItem(`faceIdEnabled`, String(!isFaceIdEnabled))
+        
     };
 
     const [isReceiveFriendRequestsEnabled, setIsReceiveFriendRequestsEnabled] = useState(receiveFriendRequests);
     const toggleReceiveFriendRequestsSwitch = async () => {
+
         setIsReceiveFriendRequestsEnabled(previousState => !previousState)
         setReceiveFriendRequests(!isReceiveFriendRequestsEnabled);
         
-        await setDoc(doc(userInfoCollectionRef, 'receiveFriendRequests'), { receiveFriendRequests: !isReceiveFriendRequestsEnabled });
+        AsyncStorage.setItem(`receiveFriendRequests`, String(!isReceiveFriendRequestsEnabled))
 
     };
 
@@ -214,7 +219,6 @@ const SettingsAccount = ({navigation}: any) => {
                         
                         <View style={tw`flex justify-center`}>
                             <Text style={tw`text-lg font-medium`}>{title}</Text>
-                            
                         </View>
                     </View>
 
@@ -252,6 +256,28 @@ const SettingsAccount = ({navigation}: any) => {
 
     //{switchButton('2FA', 'lock-closed-outline', 'green-300', '#22c55e', 24)}
 
+    const [username, setUsername] = useState<string | null>(null);
+    const [email, setEmail] = useState<string | null>(null)
+
+    const getUsername = async () => {
+        const email = await getEmail()
+
+        const AsyncStorageUsername = await AsyncStorage.getItem(`username_${email}`);
+        setUsername(AsyncStorageUsername);
+    }
+
+    useEffect(()=> {
+        getUsername();
+        
+        const fetch = async () => {
+            const AsyncStorageEmail = await getEmail();
+            setEmail(AsyncStorageEmail)
+        }
+
+        fetch();
+
+    }, [])
+
     return (
         <SafeAreaView style={tw`w-full h-full bg-white`}>
 
@@ -265,7 +291,7 @@ const SettingsAccount = ({navigation}: any) => {
                     <View style={tw`flex flex-col justify-center ml-2`}>
 
                         <Text style={tw`text-xl font-medium`}>{username}</Text>
-                        <Text style={tw`text-base text-gray-500`}>{FIREBASE_AUTH.currentUser?.email}</Text>
+                        <Text style={tw`text-base text-gray-500`}>{email}</Text>
 
                     </View>
 
@@ -275,10 +301,39 @@ const SettingsAccount = ({navigation}: any) => {
                 <View style={tw`h-[2px] w-[94%] bg-gray-300 rounded-full mx-2`}></View>
 
                 {/* Icons */}
-                {button(t('change-username'), 'text-outline', 'yellow-300', '#eab308', 24, () => changeUsername())}
-                {button(t('change-password'), 'create-outline', 'green-300', '#22c55e', 26, () => changePassword(email, user, auth))}
+                {button(t('change-username'), 'text-outline', 'yellow-300', '#eab308', 24, () => {
+                    if (internetConnected) {
+                        changeUsername()
+                    }else{
+                        Vibration.vibrate()
+                    }
+                })}
+
+
+
+                {button(t('change-password'), 'create-outline', 'green-300', '#22c55e', 26, () => {
+                    
+                    if (internetConnected) {
+                        const auth = getAuth();
+                        const user = auth.currentUser;
+                        changePassword(email, user, auth)
+                    }else{
+                        Vibration.vibrate()
+                    }
+                    
+                })}
                 {button(t('log-out'), 'log-out-outline', 'blue-300', '#3b82f6', 28, () => logOut())}
-                {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, () => deleteAccount(email, user))}
+                {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, () => {
+
+                    if (internetConnected) {
+                        const auth = getAuth();
+                        const user = auth.currentUser;
+                        deleteAccount(email, user)
+                    }else{
+                        Vibration.vibrate()
+                    }
+                    
+                })}
 
                 {switchButton(t('face-id'), 'eye-outline', 'orange-300', '#d97706', 30)}
                 {switchButton(t('receive-friend-requests'), 'notifications-outline', 'purple-300', '#8b5cf6', 24)}

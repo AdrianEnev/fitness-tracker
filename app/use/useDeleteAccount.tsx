@@ -4,6 +4,8 @@ import { deleteUser, reauthenticateWithCredential, EmailAuthProvider } from 'fir
 import { collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
 import { deleteObject, getStorage, ref } from 'firebase/storage';
 import { Alert } from 'react-native';
+import { useContext } from 'react';
+import GlobalContext from '../../GlobalContext';
 
 const changeUsername = async (user: any) => {
 
@@ -111,11 +113,13 @@ const deleteAccount = async (email: any, user: any) => {
 
                         // delete asyncstorage account data
                         AsyncStorage.removeItem(`username_${email}`)
-                        AsyncStorage.removeItem(`email_${email}`)
+                        AsyncStorage.removeItem(`email`)
                         AsyncStorage.removeItem(`workouts_${email}`)
                         AsyncStorage.removeItem(`saved_workouts_${email}`)
                         AsyncStorage.removeItem(`goal_nutrients_${email}`)
-                    
+
+                        const { setSetupRan } = useContext(GlobalContext);
+                        setSetupRan(false);
                     }
                 }).catch((error) => {
                     console.log(error);
