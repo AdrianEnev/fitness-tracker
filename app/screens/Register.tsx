@@ -108,12 +108,12 @@ const Register = () => {
         setConfirmPasswordCharacters(65 - confirmPassword.length);
 
         // console log all asyncstorage items
-        /*AsyncStorage.getAllKeys().then(keys => {
+        AsyncStorage.getAllKeys().then(keys => {
             console.log(keys)
             return AsyncStorage.multiGet(keys)
         }).then(keyValue => {
                 console.log(keyValue)
-        })*/
+        })
 
         // clear all asyncstorage items
         /*AsyncStorage.clear().then(() => {

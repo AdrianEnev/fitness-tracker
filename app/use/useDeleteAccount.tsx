@@ -8,32 +8,24 @@ import { useContext } from 'react';
 import GlobalContext from '../../GlobalContext';
 
 const changeUsername = async (user: any) => {
-
-    // Vseki chovek koito ima iztriqt akaunt kato priqtel mu se preimenuva na Deleted user
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     getDocs(usersCollectionRef).then((snapshot) => {
-
         if (snapshot.empty) {
             return;
         }
-
         snapshot.docs.forEach((doc) => {
             const userId = doc.id;
-            // get the friends list of each user
             const userFriendsCollectionRef = collection(FIRESTORE_DB, 'users', userId, 'user_info', 'friends', 'list');
             const q = query(userFriendsCollectionRef, where('id', '==', user.uid));
             getDocs(q).then((snapshot) => {
                 snapshot.docs.forEach((doc) => {
-                    // if the deleted user is in their friends list, change the name
                     const deletedUserName = "Deleted User" + Math.floor(Math.random() * 100000);
                     updateDoc(doc.ref, { username: deletedUserName });
                 });
             });
         });
     });
-
 }
-
 
 const removeReceivedRequests = async (user: any) => {
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -53,81 +45,75 @@ const removeReceivedRequests = async (user: any) => {
     }));
 }
 
-const deleteAccount = async (email: any, user: any) => {
-        
-        Alert.prompt(
-            'Изтриване на акаунт',
-            'Въведи паролата за този акаунт, за да го изтриеш',
-            [
-                {
-                    text: 'Отказ',
-                    style: 'cancel',
+const deleteAccount = async (email: any, user: any, setProfilePicture: any, setSetupRan: any, setGoalNutrients: any, setReceiveFriendRequests: any, setFaceIdEnabled: any) => {
+    
+
+    Alert.prompt(
+        'Изтриване на акаунт',
+        'Въведи паролата за този акаунт, за да го изтриеш',
+        [
+            {
+                text: 'Отказ',
+                style: 'cancel',
+            },
+            {
+                text: 'Изтриване',
+                style: 'destructive',
+                onPress: (password: string | undefined) => {
+                    reauthenticateAndDelete(password, setProfilePicture, setSetupRan, setGoalNutrients, setReceiveFriendRequests, setFaceIdEnabled);
                 },
-                {
-                    text: 'Изтриване',
-                    style: 'destructive',
-                    onPress: (password: string | undefined) => {
-                        reauthenticateAndDelete(password)
-                    },
-                },
-            ],
-            'secure-text'
-        );
+            },
+        ],
+        'secure-text'
+    );
 
+    const reauthenticateAndDelete = (password: string | undefined, setProfilePicture: any, setSetupRan: any, setGoalNutrients: any, setReceiveFriendRequests: any, setFaceIdEnabled: any) => {
+        if (email && password && user) {
+            const credentials = EmailAuthProvider.credential(email, password);
+            reauthenticateWithCredential(user, credentials).then(async () => {
+                if (user) {
+                    deleteUser(user).then(() => {
+                        FIREBASE_AUTH.signOut();
+                    }).catch((error: any) => {
+                        console.log(error);
+                    });
 
-        const reauthenticateAndDelete = (password: string | undefined) => {
+                    await changeUsername(user);
+                    await removeReceivedRequests(user);
 
-            if (email && password && user) {
+                    const userDocRef = doc(FIRESTORE_DB, 'users', user.uid);
+                    deleteDoc(userDocRef).catch((error) => {
+                        console.log(error);
+                    });
 
-                const credentials = EmailAuthProvider.credential(email, password);
-                
-                 // reauthenticate (needed in order to delete account)
-                 reauthenticateWithCredential(user, credentials).then(async () => {
-                    // user reauthenticated, delete account
-                    if (user) {
-                        deleteUser(user).then(() => {
-                            // user deleted, sign out
-                            FIREBASE_AUTH.signOut();
-                        }).catch((error: any) => {
-                            console.log(error);
-                        });
+                    const storage = getStorage();
+                    const desertRef = ref(storage, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
 
-                        await changeUsername(user);
-                        await removeReceivedRequests(user);
+                    deleteObject(desertRef).then(() => {
+                        console.log("File deleted successfully");
+                    }).catch((error) => {
+                        console.log("Uh-oh, an error occurred!"); 
+                        console.log(error)
+                    });
 
-                        // delete user from Firestore
-                        const userDocRef = doc(FIRESTORE_DB, 'users', user.uid);
-                        deleteDoc(userDocRef).catch((error) => {
-                            console.log(error);
-                        });
+                    AsyncStorage.removeItem(`username_${email}`)
+                    AsyncStorage.removeItem(`email`)
+                    AsyncStorage.removeItem(`workouts_${email}`)
+                    AsyncStorage.removeItem(`saved_workouts_${email}`)
+                    AsyncStorage.removeItem(`goal_nutrients_${email}`)
 
-                        const storage = getStorage();
-                        const desertRef = ref(storage, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
-
-                        deleteObject(desertRef).then(() => {
-                            console.log("File deleted successfully");
-                        }).catch((error) => {
-                            console.log("Uh-oh, an error occurred!"); 
-                            console.log(error)
-                        });
-
-                        // delete asyncstorage account data
-                        AsyncStorage.removeItem(`username_${email}`)
-                        AsyncStorage.removeItem(`email`)
-                        AsyncStorage.removeItem(`workouts_${email}`)
-                        AsyncStorage.removeItem(`saved_workouts_${email}`)
-                        AsyncStorage.removeItem(`goal_nutrients_${email}`)
-
-                        const { setSetupRan } = useContext(GlobalContext);
-                        setSetupRan(false);
-                    }
-                }).catch((error) => {
-                    console.log(error);
-                });
-            }
-
+                    // Reset GlobalContext to default values
+                    setProfilePicture('');
+                    setSetupRan(false);
+                    setGoalNutrients(null);
+                    setReceiveFriendRequests(false);
+                    setFaceIdEnabled(false);
+                }
+            }).catch((error) => {
+                console.log(error);
+            });
         }
-
+    }
 }
 
 export default deleteAccount;

@@ -18,7 +18,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const SettingsAccount = ({navigation}: any) => {
 
-    const { receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled, internetConnected } = useContext(GlobalContext);
+    const 
+    { receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled, internetConnected,
+        setProfilePicture, setSetupRan, setGoalNutrients } = useContext(GlobalContext);
 
     const logOut = () => {
 
@@ -328,7 +330,8 @@ const SettingsAccount = ({navigation}: any) => {
                     if (internetConnected) {
                         const auth = getAuth();
                         const user = auth.currentUser;
-                        deleteAccount(email, user)
+                        
+                        deleteAccount(email, user, setProfilePicture, setSetupRan, setGoalNutrients, setReceiveFriendRequests, setFaceIdEnabled)
                     }else{
                         Vibration.vibrate()
                     }
