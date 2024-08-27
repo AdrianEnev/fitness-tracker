@@ -8,7 +8,7 @@ import Register from './app/screens/Register';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import MainPageComponent from './app/components/MainPageComponent';
 import Setup from './app/screens/Setup';
-import { collection, doc } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from './app/screens/Welcome';
 import getUsername from './app/use/useGetUsername';
@@ -153,9 +153,8 @@ const App = () => {
     const [isEmailVerified, setIsEmailVerified] = useState(false);
 
     const fetchData = async (userDocRef: any, firebaseUser: any, userInfoCollectionRef: any) => {
-        //console.log('Fetching data');
         try {
-            await checkUserDocument(userDocRef, firebaseUser, userInfoCollectionRef);
+    
             const setupHasRan = await checkUserInfoCollection(userInfoCollectionRef);
             setSetupRan(setupHasRan);
             checkLanguageDocument(userInfoCollectionRef);
@@ -204,8 +203,8 @@ const App = () => {
                         const usersCollectionRef = collection(FIRESTORE_DB, 'users');
                         const userDocRef = doc(usersCollectionRef, user.uid);
                         const userInfoCollectionRef = collection(userDocRef, 'user_info');
-    
-                        fetchData(userDocRef, user, userInfoCollectionRef);
+
+                        await fetchData(userDocRef, user, userInfoCollectionRef);
                     } else {
                         setLoading(false);
                         setCheckingSetup(false);
@@ -274,7 +273,7 @@ const App = () => {
 
     return (
         <GlobalContext.Provider value={{
-            setupRan, setSetupRan, profilePicture, goalNutrients, setProfilePicture, friendRequestsNumber, setGoalNutrients,
+            setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber, setGoalNutrients,
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
             internetConnected: isConnected
         }}>

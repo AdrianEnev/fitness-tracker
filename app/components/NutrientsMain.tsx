@@ -1,10 +1,12 @@
 import { View, Text, Pressable } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import GlobalContext from '../../GlobalContext';
 import getCurrentDate from '../use/useGetCurrentDate';
 import { t } from 'i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import getEmail from '../use/useGetEmail';
 
 type RenderNutrientsProps = {
     currentNutrients: any;
@@ -14,9 +16,19 @@ type RenderNutrientsProps = {
 };
 
 const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate}: RenderNutrientsProps) => {
-
-    const { goalNutrients } = useContext(GlobalContext);
     
+    const [goalNutrients, setGoalNutrients] = useState<any>(null);
+   
+    useEffect(() => {
+        const fetch = async () => {
+            console.log('fetching')
+            const n = await AsyncStorage.getItem(`goal_nutrients_${await getEmail()}`);
+            console.log(n)
+            setGoalNutrients(JSON.parse(n))
+        }
+        fetch();
+    }, [])
+
     const currentCalories = currentNutrients?.calories || 0;
     const currentProtein = currentNutrients?.protein || 0;
     const currentCarbs = currentNutrients?.carbs || 0;

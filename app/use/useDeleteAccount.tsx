@@ -6,6 +6,7 @@ import { deleteObject, getStorage, ref } from 'firebase/storage';
 import { Alert } from 'react-native';
 import { useContext } from 'react';
 import GlobalContext from '../../GlobalContext';
+import getEmail from './useGetEmail';
 
 const changeUsername = async (user: any) => {
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -96,18 +97,20 @@ const deleteAccount = async (email: any, user: any, setProfilePicture: any, setS
                         console.log(error)
                     });
 
-                    AsyncStorage.removeItem(`username_${email}`)
+                    const asyncStorageEmail = await getEmail()
+
+                    AsyncStorage.removeItem(`username_${asyncStorageEmail}`)
                     AsyncStorage.removeItem(`email`)
-                    AsyncStorage.removeItem(`workouts_${email}`)
-                    AsyncStorage.removeItem(`saved_workouts_${email}`)
-                    AsyncStorage.removeItem(`goal_nutrients_${email}`)
+                    AsyncStorage.removeItem(`workouts_${asyncStorageEmail}`)
+                    AsyncStorage.removeItem(`saved_workouts_${asyncStorageEmail}`)
+                    AsyncStorage.removeItem(`goal_nutrients_${asyncStorageEmail}`)
 
                     // Reset GlobalContext to default values
-                    setProfilePicture('');
+                    /*setProfilePicture('');
                     setSetupRan(false);
                     setGoalNutrients(null);
                     setReceiveFriendRequests(false);
-                    setFaceIdEnabled(false);
+                    setFaceIdEnabled(false);*/
                 }
             }).catch((error) => {
                 console.log(error);

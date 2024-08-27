@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
 import GlobalContext from '../../GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { checkUserDocument } from '../use/useCheckUserInfo';
 
 const Register = () => {
 
@@ -92,8 +93,9 @@ const Register = () => {
 
             // send email verification
             sendEmailVerification(after.user);
+            await checkUserDocument(userDocRef, after.user, userInfoCollectionRef);
         } catch(err: any) {
-            alert(err);
+            console.log('error', err)
         }
     }
 

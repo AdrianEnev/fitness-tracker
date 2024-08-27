@@ -18,6 +18,7 @@ import SetupPageFour from '../setupComponents/SetupPageFour';
 import SetupPageFive from '../setupComponents/SetupPageFive';
 //import ScrollPicker from "react-native-wheel-scrollview-picker";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import getEmail from '../use/useGetEmail';
 
 const Setup = ({route}: any) => {
 
@@ -147,6 +148,8 @@ const Setup = ({route}: any) => {
 
     const finishSetup = async () => {
 
+        console.log('finishing setup')
+
         const calories = calculateCalories("metric")
 
         const ratios = { protein: 0.2, carbs: 0.5, fats: 0.3 };
@@ -163,17 +166,23 @@ const Setup = ({route}: any) => {
             fat: Math.round(fatsGrams)
         }
 
-        if (internetConnected) {
-            await setDoc(nutrientsDocRef, nutrients, { merge: true });
-        }
-        
+        console.log('nutrients:', nutrients)
+
+        const email = await getEmail();
+
         // nutrientite se dobavqt lokalno v telefona nezavisimo dali ima internet, ako ima internet se dobavqt i v bazata danni
         try {
             const jsonNutrients = JSON.stringify(nutrients);
-            await AsyncStorage.setItem(`goal_nutrients_${FIREBASE_AUTH.currentUser?.email}`, jsonNutrients);
+            await AsyncStorage.setItem(`goal_nutrients_${email}`, jsonNutrients);
         } catch (error) {
             console.log('Error saving nutrients to AsyncStorage:', error);
         }
+
+        if (internetConnected) {
+            await setDoc(nutrientsDocRef, nutrients, { merge: true });
+        }
+
+        console.log('setup ran')
         
         setSetupRan(true);
 

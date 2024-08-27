@@ -8,6 +8,7 @@ import BottomNavigationBar from '../components/BottomNavigationBar';
 import { useTranslation } from 'react-i18next';
 import GlobalContext from '../../GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import getEmail from '../use/useGetEmail';
 
 interface Nutrient {
     key: string;
@@ -42,7 +43,7 @@ const Settings = ({navigation}: any) => {
 
     const updateNutrientsLocally = async () => {
         try {
-            const localNutrients = await AsyncStorage.getItem(`goal_nutrients_${FIREBASE_AUTH.currentUser?.email}`);
+            const localNutrients = await AsyncStorage.getItem(`goal_nutrients_${await getEmail()}`);
             if (localNutrients) {
                 const parsedLocalNutrients = JSON.parse(localNutrients);
                 setNutrients(parsedLocalNutrients);

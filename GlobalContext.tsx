@@ -5,7 +5,7 @@ interface GlobalContextType {
     profilePicture: string;
     setupRan: boolean;
     friendRequestsNumber: string;
-    goalNutrients: GoalNutrients | null; // Changed to a single object or null
+    //goalNutrients: GoalNutrients | null; // Changed to a single object or null
     receiveFriendRequests: boolean;
     faceIdEnabled: boolean;
     internetConnected: boolean;
@@ -20,7 +20,7 @@ const defaultValues: GlobalContextType = {
     profilePicture: '',
     setupRan: false,
     friendRequestsNumber: "",
-    goalNutrients: null,
+    //goalNutrients: null,
     receiveFriendRequests: false,
     faceIdEnabled: false,
     internetConnected: false,
