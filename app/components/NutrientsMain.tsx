@@ -21,10 +21,13 @@ const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate}: 
    
     useEffect(() => {
         const fetch = async () => {
-            console.log('fetching')
+            
             const n = await AsyncStorage.getItem(`goal_nutrients_${await getEmail()}`);
-            console.log(n)
-            setGoalNutrients(JSON.parse(n))
+           
+            if (n) {
+                setGoalNutrients(JSON.parse(n))
+            }
+           
         }
         fetch();
     }, [])
