@@ -1,11 +1,7 @@
-import { View, Text, Button, Pressable } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import React from 'react'
 import tw from "twrnc";
-import { doc, deleteDoc } from 'firebase/firestore';
-import { useTranslation } from 'react-i18next';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { useNavigation } from '@react-navigation/native';
-import { t } from 'i18next';
 
 const RenderAddedFood = ({item, navigation}: any) => {
 
@@ -18,7 +14,7 @@ const RenderAddedFood = ({item, navigation}: any) => {
 
                 <View style={tw`flex flex-row`}>
 
-                    <View style={tw`w-16 h-10 bg-[#fd3e54] rounded-xl flex items-center justify-center mr-2`}>
+                    <View style={tw`w-16 h-10 bg-[#fd3e6b] rounded-xl flex items-center justify-center mr-2`}>
                         <Text style={tw`text-lg font-medium text-white`} ellipsizeMode='tail' numberOfLines={1}>{date}</Text>
                     </View>
                     

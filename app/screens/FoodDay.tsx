@@ -14,6 +14,8 @@ import Nutrients from '../components/NutrientsFoodDay';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import getCurrentDate from '../use/useGetCurrentDate';
 import { Food } from '../../interfaces';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import getEmail from '../use/useGetEmail';
 
 const FoodDay = ({route, navigation}: any) => {
 
@@ -32,7 +34,6 @@ const FoodDay = ({route, navigation}: any) => {
         return `${date.day}.${date.month}.${date.year}`;
     }
 
-    let [goalNutrients, setGoalNutrients] = useState<GoalNutrients[]>([]);
     let [currentFoods, setCurrentFoods] = useState<Food[]>([]);
 
     // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk 
@@ -45,8 +46,6 @@ const FoodDay = ({route, navigation}: any) => {
     const foodDaysCollectionRef = collection(userDocRef, 'food_days');
     const foodDayDocRef = doc(foodDaysCollectionRef, `${date.day}-${date.month}-${date.year}`);
     const foodDayCollectionRef = collection(foodDayDocRef, 'foods');
-
-    const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
     // vzima vsichki hrani ot foodDayCollectionRef i gi podrejda spored data
     const updateCurrentFoods = async () => {
@@ -66,25 +65,6 @@ const FoodDay = ({route, navigation}: any) => {
             console.error(err);
         }
     }
-
-    // passed to the first flatlist so goals can be rendered
-    const updateGoalNutrients = async () => {
-        try {
-            const docRef = doc(userInfoCollectionRef, "nutrients");
-            const docSnap = await getDoc(docRef);
-    
-            if (docSnap.exists()) {
-
-                const data = docSnap.data() as GoalNutrients;
-                setGoalNutrients([{ ...data, id: docSnap.id }]);
-
-            } else {
-                console.log("No such document!");
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    };
 
     
     const updateCurrentNutrients = async () => {
@@ -108,7 +88,6 @@ const FoodDay = ({route, navigation}: any) => {
 
             const fetchData = async () => {
                 await updateCurrentFoods();
-                await updateGoalNutrients();
                 await updateCurrentNutrients();
             };
     

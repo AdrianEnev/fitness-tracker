@@ -273,7 +273,7 @@ const App = () => {
 
     return (
         <GlobalContext.Provider value={{
-            setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber, setGoalNutrients,
+            setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber,
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
             internetConnected: isConnected
         }}>

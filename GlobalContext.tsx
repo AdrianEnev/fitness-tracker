@@ -13,7 +13,7 @@ interface GlobalContextType {
     setReceiveFriendRequests: (value: boolean) => void;
     setProfilePicture: (profilePicture: string) => void;
     setSetupRan: (value: boolean) => void;
-    setGoalNutrients: (value: GoalNutrients | null) => void; // Updated the type here as well
+    //setGoalNutrients: (value: GoalNutrients | null) => void; // Updated the type here as well
 }
 
 const defaultValues: GlobalContextType = {
@@ -28,7 +28,7 @@ const defaultValues: GlobalContextType = {
     setReceiveFriendRequests: () => {},
     setProfilePicture: () => {},
     setSetupRan: () => {},
-    setGoalNutrients: () => {},
+    //setGoalNutrients: () => {},
 };
 
 const GlobalContext = React.createContext<GlobalContextType>(defaultValues);

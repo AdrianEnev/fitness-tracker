@@ -35,8 +35,6 @@ const Main = ({navigation}: any) => {
 
     //const [steps, setSteps] = useState(0);
 
-    const { setGoalNutrients } = useContext(GlobalContext);
-
     const { t } = useTranslation();
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -102,28 +100,6 @@ const Main = ({navigation}: any) => {
 
     // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk
     let [currentNutrients, setCurrentNutrients] = useState<GoalNutrients[]>([]);
-
-    const updateGoalNutrients = async () => {
-        try {
-            const docRef = doc(userInfoCollectionRef, "nutrients");
-            const docSnap = await getDoc(docRef);
-    
-            if (docSnap.exists()) {
-                const data = docSnap.data() as GoalNutrients;
-                setGoalNutrients({ ...data, id: docSnap.id });
-            } else {
-                console.log("No such document!");
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    useEffect(() => {
-        onSnapshot(userInfoCollectionRef, (_snapshot) => {
-            updateGoalNutrients();
-        });
-    }, [])
 
     const updateCurrentNutrients = async () => {
         try {

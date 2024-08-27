@@ -1,9 +1,10 @@
 import { View, Text } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import tw from 'twrnc'
 import { bgLocaleConfig, deLocaleConfig, enLocaleConfig, frLocaleConfig, ruLocaleConfig } from "../../CalendarConfig";
 import { CalendarList, LocaleConfig } from 'react-native-calendars';
 import i18next from '../../services/i18next';
+import GlobalContext from '../../GlobalContext';
 
 LocaleConfig.locales['bg'] = bgLocaleConfig;
 LocaleConfig.locales['en'] = enLocaleConfig;
@@ -16,6 +17,8 @@ const Food = ({navigation}: any) => {
 
     const [localeKey, setLocaleKey] = useState(i18next.language);
     const [renderKey, setRenderKey] = useState(Date.now());
+
+    const {internetConnected} = useContext(GlobalContext)
 
     useEffect(() => {
         const setLocale = (lng: any) => {
@@ -62,20 +65,26 @@ const Food = ({navigation}: any) => {
 
             <View style={tw`bg-white`}>
 
-                <CalendarList 
-                    key={renderKey}
-                    horizontal={false}
-                    pagingEnabled={false}
-                    pastScrollRange={6}
-                    futureScrollRange={6}
-                    scrollEnabled={true}
-                    onDayPress={(day: any) => {
-                        navigation.navigate("Хранене-Ден", {date: day});
-                    }}
-                    markedDates={{
-                        [currentDate]: {selected: true, selectedColor: '#fd3e6b', textColor: 'white'},
-                    }}
-                />
+                {internetConnected ? (
+                    <CalendarList 
+                        key={renderKey}
+                        horizontal={false}
+                        pagingEnabled={false}
+                        pastScrollRange={6}
+                        futureScrollRange={6}
+                        scrollEnabled={true}
+                        onDayPress={(day: any) => {
+                            navigation.navigate("Хранене-Ден", {date: day});
+                        }}
+                        markedDates={{
+                            [currentDate]: {selected: true, selectedColor: '#fd3e6b', textColor: 'white'},
+                        }}
+                    />
+                ) : 
+                    <View style={tw`w-full h-full flex justify-center items-center`}>
+                        <Text>Tracking your meals requires a stable internet connection</Text>
+                    </View>
+                }
 
             </View>
             
