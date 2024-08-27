@@ -106,11 +106,8 @@ const deleteAccount = async (email: any, user: any, setProfilePicture: any, setS
                     AsyncStorage.removeItem(`goal_nutrients_${asyncStorageEmail}`)
 
                     // Reset GlobalContext to default values
-                    /*setProfilePicture('');
+                    setProfilePicture('');
                     setSetupRan(false);
-                    setGoalNutrients(null);
-                    setReceiveFriendRequests(false);
-                    setFaceIdEnabled(false);*/
                 }
             }).catch((error) => {
                 console.log(error);

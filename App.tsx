@@ -32,6 +32,7 @@ import syncNutrients from './app/use/useSyncNutrients';
 import checkReceiveFriendRequestsLocally from './app/use/useCheckReceiveFriendRequestsLocally';
 import checkFaceIdEnabledLocally from './app/use/useCheckFaceIdEnabledLocally';
 import checkForBiometricsLocally from './app/use/checkForBiometricsLocally';
+import EmailNotVerified from './app/screens/EmailNotVerified';
 
 const Stack = createStackNavigator();
 
@@ -96,14 +97,6 @@ const UnauthenticatedTabNavigator = () => (
         />
     </Stack.Navigator>
 );
-
-const EmailNotVerified = () => {
-    return (
-        <View style={tw`flex-1 justify-center items-center bg-red-500`}>
-            <Text style={tw`text-2xl font-bold text-white`}>Email Not Verified</Text>
-        </View>
-    );
-};
 
 const App = () => {
 

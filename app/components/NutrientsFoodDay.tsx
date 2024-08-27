@@ -15,7 +15,7 @@ type RenderNutrientsProps = {
     regularDate: any
 };
 
-const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate}: RenderNutrientsProps) => {
+const Nutrients = ({ currentNutrients, regularDate}: RenderNutrientsProps) => {
 
     const [goalNutrients, setGoalNutrients] = useState<any>(null);
    
