@@ -1,4 +1,6 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { addDoc, doc, getDoc, setDoc } from "firebase/firestore";
+import getEmail from "./useGetEmail";
 
 export const checkUserDocument = async (userDocRef: any, user: any, userInfoCollectionRef: any) => {
     try {
@@ -36,14 +38,31 @@ export const checkLanguageDocument = async (userInfoCollectionRef: any) => {
     }
 };
 
+export const checkLanguageDocumentLocally = async () => {
+    const email = await getEmail();
+    const language = await AsyncStorage.getItem(`language_${email}`);
+
+    if (language === null) {
+        await AsyncStorage.setItem(`language_${email}`, 'en');
+    }   
+}
+
 export const checkUserInfoCollection = async (userInfoCollectionRef: any) => {
     try {
         const nutrientsDocRef = doc(userInfoCollectionRef, 'nutrients');
         const docSnapshot = await getDoc(nutrientsDocRef);
         return docSnapshot.exists();
-        // exists
     } catch (err) {
         console.error(err);
         return false;
     }
+}
+
+export const checkUserInfoCollectionLocally = async () => {
+
+    const email = await getEmail()
+    const nutrients = await AsyncStorage.getItem(`goal_nutrients_${email}`);
+
+    // return true if nutrients has been ran
+    return nutrients !== null;
 }

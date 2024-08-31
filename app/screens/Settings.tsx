@@ -22,26 +22,7 @@ const Settings = ({navigation}: any) => {
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
-    const [selectedLanguage, setSelectedLanguage] = useState('en');
-
     const { t } = useTranslation();
-
-    const getLanguage = async () => {
-        try {
-            const docSnapshot = await getDoc(doc(userInfoCollectionRef, 'language'));
-            if (docSnapshot.exists()) {
-                const language = docSnapshot.data().language;
-                
-                return language;
-            } else {
-
-                // moje bi da napravq da izchaka 2 sek da probva pak ili neshto takova che ponqkoga ne go udpateva na vreme
-                console.log('Language document does not exist');
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    }
 
     /*const changeLanguage = async (language: string) => {
         try {
@@ -53,16 +34,6 @@ const Settings = ({navigation}: any) => {
             console.error(err);
         }
     }*/
-
-    useFocusEffect(
-        React.useCallback(() => {
-            (async () => {
-                const language = await getLanguage();
-                await i18next.changeLanguage(language);
-                setSelectedLanguage(language);
-            })();
-        }, [])
-    );
 
     const {internetConnected} = useContext(GlobalContext);
 

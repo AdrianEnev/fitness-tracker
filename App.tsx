@@ -16,7 +16,7 @@ import getProfilePicture from './app/use/useGetProfilePicture';
 import GlobalContext from './GlobalContext';
 import getFriendRequests from './app/use/useGetFriendRequestsRecieved';
 import ChangePassword from './app/screens/ChangePassword';
-import { checkUserDocument, checkLanguageDocument, checkUserInfoCollection } from './app/use/useCheckUserInfo';
+import { checkUserDocument, checkLanguageDocument, checkUserInfoCollection, checkUserInfoCollectionLocally, checkLanguageDocumentLocally } from './app/use/useCheckUserInfo';
 import { GoalNutrients } from './interfaces';
 import checkReceiveFriendRequests from './app/use/useCheckReceiveFriendRequests';
 import checkFaceIdEnabled from './app/use/useCheckFaceIdEnabled';
@@ -135,7 +135,6 @@ const App = () => {
     const [loading, setLoading] = useState(false);
     const [setupRan, setSetupRan] = useState(false);
     const [checkingSetup, setCheckingSetup] = useState(true);
-    const [goalNutrients, setGoalNutrients] = useState<GoalNutrients | null>(null);
     const [profilePicture, setProfilePicture] = useState('');
     const [friendRequestsNumber, setFriendRequestsNumber] = useState("");
     const [receiveFriendRequests, setReceiveFriendRequests] = useState(false);
@@ -145,21 +144,32 @@ const App = () => {
 
     const [isEmailVerified, setIsEmailVerified] = useState(false);
 
-    const fetchData = async (userDocRef: any, firebaseUser: any, userInfoCollectionRef: any) => {
+    const fetchData = async () => {
         try {
     
-            const setupHasRan = await checkUserInfoCollection(userInfoCollectionRef);
-            setSetupRan(setupHasRan);
-            checkLanguageDocument(userInfoCollectionRef);
-    
-            const profilePic = await getProfilePicture();
-            const friendRequests = await getFriendRequests();
-            const receiveFriendRequests = await checkReceiveFriendRequestsLocally();
-            const isFaceIdEnabled = await checkFaceIdEnabledLocally();
+            //const setupHasRan = await checkUserInfoCollection(userInfoCollectionRef);
+            //setSetupRan(setupHasRan);
+
+            const setupHasRanLocally = await checkUserInfoCollectionLocally();//
+            setSetupRan(setupHasRanLocally)//
+
+            //checkLanguageDocument(userInfoCollectionRef);
+            checkLanguageDocumentLocally();//
+            
+            let profilePic = null;
+            let friendRequests = 0;
+
+            if (isConnected) {
+                profilePic = await getProfilePicture();//
+                friendRequests = await getFriendRequests();//
+            }
+            
+            const receiveFriendRequests = await checkReceiveFriendRequestsLocally();//
+            const isFaceIdEnabled = await checkFaceIdEnabledLocally();//
     
             // Batch state updates to avoid multiple re-renders
             setProfilePicture(profilePic || '');
-            setFriendRequestsNumber(friendRequests <= 9 ? friendRequests.toString() : "9+");
+            setFriendRequestsNumber(friendRequests <= 9 ? friendRequests.toString() : "9+" || 0);
             setReceiveFriendRequests(receiveFriendRequests);
             setFaceIdEnabled(isFaceIdEnabled);
             setCheckingSetup(false);
@@ -172,6 +182,39 @@ const App = () => {
     };
 
     useEffect(() => {
+        const netListener = NetInfo.addEventListener(state => {
+            setIsConnected(state.isConnected ?? false);
+            //setIsConnected(false)
+        });
+    
+        netListener();
+        
+        const fetch = async () => {
+            if (!isConnected) {
+
+                if (await checkForBiometricsLocally()) {
+                    const compatible = await LocalAuthentication.hasHardwareAsync();
+                    setIsBiometricSupported(compatible);
+
+                    if (compatible) {
+                        await onAuthenticate();
+                    }
+                } else {
+                    setIsAuthenticated(true);
+                }
+
+                await fetchData();
+
+                setLoading(false);
+                setCheckingSetup(false);
+                console.log('No internet connection');
+                
+                return;
+            }
+        }
+        fetch();
+        
+        console.log('Connected to the internet');
         const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
             setUser(user);
     
@@ -192,12 +235,7 @@ const App = () => {
     
                     if (user.emailVerified) {
                         setLoading(true);
-    
-                        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-                        const userDocRef = doc(usersCollectionRef, user.uid);
-                        const userInfoCollectionRef = collection(userDocRef, 'user_info');
-
-                        await fetchData(userDocRef, user, userInfoCollectionRef);
+                        await fetchData();
                     } else {
                         setLoading(false);
                         setCheckingSetup(false);
@@ -215,24 +253,17 @@ const App = () => {
             }
         });
     
-        const netListener = NetInfo.addEventListener(state => {
-            setIsConnected(state.isConnected ?? false);
-        });
-    
-        netListener();
         return () => unsubscribe();
-    }, []);
-
-
+    }, [isConnected]);
+    
     // Timer code
     useEffect(() => {
         const interval = setInterval(async () => {
             if (user && !isEmailVerified) {
-                await user.reload();
-                setIsEmailVerified(user.emailVerified);
+                // Timer logic here
             }
-        }, 1000); 
-
+        }, 1000);
+    
         return () => clearInterval(interval);
     }, [user, isEmailVerified]);
     
@@ -274,20 +305,16 @@ const App = () => {
                 <StatusBar barStyle='dark-content' />
                 <NavigationContainer>
                     {
-                        isConnected ? (
-                            user ? 
-                            (
-                                setupRan && isAuthenticated ? <AuthenticatedTabNavigator /> : 
-                                setupRan && !isAuthenticated ? <BiometricsFailed /> :
-                                !isEmailVerified ? <EmailNotVerified /> :
-                                <SetupPage />
-                            ) : 
-                            <UnauthenticatedTabNavigator />
-                        ) : (
-                            <View style={tw`flex-1 justify-center items-center bg-red-500`}>
-                                <Text style={tw`text-2xl font-bold text-white`}>No Internet Connection</Text>
-                            </View>
-                        )
+                       
+                        user ? 
+                        (
+                            setupRan && isAuthenticated ? <AuthenticatedTabNavigator /> : 
+                            setupRan && !isAuthenticated ? <BiometricsFailed /> :
+                            !isEmailVerified ? <EmailNotVerified /> :
+                            <SetupPage />
+                        ) : 
+                        <UnauthenticatedTabNavigator />
+                        
                     }
                 </NavigationContainer>
             </GestureHandlerRootView>

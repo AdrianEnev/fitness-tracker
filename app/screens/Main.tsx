@@ -26,6 +26,7 @@ import syncSavedWorkouts from '../use/syncSavedWorkouts';
 import syncNutrients from '../use/useSyncNutrients';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
+import { getLanguageLocally } from '../use/useGetLanguageLocally';
 
 
 //bg-[#fd3e6b]
@@ -60,9 +61,8 @@ const Main = ({navigation}: any) => {
         React.useCallback(() => {
 
             getUsername();
-            getLanguage(userInfoCollectionRef);
-            updateCurrentNutrients();
-
+            getLanguageLocally();
+            
             const currentDate = getCurrentDate(false);
             const formattedDate = {
                 dateString: currentDate,
@@ -75,6 +75,7 @@ const Main = ({navigation}: any) => {
             setCurrentFormattedDate(formattedDate)
 
             if (internetConnected) {
+                updateCurrentNutrients();
                 syncWorkouts();
                 syncSavedWorkouts();
                 syncNutrients();

@@ -1,11 +1,14 @@
 import { View, Text, Modal, Pressable, Keyboard, TextInput } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
 import i18next, { t } from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Dropdown } from 'react-native-element-dropdown';
+import GlobalContext from '../../GlobalContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import getEmail from '../use/useGetEmail';
 
 interface LanguageModalProps {
     isLanguageModalVisible: boolean;
@@ -17,17 +20,25 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isLanguageModalVisible, s
     const {t} = useTranslation();
     const currentLanguage = i18next.language;
 
-    const saveChanges = async () => {
+    const {internetConnected} = useContext(GlobalContext);
 
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const userInfoCollectionRef = collection(userDocRef, 'user_info');
-        const userLanguageDocRef = doc(userInfoCollectionRef, 'language');
+    const saveChanges = async () => {
 
         // change the value of userLanguageDocRef to the selected language
         if (selectedLanguage) {
             setIsLanguageModalVisible(false);
-            setDoc(userLanguageDocRef, { language: selectedLanguage });
+
+            if (internetConnected) {
+
+                const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+                const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+                const userInfoCollectionRef = collection(userDocRef, 'user_info');
+                const userLanguageDocRef = doc(userInfoCollectionRef, 'language');
+
+                setDoc(userLanguageDocRef, { language: selectedLanguage });
+            }
+
+            AsyncStorage.setItem(`language_${await getEmail()}`, selectedLanguage);
             i18next.changeLanguage(selectedLanguage);
         }else{
             setIsLanguageModalVisible(false);
