@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Pressable } from 'react-native';
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import tw from "twrnc";
 import { CurrentNutrients, GoalNutrients } from '../../interfaces';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -15,6 +15,7 @@ import { Food } from '../../interfaces';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
 import generateID from '../use/useGenerateID';
+import GlobalContext from '../../GlobalContext';
 
 const FoodDay = ({route, navigation}: any) => {
 
@@ -126,6 +127,8 @@ const FoodDay = ({route, navigation}: any) => {
 
     const {t} = useTranslation();
 
+    const {internetConnected} = useContext(GlobalContext)
+
     return (
         <SafeAreaView style={tw`flex-1 bg-white`}>
 
@@ -158,6 +161,7 @@ const FoodDay = ({route, navigation}: any) => {
                 navigation={navigation} 
                 foodDayDate={date}
                 clearDay={clearDay}
+                internetConnected={internetConnected}
             />
 
         </SafeAreaView>

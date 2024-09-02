@@ -15,8 +15,6 @@ const FoodInfo = ({route}: any) => {
 
     const {food, date, unformattedDate} = route.params;
 
-    const {internetConnected} = useContext(GlobalContext)
-
     const calories = food?.calories ?? 0;
     const protein = Number(food?.protein ?? 0).toFixed(0);
     const carbs = Number(food?.carbs ?? 0).toFixed(0);
@@ -99,7 +97,7 @@ const FoodInfo = ({route}: any) => {
                 
             </View>
             
-            <BottomNavigationBar currentPage='FoodInfo' navigation={navigation} deleteFood={removeFood} internetConnected={internetConnected}/>
+            <BottomNavigationBar currentPage='FoodInfo' navigation={navigation} deleteFood={removeFood}/>
         </View>
     )
 }
