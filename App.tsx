@@ -33,6 +33,7 @@ import checkReceiveFriendRequestsLocally from './app/use/useCheckReceiveFriendRe
 import checkFaceIdEnabledLocally from './app/use/useCheckFaceIdEnabledLocally';
 import checkForBiometricsLocally from './app/use/checkForBiometricsLocally';
 import EmailNotVerified from './app/screens/EmailNotVerified';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Stack = createStackNavigator();
 
@@ -112,8 +113,6 @@ const App = () => {
             console.log(auth);
         } else {
             console.log('Authentication failed or cancelled');
-            
-            
         }
     };
 
@@ -126,7 +125,6 @@ const App = () => {
         );
     }
 
-    const [isBiometricSupported, setIsBiometricSupported] = useState(false);
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const {t} = useTranslation();
@@ -135,39 +133,36 @@ const App = () => {
     const [loading, setLoading] = useState(false);
     const [setupRan, setSetupRan] = useState(false);
     const [checkingSetup, setCheckingSetup] = useState(true);
+    const [goalNutrients, setGoalNutrients] = useState<GoalNutrients | null>(null);
     const [profilePicture, setProfilePicture] = useState('');
     const [friendRequestsNumber, setFriendRequestsNumber] = useState("");
     const [receiveFriendRequests, setReceiveFriendRequests] = useState(false);
     const [faceIdEnabled, setFaceIdEnabled] = useState(false);
+    const [lastSyncTime, setLastSyncTime] = useState(0)
 
     const [isConnected, setIsConnected] = useState(false)
 
     const [isEmailVerified, setIsEmailVerified] = useState(false);
+    const [localEmail, setLocalEmail] = useState<string | null>(null);
 
     const fetchData = async () => {
         try {
-    
-            //const setupHasRan = await checkUserInfoCollection(userInfoCollectionRef);
-            //setSetupRan(setupHasRan);
+            const setupHasRanLocally = await checkUserInfoCollectionLocally();
+            setSetupRan(setupHasRanLocally);
 
-            const setupHasRanLocally = await checkUserInfoCollectionLocally();//
-            setSetupRan(setupHasRanLocally)//
-
-            //checkLanguageDocument(userInfoCollectionRef);
-            checkLanguageDocumentLocally();//
+            checkLanguageDocumentLocally();
             
             let profilePic = null;
             let friendRequests = 0;
 
             if (isConnected) {
-                profilePic = await getProfilePicture();//
-                friendRequests = await getFriendRequests();//
+                profilePic = await getProfilePicture();
+                friendRequests = await getFriendRequests();
             }
             
-            const receiveFriendRequests = await checkReceiveFriendRequestsLocally();//
-            const isFaceIdEnabled = await checkFaceIdEnabledLocally();//
+            const receiveFriendRequests = await checkReceiveFriendRequestsLocally();
+            const isFaceIdEnabled = await checkFaceIdEnabledLocally();
     
-            // Batch state updates to avoid multiple re-renders
             setProfilePicture(profilePic || '');
             setFriendRequestsNumber(friendRequests <= 9 ? friendRequests.toString() : "9+" || 0);
             setReceiveFriendRequests(receiveFriendRequests);
@@ -181,20 +176,23 @@ const App = () => {
         }
     };
 
-    useEffect(() => {
-        const netListener = NetInfo.addEventListener(state => {
-            setIsConnected(state.isConnected ?? false);
-            //setIsConnected(false)
-        });
-    
-        netListener();
-        
-        const fetch = async () => {
-            if (!isConnected) {
+    const checkLocalEmail = async () => {
+        try {
+            const email = await AsyncStorage.getItem('email');
+            setLocalEmail(email);
+        } catch (error) {
+            console.error("Error checking local email:", error);
+        }
+    };
+
+    const userLoggedIn = async (user: any) => {
+
+        try {
+            if (user) {
+                setIsEmailVerified(user.emailVerified);
 
                 if (await checkForBiometricsLocally()) {
                     const compatible = await LocalAuthentication.hasHardwareAsync();
-                    setIsBiometricSupported(compatible);
 
                     if (compatible) {
                         await onAuthenticate();
@@ -203,75 +201,92 @@ const App = () => {
                     setIsAuthenticated(true);
                 }
 
-                await fetchData();
-
-                setLoading(false);
-                setCheckingSetup(false);
-                console.log('No internet connection');
-                
-                return;
-            }
-        }
-        fetch();
-        
-        console.log('Connected to the internet');
-        const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
-            setUser(user);
-    
-            try {
-                if (user) {
-                    setIsEmailVerified(user.emailVerified);
-    
-                    if (await checkForBiometricsLocally()) {
-                        const compatible = await LocalAuthentication.hasHardwareAsync();
-                        setIsBiometricSupported(compatible);
-    
-                        if (compatible) {
-                            await onAuthenticate();
-                        }
-                    } else {
-                        setIsAuthenticated(true);
-                    }
-    
-                    if (user.emailVerified) {
-                        setLoading(true);
-                        await fetchData();
-                    } else {
-                        setLoading(false);
-                        setCheckingSetup(false);
-                    }
+                if (user.emailVerified) {
+                    setLoading(true);
+                    await fetchData();
                 } else {
                     setLoading(false);
                     setCheckingSetup(false);
                 }
-            } catch (error) {
-                if (error == '[FirebaseError: Function doc() cannot be called with an empty path.]') {
-                    console.log('No user is logged in');
-                }
+            } else {
                 setLoading(false);
                 setCheckingSetup(false);
             }
+        } catch (error) {
+            if (error == '[FirebaseError: Function doc() cannot be called with an empty path.]') {
+                console.log('No user is logged in');
+            }
+            setLoading(false);
+            setCheckingSetup(false);
+        }
+
+    }
+
+    const userNotLoggedIn = async () => {
+        if (await checkForBiometricsLocally()) {
+            const compatible = await LocalAuthentication.hasHardwareAsync();
+
+            if (compatible) {
+                await onAuthenticate();
+            }
+        } else {
+            setIsAuthenticated(true);
+        }
+
+        setLoading(true);
+        await fetchData();
+    }
+
+    useEffect(() => {
+        const initializeApp = async () => {
+            await checkLocalEmail();
+    
+            //const netInfo = await NetInfo.fetch();
+            //setIsConnected(netInfo.isConnected ?? false);
+
+            const netInfo = { isConnected: false };
+            setIsConnected(netInfo.isConnected);
+
+            console.log(`Network status: ${netInfo.isConnected ? 'Online' : 'Offline'}`);
+          
+
+            if (netInfo.isConnected) {
+                const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
+                    setUser(user);
+                    userLoggedIn(user);
+                });
+    
+                return () => unsubscribe();
+            } else {
+                userNotLoggedIn();
+            }
+        };
+    
+        initializeApp();
+    
+        const netListener = NetInfo.addEventListener(state => {
+            setIsConnected(state.isConnected ?? false);
+            // Debug log for real-time network status updates
+            console.log(`Real-time Network status: ${state.isConnected ? 'Online' : 'Offline'}`);
         });
     
-        return () => unsubscribe();
-    }, [isConnected]);
-    
-    // Timer code
+        return () => netListener();
+    }, []);
+
     useEffect(() => {
         const interval = setInterval(async () => {
             if (user && !isEmailVerified) {
-                // Timer logic here
+                await user.reload();
+                setIsEmailVerified(user.emailVerified);
             }
-        }, 1000);
-    
+        }, 1000); 
+
         return () => clearInterval(interval);
-    }, [user, isEmailVerified]);
-    
+    }, [user, isEmailVerified, isConnected]);
 
     if (loading || checkingSetup) {
         return (
             <View style={tw`flex-1 justify-center items-center bg-red-500`}>
-
                 <LottieView
                     style={{ width: 350, height: 350 }}
                     source={require('./assets/loading_plane.json')}
@@ -279,17 +294,15 @@ const App = () => {
                     autoPlay
                     loop
                 />
-
                 <View style={tw`flex flex-row`}>
                     <Text style={tw`text-2xl font-bold text-white mt-4`}>{t('loading')}</Text>
-
                     <LottieView
-                            style={tw`w-24 h-24 mt-[-6px] ml-[-22px]`}
-                            source={require('./assets/loading_animation_white_dots.json')}
-                            speed={0.8}
-                            autoPlay
-                            loop
-                        />
+                        style={tw`w-24 h-24 mt-[-6px] ml-[-22px]`}
+                        source={require('./assets/loading_animation_white_dots.json')}
+                        speed={0.8}
+                        autoPlay
+                        loop
+                    />
                 </View>
             </View>
         );
@@ -299,22 +312,22 @@ const App = () => {
         <GlobalContext.Provider value={{
             setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber,
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
-            internetConnected: isConnected
+            internetConnected: isConnected, lastSyncTime, setLastSyncTime
         }}>
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />
                 <NavigationContainer>
-                    {
-                       
-                        user ? 
+                    {   
+                        localEmail ? 
                         (
-                            setupRan && isAuthenticated ? <AuthenticatedTabNavigator /> : 
+                            isConnected ? 
+                            (setupRan && isAuthenticated ? <AuthenticatedTabNavigator setupRan={setupRan} /> : 
                             setupRan && !isAuthenticated ? <BiometricsFailed /> :
                             !isEmailVerified ? <EmailNotVerified /> :
-                            <SetupPage />
+                            <SetupPage />) :
+                            <AuthenticatedTabNavigator setupRan={setupRan} />
                         ) : 
                         <UnauthenticatedTabNavigator />
-                        
                     }
                 </NavigationContainer>
             </GestureHandlerRootView>

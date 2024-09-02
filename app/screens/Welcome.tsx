@@ -9,7 +9,10 @@ const Welcome = ({navigation}: any) => {
 
     // set the language to english 
     const {t} = useTranslation();
-    i18next.changeLanguage('en');
+    
+    useEffect(() => {
+        i18next.changeLanguage("en");
+    }, [])
 
     return (
         <SafeAreaView style={tw`flex-1 h-full w-full bg-white`}>

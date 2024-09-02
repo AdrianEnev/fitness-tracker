@@ -29,7 +29,7 @@ i18next
   .init({
     compatibilityJSON: 'v3',
     lng: "en",
-    fallbackLng: "bg",
+    fallbackLng: "en",
     resources: languageResources,
   });
 

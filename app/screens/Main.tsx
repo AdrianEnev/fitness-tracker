@@ -38,74 +38,69 @@ const Main = ({navigation}: any) => {
 
     const { t } = useTranslation();
 
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const userInfoCollectionRef = collection(userDocRef, 'user_info');
-    const foodDaysCollectionRef = collection(userDocRef, 'food_days');
-
-    const { internetConnected } = useContext(GlobalContext);
+    const { internetConnected, setLastSyncTime, lastSyncTime } = useContext(GlobalContext);
 
     const [currentFormattedDate, setCurrentFormattedDate] = useState<any>();
     const {friendRequestsNumber} = useContext(GlobalContext);
 
     const [username, setUsername] = useState<string | null>(null);
-    
-    const getUsername = async () => {
-        const email = await getEmail()
+
+    const getUsernameLocally = async () => {
+        const email = await getEmail();
 
         const AsyncStorageUsername = await AsyncStorage.getItem(`username_${email}`);
         setUsername(AsyncStorageUsername);
     }
 
-    useFocusEffect(
-        React.useCallback(() => {
+    useEffect(() => {
+        getUsernameLocally();
+        getLanguageLocally();
+        
+        const currentDate = getCurrentDate(false);
+        const formattedDate = {
+            dateString: currentDate,
+            day: parseInt(currentDate.split('-')[0]),
+            month: parseInt(currentDate.split('-')[1]),
+            year: parseInt(currentDate.split('-')[2]),
+            timestamp: Date.now()
+        }
 
-            getUsername();
-            getLanguageLocally();
-            
-            const currentDate = getCurrentDate(false);
-            const formattedDate = {
-                dateString: currentDate,
-                day: parseInt(currentDate.split('-')[0]),
-                month: parseInt(currentDate.split('-')[1]),
-                year: parseInt(currentDate.split('-')[2]),
-                timestamp: Date.now()
-            }
+        setCurrentFormattedDate(formattedDate)
 
-            setCurrentFormattedDate(formattedDate)
+        const now = Date.now();
+        if (internetConnected && (now - lastSyncTime > 5000)) {
+            updateCurrentNutrients();
+            syncWorkouts();
+            syncSavedWorkouts();
+            syncNutrients();
+            setLastSyncTime(now);
+        }
+       
+         // console log all asyncstorage items
+        /*AsyncStorage.getAllKeys().then(keys => {
+            console.log(keys)
+            return AsyncStorage.multiGet(keys)
+        }).then(keyValue => {
+                console.log(keyValue)
+        })*/
 
-            if (internetConnected) {
-                updateCurrentNutrients();
-                syncWorkouts();
-                syncSavedWorkouts();
-                syncNutrients();
-            }
-
-            
-             // console log all asyncstorage items
-            /*AsyncStorage.getAllKeys().then(keys => {
-                console.log(keys)
-                return AsyncStorage.multiGet(keys)
-            }).then(keyValue => {
-                    console.log(keyValue)
-            })*/
-
-            // clear all asyncstorage items
-            /*AsyncStorage.clear().then(() => {
-                console.log('cleared')
-            })*/
-
-            
-        }, [])
-    );
+        // clear all asyncstorage items
+        /*AsyncStorage.clear().then(() => {
+            console.log('cleared')
+        })*/
+    }, [internetConnected, lastSyncTime])
 
     // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk
     let [currentNutrients, setCurrentNutrients] = useState<GoalNutrients[]>([]);
 
     const updateCurrentNutrients = async () => {
+         
         try {
+            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+            const foodDaysCollectionRef = collection(userDocRef, 'food_days');
             const data = await getDocs(foodDaysCollectionRef);
-            const ids = data.docs.map((doc) => doc.id);
+            //const ids = data.docs.map((doc) => doc.id);
             
             const matchingDoc = data.docs.find((doc) => doc.id === getCurrentDate(false));
             if (matchingDoc) {

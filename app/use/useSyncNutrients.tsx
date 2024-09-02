@@ -35,7 +35,7 @@ const syncNutrients = async () => {
         await setDoc(nutrientsDocRef, parsedLocalNutrients, { merge: true });
         console.log('Nutrients synced');
     } else {
-        console.log('No nutrients to sync');
+        //console.log('No nutrients to sync');
     }
 };
 

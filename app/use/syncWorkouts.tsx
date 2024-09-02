@@ -72,7 +72,7 @@ const syncWorkouts = async () => {
 
         console.log('Workouts synced');
     } else {
-        console.log('No workouts to sync');
+        //console.log('No workouts to sync');
     }
 };
 
