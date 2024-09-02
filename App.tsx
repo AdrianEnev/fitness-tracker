@@ -96,10 +96,24 @@ const UnauthenticatedTabNavigator = () => (
                 headerShown: false,
             }}
         />
+        <Stack.Screen
+            name="Непотвърден-Имейл"
+            component={EmailNotVerified}
+            options={{
+                headerShown: false,
+                gestureEnabled: false,
+            }}
+        />
+
+
     </Stack.Navigator>
 );
 
 const App = () => {
+
+    const clearAsyncStorage = async () => {
+        await AsyncStorage.clear();
+    }
 
     const onAuthenticate = async () => {
         const auth = await LocalAuthentication.authenticateAsync({
@@ -133,12 +147,12 @@ const App = () => {
     const [loading, setLoading] = useState(false);
     const [setupRan, setSetupRan] = useState(false);
     const [checkingSetup, setCheckingSetup] = useState(true);
-    const [goalNutrients, setGoalNutrients] = useState<GoalNutrients | null>(null);
     const [profilePicture, setProfilePicture] = useState('');
     const [friendRequestsNumber, setFriendRequestsNumber] = useState("");
     const [receiveFriendRequests, setReceiveFriendRequests] = useState(false);
     const [faceIdEnabled, setFaceIdEnabled] = useState(false);
     const [lastSyncTime, setLastSyncTime] = useState(0)
+    const [isAccountDeleted, setIsAccountDeleted] = useState(false);
 
     const [isConnected, setIsConnected] = useState(false)
 
@@ -186,21 +200,20 @@ const App = () => {
     };
 
     const userLoggedIn = async (user: any) => {
-
         try {
             if (user) {
                 setIsEmailVerified(user.emailVerified);
-
+    
                 if (await checkForBiometricsLocally()) {
                     const compatible = await LocalAuthentication.hasHardwareAsync();
-
+    
                     if (compatible) {
                         await onAuthenticate();
                     }
                 } else {
                     setIsAuthenticated(true);
                 }
-
+    
                 if (user.emailVerified) {
                     setLoading(true);
                     await fetchData();
@@ -215,12 +228,13 @@ const App = () => {
         } catch (error) {
             if (error == '[FirebaseError: Function doc() cannot be called with an empty path.]') {
                 console.log('No user is logged in');
+            } else {
+                console.log(error);
             }
             setLoading(false);
             setCheckingSetup(false);
         }
-
-    }
+    };
 
     const userNotLoggedIn = async () => {
         if (await checkForBiometricsLocally()) {
@@ -241,15 +255,11 @@ const App = () => {
         const initializeApp = async () => {
             await checkLocalEmail();
     
-            //const netInfo = await NetInfo.fetch();
-            //setIsConnected(netInfo.isConnected ?? false);
-
-            const netInfo = { isConnected: false };
-            setIsConnected(netInfo.isConnected);
-
+            const netInfo = await NetInfo.fetch();
+            setIsConnected(netInfo.isConnected ?? false);
+    
             console.log(`Network status: ${netInfo.isConnected ? 'Online' : 'Offline'}`);
-          
-
+    
             if (netInfo.isConnected) {
                 const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
                     setUser(user);
@@ -266,7 +276,6 @@ const App = () => {
     
         const netListener = NetInfo.addEventListener(state => {
             setIsConnected(state.isConnected ?? false);
-            // Debug log for real-time network status updates
             console.log(`Real-time Network status: ${state.isConnected ? 'Online' : 'Offline'}`);
         });
     
@@ -312,7 +321,7 @@ const App = () => {
         <GlobalContext.Provider value={{
             setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber,
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
-            internetConnected: isConnected, lastSyncTime, setLastSyncTime
+            internetConnected: isConnected, lastSyncTime, setLastSyncTime, isAccountDeleted, setIsAccountDeleted
         }}>
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />
@@ -321,7 +330,8 @@ const App = () => {
                         localEmail ? 
                         (
                             isConnected ? 
-                            (setupRan && isAuthenticated ? <AuthenticatedTabNavigator setupRan={setupRan} /> : 
+                            (isAccountDeleted ? <UnauthenticatedTabNavigator /> :
+                            setupRan && isAuthenticated ? <AuthenticatedTabNavigator setupRan={setupRan} /> : 
                             setupRan && !isAuthenticated ? <BiometricsFailed /> :
                             !isEmailVerified ? <EmailNotVerified /> :
                             <SetupPage />) :

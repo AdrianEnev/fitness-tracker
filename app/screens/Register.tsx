@@ -9,15 +9,16 @@ import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
 import GlobalContext from '../../GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { checkUserDocument } from '../use/useCheckUserInfo';
+import EmailNotVerified from './EmailNotVerified';
 
-const Register = () => {
+const Register = ({navigation}: any) => {
 
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const {internetConnected} = useContext(GlobalContext);
+    const {internetConnected, setIsAccountDeleted} = useContext(GlobalContext);
 
     const auth = FIREBASE_AUTH;
 
@@ -79,7 +80,8 @@ const Register = () => {
     
         try {
             const after = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
-    
+            setIsAccountDeleted(false)
+
             const usersCollectionRef = collection(FIRESTORE_DB, 'users');
             const userDocRef = doc(usersCollectionRef, after.user.uid);
             const userInfoCollectionRef = collection(userDocRef, 'user_info');
@@ -93,7 +95,9 @@ const Register = () => {
 
             // send email verification
             sendEmailVerification(after.user);
-            await checkUserDocument(userDocRef, after.user, userInfoCollectionRef);
+            checkUserDocument(userDocRef, after.user, userInfoCollectionRef);
+            navigation.navigate('Непотвърден-Имейл')
+
         } catch(err: any) {
             console.log('error', err)
         }

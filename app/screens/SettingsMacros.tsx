@@ -16,15 +16,8 @@ interface Nutrient {
 }
 
 const Settings = ({navigation}: any) => {
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const userInfoCollectionRef = collection(userDocRef, 'user_info');
-    const nutrientsDocRef = doc(userInfoCollectionRef, 'nutrients');
 
-    const [nutrients, setNutrients] = useState<Record<string, number>>({});
     const [tempNutrients, setTempNutrients] = useState<Record<string, number>>({});
-
-    const {internetConnected} = useContext(GlobalContext)
 
     /*const updateNutrients = async () => {
         try {
@@ -46,7 +39,6 @@ const Settings = ({navigation}: any) => {
             const localNutrients = await AsyncStorage.getItem(`goal_nutrients_${await getEmail()}`);
             if (localNutrients) {
                 const parsedLocalNutrients = JSON.parse(localNutrients);
-                setNutrients(parsedLocalNutrients);
                 setTempNutrients(parsedLocalNutrients);
             }
         } catch (error) {
@@ -62,21 +54,12 @@ const Settings = ({navigation}: any) => {
     };
 
     const saveNutrients = async () => {
-
-        if (internetConnected) {
-            try {
-                await setDoc(nutrientsDocRef, tempNutrients, { merge: true });
-                setNutrients(tempNutrients); 
-                navigation.goBack();
-            } catch (err) {
-                console.error(err);
-            } 
-        }
         
         // save nutrients locally (nqma nujda da proverqvam dali sa razlichni ot predi shtoto taka ili inache otnema suvsem malko vreme da se savenat)
         try {
             const jsonNutrients = JSON.stringify(tempNutrients);
             await AsyncStorage.setItem(`goal_nutrients_${FIREBASE_AUTH.currentUser?.email}`, jsonNutrients);
+            navigation.navigate('Настройки-Страница');
             console.log('saved successfuly (locally)')
         } catch (error) {
             console.log('Error saving nutrients to AsyncStorage:', error);
@@ -85,10 +68,7 @@ const Settings = ({navigation}: any) => {
     };
 
     useEffect(() => {
-        const unsubscribe = onSnapshot(userInfoCollectionRef, () => {
-            updateNutrientsLocally();
-        });
-        return () => unsubscribe(); // Cleanup the listener on component unmount
+        updateNutrientsLocally();
     }, []);
 
     const nutrientBox = (value: string, title: string) => (

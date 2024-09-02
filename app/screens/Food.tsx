@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native'
+import { View, Text, Vibration } from 'react-native'
 import React, { useState, useEffect, useContext } from 'react'
 import tw from 'twrnc'
 import { bgLocaleConfig, deLocaleConfig, enLocaleConfig, frLocaleConfig, ruLocaleConfig } from "../../CalendarConfig";
@@ -65,26 +65,21 @@ const Food = ({navigation}: any) => {
 
             <View style={tw`bg-white`}>
 
-                {internetConnected ? (
-                    <CalendarList 
-                        key={renderKey}
-                        horizontal={false}
-                        pagingEnabled={false}
-                        pastScrollRange={6}
-                        futureScrollRange={6}
-                        scrollEnabled={true}
-                        onDayPress={(day: any) => {
-                            navigation.navigate("Хранене-Ден", {date: day});
-                        }}
-                        markedDates={{
-                            [currentDate]: {selected: true, selectedColor: '#fd3e6b', textColor: 'white'},
-                        }}
-                    />
-                ) : 
-                    <View style={tw`w-full h-full flex justify-center items-center`}>
-                        <Text>Tracking your meals requires a stable internet connection</Text>
-                    </View>
-                }
+                <CalendarList 
+                    key={renderKey}
+                    horizontal={false}
+                    pagingEnabled={false}
+                    pastScrollRange={6}
+                    futureScrollRange={6}
+                    scrollEnabled={true}
+                    onDayPress={(day: any) => {
+                        navigation.navigate("Хранене-Ден", {date: day});
+                    }}
+                    markedDates={{
+                        [currentDate]: {selected: true, selectedColor: '#fd3e6b', textColor: 'white'},
+                    }}
+                />
+                
 
             </View>
             

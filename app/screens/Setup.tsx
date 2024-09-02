@@ -1,7 +1,5 @@
 import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, Pressable, TouchableOpacity, FlatList, ScrollView } from 'react-native'
 import React, { useState, useEffect } from 'react'
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from "twrnc";
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
@@ -9,7 +7,6 @@ import { useRoute } from '@react-navigation/native';
 import { useContext } from 'react';
 import GlobalContext from '../../GlobalContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import getLanguage from '../use/useGetLanguage';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import SetupPageOne from '../setupComponents/SetupPageOne';
 import SetupPageTwo from '../setupComponents/SetupPageTwo';
@@ -19,20 +16,16 @@ import SetupPageFive from '../setupComponents/SetupPageFive';
 //import ScrollPicker from "react-native-wheel-scrollview-picker";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
+import { getLanguageLocally } from '../use/useGetLanguageLocally';
 
-const Setup = ({route}: any) => {
+const Setup = () => {
 
     const { setSetupRan, internetConnected } = useContext(GlobalContext);
-
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const userInfoCollectionRef = collection(userDocRef, 'user_info');
-    const nutrientsDocRef = doc(userInfoCollectionRef, 'nutrients')
 
     const { t } = useTranslation();
 
     useEffect(() => {
-        getLanguage(userInfoCollectionRef);
+        getLanguageLocally();
     }, [])
 
     const [currentPage, setCurrentPage] = useState(1)
@@ -110,7 +103,6 @@ const Setup = ({route}: any) => {
 
             const initBMR = (10 * w) + (6.25 * h) - (5 * a) + 5;
             const finalBMR = Math.round(initBMR * additionalCalories);
-            setBMR(finalBMR);
 
             return finalBMR
             
@@ -139,7 +131,6 @@ const Setup = ({route}: any) => {
 
             const initBMR = (10 * w) + (6.25 * h) - (5 * a) - 161;
             const finalBMR = Math.round(initBMR * additionalCalories);
-            setBMR(finalBMR);
 
             return finalBMR
         }
@@ -147,6 +138,10 @@ const Setup = ({route}: any) => {
     }
 
     const finishSetup = async () => {
+
+        if (activityLevel == 0) {
+            return
+        }
 
         console.log('finishing setup')
 
@@ -178,10 +173,6 @@ const Setup = ({route}: any) => {
             console.log('Error saving nutrients to AsyncStorage:', error);
         }
 
-        if (internetConnected) {
-            await setDoc(nutrientsDocRef, nutrients, { merge: true });
-        }
-
         console.log('setup ran')
         
         setSetupRan(true);
@@ -208,7 +199,6 @@ const Setup = ({route}: any) => {
     const [heightType, setHeightType] = useState('CM');
     const [height, setHeight] = useState(170);
 
-    const [BMR, setBMR] = useState(0);
     const [activityLevel, setActivityLevel] = useState(0)
     //const [additionalCalories, setAdditionalCalories] = useState(0);
 

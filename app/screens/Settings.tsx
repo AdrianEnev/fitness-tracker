@@ -17,11 +17,6 @@ const Settings = ({navigation}: any) => {
 
     const { friendRequestsNumber } = useContext(GlobalContext);
 
-    // opciq za smenq na ezika koqto zadava neshto v bazata danni i ot tam se izvlicha ezikut za cqlata aplikaciq
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const userInfoCollectionRef = collection(userDocRef, 'user_info');
-
     const { t } = useTranslation();
 
     /*const changeLanguage = async (language: string) => {

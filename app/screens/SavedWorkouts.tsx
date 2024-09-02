@@ -13,26 +13,8 @@ import getSavedWorkoutInfoLocally from '../use/useGetSavedWorkoutInfoLocally';
 
 const Workouts = ({navigation}: any) => {
 
-    const usersCollectionRef = collection(FIRESTORE_DB, "users");
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const userSavedWorkoutsCollectionRef = collection(userDocRef, "saved_workouts");
-
     const [savedWorkouts, setSavedWorkouts] = useState<Workout[]>([]);
     const [viewWorkoutButtonDisabled, setViewWorkoutButtonDisabled] = useState(false);
-
-    const getWorkouts = async () => {
-        try {
-
-            const q = query(userSavedWorkoutsCollectionRef, orderBy("created", "desc"));
-            const data = await getDocs(q);
-
-            const filteredData: Workout[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Workout));
-
-            setSavedWorkouts(filteredData);
-        } catch (err) {
-            console.error(err);
-        }
-    };
 
     const getWorkoutsLocally = async () => {
         try {
@@ -61,33 +43,11 @@ const Workouts = ({navigation}: any) => {
         }
     };
 
-    const clearAllLocalSavedWorkouts = async () => {
-        try {
-            await AsyncStorage.removeItem('savedWorkouts');
-            setSavedWorkouts([]);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
     useEffect(() => {
-        onSnapshot(userSavedWorkoutsCollectionRef, (_snapshot) => {
-            //getWorkouts();
-        });
-
-        //clearAllLocalSavedWorkouts();
+        
         getWorkoutsLocally();
         
     }, [])
-
-    /*const deleteWorkout = async (id: string) => {
-        const workoutDocRef = doc(userSavedWorkoutsCollectionRef, id);
-        try {
-            await deleteDoc(workoutDocRef);
-        } catch (err) {
-            console.error("Error deleting document: ", err);
-        }
-    }*/
 
     const viewWorkout = async (workout: Workout, date: any, time: any) => {
 

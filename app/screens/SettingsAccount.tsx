@@ -20,7 +20,7 @@ const SettingsAccount = ({navigation}: any) => {
 
     const 
     { receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled, internetConnected,
-        setProfilePicture, setSetupRan, setGoalNutrients } = useContext(GlobalContext);
+        setProfilePicture, setSetupRan, setIsAccountDeleted } = useContext(GlobalContext);
 
     const logOut = () => {
 
@@ -331,7 +331,8 @@ const SettingsAccount = ({navigation}: any) => {
                         const auth = getAuth();
                         const user = auth.currentUser;
                         
-                        deleteAccount(email, user, setProfilePicture, setSetupRan, setGoalNutrients, setReceiveFriendRequests, setFaceIdEnabled)
+                        deleteAccount(email, user, setProfilePicture, setSetupRan, setIsAccountDeleted)
+                        
                     }else{
                         Vibration.vibrate()
                     }

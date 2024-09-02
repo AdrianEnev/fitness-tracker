@@ -9,7 +9,6 @@ import { useFocusEffect } from '@react-navigation/native';
 
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import getLanguage from '../use/useGetLanguage';
 
 import getCurrentDate from '../use/useGetCurrentDate';
 
@@ -68,7 +67,7 @@ const Main = ({navigation}: any) => {
         setCurrentFormattedDate(formattedDate)
 
         const now = Date.now();
-        if (internetConnected && (now - lastSyncTime > 5000)) {
+        if (!internetConnected && (now - lastSyncTime > 5000)) {
             updateCurrentNutrients();
             syncWorkouts();
             syncSavedWorkouts();

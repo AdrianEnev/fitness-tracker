@@ -46,7 +46,7 @@ const removeReceivedRequests = async (user: any) => {
     }));
 }
 
-const deleteAccount = async (email: any, user: any, setProfilePicture: any, setSetupRan: any, setGoalNutrients: any, setReceiveFriendRequests: any, setFaceIdEnabled: any) => {
+const deleteAccount = async (email: any, user: any, setProfilePicture: any, setSetupRan: any, setIsAccountDeleted: any) => {
     
 
     Alert.prompt(
@@ -61,20 +61,21 @@ const deleteAccount = async (email: any, user: any, setProfilePicture: any, setS
                 text: 'Изтриване',
                 style: 'destructive',
                 onPress: (password: string | undefined) => {
-                    reauthenticateAndDelete(password, setProfilePicture, setSetupRan, setGoalNutrients, setReceiveFriendRequests, setFaceIdEnabled);
+                    reauthenticateAndDelete(password, setProfilePicture, setSetupRan, setIsAccountDeleted);
                 },
             },
         ],
         'secure-text'
     );
 
-    const reauthenticateAndDelete = (password: string | undefined, setProfilePicture: any, setSetupRan: any, setGoalNutrients: any, setReceiveFriendRequests: any, setFaceIdEnabled: any) => {
+    const reauthenticateAndDelete = (password: string | undefined, setProfilePicture: any, setSetupRan: any, setIsAccountDeleted: any) => {
         if (email && password && user) {
             const credentials = EmailAuthProvider.credential(email, password);
             reauthenticateWithCredential(user, credentials).then(async () => {
                 if (user) {
                     deleteUser(user).then(() => {
                         FIREBASE_AUTH.signOut();
+                        setIsAccountDeleted(true)
                     }).catch((error: any) => {
                         console.log(error);
                     });
@@ -93,8 +94,9 @@ const deleteAccount = async (email: any, user: any, setProfilePicture: any, setS
                     deleteObject(desertRef).then(() => {
                         console.log("File deleted successfully");
                     }).catch((error) => {
-                        console.log("Uh-oh, an error occurred!"); 
-                        console.log(error)
+                        if (error !== "[FirebaseError: Firebase Storage: Object 'users/undefined/profile_picture' does not exist. (storage/object-not-found)]"){
+                            console.log(error)
+                        }
                     });
 
                     const asyncStorageEmail = await getEmail()
@@ -108,6 +110,7 @@ const deleteAccount = async (email: any, user: any, setProfilePicture: any, setS
                     // Reset GlobalContext to default values
                     setProfilePicture('');
                     setSetupRan(false);
+                    
                 }
             }).catch((error) => {
                 console.log(error);
