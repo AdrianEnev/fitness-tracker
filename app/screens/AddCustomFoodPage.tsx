@@ -1,26 +1,17 @@
 import { View, Text, TouchableWithoutFeedback, Button, Keyboard, TextInput } from 'react-native'
 import React, { useState } from 'react'
 import tw from "twrnc"
-import { addDoc, collection, doc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
-import { Food } from '../../interfaces';
-import i18next from '../../services/i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import getEmail from '../use/useGetEmail';
 
 const AddCustomFoodPage = ({navigation, route}: any) => {
 
-    
     const { t } = useTranslation();
 
     const { date } = route.params;
-
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const foodDaysCollectionRef = collection(userDocRef, 'food_days');
-    const foodDayDocRef = doc(foodDaysCollectionRef, `${date.day}-${date.month}-${date.year}`);
-    const foodDayCollectionRef = collection(foodDayDocRef, 'foods');
 
     const [name, setName] = useState("");
     const [calories, setCalories] = useState(0);
@@ -31,9 +22,11 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
 
     const updateCurrentNutrients = async () => {
         try {
-            const data = await getDocs(foodDayCollectionRef);
+            const email = await getEmail();
+            const storedData = await AsyncStorage.getItem(`${email}-foodDay-${date.day}-${date.month}-${date.year}`);
+            const data = storedData ? JSON.parse(storedData) : [];
 
-            if (data.empty) {
+            if (data.length === 0) {
                 // foodDayCollectionRef is empty
                 return;
             }
@@ -43,8 +36,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
             let totalCarbs = 0;
             let totalFat = 0;
 
-            data.forEach((doc) => {
-                const food = doc.data() as Food;
+            data.forEach((food: any) => {
                 totalCalories += food.calories || 0;
                 totalProtein += food.protein || 0;
                 totalCarbs += food.carbs || 0;
@@ -58,42 +50,35 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
                 fat: totalFat
             };
 
-            await updateDoc(foodDayDocRef, updatedNutrients);
+            await AsyncStorage.setItem(`${email}-foodDay-${date.day}-${date.month}-${date.year}-nutrients`, JSON.stringify(updatedNutrients));
         } catch (err) {
             console.error(err);
         }
     };
 
     const saveFood = async () => {
-
         if (!name) {
             return;
         }
-
-        console.log(name)
-        
-        const foodDayDocRef = doc(foodDaysCollectionRef, `${date.day}-${date.month}-${date.year}`);
-            
-        await setDoc(foodDayDocRef, {
-            calories: 0,
-            protein: 0,
-            carbs: 0,
-            fat: 0
-        })
-
-        const foodDayCollectionRef = collection(foodDayDocRef, 'foods');
-        
+    
+        const email = await getEmail();
+        const foodDayKey = `${email}-foodDay-${date.day}-${date.month}-${date.year}`;
+        const storedData = await AsyncStorage.getItem(foodDayKey);
+        const data = storedData ? JSON.parse(storedData) : [];
+    
         const documentInfo = {
             title: name.trim(),
-            date: serverTimestamp(),
+            date: new Date().toISOString(),
             calories: Math.round(calories),
             protein: Math.round(protein),
             carbs: Math.round(carbs),
             fat: Math.round(fat),
             grams: Math.round(grams)
         };
-
-        await addDoc(foodDayCollectionRef, documentInfo);
+    
+        data.push(documentInfo);
+        await AsyncStorage.setItem(foodDayKey, JSON.stringify(data));
+        console.log(`Data stored under key ${foodDayKey}:`, data); // Add this line
         updateCurrentNutrients();
         navigation.goBack();
     }

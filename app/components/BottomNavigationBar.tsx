@@ -23,7 +23,9 @@ const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) 
 
 const BottomNavigationBar = (
     {
-        currentPage, navigation, 
+        navigation, 
+        currentPage, 
+        internetConnected,
         forwardButton, backButton,
         deleteSavedWorkout, toggleEndWorkoutModal,
         foodDayDate, clearDay,
@@ -44,7 +46,7 @@ const BottomNavigationBar = (
         addActiveWorkoutExercise
     }: 
     {
-        currentPage: string, navigation: any,
+        currentPage: string, navigation: any, internetConnected?: boolean,
         forwardButton?: () => void, backButton?: () => void
         deleteSavedWorkout?: () => void, toggleEndWorkoutModal?: () => void,
         foodDayDate?: any, clearDay?: () => void,
@@ -160,7 +162,10 @@ const BottomNavigationBar = (
                         <Ionicons name="refresh-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
-                    <Pressable onPress={() => navigation.navigate("Храна-Потърси", { date: foodDayDate })}>
+                    <Pressable onPress={() => {
+                        if (!internetConnected) {return;}
+                        navigation.navigate("Храна-Потърси", { date: foodDayDate })
+                    }}>
                         <Ionicons name="search-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
                 </View>

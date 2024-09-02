@@ -4,7 +4,6 @@ import tw from 'twrnc'
 import { bgLocaleConfig, deLocaleConfig, enLocaleConfig, frLocaleConfig, ruLocaleConfig } from "../../CalendarConfig";
 import { CalendarList, LocaleConfig } from 'react-native-calendars';
 import i18next from '../../services/i18next';
-import GlobalContext from '../../GlobalContext';
 
 LocaleConfig.locales['bg'] = bgLocaleConfig;
 LocaleConfig.locales['en'] = enLocaleConfig;
@@ -17,8 +16,6 @@ const Food = ({navigation}: any) => {
 
     const [localeKey, setLocaleKey] = useState(i18next.language);
     const [renderKey, setRenderKey] = useState(Date.now());
-
-    const {internetConnected} = useContext(GlobalContext)
 
     useEffect(() => {
         const setLocale = (lng: any) => {

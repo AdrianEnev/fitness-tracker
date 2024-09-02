@@ -1,9 +1,7 @@
-import { View, Text, FlatList, Pressable } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import tw from "twrnc"
-import { GoalNutrients } from '../../interfaces'
-import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { View, Text, FlatList, Pressable } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import tw from "twrnc";
+import { CurrentNutrients, GoalNutrients } from '../../interfaces';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import RenderAddedFood from '../components/RenderAddedFood';
 import { useFocusEffect } from '@react-navigation/native';
@@ -16,10 +14,10 @@ import getCurrentDate from '../use/useGetCurrentDate';
 import { Food } from '../../interfaces';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
+import generateID from '../use/useGenerateID';
 
 const FoodDay = ({route, navigation}: any) => {
 
-    //{"dateString": "2024-06-19", "day": 19, "month": 6, "timestamp": 1718791193903, "year": 2024} -> example of what should be passed
     const { date } = route.params;
 
     const getDate = () => {
@@ -35,98 +33,97 @@ const FoodDay = ({route, navigation}: any) => {
     }
 
     let [currentFoods, setCurrentFoods] = useState<Food[]>([]);
+    let [currentNutrients, setCurrentNutrients] = useState<CurrentNutrients>({ calories: 0, protein: 0, carbs: 0, fat: 0, id: generateID() });
 
-    // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk 
-    // object
-    let [currentNutrients, setCurrentNutrients] = useState<GoalNutrients[]>([]);
-
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-
-    const foodDaysCollectionRef = collection(userDocRef, 'food_days');
-    const foodDayDocRef = doc(foodDaysCollectionRef, `${date.day}-${date.month}-${date.year}`);
-    const foodDayCollectionRef = collection(foodDayDocRef, 'foods');
-
-    // vzima vsichki hrani ot foodDayCollectionRef i gi podrejda spored data
     const updateCurrentFoods = async () => {
         try {
-            const data = await getDocs(foodDayCollectionRef);
 
-            let filteredData: Food[] = data.docs.map((doc) => ({ ...doc.data(), id: doc.id } as Food));
+            const email = await getEmail();
 
-            // ako ima pone 2 hrani togava sortira, inache nqma kakvo da se sortira zashtoto e samo 1
+            const storedFoods = await AsyncStorage.getItem(`${email}-foodDay-${date.day}-${date.month}-${date.year}`);
+            let filteredData: Food[] = storedFoods ? JSON.parse(storedFoods) : [];
+    
             if (filteredData.length > 1) {
                 filteredData = filteredData.sort((a, b) => b.date - a.date);
             }
-
+    
             setCurrentFoods(filteredData);
-            
+            console.log(`Data retrieved for key ${email}-foodDay-${date.day}-${date.month}-${date.year}:`, filteredData);
         } catch (err) {
             console.error(err);
         }
     }
 
-    
-    const updateCurrentNutrients = async () => {
-        try {
-            const data = await getDocs(foodDaysCollectionRef);
-            const ids = data.docs.map((doc) => doc.id);
-            
-            const matchingDoc = data.docs.find((doc) => doc.id === `${date.day}-${date.month}-${date.year}`);
-            if (matchingDoc) {
-                setCurrentNutrients(matchingDoc.data() as GoalNutrients[]);
-            }
+    const updateCurrentNutrients = () => {
+        let totalCalories = 0;
+        let totalProtein = 0;
+        let totalCarbs = 0;
+        let totalFat = 0;
 
-        } catch (err) {
-            console.error(err);
-        }
+        currentFoods.forEach(food => {
+            totalCalories += food.calories || 0;
+            totalProtein += food.protein || 0;
+            totalCarbs += food.carbs || 0;
+            totalFat += food.fat || 0;
+        });
+
+        setCurrentNutrients({
+            calories: totalCalories,
+            protein: totalProtein,
+            carbs: totalCarbs,
+            fat: totalFat,
+            id: generateID()
+        });
+
+        
     }
 
-    // runs when the screen is opened
+    useEffect(() => {
+        const fetchData = async () => {
+            await updateCurrentFoods();
+        };
+
+        fetchData();
+    }, [])
+
+    useEffect(() => {
+        updateCurrentNutrients();
+    }, [currentFoods]);
+
     useFocusEffect(
-        React.useCallback(() => {
-
-            const fetchData = async () => {
-                await updateCurrentFoods();
-                await updateCurrentNutrients();
-            };
-    
-            fetchData();
-            
-            return () => {
-                // Optional: You can do something when the screen is unfocused
-                // This function runs when the screen goes out of focus
-            };
+        useCallback(() => {
+            updateCurrentFoods();
         }, [])
     );
+
 
     const clearDay = async () => {
 
         if (currentFoods.length === 0) {
+            console.log('No foods to clear');
             return;
         }
 
-        try {
-            const data = await getDocs(foodDayCollectionRef);
-            data.docs.forEach(async (doc) => {
-                await deleteDoc(doc.ref);
-            });
 
-            const updatedNutrients = {
+        try {
+            const email = await getEmail();
+    
+            await AsyncStorage.removeItem(`${email}-foodDay-${date.day}-${date.month}-${date.year}`);
+    
+            await AsyncStorage.setItem(`${email}-nutrients-${date.day}-${date.month}-${date.year}`, JSON.stringify({
                 calories: 0,
                 protein: 0,
                 carbs: 0,
                 fat: 0
-            };
-
-            await updateDoc(foodDayDocRef, updatedNutrients);
-            updateCurrentFoods();
-            updateCurrentNutrients();
+            }));
+    
+            await updateCurrentFoods();
+            setCurrentNutrients({ calories: 0, protein: 0, carbs: 0, fat: 0, id: generateID() });
         } catch (err) {
             console.error(err);
         }
     }
-    
+
     const {t} = useTranslation();
 
     return (
@@ -167,4 +164,4 @@ const FoodDay = ({route, navigation}: any) => {
     )
 }
 
-export default FoodDay
+export default FoodDay;

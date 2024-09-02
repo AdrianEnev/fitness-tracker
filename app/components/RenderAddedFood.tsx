@@ -5,8 +5,8 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 
 const RenderAddedFood = ({item, navigation}: any) => {
 
-    const dateOptions = { hour: '2-digit', minute: '2-digit' };
-    const date = item?.date ? item.date.toDate().toLocaleTimeString([], dateOptions) : '';
+    const dateOptions: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit' };
+    const date = item?.date ? new Date(item.date).toLocaleTimeString([], dateOptions) : ''; // Convert date string to Date object
 
     return (
         <Pressable style={tw`w-full h-14 bg-white py-1`} onPress={() => navigation.navigate("Храна-Подробности", {food: item, date: date, unformattedDate: item.date})}>

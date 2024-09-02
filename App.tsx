@@ -257,6 +257,9 @@ const App = () => {
     
             const netInfo = await NetInfo.fetch();
             setIsConnected(netInfo.isConnected ?? false);
+
+            //const netInfo = { isConnected: false }
+            //setIsConnected(false)
     
             console.log(`Network status: ${netInfo.isConnected ? 'Online' : 'Offline'}`);
     

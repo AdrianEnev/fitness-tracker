@@ -41,6 +41,13 @@ export interface GoalNutrients {
     fat: string,
     id: string
 }
+export interface CurrentNutrients {
+    calories: number,
+    protein: number,
+    carbs: number,
+    fat: number,
+    id: string
+}
 
 export interface Food {
     title: string;
