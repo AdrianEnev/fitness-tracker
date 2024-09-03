@@ -1,5 +1,5 @@
-import { View, Text, Pressable, SafeAreaView, TouchableWithoutFeedback, Keyboard } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, Pressable, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native'
+import React, { useState, useRef } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
 
@@ -14,23 +14,30 @@ import generateWorkout from '../useWorkout/useGenerateWorkout'
 const GenerateWorkoutPage = () => {
 
     const [currentPage, setCurrentPage] = useState(1);
+    const scrollViewRef = useRef<ScrollView>(null);
+    const equipmentRef = useRef<View>(null);
 
     const nextPage = () => {
         if (currentPage != 6) {
             setCurrentPage(currentPage + 1);
-        }else{
+        } else {
             generateWorkout();
         }
-        
     }
     const previousPage = () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1)
-            console.log('set current page to', currentPage)
-        }else{
-            console.log('limit exceeded')
         }
     }
+
+    const scrollToEquipment = () => {
+        if (scrollViewRef.current && equipmentRef.current) {
+            equipmentRef.current.measure((x, y, width, height, pageX, pageY) => {
+                const offset = -450; // Adjust this value as needed
+                scrollViewRef.current?.scrollTo({ y: pageY - offset, animated: true });
+            });
+        }
+    };
 
     const [experienceLevel, setExperienceLevel] = useState(1);
     const [primaryGoal, setPrimaryGoal] = useState('');
@@ -57,7 +64,7 @@ const GenerateWorkoutPage = () => {
 
                         </View>
 
-                        <View style={tw``}>
+                        <View style={tw`h-full`}>
 
                             {currentPage === 1 ? (
                                 <PageOne experienceLevel={experienceLevel} setExperienceLevel={setExperienceLevel}/>
@@ -70,7 +77,16 @@ const GenerateWorkoutPage = () => {
                             ) : currentPage === 5 ? (
                                 <PageFive specificBodyparts={specificBodyparts} setSpecificBodyparts={setSpecificBodyparts}/>
                             ) : (
-                                <PageSix equipment={equipment} setEquipment={setEquipment} equipmentGroup={equipmentGroup} setEquipmentGroup={setEquipmentGroup}/>
+                                <ScrollView ref={scrollViewRef} style={tw`h-full`} contentContainerStyle={tw``}>
+                                    <PageSix 
+                                        equipment={equipment} 
+                                        setEquipment={setEquipment} 
+                                        equipmentGroup={equipmentGroup} 
+                                        setEquipmentGroup={setEquipmentGroup}
+                                        scrollToEquipment={scrollToEquipment}
+                                        equipmentRef={equipmentRef}
+                                    />
+                                </ScrollView>
                             )}
 
                         </View>
