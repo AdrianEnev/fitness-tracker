@@ -9,7 +9,7 @@ import PageThree from '../generateWorkoutComponents/PageThree'
 import PageFour from '../generateWorkoutComponents/PageFour'
 import PageFive from '../generateWorkoutComponents/PageFive'
 import PageSix from '../generateWorkoutComponents/PageSix'
-import generateWorkout from '../use/useGenerateWorkout'
+import generateWorkout from '../useWorkout/useGenerateWorkout'
 
 const GenerateWorkoutPage = () => {
 

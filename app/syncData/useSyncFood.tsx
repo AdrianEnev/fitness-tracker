@@ -1,7 +1,7 @@
 import { addDoc, collection, doc, getDocs, serverTimestamp, setDoc, deleteDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import getEmail from "./useGetEmail";
+import getEmail from "../use/useGetEmail";
 
 type FoodItem = {
     id: string;
@@ -41,10 +41,10 @@ const syncFood = async () => {
         const firebaseDays = userDaysSnapshot.docs.map(doc => ({
             id: doc.id,
             ...doc.data(),
-            calories: doc.data().calories, // Add the 'calories' property
-            protein: doc.data().protein || 0, // Add the 'protein' property
-            carbs: doc.data().carbs || 0, // Add the 'carbs' property
-            fat: doc.data().fat || 0 // Add the 'fat' property
+            calories: doc.data().calories, 
+            protein: doc.data().protein || 0, 
+            carbs: doc.data().carbs || 0, 
+            fat: doc.data().fat || 0 
         }));
 
         // Flag to track if any changes were made

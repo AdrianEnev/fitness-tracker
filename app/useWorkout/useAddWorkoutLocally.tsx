@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import generateRandomColour from './useGenerateColour';
-import getEmail from './useGetEmail';
+import generateRandomColour from '../use/useGenerateColour';
+import getEmail from '../use/useGetEmail';
 
 interface SetInfo {
     id: string;

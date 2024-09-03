@@ -172,7 +172,7 @@ const SettingsAccount = ({navigation}: any) => {
                         
                         <View style={tw`flex justify-center`}>
                             <Text style={tw`text-lg font-medium`}>{title}</Text>
-                            {(title === t('change-username') || title === t('change-password') || title === t('delete-account')) && (
+                            {(title === t('change-username') || title === t('change-password') || title === t('delete-account') || title === t(`log-out`)) && (
                                 <Text style={tw`text-gray-500 mb-[8px]`}>Requires internet</Text>
                             )}
                         </View>
@@ -324,7 +324,13 @@ const SettingsAccount = ({navigation}: any) => {
                     }
                     
                 })}
-                {button(t('log-out'), 'log-out-outline', 'blue-300', '#3b82f6', 28, () => logOut())}
+                {button(t('log-out'), 'log-out-outline', 'blue-300', '#3b82f6', 28, () => {
+                    if (internetConnected) {
+                        logOut()
+                    }else{
+                        Vibration.vibrate()
+                    }
+                })}
                 {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, () => {
 
                     if (internetConnected) {

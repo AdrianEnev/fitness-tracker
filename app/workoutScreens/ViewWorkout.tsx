@@ -6,13 +6,14 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { Ionicons } from '@expo/vector-icons';
 import generateID from '../use/useGenerateID';
-import saveWorkoutEdits from '../use/useSaveWorkoutEdits';
-import startWorkout from '../use/useStartWorkout';
+import saveWorkoutEdits from '../useWorkout/useSaveWorkoutEdits';
+import startWorkout from '../useWorkout/useStartWorkout';
 import { BlurView } from 'expo-blur';
 import SetIntensityModal from '../components/SetIntensityModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import saveWorkoutEditsLocally from '../use/useSaveWorkoutEditsLocally';
+import saveWorkoutEditsLocally from '../useWorkout/useSaveWorkoutEditsLocally';
 import GlobalContext from '../../GlobalContext';
+import getEmail from '../use/useGetEmail';
 
 const ViewWorkout = ({route, navigation}: any) => {
 
@@ -28,6 +29,10 @@ const ViewWorkout = ({route, navigation}: any) => {
         ...exercise,
         sets: exercise.sets.map((set: any) => ({...set, reps: set.reps, weight: set.weight}))
     })));
+
+    const [saveChangesRan, setSaveChangesRan] = useState(false);
+
+    const [deleteWorkoutCalled, setDeleteWorkoutCalled] = useState(false);
 
     const addSet = () => {
         const updatedExercises = [...newExercises];
@@ -75,14 +80,21 @@ const ViewWorkout = ({route, navigation}: any) => {
 
     const saveChanges = async () => {
 
-        if (internetConnected) {
-            await saveWorkoutEdits(workout, userInputs, newExercises, newWorkoutTitle);
+        if (saveChangesRan) {
+            return;
         }
 
-        saveWorkoutEditsLocally(workout, userInputs, newExercises, newWorkoutTitle);
-        
-        
+        setSaveChangesRan(true);
+
+        await saveWorkoutEditsLocally(workout, userInputs, newExercises, newWorkoutTitle);
+
+        if (internetConnected) {
+            saveWorkoutEdits(workout, userInputs, newExercises, newWorkoutTitle);
+        }
+
+        setSaveChangesRan(false);
         navigation.navigate('Тренировки');
+        
     }
     
     const addExercise = () => {
@@ -109,7 +121,12 @@ const ViewWorkout = ({route, navigation}: any) => {
     };
 
     const deleteWorkout = async () => {
-        console.log('deleteWorkout function called');
+    
+        if (deleteWorkoutCalled) {
+            return;
+        }
+
+        setDeleteWorkoutCalled(true)
     
         // Check if the workout document exists before deleting it
         const usersCollectionRef = collection(FIRESTORE_DB, "users");
@@ -120,7 +137,7 @@ const ViewWorkout = ({route, navigation}: any) => {
         try {
             const workoutDocSnapshot = await getDoc(workoutDocRef);
             if (workoutDocSnapshot.exists()) {
-                console.log('Workout document exists, deleting from Firestore');
+                //console.log('Workout document exists, deleting from Firestore');
                 await deleteDoc(workoutDocRef);
             } else {
                 console.log('Workout document does not exist in Firestore');
@@ -131,21 +148,23 @@ const ViewWorkout = ({route, navigation}: any) => {
     
         // Delete the workout from AsyncStorage
         try {
-            const workouts = await AsyncStorage.getItem('workouts');
+            const email = await getEmail()
+
+            const workouts = await AsyncStorage.getItem(`workouts_${email}`);
             const workoutsArray = workouts ? JSON.parse(workouts) : [];
-            console.log('Retrieved workouts from AsyncStorage:', workoutsArray);
+            //console.log('Retrieved workouts from AsyncStorage:', workoutsArray);
     
             const updatedWorkoutsArray = workoutsArray.filter((w: any) => w.id !== workout.id);
-            console.log('Updated workouts array after deletion:', updatedWorkoutsArray);
+            //console.log('Updated workouts array after deletion:', updatedWorkoutsArray);
     
-            await AsyncStorage.setItem('workouts', JSON.stringify(updatedWorkoutsArray));
-            console.log('Updated workouts saved to AsyncStorage');
+            await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(updatedWorkoutsArray));
+            //console.log('Updated workouts saved to AsyncStorage');
         } catch (err) {
             console.error('Error deleting workout from local storage: ', err);
         }
-    
-        navigation.navigate('Главна Страница');
-        console.log('Navigated to Главна Страница');
+        
+        setDeleteWorkoutCalled(false);
+        navigation.navigate('Тренировки');
     }
 
     const handleContentSizeChange = (event: any) => {
@@ -253,14 +272,13 @@ const ViewWorkout = ({route, navigation}: any) => {
                         onChangeText={(text) => setNewWorkoutTitle(text)}
                     />
 
-                    <Button title='start' onPress={() => startWorkout(workout, navigation)} />
-
                     <View style={tw`flex flex-col gap-y-1`}>
                         {newExercises.map((exercise: any, index: any) => {
                             if (exercise.exerciseIndex === currentIndex + 1) {
                                 return (
                                     <View key={exercise.id} style={tw`w-full h-[82%]`}>
-
+                                        
+                                        
                                         <TextInput 
                                             style={textInputStyle}
                                             keyboardType='default'
@@ -273,7 +291,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                                             onChangeText={(text) => updateExerciseTitle(exercise.id, text)}
                                             onContentSizeChange={handleContentSizeChange}
                                         />
-                                    
+
                                         <ScrollView style={tw`h-[75%] w-full mb-3`}>
                                             <View style={tw`flex-1`}>
                                                 {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => {
@@ -340,7 +358,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                                                                                 style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
                                                                                 keyboardType='number-pad'
                                                                                 maxLength={4}
-                                                                                placeholder={set.weight === "" ? 'Килограми' : set.weight.toString()}
+                                                                                placeholder={set.weight === "" ? 'Тежест' : set.weight.toString()}
                                                                                 value={userInputs[index].sets[mapIndex].weight}
                                                                                 onChangeText={(text) => {
                                                                                     let updatedInputs = [...userInputs];
@@ -382,6 +400,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                         viewWorkoutNumberOfExercises={newExercises.length}
                         saveViewWorkoutChanges={saveChanges}
                         viewWorkoutAddExercise={addExercise}
+                        startWorkout={() => startWorkout(workout, navigation)}
                     />
                     
                 </SafeAreaView>

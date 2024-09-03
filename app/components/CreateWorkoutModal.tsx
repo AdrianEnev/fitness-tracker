@@ -1,9 +1,9 @@
 import { View, Text, Modal, Pressable, Keyboard, TextInput } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
-import addWorkout from '../use/useAddWorkout';
+import addWorkout from '../useWorkout/useAddWorkout';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import addWorkoutLocally from '../use/useAddWorkoutLocally';
+import addWorkoutLocally from '../useWorkout/useAddWorkoutLocally';
 import generateID from '../use/useGenerateID';
 
 interface CreateWorkoutModalProps {
@@ -53,7 +53,7 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
                                     tw`bg-green-500 w-full h-10 rounded-xl flex items-center justify-center mb-1`,
                                     pressed ? tw`opacity-75` : {}, // This line changes the style based on the pressed state
                                 ]}
-                                onPress={() => {
+                                onPress={async () => {
                                     
                                     setSaveButtonDisabled(true)
 
@@ -64,13 +64,13 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
 
                                     const id = generateID();
 
-                                    addWorkoutLocally(exercises, workoutTitle, id);
+                                    await addWorkoutLocally(exercises, workoutTitle, id);
                                     
                                     if (internetConnected) {
                                         addWorkout(exercises, workoutTitle, id);
                                     }
                                     
-                                    navigation.navigate('Главна Страница');
+                                    navigation.navigate('Тренировки');
                                 }}
                             >
                                 <Text style={tw`text-white text-lg font-medium`}>Запазване</Text>

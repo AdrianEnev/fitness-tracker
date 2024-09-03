@@ -1,6 +1,6 @@
 import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
-import generateRandomColour from "./useGenerateColour";
+import generateRandomColour from "../use/useGenerateColour";
 
 const endWorkout = async (exercises: any, workoutTitle: string, duration: any, id: any) => {
 

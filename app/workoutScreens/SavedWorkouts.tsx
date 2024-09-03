@@ -5,11 +5,10 @@ import { useTranslation } from 'react-i18next';
 import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, setDoc, Timestamp, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
-import getSavedWorkoutInfo from '../use/useGetSavedWorkoutInfo';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import getSavedWorkoutInfoLocally from '../use/useGetSavedWorkoutInfoLocally';
+import getSavedWorkoutInfoLocally from '../useWorkout/useGetSavedWorkoutInfoLocally';
 
 const Workouts = ({navigation}: any) => {
 

@@ -20,14 +20,13 @@ import WorkoutFoodButtons from '../components/WorkoutFoodButtons';
 import Nutrients from '../components/NutrientsMain';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import ProfilePicture from '../components/ProfilePicture';
-import syncWorkouts from '../use/syncWorkouts';
-import syncSavedWorkouts from '../use/syncSavedWorkouts';
-import syncNutrients from '../use/useSyncNutrients';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
 import { getLanguageLocally } from '../use/useGetLanguageLocally';
-import syncFood from '../use/syncFood';
-
+import syncSavedWorkouts from '../syncData/useSyncSavedWorkouts';
+import syncNutrients from '../syncData/useSyncNutrients';
+import syncFood from '../syncData/useSyncFood';
+import syncWorkouts from '../syncData/useSyncWorkouts';
 
 //bg-[#fd3e6b]
 //bg-[#3d5875]

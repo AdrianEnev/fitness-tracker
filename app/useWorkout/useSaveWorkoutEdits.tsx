@@ -1,6 +1,6 @@
 import { addDoc, collection, deleteDoc, doc, getDocs, setDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
-import generateID from "./useGenerateID";
+import generateID from "../use/useGenerateID";
 
 const saveWorkoutEdits = async (workout: any, userInputs: any, newExercises: any, newWorkoutTitle: any) => {
     

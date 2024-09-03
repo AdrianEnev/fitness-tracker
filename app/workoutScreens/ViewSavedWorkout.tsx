@@ -4,7 +4,6 @@ import tw from 'twrnc'
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { collection, deleteDoc, doc, getDoc } from 'firebase/firestore';
-import getSavedWorkoutInfo from '../use/useGetSavedWorkoutInfo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ViewSavedWorkout = ({navigation, route}: any) => {

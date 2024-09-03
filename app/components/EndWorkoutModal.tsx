@@ -1,8 +1,8 @@
 import { View, Text, Modal, Pressable, Keyboard, TextInput } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
-import endWorkout from '../use/useEndWorkout';
-import endWorkoutLocally from '../use/useEndWorkoutLocally';
+import endWorkout from '../useWorkout/useEndWorkout';
+import endWorkoutLocally from '../useWorkout/useEndWorkoutLocally';
 import generateID from '../use/useGenerateID';
 
 interface EndWorkoutModalProps {

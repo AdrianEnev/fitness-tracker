@@ -45,10 +45,6 @@ const Settings = ({navigation}: any) => {
                     Vibration.vibrate();
                     return;
                 }
-                if (title === t('account') && !internetConnected) {
-                    Vibration.vibrate();
-                    return;
-                }
 
                 navigation.navigate(navigationPath)
             }}>

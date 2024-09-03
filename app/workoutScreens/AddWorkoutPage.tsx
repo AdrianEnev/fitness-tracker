@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard, Pressable, ScrollView } from 'react-native';
 import tw from 'twrnc';
 import { Exercise, Set } from '../../interfaces';
-import addWorkout from '../use/useAddWorkout';
+import addWorkout from '../useWorkout/useAddWorkout';
 import { Ionicons } from '@expo/vector-icons';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { BlurView } from 'expo-blur';

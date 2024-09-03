@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import getEmail from './useGetEmail';
+import getEmail from '../use/useGetEmail';
 
 const getWorkoutInfoLocally = async (workoutId: string) => {
     try {

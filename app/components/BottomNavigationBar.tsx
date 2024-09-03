@@ -2,8 +2,6 @@ import { View, Text, Pressable } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
-import endWorkout from '../use/useEndWorkout';
-import startWorkout from '../use/useStartWorkout';
 
 const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) => {
     return (
@@ -31,7 +29,7 @@ const BottomNavigationBar = (
         foodDayDate, clearDay,
         saveCustomFood,
         displayFoods,
-        workout,
+        startWorkout,
         viewWorkoutNumberOfExercises,
         friendsListUsername,
         removeFriend,
@@ -64,7 +62,8 @@ const BottomNavigationBar = (
         saveViewWorkoutChanges?: () => void,
         addWorkoutPageCurrentExercise?: number,
         addActiveWorkoutSet?: () => void,
-        addActiveWorkoutExercise?: () => void
+        addActiveWorkoutExercise?: () => void,
+        startWorkout?: () => void
     }
 ) => {
     //AddCustomFood
@@ -206,26 +205,30 @@ const BottomNavigationBar = (
                         <Pressable style={tw`w-[49%] bg-blue-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addSetButton}>
                             <Text style={tw`text-white font-medium text-xl`}>+ Set</Text>
                         </Pressable>
+                       
                         <Pressable style={tw`w-[49%] bg-yellow-400 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={viewWorkoutAddExercise}>
                             <Text style={tw`text-white font-medium text-xl`}>+ Exercise</Text>
                         </Pressable>
                         
                     </View>
 
-                    <View style={tw`w-full flex flex-row ${viewWorkoutNumberOfExercises === 1 ? 'justify-around' : 'justify-between'}`}>
+                    <View style={tw`w-full flex flex-row ${viewWorkoutNumberOfExercises === 1 ? 'justify-around' : 'justify-around'}`}>
 
                         <Pressable onPress={backButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
-                            <Ionicons name='chevron-back-circle-outline' color='#fd1c47' size={72}/>
+                            <Ionicons name='chevron-back-circle-outline' color='#3b82f6' size={72}/>
                         </Pressable>
                         <Pressable onPress={deleteSavedWorkout} style={tw``}>
-                            <Ionicons name='close-circle-outline' color='#fb923c' size={72}/>
+                            <Ionicons name='close-circle-outline' color='#ef4444' size={72}/>
+                        </Pressable>
+                        <Pressable onPress={startWorkout} style={tw``}>
+                            <Ionicons name='play-circle-outline' color='#3b82f6' size={72}/>
                         </Pressable>
                         <Pressable onPress={saveViewWorkoutChanges} style={tw``}>
                             <Ionicons name='checkmark-circle-outline' color='#22c55e' size={72}/>
                         </Pressable>
                         
                         <Pressable onPress={forwardButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
-                            <Ionicons name='chevron-forward-circle-outline' color='#fd1c47' size={72}/>
+                            <Ionicons name='chevron-forward-circle-outline' color='#3b82f6' size={72}/>
                         </Pressable>
                     </View>
                 </View>
