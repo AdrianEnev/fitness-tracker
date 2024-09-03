@@ -13,16 +13,101 @@ import generateWorkout from '../useWorkout/useGenerateWorkout'
 
 const GenerateWorkoutPage = () => {
 
-    const [currentPage, setCurrentPage] = useState(1);
-    const scrollViewRef = useRef<ScrollView>(null);
-    const equipmentRef = useRef<View>(null);
-
     const nextPage = () => {
-        if (currentPage != 6) {
+        
+        if (currentPage === 1 && experienceLevel !== 0) {
             setCurrentPage(currentPage + 1);
-        } else {
-            generateWorkout();
+        }else if (currentPage === 2 && primaryGoal !== 0) {
+            setCurrentPage(currentPage + 1);
+        }else if (currentPage === 3 && numberOfDays !== 0) {
+            setCurrentPage(currentPage + 1);
+        }else if (currentPage === 4 && workoutLocation !== 0) {
+            setCurrentPage(currentPage + 1);
+        }else if (currentPage === 5) {
+            setCurrentPage(currentPage + 1);
+        }else if (currentPage === 6 && equipment.length > 0) {
+            setCurrentPage(currentPage + 1);
+        }else if (currentPage === 7) {
+
+            let level = '';
+            switch (experienceLevel) {
+                case 1:
+                    level = 'Beginner';
+                    break;
+                case 2:
+                    level = 'Intermediate';
+                    break;
+                case 3:
+                    level = 'Advanced';
+                    break;
+                case 4:
+                    level = 'Elite';
+                    break;
+                default:
+                    level = 'Beginner';
+                    break;
+            }
+
+            let goal = '';
+            switch (primaryGoal) {
+                case 1:
+                    goal = 'muscle gain';
+                    break;
+                case 2:
+                    goal = 'fat loss';
+                    break;
+                case 3:
+                    goal = 'endurance';
+                    break;
+                case 4:
+                    goal = 'flexibility';
+                    break;
+                default:
+                    goal = 'muscle gain';
+                    break;
+            }
+
+            let location = '';
+            switch (workoutLocation) {
+                case 1:
+                    location = 'gym';
+                    break;
+                case 2:
+                    location = 'home';
+                    break;
+                case 3:
+                    location = 'outdoors';
+                    break;
+                case 4:
+                    location = 'calisthenics park';
+                    break;
+                default:
+                    location = 'gym';
+                    break;
+            }
+
+            let group = '';
+            switch (equipmentGroup) {
+                case 1:
+                    group = 'no equipment';
+                    break;
+                case 2:
+                    group = 'full gym';
+                    break;
+                case 3:
+                    group = 'calisthenics park';
+                    break;
+                case 4:
+                    group = 'home equipment';
+                    break;
+                default:
+                    group = 'full gym';
+                    break;
+            }
+
+            generateWorkout(level, goal, numberOfDays, location, specificBodyparts, group, equipment);
         }
+
     }
     const previousPage = () => {
         if (currentPage > 1) {
@@ -39,10 +124,14 @@ const GenerateWorkoutPage = () => {
         }
     };
 
-    const [experienceLevel, setExperienceLevel] = useState(1);
-    const [primaryGoal, setPrimaryGoal] = useState('');
+    const [currentPage, setCurrentPage] = useState(1);
+    const scrollViewRef = useRef<ScrollView>(null);
+    const equipmentRef = useRef<View>(null);
+
+    const [experienceLevel, setExperienceLevel] = useState(0);
+    const [primaryGoal, setPrimaryGoal] = useState(0);
     const [numberOfDays, setNumberOfDays] = useState(0);
-    const [workoutLocation, setWorkoutLocation] = useState('');
+    const [workoutLocation, setWorkoutLocation] = useState(0);
     const [specificBodyparts, setSpecificBodyparts] = useState([]);
     const [equipmentGroup, setEquipmentGroup] = useState(0);
     const [equipment, setEquipment] = useState([]);

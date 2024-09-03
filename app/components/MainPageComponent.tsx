@@ -23,6 +23,7 @@ import FoodInfo from "../foodScreens/FoodInfo";
 import Donate from "../settingsScreens/Donate";
 import DonateScreen from "../settingsScreens/DonateScreen";
 import GenerateWorkoutPage from "../workoutScreens/GenerateWorkoutPage";
+import ScanFood from "../foodScreens/ScanFood";
 
 const Stack = createNativeStackNavigator();
 /* 
@@ -128,6 +129,13 @@ const MainPageComponent = () => {
           <Stack.Screen
               name="Хранене-Ден"
               component={FoodDay}
+              options={{
+                  headerShown: false,
+              }}
+          />
+          <Stack.Screen
+              name="Храна-Сканиране"
+              component={ScanFood}
               options={{
                   headerShown: false,
               }}

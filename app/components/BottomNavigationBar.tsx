@@ -47,7 +47,7 @@ const BottomNavigationBar = (
         currentPage: string, navigation: any, internetConnected?: boolean,
         forwardButton?: () => void, backButton?: () => void
         deleteSavedWorkout?: () => void, toggleEndWorkoutModal?: () => void,
-        foodDayDate?: any, clearDay?: () => void,
+        foodDayDate?: any, clearDay?: () => void, 
         saveCustomFood?: () => void,
         displayFoods?: () => void,
         workout?: any,
@@ -157,8 +157,8 @@ const BottomNavigationBar = (
                         <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
-                    <Pressable onPress={clearDay}>
-                        <Ionicons name="refresh-circle-outline" size={72} color="#fd1c47"/>
+                    <Pressable onPress={() => navigation.navigate("Храна-Сканиране")}>
+                        <Ionicons name="scan-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
                     <Pressable onPress={() => {

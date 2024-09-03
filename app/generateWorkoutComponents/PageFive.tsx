@@ -5,9 +5,9 @@ import { Ionicons } from '@expo/vector-icons'
 
 const PageFive = ({ specificBodyparts, setSpecificBodyparts }: any) => {
 
-    const toggleBodyPart = (bodyPart: number) => {
+    const toggleBodyPart = (bodyPart: string) => {
         if (specificBodyparts.includes(bodyPart)) {
-            setSpecificBodyparts(specificBodyparts.filter((part: number) => part !== bodyPart));
+            setSpecificBodyparts(specificBodyparts.filter((part: string) => part !== bodyPart));
         } else {
             setSpecificBodyparts([...specificBodyparts, bodyPart]);
         }
@@ -24,39 +24,39 @@ const PageFive = ({ specificBodyparts, setSpecificBodyparts }: any) => {
 
             <View style={tw`flex-1 flex-col gap-y-2 mx-5 mt-[5%]`}>
 
-                <Pressable style={tw`w-full h-[10.9%] rounded-2xl ${specificBodyparts.includes(1) ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
-                    onPress={() => toggleBodyPart(1)}
+                <Pressable style={tw`w-full h-[10.9%] rounded-2xl ${specificBodyparts.includes('Chest') ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
+                    onPress={() => toggleBodyPart('Chest')}
                 >
-                    <Ionicons name={specificBodyparts.includes(1) ? 'ellipse' : 'ellipse-outline'} size={42} color={specificBodyparts.includes(1) ? 'white' : '#6b7280'} style={tw`mt-[6px]`} />
-                    <Text style={tw`text-2xl font-medium ${specificBodyparts.includes(1) ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>Chest</Text>
+                    <Ionicons name={specificBodyparts.includes('Chest') ? 'ellipse' : 'ellipse-outline'} size={42} color={specificBodyparts.includes('Chest') ? 'white' : '#6b7280'} style={tw`mt-[6px]`} />
+                    <Text style={tw`text-2xl font-medium ${specificBodyparts.includes('Chest') ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>Chest</Text>
                 </Pressable>
 
-                <Pressable style={tw`w-full h-[10.9%] rounded-2xl ${specificBodyparts.includes(2) ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
-                    onPress={() => toggleBodyPart(2)}
+                <Pressable style={tw`w-full h-[10.9%] rounded-2xl ${specificBodyparts.includes('Back') ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
+                    onPress={() => toggleBodyPart('Back')}
                 >
-                    <Ionicons name={specificBodyparts.includes(2) ? 'ellipse' : 'ellipse-outline'} size={42} color={specificBodyparts.includes(2) ? 'white' : '#6b7280'} style={tw`mt-[6px]`} />
-                    <Text style={tw`text-2xl font-medium ${specificBodyparts.includes(2) ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>Back</Text>
+                    <Ionicons name={specificBodyparts.includes('Back') ? 'ellipse' : 'ellipse-outline'} size={42} color={specificBodyparts.includes('Back') ? 'white' : '#6b7280'} style={tw`mt-[6px]`} />
+                    <Text style={tw`text-2xl font-medium ${specificBodyparts.includes('Back') ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>Back</Text>
                 </Pressable>
 
-                <Pressable style={tw`w-full h-[10.9%] rounded-2xl ${specificBodyparts.includes(3) ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
-                    onPress={() => toggleBodyPart(3)}
+                <Pressable style={tw`w-full h-[10.9%] rounded-2xl ${specificBodyparts.includes('Legs') ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
+                    onPress={() => toggleBodyPart('Legs')}
                 >
-                    <Ionicons name={specificBodyparts.includes(3) ? 'ellipse' : 'ellipse-outline'} size={42} color={specificBodyparts.includes(3) ? 'white' : '#6b7280'} style={tw`mt-[6px]`} />
-                    <Text style={tw`text-2xl font-medium ${specificBodyparts.includes(3) ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>Legs</Text>
+                    <Ionicons name={specificBodyparts.includes('Legs') ? 'ellipse' : 'ellipse-outline'} size={42} color={specificBodyparts.includes('Legs') ? 'white' : '#6b7280'} style={tw`mt-[6px]`} />
+                    <Text style={tw`text-2xl font-medium ${specificBodyparts.includes('Legs') ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>Legs</Text>
                 </Pressable>
 
-                <Pressable style={tw`w-full h-[10.9%] rounded-2xl ${specificBodyparts.includes(4) ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
-                    onPress={() => toggleBodyPart(4)}
+                <Pressable style={tw`w-full h-[10.9%] rounded-2xl ${specificBodyparts.includes('Arms') ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
+                    onPress={() => toggleBodyPart('Arms')}
                 >
-                    <Ionicons name={specificBodyparts.includes(4) ? 'ellipse' : 'ellipse-outline'} size={42} color={specificBodyparts.includes(4) ? 'white' : '#6b7280'} style={tw`mt-[6px]`} />
-                    <Text style={tw`text-2xl font-medium ${specificBodyparts.includes(4) ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>Arms</Text>
+                    <Ionicons name={specificBodyparts.includes('Arms') ? 'ellipse' : 'ellipse-outline'} size={42} color={specificBodyparts.includes('Arms') ? 'white' : '#6b7280'} style={tw`mt-[6px]`} />
+                    <Text style={tw`text-2xl font-medium ${specificBodyparts.includes('Arms') ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>Arms</Text>
                 </Pressable>
 
-                <Pressable style={tw`w-full h-[10.9%] rounded-2xl ${specificBodyparts.includes(5) ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
-                    onPress={() => toggleBodyPart(5)}
+                <Pressable style={tw`w-full h-[10.9%] rounded-2xl ${specificBodyparts.includes('Shoulders') ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
+                    onPress={() => toggleBodyPart('Shoulders')}
                 >
-                    <Ionicons name={specificBodyparts.includes(5) ? 'ellipse' : 'ellipse-outline'} size={42} color={specificBodyparts.includes(5) ? 'white' : '#6b7280'} style={tw`mt-[6px]`} />
-                    <Text style={tw`text-2xl font-medium ${specificBodyparts.includes(5) ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>Shoulders</Text>
+                    <Ionicons name={specificBodyparts.includes('Shoulders') ? 'ellipse' : 'ellipse-outline'} size={42} color={specificBodyparts.includes('Shoulders') ? 'white' : '#6b7280'} style={tw`mt-[6px]`} />
+                    <Text style={tw`text-2xl font-medium ${specificBodyparts.includes('Shoulders') ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>Shoulders</Text>
                 </Pressable>
 
             </View>
