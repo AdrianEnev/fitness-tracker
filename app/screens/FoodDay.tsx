@@ -55,6 +55,40 @@ const FoodDay = ({route, navigation}: any) => {
         }
     }
 
+    
+    // console log all items related to foodDay inside asyncstorage
+    const logAllFoodItems = async () => {
+        try {
+            const email = await getEmail();
+            const keys = await AsyncStorage.getAllKeys();
+            const foodDayKeys = keys.filter(key => key.includes(`${email}-foodDay-`));
+            const foodItems = await AsyncStorage.multiGet(foodDayKeys);
+            console.log('All food items:', foodItems);
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    const clearAllFoodItems = async () => {
+        try {
+            const email = await getEmail();
+            const keys = await AsyncStorage.getAllKeys();
+            const foodDayKeys = keys.filter(key => key.includes(`${email}-foodDay-`));
+            await AsyncStorage.multiRemove(foodDayKeys);
+            console.log('All food items cleared');
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    useEffect(() => {
+        logAllFoodItems();
+        //clearAllFoodItems();
+    }, []);
+
+    
+
+
     const updateCurrentNutrients = () => {
         let totalCalories = 0;
         let totalProtein = 0;

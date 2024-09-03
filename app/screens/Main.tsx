@@ -26,6 +26,7 @@ import syncNutrients from '../use/useSyncNutrients';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
 import { getLanguageLocally } from '../use/useGetLanguageLocally';
+import syncFood from '../use/syncFood';
 
 
 //bg-[#fd3e6b]
@@ -67,11 +68,12 @@ const Main = ({navigation}: any) => {
         setCurrentFormattedDate(formattedDate)
 
         const now = Date.now();
-        if (!internetConnected && (now - lastSyncTime > 5000)) {
+        if (internetConnected && (now - lastSyncTime > 5000)) {
             updateCurrentNutrients();
             syncWorkouts();
             syncSavedWorkouts();
             syncNutrients();
+            syncFood();
             setLastSyncTime(now);
         }
        
