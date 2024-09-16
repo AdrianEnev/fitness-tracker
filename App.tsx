@@ -256,6 +256,8 @@ const App = () => {
         const initializeApp = async () => {
             await checkLocalEmail();
 
+            //AsyncStorage.removeItem('language');
+
             const localLanguageSet = await getLocalLanguageSet();
             if (localLanguageSet) {
                 setLocalLanguageSet(true)
