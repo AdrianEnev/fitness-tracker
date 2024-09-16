@@ -38,7 +38,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isLanguageModalVisible, s
                 setDoc(userLanguageDocRef, { language: selectedLanguage });
             }
 
-            AsyncStorage.setItem(`language_${await getEmail()}`, selectedLanguage);
+            AsyncStorage.setItem(`language`, selectedLanguage);
             i18next.changeLanguage(selectedLanguage);
         }else{
             setIsLanguageModalVisible(false);

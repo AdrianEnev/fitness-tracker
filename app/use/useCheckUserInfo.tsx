@@ -40,10 +40,10 @@ export const checkLanguageDocument = async (userInfoCollectionRef: any) => {
 
 export const checkLanguageDocumentLocally = async () => {
     const email = await getEmail();
-    const language = await AsyncStorage.getItem(`language_${email}`);
+    const language = await AsyncStorage.getItem(`language`);
 
     if (language === null) {
-        await AsyncStorage.setItem(`language_${email}`, 'en');
+        await AsyncStorage.setItem(`language`, 'en');
     }   
 }
 

@@ -17,23 +17,19 @@ import GlobalContext from './GlobalContext';
 import getFriendRequests from './app/use/useGetFriendRequestsRecieved';
 import ChangePassword from './app/screens/ChangePassword';
 import { checkUserDocument, checkLanguageDocument, checkUserInfoCollection, checkUserInfoCollectionLocally, checkLanguageDocumentLocally } from './app/use/useCheckUserInfo';
-import { GoalNutrients } from './interfaces';
-import checkReceiveFriendRequests from './app/use/useCheckReceiveFriendRequests';
-import checkFaceIdEnabled from './app/use/useCheckFaceIdEnabled';
 import LottieView from 'lottie-react-native';
 import tw from 'twrnc';
 import { useTranslation } from 'react-i18next';
 import * as LocalAuthentication from 'expo-local-authentication';
 import checkForBiometrics from './app/use/useCheckForBiometrics';
 import NetInfo from "@react-native-community/netinfo";
-import syncWorkouts from './app/use/syncWorkouts';
-import syncSavedWorkouts from './app/use/syncSavedWorkouts';
-import syncNutrients from './app/use/useSyncNutrients';
 import checkReceiveFriendRequestsLocally from './app/use/useCheckReceiveFriendRequestsLocally';
 import checkFaceIdEnabledLocally from './app/use/useCheckFaceIdEnabledLocally';
 import checkForBiometricsLocally from './app/use/checkForBiometricsLocally';
 import EmailNotVerified from './app/screens/EmailNotVerified';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import getLocalLanguageSet from './app/use/useGetLocalLanguageSet';
+import LanguageScreen from './app/screens/LanguageScreen';
 
 const Stack = createStackNavigator();
 
@@ -68,6 +64,7 @@ const AuthenticatedTabNavigator = ({ setupRan }: any) => {
 
 const UnauthenticatedTabNavigator = () => (
     <Stack.Navigator>
+
         <Stack.Screen
             name="Добре-Дошъл"
             component={Welcome}
@@ -113,6 +110,7 @@ const App = () => {
 
     const clearAsyncStorage = async () => {
         await AsyncStorage.clear();
+        console.log('async storage cleared')
     }
 
     const onAuthenticate = async () => {
@@ -158,6 +156,8 @@ const App = () => {
 
     const [isEmailVerified, setIsEmailVerified] = useState(false);
     const [localEmail, setLocalEmail] = useState<string | null>(null);
+
+    const [localLanguageSet, setLocalLanguageSet] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -243,6 +243,7 @@ const App = () => {
             if (compatible) {
                 await onAuthenticate();
             }
+
         } else {
             setIsAuthenticated(true);
         }
@@ -254,6 +255,11 @@ const App = () => {
     useEffect(() => {
         const initializeApp = async () => {
             await checkLocalEmail();
+
+            const localLanguageSet = await getLocalLanguageSet();
+            if (localLanguageSet) {
+                setLocalLanguageSet(true)
+            }
     
             const netInfo = await NetInfo.fetch();
             setIsConnected(netInfo.isConnected ?? false);
@@ -290,6 +296,7 @@ const App = () => {
             if (user && !isEmailVerified) {
                 await user.reload();
                 setIsEmailVerified(user.emailVerified);
+                console.log('interval ran')
             }
         }, 1000); 
 
@@ -340,7 +347,7 @@ const App = () => {
                             <SetupPage />) :
                             <AuthenticatedTabNavigator setupRan={setupRan} />
                         ) : 
-                        <UnauthenticatedTabNavigator />
+                        (localLanguageSet ? <UnauthenticatedTabNavigator /> : <LanguageScreen setLocalLanguageSet={setLocalLanguageSet}/>)
                     }
                 </NavigationContainer>
             </GestureHandlerRootView>

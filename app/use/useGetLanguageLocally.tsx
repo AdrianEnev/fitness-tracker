@@ -1,10 +1,9 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
-import getEmail from "./useGetEmail";
 import i18next from "i18next";
 
 export const getLanguageLocally = async () => {
-    const email = await getEmail()
-    const language = await AsyncStorage.getItem(`language_${email}`);
+   
+    const language = await AsyncStorage.getItem(`language`);
 
     if (language === null) {
 

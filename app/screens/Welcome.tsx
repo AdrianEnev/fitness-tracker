@@ -4,6 +4,7 @@ import tw from "twrnc"
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useTranslation } from 'react-i18next'
 import i18next from "i18next";
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const Welcome = ({navigation}: any) => {
 
@@ -11,7 +12,13 @@ const Welcome = ({navigation}: any) => {
     const {t} = useTranslation();
     
     useEffect(() => {
-        i18next.changeLanguage("en");
+        const fetch = async () => {
+            const language = await AsyncStorage.getItem(`language`);
+            i18next.changeLanguage(language?.toString());
+        }
+
+        fetch();
+        
     }, [])
 
     return (
