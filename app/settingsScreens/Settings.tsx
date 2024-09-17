@@ -10,7 +10,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalContext from '../../GlobalContext';
 import BottomNavigationBar from '../components/BottomNavigationBar';
-import LanguageModal from '../components/LanguageModal';
+import LanguageModal from '../modals/LanguageModal';
 import { BlurView } from 'expo-blur';
 
 const Settings = ({navigation}: any) => {

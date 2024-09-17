@@ -5,7 +5,7 @@ import tw from 'twrnc'
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { BlurView } from 'expo-blur';
 import NoteModal from '../components/NoteModal';
-import EndWorkoutModal from '../components/EndWorkoutModal';
+import EndWorkoutModal from '../modals/EndWorkoutModal';
 import GlobalContext from '../../GlobalContext';
 
 const ActiveWorkout = ({route, navigation}: any) => {

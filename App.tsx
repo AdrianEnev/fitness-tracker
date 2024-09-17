@@ -158,6 +158,7 @@ const App = () => {
     const [localEmail, setLocalEmail] = useState<string | null>(null);
 
     const [localLanguageSet, setLocalLanguageSet] = useState(false);
+    const [emailVerifiedChanged, setEmailVerifiedChanged] = useState(false); // New state
 
     const fetchData = async () => {
         try {
@@ -297,13 +298,23 @@ const App = () => {
         const interval = setInterval(async () => {
             if (user && !isEmailVerified) {
                 await user.reload();
-                setIsEmailVerified(user.emailVerified);
+                if (user.emailVerified) {
+                    setIsEmailVerified(true);
+                    setEmailVerifiedChanged(true); // Update state when email is verified
+                }
                 console.log('interval ran')
             }
         }, 1000); 
 
         return () => clearInterval(interval);
     }, [user, isEmailVerified, isConnected]);
+
+    useEffect(() => {
+        if (emailVerifiedChanged) {
+            setLoading(true);
+            fetchData();
+        }
+    }, [emailVerifiedChanged]);
 
     if (loading || checkingSetup) {
         return (

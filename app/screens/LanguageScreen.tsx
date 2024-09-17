@@ -29,6 +29,7 @@ const LanguageScreen = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: 
 
                 <View style={tw`mx-5 mb-5`}>
                     <Text style={tw`font-medium text-2xl text-center`}>What is your preferred language?</Text>
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>This can be changed later</Text>
                 </View>
 
                 <View style={tw`w-[40%] h-[60%] bg-gray-200 rounded-[47px] flex items-center pt-3`}>

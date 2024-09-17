@@ -7,7 +7,7 @@ import { useContext, useEffect, useState } from 'react';
 import GlobalContext from '../../GlobalContext';
 import { FIREBASE_AUTH } from '../../firebaseConfig';
 import { NavigationProp } from "@react-navigation/native";
-import scanImage from "../use/useScanImage";
+import scanImage from "../use/useScanImageNSFW";
 
 interface ProfilePictureProps {
     page: any;

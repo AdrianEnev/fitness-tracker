@@ -157,7 +157,7 @@ const BottomNavigationBar = (
                         <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
-                    <Pressable onPress={() => navigation.navigate("Храна-Сканиране")}>
+                    <Pressable onPress={() => navigation.navigate("Храна-Сканиране", { date: foodDayDate })}>
                         <Ionicons name="scan-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 

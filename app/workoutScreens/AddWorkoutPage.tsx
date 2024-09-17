@@ -7,8 +7,8 @@ import { Ionicons } from '@expo/vector-icons';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { BlurView } from 'expo-blur';
 import { Dimensions } from 'react-native';
-import CreateWorkoutModal from '../components/CreateWorkoutModal';
-import SetIntensityModal from '../components/SetIntensityModal';
+import CreateWorkoutModal from '../modals/CreateWorkoutModal';
+import SetIntensityModal from '../modals/SetIntensityModal';
 import GlobalContext from '../../GlobalContext';
 
 const AddWorkoutPage = ({ navigation }: any) => {

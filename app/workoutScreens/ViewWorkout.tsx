@@ -9,7 +9,7 @@ import generateID from '../use/useGenerateID';
 import saveWorkoutEdits from '../useWorkout/useSaveWorkoutEdits';
 import startWorkout from '../useWorkout/useStartWorkout';
 import { BlurView } from 'expo-blur';
-import SetIntensityModal from '../components/SetIntensityModal';
+import SetIntensityModal from '../modals/SetIntensityModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import saveWorkoutEditsLocally from '../useWorkout/useSaveWorkoutEditsLocally';
 import GlobalContext from '../../GlobalContext';
