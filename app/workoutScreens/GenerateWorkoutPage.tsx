@@ -10,10 +10,13 @@ import PageFour from '../generateWorkoutComponents/PageFour'
 import PageFive from '../generateWorkoutComponents/PageFive'
 import PageSix from '../generateWorkoutComponents/PageSix'
 import generateWorkout from '../useWorkout/useGenerateWorkout'
+import GenerateWorkoutModal from '../modals/GeneratingWorkoutModal'
+import { BlurView } from 'expo-blur'
+import addGeneratedWorkoutLocally from '../useWorkout/useAddGeneratedWorkoutLocally'
 
-const GenerateWorkoutPage = () => {
+const GenerateWorkoutPage = ({navigation}: any) => {
 
-    const nextPage = () => {
+    const nextPage = async () => {
         
         if (currentPage === 1 && experienceLevel !== 0) {
             setCurrentPage(currentPage + 1);
@@ -105,7 +108,11 @@ const GenerateWorkoutPage = () => {
                     break;
             }
 
-            generateWorkout(level, goal, numberOfDays, location, specificBodyparts, group, equipment);
+            setIsGenerateWorkoutModalVisible(true);
+
+            const generatedWorkout = await generateWorkout(level, goal, numberOfDays, location, specificBodyparts, group, equipment);
+            await addGeneratedWorkoutLocally(generatedWorkout)
+            navigation.goBack();
         }
 
     }
@@ -136,8 +143,23 @@ const GenerateWorkoutPage = () => {
     const [equipmentGroup, setEquipmentGroup] = useState(0);
     const [equipment, setEquipment] = useState([]);
 
+    const [isGenerateWorkoutModalVisible, setIsGenerateWorkoutModalVisible] = useState(false);
+
     return (
         <>
+
+            { isGenerateWorkoutModalVisible && (
+                <BlurView
+                    style={tw`absolute w-full h-full z-10`}
+                    intensity={50}
+                    tint='dark'
+                />
+            )}
+
+            <GenerateWorkoutModal
+                isGenerateWorkoutModalVisible={isGenerateWorkoutModalVisible}
+                setIsGenerateWorkoutModalVisible={setIsGenerateWorkoutModalVisible}
+            />
 
             <SafeAreaView style={tw`flex-1 bg-white`}>
                 <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
