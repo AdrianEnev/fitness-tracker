@@ -1,5 +1,5 @@
-const addGeneratedWorkoutLocally = async (workout: any) => {
-    console.log(workout)
-}
+const addGeneratedWorkoutLocally = async (generatedWorkout: any) => {
+    console.log(generatedWorkout);
+};
 
 export default addGeneratedWorkoutLocally;
