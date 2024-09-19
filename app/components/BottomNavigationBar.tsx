@@ -41,7 +41,8 @@ const BottomNavigationBar = (
         saveViewWorkoutChanges,
         addWorkoutPageCurrentExercise,
         addActiveWorkoutSet,
-        addActiveWorkoutExercise
+        addActiveWorkoutExercise,
+        addEmptyFolder, folder, deleteFolder
     }: 
     {
         currentPage: string, navigation: any, internetConnected?: boolean,
@@ -63,7 +64,9 @@ const BottomNavigationBar = (
         addWorkoutPageCurrentExercise?: number,
         addActiveWorkoutSet?: () => void,
         addActiveWorkoutExercise?: () => void,
-        startWorkout?: () => void
+        startWorkout?: () => void,
+        addEmptyFolder?: () => void,
+        folder?: any, deleteFolder?: () => void
     }
 ) => {
     //AddCustomFood
@@ -187,8 +190,13 @@ const BottomNavigationBar = (
             ) : currentPage === 'Workouts' ? (
                 <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
 
-                    <Pressable onPress={() => navigation.navigate("Тренировка-Добави")}>
+
+                    <Pressable onPress={() => navigation.navigate("Тренировка-Добави", {folder: folder})}>
                         <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
+                    </Pressable>
+
+                    <Pressable onPress={addEmptyFolder}>
+                        <Ionicons name="folder-open-outline" size={72} color="#fd1c47"/>
                     </Pressable>
                     
                     <Pressable style={tw`w-15 h-15 border-4 border-[#fd1c47] rounded-full flex items-center justify-center`}
@@ -263,6 +271,24 @@ const BottomNavigationBar = (
                     <Pressable onPress={saveSettingsMacrosButton}>
                         <Ionicons name='checkmark-done' color='white' size={64}/>
                     </Pressable>
+                </View>
+            ) : currentPage === "Folder" ? (
+                <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
+                    
+                    <Pressable onPress={() => navigation.navigate("Тренировка-Добави", {folder: folder})}>
+                        <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
+                    </Pressable>
+
+                    <Pressable onPress={deleteFolder}>
+                        <Ionicons name="remove-circle-outline" size={72} color="#fd1c47"/>
+                    </Pressable>
+                    
+                    <Pressable style={tw`w-15 h-15 border-4 border-[#fd1c47] rounded-full flex items-center justify-center`}
+                        onPress={() => navigation.navigate('Генериране-Тренировка')}
+                    >
+                        <Ionicons name="flash-outline" size={40} color="#fd1c47"/>
+                    </Pressable>
+
                 </View>
             ) : (
                 <View style={tw`flex flex-row justify-around items-center w-full h-full`}>

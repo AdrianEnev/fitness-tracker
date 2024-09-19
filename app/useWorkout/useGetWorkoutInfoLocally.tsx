@@ -1,8 +1,19 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
 
-const getWorkoutInfoLocally = async (workoutId: string) => {
+const getWorkoutInfoLocally = async (workoutId: string, folder?: any) => {
     try {
+        if (folder) {
+            const workout = folder.workouts.find((w: any) => w.id === workoutId);
+            if (workout) {
+                const { title: workoutTitle, info: exercisesData } = workout;
+                return { workoutTitle, exercisesData };
+            } else {
+                console.error('Workout not found in folder', workoutId);
+                return null;
+            }
+        }
+
         const email = await getEmail();
         if (!email) return null;
 

@@ -24,6 +24,7 @@ import Donate from "../settingsScreens/Donate";
 import DonateScreen from "../settingsScreens/DonateScreen";
 import GenerateWorkoutPage from "../workoutScreens/GenerateWorkoutPage";
 import ScanFood from "../foodScreens/ScanFood";
+import WorkoutFolder from "../workoutScreens/WorkoutFolder";
 
 const Stack = createNativeStackNavigator();
 /* 
@@ -67,6 +68,15 @@ const MainPageComponent = () => {
                   headerShown: false,
               }}
           />
+          <Stack.Screen
+              name="Папка"
+              component={WorkoutFolder}
+              options={{
+                  title: "Тренировки",
+                  headerShown: false,
+              }}
+          />
+
           <Stack.Screen
               name="Генериране-Тренировка"
               component={GenerateWorkoutPage}

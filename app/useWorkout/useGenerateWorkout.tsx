@@ -14,7 +14,7 @@ const useGenerateWorkout = async (
     const RAW_TEXT = `
     Generate a workout plan for a ${experienceLevel} level athlete who wants to ${primaryGoal} for ${numberOfDays} days. 
     The workout will take place at ${workoutLocation} and will focus on ${specificBodyparts}. 
-    The athlete will use ${equipment} equipment. 
+    The athlete will use ${equipment} equipment. Don't forget to include an approximate amount of weight for each exercise.
     I would like each exercise to have only 1 specific number of reps which would be the approximate number of reps for that exercise. 
     For example an exercise can have 8 reps as the value and not "8-12". 
     I also want you to keep in mind that "focusing on specific bodyparts" does not require focusing the whole program on those bodyparts but just slightly prioritizing them over other bodyparts during workouts.

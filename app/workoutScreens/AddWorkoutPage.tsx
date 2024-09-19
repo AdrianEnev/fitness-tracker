@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard, Pressable, ScrollView } from 'react-native';
 import tw from 'twrnc';
 import { Exercise, Set } from '../../interfaces';
@@ -11,9 +11,15 @@ import CreateWorkoutModal from '../modals/CreateWorkoutModal';
 import SetIntensityModal from '../modals/SetIntensityModal';
 import GlobalContext from '../../GlobalContext';
 
-const AddWorkoutPage = ({ navigation }: any) => {
+const AddWorkoutPage = ({ navigation, route }: any) => {
 
     const {internetConnected} = useContext(GlobalContext);
+
+    const { folder } = route.params;
+
+    useEffect(() => {
+        console.log(folder)
+    }, [folder]);
 
     const newExercise: any = {
         title: '',
@@ -184,6 +190,7 @@ const AddWorkoutPage = ({ navigation }: any) => {
                         saveButtonDisabled={saveButtonDisabled}
                         setSaveButtonDisabled={setSaveButtonDisabled}
                         internetConnected={internetConnected}
+                        folder={folder}
                     />
 
                     <View style={tw`flex flex-col gap-y-1 max-h-[82%]`}>

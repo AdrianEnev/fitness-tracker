@@ -21,11 +21,49 @@ const Workouts = ({navigation}: any) => {
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
 
     const [workouts, setWorkouts] = useState<Workout[]>([]);
+    const [folders, setFolders] = useState<any[]>([]);
     const [viewWorkoutButtonDisabled, setViewWorkoutButtonDisabled] = useState(false);
 
+    const addEmptyFolder = async () => {
+        try {
+            const email = await getEmail();
+            if (!email) return;
+    
+            const newFolder = {
+                id: `folder_${Date.now()}`,
+                title: 'New Folder',
+                type: 'folder',
+                workouts: []
+            };
+    
+            const data = await AsyncStorage.getItem(`folders_${email}`);
+            let folders = data ? JSON.parse(data) : [];
+    
+            folders.push(newFolder);
+    
+            await AsyncStorage.setItem(`folders_${email}`, JSON.stringify(folders));
+            console.log('New folder added');
+            setFolders(folders); // Update state with new folders
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
+    const getFoldersLocally = async () => {
+        try {
+            const email = await getEmail();
+            if (!email) return;
+    
+            const data = await AsyncStorage.getItem(`folders_${email}`);
+            let folders = data ? JSON.parse(data) : [];
+    
+            setFolders(folders); // Update state with fetched folders
+        } catch (err) {
+            console.error(err);
+        }
+    }
 
     const getWorkoutsLocally = async () => {
-
         console.log('getWokoutsLocally called')
 
         try {
@@ -44,27 +82,14 @@ const Workouts = ({navigation}: any) => {
         }
     };
 
-    const clearAllLocalWorkouts = async () => {
-        try {
-            const email = await getEmail();
-            if (!email) return;
-    
-            await AsyncStorage.removeItem(`workouts_${email}`);
-            console.log('All workouts cleared locally');
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-
     useFocusEffect(
         useCallback(() => {
             getWorkoutsLocally();
+            getFoldersLocally();
         }, [])
     );
 
     const changeWorkoutName = async (workoutID: string, workoutTitle: string) => {
-
         Alert.prompt(
             t('new-name-alert'),
             '',
@@ -86,29 +111,21 @@ const Workouts = ({navigation}: any) => {
             'plain-text',
             workoutTitle
         );
-
     }
 
     const viewWorkout = async (workout: Workout) => {
-
         setViewWorkoutButtonDisabled(true);
 
-        //const workoutInfo = await getWorkoutInfo(workout.id);
         const workoutInfo = await getWorkoutInfoLocally(workout.id);
         if (workoutInfo) {
-
-
-
             const { exercisesData, workoutTitle } = workoutInfo;
             navigation.navigate('Тренировка-Детайли', {exercises: exercisesData, workoutTitle: workoutTitle, workout: workout});
-
         }
 
         setTimeout(() => {
             setViewWorkoutButtonDisabled(false);
             console.log('button enabled')
         }, 500);
-
     }
 
     const getInitials = (name: string) => {
@@ -116,15 +133,12 @@ const Workouts = ({navigation}: any) => {
     }
 
     const renderWorkout = (workout: Workout) => {
-
         const exercisesCount = workout.numberOfExercises;
 
         return (
             <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-lg rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
-                
                 <View style={tw`flex flex-row justify-between`}>
                     <View style={tw`flex-1 flex-row`}>
-
                         <View style={tw`h-full py-3`}>
                             <View style={tw`w-14 h-full rounded-md bg-${workout.colour} flex items-center justify-center`}>
                                 <Text style={tw`text-xl font-medium text-white`}>{getInitials(workout.title)}</Text>
@@ -135,63 +149,67 @@ const Workouts = ({navigation}: any) => {
                             <Text style={tw`text-xl font-medium w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.title}</Text>
                             <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{exercisesCount ? exercisesCount : '?'} {exercisesCount === 1 ? t('exercise-djhjd') : t('exercises-rhahsgdg')}</Text>
                         </View>
-
                     </View>
 
                     <View style={tw`flex justify-center`}>
                         <Ionicons name='chevron-forward' size={36} color='black'/>
                     </View>
                 </View>
-                
+            </Pressable>
+        )
+    }
+
+    const renderFolder = (folder: any) => {
+        return (
+            <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-lg rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => navigation.navigate('Папка', {folder: folder})}>
+                <View style={tw`flex flex-row justify-between`}>
+                    <View style={tw`flex-1 flex-row`}>
+                        <View style={tw`h-full py-3`}>
+                            <View style={tw`w-14 h-full rounded-md bg-yellow-300 flex items-center justify-center`}>
+                                <Ionicons name='folder' size={32} color='white'/>
+                            </View>
+                        </View>
+                        
+                        <View style={tw`flex flex-col ml-3 justify-center w-full`}>
+                            <Text style={tw`text-xl font-medium w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{folder.title}</Text>
+                            <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{folder.workouts.length} {folder.workouts.length === 1 ? t('workout') : t('workouts')}</Text>
+                        </View>
+                    </View>
+
+                    <View style={tw`flex justify-center`}>
+                        <Ionicons name='chevron-forward' size={36} color='black'/>
+                    </View>
+                </View>
             </Pressable>
         )
     }
 
     const { t } = useTranslation();
 
+    const combinedData = [...folders, ...workouts];
+
     return (
         <View style={tw`w-full h-full bg-neutral-50`}>
-
-            {/* 
-                <View style={tw`flex flex-row justify-between mx-3`}>
-
-                    <Pressable style={tw`w-13 h-13 bg-white shadow-lg rounded-2xl flex items-center justify-center`} onPress={() => navigation.goBack()}>
-                        <Ionicons name='arrow-back-outline' size={36} color='#fa1148'/>
-                    </Pressable>
-
-                    <Pressable style={tw`w-13 h-13 bg-white shadow-lg rounded-2xl flex items-center justify-center`} onPress={() => navigation.navigate("Тренировка-Добави")}>
-                        <Ionicons name='add' size={44} color='#fa1148'/>
-                    </Pressable>
-
-                </View>
-            */}
-            
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('workouts')}</Text>
             </View>
 
-            <View style={tw`w-full h-[82%] mt-4 mx-2`}>
-
+            <View style={tw`w-full h-[71%] mt-4 mx-2`}>
                 <FlatList
-                    data={workouts}
-                    renderItem={({item}: any) => renderWorkout(item)}
-                    keyExtractor={(workout: Workout) => workout.id}
+                    data={combinedData}
+                    renderItem={({item}: any) => item.type === 'folder' ? renderFolder(item) : renderWorkout(item)}
+                    keyExtractor={(item: any) => item.id}
                     ListEmptyComponent={() => (
                         <View style={tw``}>
                             <Text style={tw`text-2xl font-medium text-gray-500 ml-3`}>test</Text>
                         </View>
                     )}
-                   
                 />
             </View>
 
-            <BottomNavigationBar currentPage='Workouts' navigation={navigation}/>
-            
+            <BottomNavigationBar currentPage='Workouts' addEmptyFolder={addEmptyFolder} navigation={navigation}/>
         </View>
     )
 }
 
 export default Workouts
-
-
-

@@ -16,11 +16,12 @@ interface CreateWorkoutModalProps {
     isCreateWorkoutModalVisible: boolean;
     setIsCreateWorkoutModalVisible: (isVisible: boolean) => void;
     internetConnected: boolean;
+    folder: any;
 }
 
 const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({ 
     isCreateWorkoutModalVisible, setIsCreateWorkoutModalVisible, exercises, navigation, workoutTitle, setWorkoutTitle,
-    setSaveButtonDisabled, saveButtonDisabled, internetConnected
+    setSaveButtonDisabled, saveButtonDisabled, internetConnected, folder
 }) => { 
     
     return (
@@ -64,7 +65,7 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
 
                                     const id = generateID();
 
-                                    await addWorkoutLocally(exercises, workoutTitle, id);
+                                    await addWorkoutLocally(exercises, workoutTitle, id, folder);
                                     
                                     if (internetConnected) {
                                         addWorkout(exercises, workoutTitle, id);
