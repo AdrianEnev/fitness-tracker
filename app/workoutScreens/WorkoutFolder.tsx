@@ -68,7 +68,7 @@ const WorkoutFolder = ({route, navigation}: any) => {
             
             <View style={tw`w-full h-[85%] p-3`}>
                 {folder.workouts.map((workout: any) => (
-                    <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-lg rounded-2xl mr-2 mb-2 py-2 px-3`} disabled={viewWorkoutButtonDisabled} onPress={() => viewWorkout(workout)}>
+                    <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-lg rounded-2xl mr-2 mb-2 py-2 px-3`} key={workout.id} disabled={viewWorkoutButtonDisabled} onPress={() => viewWorkout(workout)}>
                         <View style={tw`flex flex-row justify-between`}>
                             <View style={tw`flex-1 flex-row`}>
                                 <View style={tw`h-full py-3`}>

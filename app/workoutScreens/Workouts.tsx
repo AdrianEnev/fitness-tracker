@@ -159,9 +159,45 @@ const Workouts = ({navigation}: any) => {
         )
     }
 
+    const renameFolder = async (folderID: string) => {
+        Alert.prompt(
+            t('new-name-alert'),
+            '',
+            async (newName) => {
+                if (newName && newName.length <= 50) {
+                    try {
+                        const email = await getEmail();
+                        if (!email) return;
+    
+                        const data = await AsyncStorage.getItem(`folders_${email}`);
+                        let folders = data ? JSON.parse(data) : [];
+    
+                        const folderIndex = folders.findIndex((folder: any) => folder.id === folderID);
+                        if (folderIndex !== -1) {
+                            folders[folderIndex].title = newName;
+                            await AsyncStorage.setItem(`folders_${email}`, JSON.stringify(folders));
+                            setFolders(folders); // Update state with new folders
+                        }
+                    } catch (err) {
+                        console.error(err);
+                    }
+                } else {
+                    Alert.alert(t('folder-characters-alert'), '', [
+                        {
+                            text: 'OK',
+                            style: 'cancel',
+                        },
+                    ]);
+                }
+            },
+            'plain-text',
+            ''
+        );
+    };
+
     const renderFolder = (folder: any) => {
         return (
-            <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-lg rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => navigation.navigate('Папка', {folder: folder})}>
+            <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-lg rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => navigation.navigate('Папка', {folder: folder})} onLongPress={() => renameFolder(folder.id)}>
                 <View style={tw`flex flex-row justify-between`}>
                     <View style={tw`flex-1 flex-row`}>
                         <View style={tw`h-full py-3`}>

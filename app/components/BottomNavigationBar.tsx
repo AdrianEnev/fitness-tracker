@@ -280,11 +280,11 @@ const BottomNavigationBar = (
                     </Pressable>
 
                     <Pressable onPress={deleteFolder}>
-                        <Ionicons name="remove-circle-outline" size={72} color="#fd1c47"/>
+                        <Ionicons name="trash-bin-outline" size={72} color="#fd1c47"/>
                     </Pressable>
                     
                     <Pressable style={tw`w-15 h-15 border-4 border-[#fd1c47] rounded-full flex items-center justify-center`}
-                        onPress={() => navigation.navigate('Генериране-Тренировка')}
+                        onPress={() => navigation.navigate('Генериране-Тренировка', {folder: folder})}
                     >
                         <Ionicons name="flash-outline" size={40} color="#fd1c47"/>
                     </Pressable>

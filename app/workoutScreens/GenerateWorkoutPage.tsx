@@ -14,7 +14,9 @@ import GenerateWorkoutModal from '../modals/GeneratingWorkoutModal'
 import { BlurView } from 'expo-blur'
 import addGeneratedWorkoutLocally from '../useWorkout/useAddGeneratedWorkoutLocally'
 
-const GenerateWorkoutPage = ({navigation}: any) => {
+const GenerateWorkoutPage = ({navigation, route}: any) => {
+
+    const {folder = null} = route.params || {};
 
     const nextPage = async () => {
         
@@ -28,7 +30,7 @@ const GenerateWorkoutPage = ({navigation}: any) => {
             setCurrentPage(currentPage + 1);
         }else if (currentPage === 5) {
             setCurrentPage(currentPage + 1);
-        }else if (currentPage === 6 && equipment.length > 0) {
+        }else if (currentPage === 6) {
             setCurrentPage(currentPage + 1);
         }else if (currentPage === 7) {
 
@@ -111,8 +113,13 @@ const GenerateWorkoutPage = ({navigation}: any) => {
             setIsGenerateWorkoutModalVisible(true);
 
             const generatedWorkout = await generateWorkout(level, goal, numberOfDays, location, specificBodyparts, group, equipment);
-            await addGeneratedWorkoutLocally(generatedWorkout)
-            navigation.goBack();
+            await addGeneratedWorkoutLocally(generatedWorkout, folder)
+            
+            if (folder) {
+                navigation.navigate('Тренировки');
+            }else{
+                navigation.goBack();
+            }
         }
 
     }

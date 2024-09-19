@@ -20,8 +20,6 @@ interface ExerciseInfo {
 const addWorkoutLocally = async (exercises: any, workoutTitle: string, id: any, folder: any) => {
     try {
 
-        
-
         const email = await getEmail();
         if (!email) return;
 
@@ -75,7 +73,6 @@ const addWorkoutLocally = async (exercises: any, workoutTitle: string, id: any, 
             folders[index].workouts.push(newWorkout);
             await AsyncStorage.setItem(`folders_${email}`, JSON.stringify(folders));
         }
-        
 
         console.log('Workout saved locally:', newWorkout);
     } catch (err) {
