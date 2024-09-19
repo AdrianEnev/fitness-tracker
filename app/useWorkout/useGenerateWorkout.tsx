@@ -17,7 +17,11 @@ const useGenerateWorkout = async (
     The athlete will use ${equipment} equipment. 
     I would like each exercise to have only 1 specific number of reps which would be the approximate number of reps for that exercise. 
     For example an exercise can have 8 reps as the value and not "8-12". 
-    I also want you to keep in mind that "focusing on specific bodyparts" does not require focusing the whole program on those bodyparts but just slightly prioritizing them over other bodyparts during workouts
+    I also want you to keep in mind that "focusing on specific bodyparts" does not require focusing the whole program on those bodyparts but just slightly prioritizing them over other bodyparts during workouts.
+    Also keep in mind that the main fitness goal set should not completely alter the focus of the workout plan but set the general direction.
+    Only include exercises that can be done at ${workoutLocation} with ${equipment} equipment.
+    Do not include exercises that require seconds instead of reps.
+    Do not include any lesser know or gimicky exercises like "cable woodchoppers" and when generating unilateral exercises only return an integer value for the number of reps and not "10 per side" or something similar.
 
     Please provide the workout plan in the following JSON format:
     {
