@@ -15,6 +15,8 @@ import saveWorkoutEditsLocally from '../useWorkout/useSaveWorkoutEditsLocally';
 import GlobalContext from '../../GlobalContext';
 import getEmail from '../use/useGetEmail';
 import saveWorkoutEditsFromFolderLocally from '../useWorkout/useSaveWorkoutEditsFromFolderLocally';
+import * as Device from 'expo-device';
+import DeleteExerciseModal from '../modals/DeleteExerciseModal';
 
 const ViewWorkout = ({route, navigation}: any) => {
 
@@ -261,12 +263,46 @@ const ViewWorkout = ({route, navigation}: any) => {
             setUserInputs(updatedUserInputs);
         }
     };
+
+    const [topMargin, setTopMargin] = useState<number | null>(null);
     
+    useEffect(() => {
+        //const { height } = Dimensions.get('window');
+        const model = Device.modelName;
+
+        let margin = 15; // Default margin
+
+        if (model && model.includes('iPhone')) {
+            if (model.includes('X') || model.includes('11') || model.includes('12') || model.includes('13')) {
+                margin = 12;
+            } else if (model.includes('8') || model.includes('7') || model.includes('6')) {
+                margin = 5;
+            }
+        }
+
+        setTopMargin(margin);
+    }, []);
+
+    const deleteExercise = (exerciseId: any) => {
+
+        const updatedExercises = newExercises.filter((ex: any) => ex.id !== exerciseId);
+        const updatedUserInputs = userInputs.filter((input: any) => input.id !== exerciseId);
+    
+        setNewExercises(updatedExercises);
+        setUserInputs(updatedUserInputs);
+
+        setCurrentIndex(currentIndex + 1)
+
+        
+    }
+
+    const [isDeleteExerciseModalVisible, setIsDeleteExerciseModalVisible] = useState(false);
+    const [currentExerciseId, setCurrentExerciseId] = useState('');
 
     return (
         <>
 
-        { (isSetIntensityModalVisible) && (
+        { (isSetIntensityModalVisible || isDeleteExerciseModalVisible) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -287,9 +323,18 @@ const ViewWorkout = ({route, navigation}: any) => {
                         setSetIntensity={setSetIntensity}
 
                     />
+
+                    <DeleteExerciseModal 
+                    
+                        navigation={navigation}
+                        isDeleteExerciseModalVisible={isDeleteExerciseModalVisible}
+                        setIsDeleteExerciseModalVisible={setIsDeleteExerciseModalVisible}
+                        deleteExercise={deleteExercise}
+                        currentExerciseId={currentExerciseId}
+                    />
                     
                     <TextInput 
-                        style={tw`text-2xl font-bold mx-3 mb-5`}
+                        style={tw`text-2xl font-bold mx-3 mb-5 max-w-[81%]`}
                         keyboardType='default'
                         multiline={true}
                         numberOfLines={2}
@@ -305,8 +350,8 @@ const ViewWorkout = ({route, navigation}: any) => {
                             if (exercise.exerciseIndex === currentIndex + 1) {
                                 return (
                                     <View key={exercise.id} style={tw`w-full h-[82%]`}>
-                                        
-                                        
+                                    
+
                                         <TextInput 
                                             style={textInputStyle}
                                             keyboardType='default'
@@ -395,6 +440,15 @@ const ViewWorkout = ({route, navigation}: any) => {
                                                                                 }}
                                                                             />
                                                                         </View>
+
+                                                                        <Pressable style={tw`absolute right-7 w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${mapIndex != 0 ? 'hidden' : ''} ${newExercises.length == 1 ? 'hidden' : ''}`}
+                                                                            onPress={() => {
+                                                                                setIsDeleteExerciseModalVisible(true)
+                                                                                setCurrentExerciseId(exercise.id)
+                                                                            }} 
+                                                                        >
+                                                                            <Ionicons name='close' size={20} color='black' />
+                                                                        </Pressable>
         
                                                                         <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
                                                                             onPress={() => removeSet(exercise.exerciseIndex, set.id)}

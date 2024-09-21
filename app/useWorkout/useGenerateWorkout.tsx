@@ -28,6 +28,7 @@ const useGenerateWorkout = async (
     unique touch to the workout plan. You should consider 8 day weeks only if the number of days I can work out is 6 or 7, then 2 rest days should be included.
     The rest days should be labelled as an empty day in the workout plan and should be placed in the most optimal position for maximum recovery.
     Exclude olympic exercises like "clean and jerk" and follow a traditional route, inspired by modern science-based workout programmes.
+    If an exercise requires bodyweight, specify the number 0 for the weight property instead of 'bodyweight'.
 
     Please provide the workout plan in the following JSON format:
     {

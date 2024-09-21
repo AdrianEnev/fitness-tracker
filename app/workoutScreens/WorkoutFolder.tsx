@@ -60,28 +60,60 @@ const WorkoutFolder = ({route, navigation}: any) => {
         }, 500);
     }
 
-    const renderWorkout = ({ item: workout }: { item: Workout }) => (
-        <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} key={workout.id} disabled={viewWorkoutButtonDisabled} onPress={() => viewWorkout(workout, folder)}>
-            <View style={tw`flex flex-row justify-between`}>
-                <View style={tw`flex-1 flex-row`}>
-                    <View style={tw`h-full py-3`}>
-                        <View style={tw`w-14 h-full rounded-md bg-${workout.colour} flex items-center justify-center`}>
-                            <Text style={tw`text-xl font-medium text-white`}>{getInitials(workout.title)}</Text>
+    const renderWorkout = ({ item: workout }: { item: Workout }) => {
+
+        if (workout.title === "Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($"){
+            return (
+                <View style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`}>
+                    <View style={tw`flex flex-row justify-between`}>
+                        <View style={tw`flex-1 flex-row`}>
+                            <View style={tw`h-full py-3`}>
+                                <View style={tw`w-14 h-full rounded-md bg-[#67e8f9] flex items-center justify-center`}>
+                                    <Ionicons name='cloud' size={38} color='white'/>
+                                </View>
+                            </View>
+                            
+                            <View style={tw`flex flex-col ml-3 justify-center w-full`}>
+                                <Text style={tw`text-xl font-medium w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>
+                                    Rest Day
+                                </Text>
+    
+                                <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>You can take a break today!</Text>
+                            </View>
+                        </View>
+    
+                    </View>
+                </View>
+            )
+        }else{
+            return (
+                <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} key={workout.id} disabled={viewWorkoutButtonDisabled} onPress={() => viewWorkout(workout, folder)}>
+                    <View style={tw`flex flex-row justify-between`}>
+                        <View style={tw`flex-1 flex-row`}>
+                            <View style={tw`h-full py-3`}>
+                                <View style={tw`w-14 h-full rounded-md bg-${workout.colour} flex items-center justify-center`}>
+                                    <Text style={tw`text-xl font-medium text-white`}>{getInitials(workout.previousTitle)}</Text>
+                                </View>
+                            </View>
+                            
+                            <View style={tw`flex flex-col ml-3 justify-center w-full`}>
+                                <Text style={tw`text-xl font-medium w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>
+                                    {workout.title}
+                                </Text>
+    
+                                <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.numberOfExercises} {workout.numberOfExercises === 1 ? t('exercise-djhjd') : t('exercises-rhahsgdg')}</Text>
+                            </View>
+                        </View>
+    
+                        <View style={tw`flex justify-center`}>
+                            <Ionicons name='chevron-forward' size={36} color='black'/>
                         </View>
                     </View>
-                    
-                    <View style={tw`flex flex-col ml-3 justify-center w-full`}>
-                        <Text style={tw`text-xl font-medium w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.title}</Text>
-                        <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.numberOfExercises} {workout.numberOfExercises === 1 ? t('exercise-djhjd') : t('exercises-rhahsgdg')}</Text>
-                    </View>
-                </View>
-
-                <View style={tw`flex justify-center`}>
-                    <Ionicons name='chevron-forward' size={36} color='black'/>
-                </View>
-            </View>
-        </Pressable>
-    );
+                </Pressable>
+            )
+        }
+        
+    };
 
     return (
         <View style={tw`w-full h-full bg-neutral-50`}>

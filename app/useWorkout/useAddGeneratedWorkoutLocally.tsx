@@ -33,6 +33,18 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, folder?: any) =
 
         generatedWorkout.days.forEach((day: any, index: number) => {
             const workoutTitle = day.day;
+
+            let newWorkoutTitle = workoutTitle;
+            // if workoutTitle contains "Day x - " then remove it
+            const dayMatch = workoutTitle.match(/^Day (\d) - /);
+            if (dayMatch && dayMatch[1] >= '1' && dayMatch[1] <= '8') {
+                newWorkoutTitle = workoutTitle.replace(/^Day (\d) - /, '');
+            }
+
+            if (newWorkoutTitle === "Rest") {
+                newWorkoutTitle = "Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($";
+            }
+
             const exercises = day.exercises ? day.exercises.map((exercise: any, exerciseIndex: number) => ({
                 id: Math.random().toString(),
                 title: exercise.name,
@@ -48,7 +60,8 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, folder?: any) =
 
             const newWorkout = {
                 id: Math.random().toString(),
-                title: workoutTitle,
+                title: newWorkoutTitle,
+                previousTitle: workoutTitle,
                 created: new Date().toISOString(),
                 colour: getUniqueColour(),
                 numberOfExercises: exercises.length,
@@ -66,7 +79,20 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, folder?: any) =
             const folderIndex = folders.findIndex((f: any) => f.id === folder.id);
             if (folderIndex !== -1) {
                 generatedWorkout.days.forEach((day: any, index: number) => {
+                    
                     const workoutTitle = day.day;
+
+                    let newWorkoutTitle = workoutTitle;
+                    // if workoutTitle contains "Day x - " then remove it
+                    const dayMatch = workoutTitle.match(/^Day (\d) - /);
+                    if (dayMatch && dayMatch[1] >= '1' && dayMatch[1] <= '8') {
+                        newWorkoutTitle = workoutTitle.replace(/^Day (\d) - /, '');
+                    }
+        
+                    if (newWorkoutTitle === "Rest" || newWorkoutTitle === "Rest Day" || newWorkoutTitle === "Rest/Active Recovery") {
+                        newWorkoutTitle = "Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($";
+                    }
+
                     const exercises = day.exercises ? day.exercises.map((exercise: any, exerciseIndex: number) => ({
                         id: Math.random().toString(),
                         title: exercise.name,
@@ -82,7 +108,8 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, folder?: any) =
 
                     const newWorkout = {
                         id: Math.random().toString(),
-                        title: workoutTitle,
+                        title: newWorkoutTitle,
+                        previousTitle: workoutTitle,
                         created: new Date().toISOString(),
                         colour: getUniqueColour(),
                         numberOfExercises: exercises.length,

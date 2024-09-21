@@ -3,7 +3,6 @@ import generateID from '../use/useGenerateID';
 import getEmail from '../use/useGetEmail';
 
 const saveWorkoutEditsLocally = async (workout: any, userInputs: any, newExercises: any, newWorkoutTitle: any, folder?: any) => {
-
     try {
         const email = await getEmail();
         if (!email) return;
@@ -37,7 +36,7 @@ const saveWorkoutEditsLocally = async (workout: any, userInputs: any, newExercis
             }
         });
 
-        // Add new exercises
+        // Check for exercises to add
         newExercises.forEach((newExercise: any, exerciseIndex: number) => {
             const newExerciseInfo = {
                 id: generateID(),
@@ -54,6 +53,21 @@ const saveWorkoutEditsLocally = async (workout: any, userInputs: any, newExercis
             };
             updatedWorkout.info.push(newExerciseInfo);
         });
+
+        // Check for exercises to remove
+        const existingExerciseIds = updatedWorkout.info.map((ex: any) => ex.id);
+        const newExerciseIds = newExercises.map((ex: any) => ex.id);
+        const deletedExerciseIds = existingExerciseIds.filter((id: any) => !newExerciseIds.includes(id));
+
+        updatedWorkout.info = updatedWorkout.info.filter((ex: any) => !deletedExerciseIds.includes(ex.id));
+
+        // Update exerciseIndex to be sequential
+        updatedWorkout.info.forEach((ex: any, index: number) => {
+            ex.exerciseIndex = index + 1;
+        });
+
+        // Update numberOfExercises property
+        updatedWorkout.numberOfExercises = updatedWorkout.info.length;
 
         // Update the workout in the list
         workouts[workoutIndex] = updatedWorkout;

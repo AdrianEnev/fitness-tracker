@@ -42,7 +42,7 @@ const saveWorkoutEditsFromFolderLocally = async (workout: any, userInputs: any, 
             }
         });
 
-        // Add new exercises
+        // Check for exercises to add
         newExercises.forEach((newExercise: any, exerciseIndex: number) => {
             const existingExerciseIndex = updatedWorkout.info.findIndex((ex: any) => ex.id === newExercise.id);
             if (existingExerciseIndex === -1) {
@@ -63,6 +63,21 @@ const saveWorkoutEditsFromFolderLocally = async (workout: any, userInputs: any, 
             }
         });
 
+        // Check for exercises to remove
+        const existingExerciseIds = updatedWorkout.info.map((ex: any) => ex.id);
+        const newExerciseIds = newExercises.map((ex: any) => ex.id);
+        const deletedExerciseIds = existingExerciseIds.filter((id: any) => !newExerciseIds.includes(id));
+
+        updatedWorkout.info = updatedWorkout.info.filter((ex: any) => !deletedExerciseIds.includes(ex.id));
+
+        // Update exerciseIndex to be sequential
+        updatedWorkout.info.forEach((ex: any, index: number) => {
+            ex.exerciseIndex = index + 1;
+        });
+
+        // Update numberOfExercises property
+        updatedWorkout.numberOfExercises = updatedWorkout.info.length;
+
         // Update the workout in the folder's workout list
         const folderWorkoutIndex = folders[folderIndex].workouts.findIndex((w: any) => w.id === workout.id);
         if (folderWorkoutIndex !== -1) {
@@ -75,7 +90,7 @@ const saveWorkoutEditsFromFolderLocally = async (workout: any, userInputs: any, 
         // Save updated folders list to local storage
         await AsyncStorage.setItem(`folders_${email}`, JSON.stringify(folders));
 
-        //console.log('Workout edits saved locally:', updatedWorkout);
+        console.log('Workout edits saved locally:', updatedWorkout);
     } catch (err) {
         console.error('Error saving workout edits locally:', err);
     }

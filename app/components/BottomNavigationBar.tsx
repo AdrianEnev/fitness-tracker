@@ -200,7 +200,11 @@ const BottomNavigationBar = (
                     </Pressable>
                     
                     <Pressable style={tw`w-15 h-15 border-4 border-[#fd1c47] rounded-full flex items-center justify-center`}
-                        onPress={() => navigation.navigate('Генериране-Тренировка')}
+                        onPress={() => {
+                            if (internetConnected) {
+                                navigation.navigate('Генериране-Тренировка');
+                            }
+                        }}
                     >
                         <Ionicons name="flash-outline" size={40} color="#fd1c47"/>
                     </Pressable>

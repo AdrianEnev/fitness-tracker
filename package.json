@@ -56,7 +56,8 @@
     "react-native-wheel-scrollview-picker": "^2.0.4",
     "string-similarity": "^4.0.4",
     "twrnc": "^3.6.7",
-    "expo-image-manipulator": "~12.0.5"
+    "expo-image-manipulator": "~12.0.5",
+    "expo-device": "~6.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

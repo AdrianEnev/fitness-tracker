@@ -16,6 +16,7 @@ export interface Exercise {
 
 export interface Workout {
     title: string;
+    previousTitle: string;
     exercises: Exercise[];
     id: string;
     colour: string;
