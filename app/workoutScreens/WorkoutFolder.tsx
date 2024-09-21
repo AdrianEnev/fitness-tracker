@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from 'react-native'
+import { View, Text, Pressable, FlatList } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -13,13 +13,13 @@ const WorkoutFolder = ({route, navigation}: any) => {
 
     const {folder} = route.params;
 
-    useEffect(() => {
-        console.log('Navigated to workout folder: ', folder)
-    }, [folder]);
-
     const {t} = useTranslation();
 
     const getInitials = (name: string) => {
+        const dayMatch = name.match(/^Day (\d) - /);
+        if (dayMatch && dayMatch[1] >= '1' && dayMatch[1] <= '8') {
+            return `D${dayMatch[1]}`;
+        }
         return name.split(' ').map(word => word[0]).join('').substring(0, 3).toUpperCase();
     }
 
@@ -45,13 +45,13 @@ const WorkoutFolder = ({route, navigation}: any) => {
 
     const [viewWorkoutButtonDisabled, setViewWorkoutButtonDisabled] = useState(false);
 
-    const viewWorkout = async (workout: Workout) => {
+    const viewWorkout = async (workout: Workout, folder: any) => {
         setViewWorkoutButtonDisabled(true);
 
         const workoutInfo = await getWorkoutInfoLocally(workout.id, folder);
         if (workoutInfo) {
             const { exercisesData, workoutTitle } = workoutInfo;
-            navigation.navigate('Тренировка-Детайли', {exercises: exercisesData, workoutTitle: workoutTitle, workout: workout});
+            navigation.navigate('Тренировка-Детайли', {exercises: exercisesData, workoutTitle: workoutTitle, workout: workout, folder: folder});
         }
 
         setTimeout(() => {
@@ -60,35 +60,47 @@ const WorkoutFolder = ({route, navigation}: any) => {
         }, 500);
     }
 
+    const renderWorkout = ({ item: workout }: { item: Workout }) => (
+        <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} key={workout.id} disabled={viewWorkoutButtonDisabled} onPress={() => viewWorkout(workout, folder)}>
+            <View style={tw`flex flex-row justify-between`}>
+                <View style={tw`flex-1 flex-row`}>
+                    <View style={tw`h-full py-3`}>
+                        <View style={tw`w-14 h-full rounded-md bg-${workout.colour} flex items-center justify-center`}>
+                            <Text style={tw`text-xl font-medium text-white`}>{getInitials(workout.title)}</Text>
+                        </View>
+                    </View>
+                    
+                    <View style={tw`flex flex-col ml-3 justify-center w-full`}>
+                        <Text style={tw`text-xl font-medium w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.title}</Text>
+                        <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.numberOfExercises} {workout.numberOfExercises === 1 ? t('exercise-djhjd') : t('exercises-rhahsgdg')}</Text>
+                    </View>
+                </View>
+
+                <View style={tw`flex justify-center`}>
+                    <Ionicons name='chevron-forward' size={36} color='black'/>
+                </View>
+            </View>
+        </Pressable>
+    );
+
     return (
         <View style={tw`w-full h-full bg-neutral-50`}>
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{folder.title}</Text>
             </View>
             
-            <View style={tw`w-full h-[85%] p-3`}>
-                {folder.workouts.map((workout: any) => (
-                    <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-lg rounded-2xl mr-2 mb-2 py-2 px-3`} key={workout.id} disabled={viewWorkoutButtonDisabled} onPress={() => viewWorkout(workout)}>
-                        <View style={tw`flex flex-row justify-between`}>
-                            <View style={tw`flex-1 flex-row`}>
-                                <View style={tw`h-full py-3`}>
-                                    <View style={tw`w-14 h-full rounded-md bg-${workout.colour} flex items-center justify-center`}>
-                                        <Text style={tw`text-xl font-medium text-white`}>{getInitials(workout.title)}</Text>
-                                    </View>
-                                </View>
-                                
-                                <View style={tw`flex flex-col ml-3 justify-center w-full`}>
-                                    <Text style={tw`text-xl font-medium w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.title}</Text>
-                                    <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.numberOfExercises} {workout.numberOfExercises === 1 ? t('exercise-djhjd') : t('exercises-rhahsgdg')}</Text>
-                                </View>
-                            </View>
-
-                            <View style={tw`flex justify-center`}>
-                                <Ionicons name='chevron-forward' size={36} color='black'/>
-                            </View>
+            <View style={tw`w-full h-[73%] p-3`}>
+                <FlatList
+                    data={folder.workouts}
+                    renderItem={renderWorkout}
+                    keyExtractor={(item: any) => item.id}
+                    ListEmptyComponent={() => (
+                        <View style={tw``}>
+                            <Text style={tw`text-2xl font-medium text-gray-500 ml-3`}>test</Text>
                         </View>
-                    </Pressable>
-                ))}
+                    )}
+                    showsVerticalScrollIndicator={false}
+                />
             </View>
 
             <BottomNavigationBar navigation={navigation} folder={folder} currentPage='Folder' deleteFolder={deleteFolder}/>

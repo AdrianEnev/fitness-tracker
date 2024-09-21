@@ -129,6 +129,10 @@ const Workouts = ({navigation}: any) => {
     }
 
     const getInitials = (name: string) => {
+        const dayMatch = name.match(/^Day (\d) - /);
+        if (dayMatch && dayMatch[1] >= '1' && dayMatch[1] <= '8') {
+            return `D${dayMatch[1]}`;
+        }
         return name.split(' ').map(word => word[0]).join('').substring(0, 3).toUpperCase();
     }
 
@@ -136,7 +140,7 @@ const Workouts = ({navigation}: any) => {
         const exercisesCount = workout.numberOfExercises;
 
         return (
-            <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-lg rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
+            <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
                 <View style={tw`flex flex-row justify-between`}>
                     <View style={tw`flex-1 flex-row`}>
                         <View style={tw`h-full py-3`}>
@@ -197,7 +201,7 @@ const Workouts = ({navigation}: any) => {
 
     const renderFolder = (folder: any) => {
         return (
-            <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-lg rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => navigation.navigate('Папка', {folder: folder})} onLongPress={() => renameFolder(folder.id)}>
+            <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => navigation.navigate('Папка', {folder: folder})} onLongPress={() => renameFolder(folder.id)}>
                 <View style={tw`flex flex-row justify-between`}>
                     <View style={tw`flex-1 flex-row`}>
                         <View style={tw`h-full py-3`}>
@@ -240,6 +244,7 @@ const Workouts = ({navigation}: any) => {
                             <Text style={tw`text-2xl font-medium text-gray-500 ml-3`}>test</Text>
                         </View>
                     )}
+                    showsVerticalScrollIndicator={false}
                 />
             </View>
 

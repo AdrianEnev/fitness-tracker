@@ -37,12 +37,14 @@ const PageTwo = ({primaryGoal, setPrimaryGoal}: any) => {
                     <Text style={tw`text-2xl font-medium ${primaryGoal === 3 ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>Endurance</Text>
                 </Pressable>
 
-                <Pressable style={tw`w-full h-[10.9%] rounded-2xl ${primaryGoal === 4 ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
+                {/* 
+                    <Pressable style={tw`w-full h-[10.9%] rounded-2xl ${primaryGoal === 4 ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
                     onPress={() => setPrimaryGoal(4)}
-                >
-                    <Ionicons name='accessibility-outline' size={42} color={primaryGoal === 4 ? 'white' : '#6b7280'} style={tw`mt-[6px]`}/>
-                    <Text style={tw`text-2xl font-medium ${primaryGoal === 4 ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>Flexibility</Text>
-                </Pressable>
+                    >
+                        <Ionicons name='accessibility-outline' size={42} color={primaryGoal === 4 ? 'white' : '#6b7280'} style={tw`mt-[6px]`}/>
+                        <Text style={tw`text-2xl font-medium ${primaryGoal === 4 ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>Flexibility</Text>
+                    </Pressable>
+                */}
 
             </View>
         </View>

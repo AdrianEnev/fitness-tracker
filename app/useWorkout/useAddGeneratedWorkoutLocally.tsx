@@ -3,6 +3,21 @@ import generateRandomColour from "../use/useGenerateColour";
 import getEmail from "../use/useGetEmail";
 
 const addGeneratedWorkoutLocally = async (generatedWorkout: any, folder?: any) => {
+    const usedColours: string[] = [];
+
+    const getUniqueColour = () => {
+        let colour;
+        do {
+            colour = generateRandomColour();
+        } while (usedColours.includes(colour) && usedColours.length < 7);
+
+        if (usedColours.length >= 7) {
+            usedColours.length = 0; // Reset the used colours array
+        }
+
+        usedColours.push(colour);
+        return colour;
+    };
 
     try {
         const email = await getEmail();
@@ -35,7 +50,7 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, folder?: any) =
                 id: Math.random().toString(),
                 title: workoutTitle,
                 created: new Date().toISOString(),
-                colour: generateRandomColour(),
+                colour: getUniqueColour(),
                 numberOfExercises: exercises.length,
                 info: exercises
             };
@@ -69,7 +84,7 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, folder?: any) =
                         id: Math.random().toString(),
                         title: workoutTitle,
                         created: new Date().toISOString(),
-                        colour: generateRandomColour(),
+                        colour: getUniqueColour(),
                         numberOfExercises: exercises.length,
                         info: exercises
                     };

@@ -14,10 +14,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import saveWorkoutEditsLocally from '../useWorkout/useSaveWorkoutEditsLocally';
 import GlobalContext from '../../GlobalContext';
 import getEmail from '../use/useGetEmail';
+import saveWorkoutEditsFromFolderLocally from '../useWorkout/useSaveWorkoutEditsFromFolderLocally';
 
 const ViewWorkout = ({route, navigation}: any) => {
 
-    const { exercises, workout, workoutTitle } = route.params;
+    const { exercises, workout, workoutTitle, folder } = route.params;
 
     const {internetConnected} = useContext(GlobalContext)
 
@@ -86,7 +87,11 @@ const ViewWorkout = ({route, navigation}: any) => {
 
         setSaveChangesRan(true);
 
-        await saveWorkoutEditsLocally(workout, userInputs, newExercises, newWorkoutTitle);
+        if (folder) {
+            await saveWorkoutEditsFromFolderLocally(workout, userInputs, newExercises, newWorkoutTitle, folder);
+        }else{
+            await saveWorkoutEditsLocally(workout, userInputs, newExercises, newWorkoutTitle, folder);
+        }
 
         if (internetConnected) {
             saveWorkoutEdits(workout, userInputs, newExercises, newWorkoutTitle);
@@ -97,27 +102,52 @@ const ViewWorkout = ({route, navigation}: any) => {
         
     }
     
+        
     const addExercise = () => {
+        console.log('add exercise ran');
+        console.log('Current exercises:', newExercises); // Debug log
+
         if (newExercises.length < 9) {
             const newSet = {
                 id: generateID(),
-                reps: "", 
+                reps: "",
                 weight: "" 
             };
-        
+
             const newExercise = {
                 id: generateID(),
                 title: "Упражнение " + (newExercises.length + 1),
                 exerciseIndex: newExercises.length + 1,
                 sets: [newSet]
             };
-        
+
             setNewExercises([...newExercises, newExercise]);
             setUserInputs([...userInputs, { ...newExercise, sets: [newSet] }]);
-        
+
             // Update currentIndex to the newly added exercise
             setCurrentIndex(newExercises.length);
         }
+    };
+
+    const deleteWorkoutFromFolder = async () => {
+        try {
+            const email = await getEmail();
+            if (!email) return;
+    
+            const data = await AsyncStorage.getItem(`folders_${email}`);
+            let folders = data ? JSON.parse(data) : [];
+    
+            const folderIndex = folders.findIndex((f: any) => f.id === folder.id);
+            if (folderIndex !== -1) {
+                folders[folderIndex].workouts = folders[folderIndex].workouts.filter((w: any) => w.id !== workout.id);
+                await AsyncStorage.setItem(`folders_${email}`, JSON.stringify(folders));
+            }
+        } catch (err) {
+            console.error('Error deleting workout from local storage: ', err);
+        }
+    
+        setDeleteWorkoutCalled(false);
+        navigation.navigate('Тренировки');
     };
 
     const deleteWorkout = async () => {
@@ -201,8 +231,6 @@ const ViewWorkout = ({route, navigation}: any) => {
     };
 
     const [textInputStyle, setTextInputStyle] = useState({});
-
-    const [saveButtonDisabled, setSaveButtonDisabled] = useState(false);
 
     const getDimensions = () => {
         const {width} = Dimensions.get('window')
@@ -392,7 +420,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                     <BottomNavigationBar
                         currentPage='ViewWorkout'
                         navigation={navigation}
-                        deleteSavedWorkout={deleteWorkout}
+                        deleteSavedWorkout={folder ? deleteWorkoutFromFolder : deleteWorkout}
                         addSetButton={addSet}
                         workout={workout}
                         forwardButton={() => setCurrentIndex((currentIndex + 1) % newExercises.length)}

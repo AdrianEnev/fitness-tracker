@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import generateID from '../use/useGenerateID';
 import getEmail from '../use/useGetEmail';
 
-const saveWorkoutEditsLocally = async (workout: any, userInputs: any, newExercises: any, newWorkoutTitle: any) => {
+const saveWorkoutEditsLocally = async (workout: any, userInputs: any, newExercises: any, newWorkoutTitle: any, folder?: any) => {
 
     try {
         const email = await getEmail();
@@ -49,7 +49,8 @@ const saveWorkoutEditsLocally = async (workout: any, userInputs: any, newExercis
                     weight: set.weight,
                     intensity: set.intensity || null,
                     setIndex: index + 1
-                }))
+                })),
+                numberOfExercises: newExercise.sets.length
             };
             updatedWorkout.info.push(newExerciseInfo);
         });
