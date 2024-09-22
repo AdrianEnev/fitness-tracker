@@ -315,7 +315,7 @@ const Workouts = ({navigation}: any) => {
             <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} 
                 onPress={() => {
                     if (!selectionMode) {
-                        navigation.navigate('Папка', {folder: folder})
+                        navigation.navigate('Папка', {folderId: folder.id})
                     }
                 }} 
                 onLongPress={() => renameFolder(folder.id)}
