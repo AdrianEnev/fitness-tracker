@@ -9,6 +9,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Workout } from '../../interfaces'
 import getWorkoutInfoLocally from '../useWorkout/useGetWorkoutInfoLocally'
 import { BlurView } from 'expo-blur'
+import { copySelectedWorkoutsInFolder, cutSelectedWorkoutsInFolder, deleteSelectedWorkoutsInFolder, pasteCopiedWorkoutsInFolder, pasteCutWorkoutsInFolder } from '../useWorkout/handleSelectionModeForFolders'
+import PasteWorkoutsInFolderModal from '../modals/PasteWorkoutsInFolderModal'
 
 const WorkoutFolder = ({route, navigation}: any) => {
 
@@ -61,21 +63,43 @@ const WorkoutFolder = ({route, navigation}: any) => {
         }, 500);
     }
 
-    const selectWorkout = async (workout: Workout) => {
-        // turn selection mode on and add the workout to the list, then allow the user to delete or move the workout
-        console.log('selected workout: ', workout)
-    }
+    const [selectedWorkouts, setSelectedWorkouts] = useState<any>([])
+    const [selectionMode, setSelectionMode] = useState(false)
 
-    const [isDeleteRestDayModalVisible, setIsDeleteRestDayModalVisible] = useState(false);
+    useEffect(() => {
+        if (selectedWorkouts.length === 0) {
+            setSelectionMode(false)
+            console.log('selection mode disabled')
+        }
+    }, [selectedWorkouts])
 
     const renderWorkout = ({ item: workout }: { item: Workout }) => {
 
         if (workout.title === "Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($"){
             return (
-                <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`}
+                <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3
+                    ${selectedWorkouts.some((selectedWorkout: any) => selectedWorkout.id === workout.id) ? 'border-2 border-red-300' : 'border border-gray-200'}
+                `}
                     onLongPress={() => {
-                        
-                    }}
+                        if (selectedWorkouts.length === 0) {
+                            // add the workout to selectedWorkouts and set selection mode to true as this is the first workout being selected
+                            console.log('selection mode on')
+                            setSelectedWorkouts([...selectedWorkouts, workout]);
+                            setSelectionMode(true)
+                        }
+                    }} 
+                    onPress={() => {
+                        if (selectionMode) {
+                            // add the workout to the selectedWorkouts list
+                            setSelectedWorkouts((prevSelectedWorkouts: any) => {
+                                if (prevSelectedWorkouts.some((selectedWorkout: any) => selectedWorkout.id === workout.id)) {
+                                    return prevSelectedWorkouts.filter((selectedWorkout: any) => selectedWorkout.id !== workout.id);
+                                } else {
+                                    return [...prevSelectedWorkouts, workout];
+                                }
+                            });
+                        }
+                    }} 
                 >
                     <View style={tw`flex flex-row justify-between`}>
                         <View style={tw`flex-1 flex-row`}>
@@ -99,10 +123,33 @@ const WorkoutFolder = ({route, navigation}: any) => {
             )
         }else{
             return (
-                <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} 
+                <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3
+                    ${selectedWorkouts.some((selectedWorkout: any) => selectedWorkout.id === workout.id) ? 'border-2 border-red-300' : 'border border-gray-200'}
+                    `            
+                } 
                     key={workout.id} disabled={viewWorkoutButtonDisabled} 
-                    onPress={() => viewWorkout(workout, folder)}
-                    onLongPress={() => selectWorkout(workout)}
+                    onPress={() => {
+                        if (!selectionMode) {
+                            viewWorkout(workout, folder)
+                        }else{
+                            // add the workout to the selectedWorkouts list
+                            setSelectedWorkouts((prevSelectedWorkouts: any) => {
+                                if (prevSelectedWorkouts.some((selectedWorkout: any) => selectedWorkout.id === workout.id)) {
+                                    return prevSelectedWorkouts.filter((selectedWorkout: any) => selectedWorkout.id !== workout.id);
+                                } else {
+                                    return [...prevSelectedWorkouts, workout];
+                                }
+                            });
+                        }
+                    }} 
+                    onLongPress={() => {
+                        if (selectedWorkouts.length === 0) {
+                            // add the workout to selectedWorkouts and set selection mode to true as this is the first workout being selected
+                            console.log('selection mode on')
+                            setSelectedWorkouts([...selectedWorkouts, workout]);
+                            setSelectionMode(true)
+                        }
+                    }} 
                 >
                     <View style={tw`flex flex-row justify-between`}>
                         <View style={tw`flex-1 flex-row`}>
@@ -131,19 +178,59 @@ const WorkoutFolder = ({route, navigation}: any) => {
         
     };
 
+    const deleteWorkouts = () => {
+        //selectedWorkouts: any, folderId: string, setSelectedWorkouts: any, setSelectionMode: any
+        deleteSelectedWorkoutsInFolder(selectedWorkouts, folder.id, setSelectedWorkouts, setSelectionMode)
+        setSelectedWorkouts([])
+    }
+
+    const cutWorkouts = () => {
+        //selectedWorkouts: any, folderId: string, setSelectedWorkouts: any, setSelectionMode: any
+        cutSelectedWorkoutsInFolder(selectedWorkouts, folder.id, setSelectedWorkouts, setSelectionMode)
+        setSelectedWorkouts([])
+    }
+
+    const copyWorkouts = () => {
+        copySelectedWorkoutsInFolder(selectedWorkouts)
+        setSelectionMode(false)
+        setSelectedWorkouts([])
+    }
+
+    const pasteCutWorkoutsFunc = () => {
+        //folderId: string, setFolders: any
+        pasteCutWorkoutsInFolder(folder.id);
+    }
+
+    const pasteCopiedWorkoutsFunc = () => {
+        pasteCopiedWorkoutsInFolder(folder.id)
+    }
+
+    const [isPasteWorkoutsInFolderModalVisible, setIsPasteWorkoutsInFolderModalVisible] = useState(false)
 
     return (
         <>
 
-            
+            { isPasteWorkoutsInFolderModalVisible && (
+                <BlurView
+                    style={tw`absolute w-full h-full z-10`}
+                    intensity={50}
+                    tint='dark'
+                />
+            )}
 
             <View style={tw`w-full h-full bg-neutral-50`}>
 
-                
+                <PasteWorkoutsInFolderModal
+                    isPasteWorkoutsInFolderModalVisible={isPasteWorkoutsInFolderModalVisible}
+                    setIsPasteWorkoutsInFolderModalVisible={setIsPasteWorkoutsInFolderModalVisible}
+                    navigation={navigation}
+                    pasteCopiedWorkouts={pasteCopiedWorkoutsFunc}
+                    pasteCutWorkouts={pasteCutWorkoutsFunc}
+                />
 
-                <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+                <Pressable style={tw`bg-gray-100 h-[15%] w-full flex justify-end`} onPress={() => setIsPasteWorkoutsInFolderModalVisible(true)}>
                     <Text style={tw`text-4xl font-medium text-black m-3`}>{folder.title}</Text>
-                </View>
+                </Pressable>
                 
                 <View style={tw`w-full h-[73%] p-3`}>
                     <FlatList
@@ -159,7 +246,16 @@ const WorkoutFolder = ({route, navigation}: any) => {
                     />
                 </View>
 
-                <BottomNavigationBar navigation={navigation} folder={folder} currentPage='Folder' deleteFolder={deleteFolder}/>
+                <BottomNavigationBar 
+                    navigation={navigation} 
+                    folder={folder} 
+                    currentPage='Folder' 
+                    deleteFolder={deleteFolder}
+                    selectionMode={selectionMode}
+                    copySelectedWorkoutsInFolder={copyWorkouts}
+                    cutSelectedWorkoutsInFolder={cutWorkouts}
+                    deleteSelectedWorkoutsInFolder={deleteWorkouts}
+                />
             </View>
         </>
     )

@@ -348,6 +348,7 @@ const App = () => {
         }}>
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />
+                
                 <NavigationContainer>
                     {   
                         localEmail ? 

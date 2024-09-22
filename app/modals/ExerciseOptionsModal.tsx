@@ -34,7 +34,7 @@ const ExerciseOptionsModal: React.FC<ExerciseOptionsModalProps> = ({
                         <Text style={tw`text-lg text-center text-gray-500 font-medium mb-1`}>Моля избери опция!</Text>
 
                         <View style={tw`w-full h-[50%] flex justify-center flex-row gap-x-3 mt-1`}>
-                            <Pressable style={tw`w-[45%] h-[100%] rounded-[20px] bg-cyan-500 flex flex-col items-center justify-center`}
+                            <Pressable style={tw`w-[48%] h-[100%] rounded-[20px] bg-cyan-500 flex flex-col items-center justify-center`}
                                 onPress={async () => {
                                     addRestDay();
                                     navigation.navigate('Тренировки');
@@ -45,7 +45,7 @@ const ExerciseOptionsModal: React.FC<ExerciseOptionsModalProps> = ({
                                 <Text style={tw`text-white font-medium text-lg mt-[-5px]`}>почивка</Text>
                             </Pressable>
                             
-                            <Pressable style={tw`w-[45%] h-[100%] rounded-[20px] bg-red-500 flex-col items-center justify-center ${pageIndex === 1 ? 'hidden' : ''}`}
+                            <Pressable style={tw`w-[48%] h-[100%] rounded-[20px] bg-red-500 flex-col items-center justify-center ${pageIndex === 1 ? 'hidden' : ''}`}
                                 onPress={() => {
                                     deleteCurrentExercise();
                                     setIsExerciseOptionsModalVisible(false);

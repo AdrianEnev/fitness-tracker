@@ -1,0 +1,210 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import getEmail from "../use/useGetEmail";
+import { Workout } from "../../interfaces";
+import generateID from "../use/useGenerateID";
+
+export const deleteSelectedWorkouts = async (selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any) => {
+    try {
+        const email = await getEmail();
+        if (!email) return;
+
+        const data = await AsyncStorage.getItem(`workouts_${email}`);
+        let workouts = data ? JSON.parse(data) : [];
+
+        // Filter out the selected workouts
+        const updatedWorkouts = workouts.filter((workout: Workout) => 
+            !selectedWorkouts.some((selectedWorkout: any) => selectedWorkout.id === workout.id)
+        );
+
+        // Update AsyncStorage with the new list of workouts
+        await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(updatedWorkouts));
+
+        // Update state
+        setWorkouts(updatedWorkouts);
+        setSelectedWorkouts([]);
+        setSelectionMode(false);
+        console.log('Selected workouts deleted');
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const copySelectedWorkouts = async (selectedWorkouts: any) => {
+    try {
+        const email = await getEmail();
+        if (!email) return;
+
+        const data = await AsyncStorage.getItem(`workouts_${email}`);
+        let workouts = data ? JSON.parse(data) : [];
+
+        // Filter out the selected workouts
+        const selectedWorkoutsData = workouts.filter((workout: Workout) => 
+            selectedWorkouts.some((selectedWorkout: any) => selectedWorkout.id === workout.id)
+        );
+
+        // Store the selected workouts in a separate AsyncStorage item
+        await AsyncStorage.setItem(`copied_workouts_${email}`, JSON.stringify(selectedWorkoutsData));
+        //logCopiedWorkouts();
+
+        console.log('Selected workouts copied');
+    } catch (err) {
+        console.error(err);
+    }
+}
+
+export const cutSelectedWorkouts = async (selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any) => {
+    try {
+        const email = await getEmail();
+        if (!email) return;
+
+        const data = await AsyncStorage.getItem(`workouts_${email}`);
+        let workouts = data ? JSON.parse(data) : [];
+
+        // Filter out the selected workouts
+        const selectedWorkoutsData = workouts.filter((workout: Workout) => 
+            selectedWorkouts.some((selectedWorkout: any) => selectedWorkout.id === workout.id)
+        );
+
+        // Store the selected workouts in a separate AsyncStorage item
+        await AsyncStorage.setItem(`cut_workouts_${email}`, JSON.stringify(selectedWorkoutsData));
+        //logCutWorkouts();
+
+        // Delete the selected workouts from the main workouts list
+        await deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode);
+
+        console.log('Selected workouts cut');
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+const logCutWorkouts = async () => {
+    try {
+        const email = await getEmail();
+        if (!email) return;
+
+        const data = await AsyncStorage.getItem(`cut_workouts_${email}`);
+        const cutWorkouts = data ? JSON.parse(data) : [];
+
+        console.log('Cut workouts:', cutWorkouts);
+    } catch (err) {
+        console.error(err);
+    }
+};
+const logCopiedWorkouts = async () => {
+    try {
+        const email = await getEmail();
+        if (!email) return;
+
+        const data = await AsyncStorage.getItem(`copied_workouts_${email}`);
+        const copiedWorkouts = data ? JSON.parse(data) : [];
+
+        console.log('Copied workouts:', copiedWorkouts);
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const pasteCutWorkouts = async (setWorkouts: any) => {
+    try {
+        const email = await getEmail();
+        if (!email) return;
+
+        // Get the cut workouts from AsyncStorage
+        const cutData = await AsyncStorage.getItem(`cut_workouts_${email}`);
+        const cutWorkouts = cutData ? JSON.parse(cutData) : [];
+
+        if (cutWorkouts.length === 0) {
+            console.log('No cut workouts to paste');
+            return;
+        }
+
+        // Get the current workouts from AsyncStorage
+        const data = await AsyncStorage.getItem(`workouts_${email}`);
+        let workouts = data ? JSON.parse(data) : [];
+
+        // Add the cut workouts to the current workouts
+        const updatedWorkouts = [...workouts, ...cutWorkouts];
+
+        // Update AsyncStorage with the new list of workouts
+        await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(updatedWorkouts));
+
+        // Clear the cut workouts from AsyncStorage
+        await AsyncStorage.removeItem(`cut_workouts_${email}`);
+
+        // Update state
+        setWorkouts(updatedWorkouts);
+
+        console.log('Cut workouts pasted');
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+/* --------------------------------------------------------------------------- */
+
+const extractBaseTitleAndCopyNumber = (title: string) => {
+    const regex = /^(.*?)( copy(?: \((\d+)\))?)?$/;
+    const match = title.match(regex);
+    const baseTitle = match ? match[1] : title;
+    const copyNumber = match && match[3] ? parseInt(match[3], 10) : (match && match[2] ? 1 : 0);
+    return { baseTitle, copyNumber };
+};
+
+const generateNewTitle = (baseTitle: string, existingTitles: string[]) => {
+    let maxCopyNumber = 0;
+    existingTitles.forEach(title => {
+        const { baseTitle: existingBaseTitle, copyNumber } = extractBaseTitleAndCopyNumber(title);
+        if (existingBaseTitle === baseTitle && copyNumber > maxCopyNumber) {
+            maxCopyNumber = copyNumber;
+        }
+    });
+    return `${baseTitle} copy${maxCopyNumber > 0 ? ` (${maxCopyNumber + 1})` : ''}`;
+};
+
+export const pasteCopiedWorkouts = async () => {
+    try {
+        const email = await getEmail();
+        if (!email) return;
+
+        // Get the copied workouts from AsyncStorage
+        const cutData = await AsyncStorage.getItem(`copied_workouts_${email}`);
+        const copiedWorkouts = cutData ? JSON.parse(cutData) : [];
+
+        if (copiedWorkouts.length === 0) {
+            console.log('No copied workouts to paste');
+            return;
+        }
+
+        // Get the current workouts from AsyncStorage
+        const data = await AsyncStorage.getItem(`workouts_${email}`);
+        let workouts = data ? JSON.parse(data) : [];
+
+        // Check for duplicates and rename if necessary
+        const updatedCopiedWorkouts = copiedWorkouts.map((copiedWorkout: any) => {
+            const exists = workouts.some((workout: any) => workout.id === copiedWorkout.id);
+            if (exists) {
+                const existingTitles = workouts.map((workout: any) => workout.title);
+                const { baseTitle } = extractBaseTitleAndCopyNumber(copiedWorkout.title);
+                copiedWorkout.title = generateNewTitle(baseTitle, existingTitles);
+                copiedWorkout.id = generateID();
+            }
+            return copiedWorkout;
+        });
+
+        // Add the copied workouts to the current workouts
+        const updatedWorkouts = [...workouts, ...updatedCopiedWorkouts];
+
+        // Update AsyncStorage with the new list of workouts
+        await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(updatedWorkouts));
+
+        // Clear the copied workouts from AsyncStorage
+        await AsyncStorage.removeItem(`copied_workouts_${email}`);
+
+        console.log('Copied workouts pasted');
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+/* --------------------------------------------------------------------------- */
