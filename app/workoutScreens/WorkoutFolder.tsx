@@ -8,6 +8,7 @@ import getEmail from '../use/useGetEmail'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Workout } from '../../interfaces'
 import getWorkoutInfoLocally from '../useWorkout/useGetWorkoutInfoLocally'
+import { BlurView } from 'expo-blur'
 
 const WorkoutFolder = ({route, navigation}: any) => {
 
@@ -60,11 +61,22 @@ const WorkoutFolder = ({route, navigation}: any) => {
         }, 500);
     }
 
+    const selectWorkout = async (workout: Workout) => {
+        // turn selection mode on and add the workout to the list, then allow the user to delete or move the workout
+        console.log('selected workout: ', workout)
+    }
+
+    const [isDeleteRestDayModalVisible, setIsDeleteRestDayModalVisible] = useState(false);
+
     const renderWorkout = ({ item: workout }: { item: Workout }) => {
 
         if (workout.title === "Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($"){
             return (
-                <View style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`}>
+                <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`}
+                    onLongPress={() => {
+                        
+                    }}
+                >
                     <View style={tw`flex flex-row justify-between`}>
                         <View style={tw`flex-1 flex-row`}>
                             <View style={tw`h-full py-3`}>
@@ -83,16 +95,20 @@ const WorkoutFolder = ({route, navigation}: any) => {
                         </View>
     
                     </View>
-                </View>
+                </Pressable>
             )
         }else{
             return (
-                <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} key={workout.id} disabled={viewWorkoutButtonDisabled} onPress={() => viewWorkout(workout, folder)}>
+                <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} 
+                    key={workout.id} disabled={viewWorkoutButtonDisabled} 
+                    onPress={() => viewWorkout(workout, folder)}
+                    onLongPress={() => selectWorkout(workout)}
+                >
                     <View style={tw`flex flex-row justify-between`}>
                         <View style={tw`flex-1 flex-row`}>
                             <View style={tw`h-full py-3`}>
                                 <View style={tw`w-14 h-full rounded-md bg-${workout.colour} flex items-center justify-center`}>
-                                    <Text style={tw`text-xl font-medium text-white`}>{getInitials(workout.previousTitle)}</Text>
+                                    <Text style={tw`text-xl font-medium text-white`}>{workout.previousTitle ? getInitials(workout.previousTitle) : getInitials(workout.title)}</Text>
                                 </View>
                             </View>
                             
@@ -115,28 +131,37 @@ const WorkoutFolder = ({route, navigation}: any) => {
         
     };
 
-    return (
-        <View style={tw`w-full h-full bg-neutral-50`}>
-            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
-                <Text style={tw`text-4xl font-medium text-black m-3`}>{folder.title}</Text>
-            </View>
-            
-            <View style={tw`w-full h-[73%] p-3`}>
-                <FlatList
-                    data={folder.workouts}
-                    renderItem={renderWorkout}
-                    keyExtractor={(item: any) => item.id}
-                    ListEmptyComponent={() => (
-                        <View style={tw``}>
-                            <Text style={tw`text-2xl font-medium text-gray-500 ml-3`}>test</Text>
-                        </View>
-                    )}
-                    showsVerticalScrollIndicator={false}
-                />
-            </View>
 
-            <BottomNavigationBar navigation={navigation} folder={folder} currentPage='Folder' deleteFolder={deleteFolder}/>
-        </View>
+    return (
+        <>
+
+            
+
+            <View style={tw`w-full h-full bg-neutral-50`}>
+
+                
+
+                <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+                    <Text style={tw`text-4xl font-medium text-black m-3`}>{folder.title}</Text>
+                </View>
+                
+                <View style={tw`w-full h-[73%] p-3`}>
+                    <FlatList
+                        data={folder.workouts}
+                        renderItem={renderWorkout}
+                        keyExtractor={(item: any) => item.id}
+                        ListEmptyComponent={() => (
+                            <View style={tw``}>
+                                <Text style={tw`text-2xl font-medium text-gray-500 ml-3`}>test</Text>
+                            </View>
+                        )}
+                        showsVerticalScrollIndicator={false}
+                    />
+                </View>
+
+                <BottomNavigationBar navigation={navigation} folder={folder} currentPage='Folder' deleteFolder={deleteFolder}/>
+            </View>
+        </>
     )
 }
 

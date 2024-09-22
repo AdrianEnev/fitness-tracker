@@ -42,7 +42,7 @@ const BottomNavigationBar = (
         addWorkoutPageCurrentExercise,
         addActiveWorkoutSet,
         addActiveWorkoutExercise,
-        addEmptyFolder, folder, deleteFolder
+        addEmptyFolder, folder, deleteFolder,
     }: 
     {
         currentPage: string, navigation: any, internetConnected?: boolean,
@@ -66,7 +66,7 @@ const BottomNavigationBar = (
         addActiveWorkoutExercise?: () => void,
         startWorkout?: () => void,
         addEmptyFolder?: () => void,
-        folder?: any, deleteFolder?: () => void
+        folder?: any, deleteFolder?: () => void,
     }
 ) => {
     //AddCustomFood
@@ -191,7 +191,9 @@ const BottomNavigationBar = (
                 <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
 
 
-                    <Pressable onPress={() => navigation.navigate("Тренировка-Добави", {folder: folder})}>
+                    <Pressable onPress={() => {
+                        navigation.navigate('Тренировка-Добави', {folder: undefined});
+                    }}>
                         <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 

@@ -47,11 +47,11 @@ const saveWorkoutEditsFromFolderLocally = async (workout: any, userInputs: any, 
             const existingExerciseIndex = updatedWorkout.info.findIndex((ex: any) => ex.id === newExercise.id);
             if (existingExerciseIndex === -1) {
                 const newExerciseInfo = {
-                    id: generateID(),
+                    id: newExercise.id || generateID(),
                     title: newExercise.title.trim() || `Exercise ${exerciseIndex + 1}`,
                     exerciseIndex: updatedWorkout.info.length + 1,
                     sets: newExercise.sets.map((set: any, index: number) => ({
-                        id: generateID(),
+                        id: set.id || generateID(),
                         reps: set.reps,
                         weight: set.weight,
                         intensity: set.intensity || null,

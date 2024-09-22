@@ -38,20 +38,23 @@ const saveWorkoutEditsLocally = async (workout: any, userInputs: any, newExercis
 
         // Check for exercises to add
         newExercises.forEach((newExercise: any, exerciseIndex: number) => {
-            const newExerciseInfo = {
-                id: generateID(),
-                title: newExercise.title.trim() || `Упражнение ${exerciseIndex + 1}`,
-                exerciseIndex: updatedWorkout.info.length + 1,
-                sets: newExercise.sets.map((set: any, index: number) => ({
-                    id: generateID(),
-                    reps: set.reps,
-                    weight: set.weight,
-                    intensity: set.intensity || null,
-                    setIndex: index + 1
-                })),
-                numberOfExercises: newExercise.sets.length
-            };
-            updatedWorkout.info.push(newExerciseInfo);
+            const existingExerciseIndex = updatedWorkout.info.findIndex((ex: any) => ex.id === newExercise.id);
+            if (existingExerciseIndex === -1) {
+                const newExerciseInfo = {
+                    id: newExercise.id || generateID(),
+                    title: newExercise.title.trim() || `Exercise ${exerciseIndex + 1}`,
+                    exerciseIndex: updatedWorkout.info.length + 1,
+                    sets: newExercise.sets.map((set: any, index: number) => ({
+                        id: set.id || generateID(),
+                        reps: set.reps,
+                        weight: set.weight,
+                        intensity: set.intensity || null,
+                        setIndex: index + 1
+                    })),
+                    numberOfExercises: newExercise.sets.length
+                };
+                updatedWorkout.info.push(newExerciseInfo);
+            }
         });
 
         // Check for exercises to remove

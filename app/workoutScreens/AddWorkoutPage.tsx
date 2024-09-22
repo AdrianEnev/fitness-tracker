@@ -10,16 +10,17 @@ import { Dimensions } from 'react-native';
 import CreateWorkoutModal from '../modals/CreateWorkoutModal';
 import SetIntensityModal from '../modals/SetIntensityModal';
 import GlobalContext from '../../GlobalContext';
+import ExerciseOptionsModal from '../modals/ExerciseOptionsModal';
+import generateID from '../use/useGenerateID';
+import generateRandomColour from '../use/useGenerateColour';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import getEmail from '../use/useGetEmail';
 
 const AddWorkoutPage = ({ navigation, route }: any) => {
 
     const {internetConnected} = useContext(GlobalContext);
 
     const { folder } = route.params;
-
-    useEffect(() => {
-        console.log(folder)
-    }, [folder]);
 
     const newExercise: any = {
         title: '',
@@ -157,10 +158,54 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
         ));
     };
 
+    const [isExerciseOptionsModalVisible, setIsExerciseOptionsModalVisible] = useState(false);
+
+    const addRestDay = async () => {
+        //add empty workout with name 'Rest Day'
+
+        const email = await getEmail();
+
+        const existingWorkouts = await AsyncStorage.getItem(`workouts_${email}`);
+        const workouts = existingWorkouts ? JSON.parse(existingWorkouts) : [];
+
+        const newWorkout = {
+            id: generateID(),
+            title: 'Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($',
+            created: new Date().toISOString(),
+            colour: generateRandomColour(),
+            numberOfExercises: 0,
+            info: [] as any[]
+        };
+
+        workouts.push(newWorkout);
+
+        if (folder) {
+            const data = await AsyncStorage.getItem(`folders_${email}`);
+            let folders = data ? JSON.parse(data) : [];
+            const index = folders.findIndex((f: any) => f.id === folder.id);
+            folders[index].workouts.push(newWorkout);
+            await AsyncStorage.setItem(`folders_${email}`, JSON.stringify(folders));
+        }else{
+            await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(workouts));
+        }
+    }
+
+
+    const deleteCurrentExercise = () => {
+
+        const currentExercise = exercises[pageIndex - 1];
+        setExercises(exercises.filter((exercise) => exercise.id !== currentExercise.id));
+        setExerciseIndex(exerciseIndex - 1); // decrement exerciseIndex
+        
+        if (pageIndex !== 1) {
+            setPageIndex(pageIndex - 1);
+        }
+    }
+
     return (
         <>
             
-            { (isCreateWorkoutModalVisible || isSetIntensityModalVisible) && (
+            { (isCreateWorkoutModalVisible || isSetIntensityModalVisible || isExerciseOptionsModalVisible) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -191,6 +236,15 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                         setSaveButtonDisabled={setSaveButtonDisabled}
                         internetConnected={internetConnected}
                         folder={folder}
+                    />
+
+                    <ExerciseOptionsModal 
+                        navigation={navigation}
+                        isExerciseOptionsModalVisible={isExerciseOptionsModalVisible}
+                        setIsExerciseOptionsModalVisible={setIsExerciseOptionsModalVisible}
+                        addRestDay={addRestDay}
+                        pageIndex={pageIndex}
+                        deleteCurrentExercise={deleteCurrentExercise}
                     />
 
                     <View style={tw`flex flex-col gap-y-1 max-h-[82%]`}>
@@ -271,6 +325,16 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                                                                         onChangeText={(value) => updateSet(exercise.id, set.id, 'weight', value)}
                                                                     />
                                                                 </View>
+
+
+                                                                <Pressable style={tw`absolute right-7 w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${mapIndex != 0 ? 'hidden' : ''}`}
+                                                                    onPress={() => {
+                                                                        setIsExerciseOptionsModalVisible(true)
+                                                                    }} 
+                                                                >
+                                                                    <Ionicons name='ellipsis-horizontal' size={24} color='black' />
+                                                                </Pressable>
+
                                                                 <TouchableOpacity
                                                                     style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`}
                                                                     onPress={() => removeSet(exercise.id, set.id)}

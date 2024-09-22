@@ -1,5 +1,5 @@
 import { View, Text, Button, SafeAreaView, TouchableOpacity, FlatList, Pressable, Alert, TextInput } from 'react-native'  
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
@@ -13,10 +13,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import getWorkoutInfoLocally from '../useWorkout/useGetWorkoutInfoLocally';
 import getEmail from '../use/useGetEmail';
 import { useFocusEffect } from '@react-navigation/native';
+import GlobalContext from '../../GlobalContext';
 
 const Workouts = ({navigation}: any) => {
 
-    const [internetConnected, setInternetConnected] = useState(true);
+    const [initialLoad, setInitialLoad] = useState(true);
+
+    const { internetConnected } = useContext(GlobalContext);
 
     const [workouts, setWorkouts] = useState<Workout[]>([]);
     const [folders, setFolders] = useState<any[]>([]);
@@ -62,7 +65,7 @@ const Workouts = ({navigation}: any) => {
     }
 
     const getWorkoutsLocally = async () => {
-        console.log('getWokoutsLocally called')
+        //console.log('getWokoutsLocally called')
 
         try {
             const email = await getEmail();
@@ -74,6 +77,7 @@ const Workouts = ({navigation}: any) => {
             workouts = workouts.reverse();
     
             setWorkouts(workouts);
+            //console.log(workouts)
             
         } catch (err) {
             console.error(err);
@@ -82,12 +86,21 @@ const Workouts = ({navigation}: any) => {
 
     useFocusEffect(
         useCallback(() => {
-            getWorkoutsLocally();
-            getFoldersLocally();
-        }, [])
+            if (!initialLoad) {
+                setTimeout(() => {
+                    getWorkoutsLocally();
+                    getFoldersLocally();
+                }, 100)
+            }else{
+                getWorkoutsLocally();
+                getFoldersLocally();
+                setInitialLoad(false);
+            }
+            
+        }, [workouts])
     );
 
-    const changeWorkoutName = async (workoutID: string, workoutTitle: string) => {
+    /*const changeWorkoutName = async (workoutID: string, workoutTitle: string) => {
         Alert.prompt(
             t('new-name-alert'),
             '',
@@ -113,7 +126,7 @@ const Workouts = ({navigation}: any) => {
             'plain-text',
             workoutTitle
         );
-    }
+    }*/
 
     const viewWorkout = async (workout: Workout) => {
         setViewWorkoutButtonDisabled(true);
@@ -138,36 +151,43 @@ const Workouts = ({navigation}: any) => {
         return name.split(' ').map(word => word[0]).join('').substring(0, 3).toUpperCase();
     }
 
-    const renderWorkout = (workout: Workout) => {
+    const selectWorkout = async (workout: Workout) => {
+        // turn selection mode on and add the workout to the list, then allow the user to delete or move the workout
+        console.log('selected workout: ', workout)
+    }
 
-        const exercisesCount = workout.numberOfExercises;
+    const renderWorkout = (workout: Workout) => {
 
         if (workout.title === "Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($"){
             return (
-                <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => viewWorkout(workout)} disabled={viewWorkoutButtonDisabled} onLongPress={() => changeWorkoutName(workout.id, workout.title)}>
+                <View style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`}>
                     <View style={tw`flex flex-row justify-between`}>
                         <View style={tw`flex-1 flex-row`}>
                             <View style={tw`h-full py-3`}>
-                                <View style={tw`w-14 h-full rounded-md bg-${workout.colour} flex items-center justify-center`}>
-                                    <Text style={tw`text-xl font-medium text-white`}>{getInitials(workout.title)}</Text>
+                                <View style={tw`w-14 h-full rounded-md bg-[#67e8f9] flex items-center justify-center`}>
+                                    <Ionicons name='cloud' size={38} color='white'/>
                                 </View>
                             </View>
                             
                             <View style={tw`flex flex-col ml-3 justify-center w-full`}>
-                                <Text style={tw`text-xl font-medium w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.title}</Text>
-                                <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{exercisesCount ? exercisesCount : '?'} {exercisesCount === 1 ? t('exercise-djhjd') : t('exercises-rhahsgdg')}</Text>
+                                <Text style={tw`text-xl font-medium w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>
+                                    Rest Day
+                                </Text>
+    
+                                <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>You can take a break today!</Text>
                             </View>
                         </View>
-
-                        <View style={tw`flex justify-center`}>
-                            <Ionicons name='chevron-forward' size={36} color='black'/>
-                        </View>
+    
                     </View>
-                </Pressable>
+                </View>
             )
         }else{
             return (
-                <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} key={workout.id} disabled={viewWorkoutButtonDisabled} onPress={() => viewWorkout(workout)}>
+                <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} 
+                    key={workout.id} disabled={viewWorkoutButtonDisabled} 
+                    onPress={() => viewWorkout(workout)} 
+                    onLongPress={() => selectWorkout(workout)} 
+                >
                     <View style={tw`flex flex-row justify-between`}>
                         <View style={tw`flex-1 flex-row`}>
                             <View style={tw`h-full py-3`}>
@@ -232,7 +252,7 @@ const Workouts = ({navigation}: any) => {
 
     const renderFolder = (folder: any) => {
         return (
-            <Pressable style={tw`w-[96%] h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => navigation.navigate('Папка', {folder: folder})} onLongPress={() => renameFolder(folder.id)}>
+            <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} onPress={() => navigation.navigate('Папка', {folder: folder})} onLongPress={() => renameFolder(folder.id)}>
                 <View style={tw`flex flex-row justify-between`}>
                     <View style={tw`flex-1 flex-row`}>
                         <View style={tw`h-full py-3`}>
@@ -260,27 +280,30 @@ const Workouts = ({navigation}: any) => {
     const combinedData = [...folders, ...workouts];
 
     return (
-        <View style={tw`w-full h-full bg-neutral-50`}>
-            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
-                <Text style={tw`text-4xl font-medium text-black m-3`}>{t('workouts')}</Text>
-            </View>
+        <>
+            <View style={tw`w-full h-full bg-neutral-50`}>
 
-            <View style={tw`w-full h-[71%] mt-4 mx-2`}>
-                <FlatList
-                    data={combinedData}
-                    renderItem={({item}: any) => item.type === 'folder' ? renderFolder(item) : renderWorkout(item)}
-                    keyExtractor={(item: any) => item.id}
-                    ListEmptyComponent={() => (
-                        <View style={tw``}>
-                            <Text style={tw`text-2xl font-medium text-gray-500 ml-3`}>test</Text>
-                        </View>
-                    )}
-                    showsVerticalScrollIndicator={false}
-                />
-            </View>
+                <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+                    <Text style={tw`text-4xl font-medium text-black m-3`}>{t('workouts')}</Text>
+                </View>
 
-            <BottomNavigationBar currentPage='Workouts' internetConnected={internetConnected} addEmptyFolder={addEmptyFolder} navigation={navigation}/>
-        </View>
+                <View style={tw`w-[96%] h-[71%] mt-4 mx-2`}>
+                    <FlatList
+                        data={combinedData}
+                        renderItem={({item}: any) => item.type === 'folder' ? renderFolder(item) : renderWorkout(item)}
+                        keyExtractor={(item: any) => item.id}
+                        ListEmptyComponent={() => (
+                            <View style={tw``}>
+                                <Text style={tw`text-2xl font-medium text-gray-500 ml-3`}>test</Text>
+                            </View>
+                        )}
+                        showsVerticalScrollIndicator={false}
+                    />
+                </View>
+
+                <BottomNavigationBar currentPage='Workouts' internetConnected={internetConnected} addEmptyFolder={addEmptyFolder} navigation={navigation}/>
+            </View>
+        </>
     )
 }
 

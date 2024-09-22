@@ -291,9 +291,12 @@ const ViewWorkout = ({route, navigation}: any) => {
         setNewExercises(updatedExercises);
         setUserInputs(updatedUserInputs);
 
-        setCurrentIndex(currentIndex + 1)
-
-        
+        if (currentIndex !== newExercises.length - 1) {
+           setCurrentIndex(currentIndex + 1) 
+        }else{
+            setCurrentIndex(currentIndex - 1)
+        }
+          
     }
 
     const [isDeleteExerciseModalVisible, setIsDeleteExerciseModalVisible] = useState(false);
