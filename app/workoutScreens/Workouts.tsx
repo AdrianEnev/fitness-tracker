@@ -172,7 +172,7 @@ const Workouts = ({navigation}: any) => {
 
     const renderWorkout = (workout: Workout) => {
 
-        if (workout.title === "Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($"){
+        if (workout.title.includes("Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($")){
             return (
                 <Pressable style={
                     tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3

@@ -36,6 +36,7 @@ const PasteWorkoutsModal: React.FC<PasteWorkoutsModalProps> = ({
                             <Pressable style={tw`w-[48%] h-[100%] rounded-[20px] bg-cyan-500 flex flex-col items-center justify-center`}
                                 onPress={async () => {
                                    pasteCutWorkouts()
+                                   setIsPasteWorkoutsModalVisible(false)
                                 }}
                             >
                                 <Ionicons name='cut-outline' size={32} color='white'/>
@@ -46,6 +47,7 @@ const PasteWorkoutsModal: React.FC<PasteWorkoutsModalProps> = ({
                             <Pressable style={tw`w-[48%] h-[100%] rounded-[20px] bg-yellow-400 flex-col items-center justify-center`}
                                 onPress={() => {
                                     pasteCopiedWorkouts()
+                                    setIsPasteWorkoutsModalVisible(false)
                                 }}
                             >
                                 <Ionicons name='copy-outline' size={32} color='white'/>

@@ -75,7 +75,7 @@ const WorkoutFolder = ({route, navigation}: any) => {
 
     const renderWorkout = ({ item: workout }: { item: Workout }) => {
 
-        if (workout.title === "Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($"){
+        if (workout.title.includes("Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($")){
             return (
                 <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3
                     ${selectedWorkouts.some((selectedWorkout: any) => selectedWorkout.id === workout.id) ? 'border-2 border-red-300' : 'border border-gray-200'}
