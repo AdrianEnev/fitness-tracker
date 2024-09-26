@@ -33,7 +33,8 @@ const addWorkoutLocally = async (exercises: any, workoutTitle: string, id: any, 
             created: new Date().toISOString(),
             colour: generateRandomColour(),
             numberOfExercises: exercises.length,
-            info: [] as ExerciseInfo[]
+            info: [] as ExerciseInfo[],
+            folderId: folder ? folder.id : null
         };
 
         // Add exercises and sets to the workout

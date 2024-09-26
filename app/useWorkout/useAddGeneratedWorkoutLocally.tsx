@@ -1,8 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import generateRandomColour from "../use/useGenerateColour";
 import getEmail from "../use/useGetEmail";
+import generateID from "../use/useGenerateID";
+import { collection, doc } from "firebase/firestore";
+import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 
-const addGeneratedWorkoutLocally = async (generatedWorkout: any, folder?: any) => {
+const addGeneratedWorkoutLocally = async (generatedWorkout: any, internetConnected: boolean, folder?: any) => {
     const usedColours: string[] = [];
 
     const getUniqueColour = () => {
@@ -41,7 +44,7 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, folder?: any) =
                 newWorkoutTitle = workoutTitle.replace(/^Day (\d) - /, '');
             }
 
-            if (newWorkoutTitle === "Rest") {
+            if (newWorkoutTitle.includes('Rest') || newWorkoutTitle.includes('Active Recovery')) {
                 newWorkoutTitle = "Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($";
             }
 
@@ -59,13 +62,14 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, folder?: any) =
             })) : [];
 
             const newWorkout = {
-                id: Math.random().toString(),
+                id: generateID(),
                 title: newWorkoutTitle,
                 previousTitle: workoutTitle,
                 created: new Date().toISOString(),
                 colour: getUniqueColour(),
                 numberOfExercises: exercises.length,
-                info: exercises
+                info: exercises,
+                folderId: folder ? folder.id : null
             };
 
             workouts.push(newWorkout);
@@ -107,7 +111,7 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, folder?: any) =
                     })) : [];
 
                     const newWorkout = {
-                        id: Math.random().toString(),
+                        id: generateID(),
                         title: newWorkoutTitle,
                         previousTitle: workoutTitle,
                         created: new Date().toISOString(),
@@ -121,6 +125,7 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, folder?: any) =
                 await AsyncStorage.setItem(`folders_${email}`, JSON.stringify(folders));
             }
         }
+
         console.log('Generated workouts saved locally:', workouts);
     } catch (err) {
         console.error('Error saving generated workouts locally:', err);

@@ -160,22 +160,24 @@ const ViewWorkout = ({route, navigation}: any) => {
 
         setDeleteWorkoutCalled(true)
     
-        // Check if the workout document exists before deleting it
-        const usersCollectionRef = collection(FIRESTORE_DB, "users");
-        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
-        const workoutDocRef = doc(userWorkoutsCollectionRef, workout.id);
-    
-        try {
-            const workoutDocSnapshot = await getDoc(workoutDocRef);
-            if (workoutDocSnapshot.exists()) {
-                //console.log('Workout document exists, deleting from Firestore');
-                await deleteDoc(workoutDocRef);
-            } else {
-                console.log('Workout document does not exist in Firestore');
+        if (internetConnected) {
+            // Check if the workout document exists before deleting it
+            const usersCollectionRef = collection(FIRESTORE_DB, "users");
+            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+            const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
+            const workoutDocRef = doc(userWorkoutsCollectionRef, workout.id);
+
+            try {
+                const workoutDocSnapshot = await getDoc(workoutDocRef);
+                if (workoutDocSnapshot.exists()) {
+                    //console.log('Workout document exists, deleting from Firestore');
+                    await deleteDoc(workoutDocRef);
+                } else {
+                    console.log('Workout document does not exist in Firestore');
+                }
+            } catch (error) {
+                console.error('Error deleting workout from Firestore: ', error);
             }
-        } catch (error) {
-            console.error('Error deleting workout from Firestore: ', error);
         }
     
         // Delete the workout from AsyncStorage

@@ -2,8 +2,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
 import { Workout } from "../../interfaces";
 import generateID from "../use/useGenerateID";
+import { deleteDoc, doc, getDocs } from "firebase/firestore";
 
-export const deleteSelectedWorkouts = async (selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any) => {
+export const deleteSelectedWorkouts = async (
+    selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, firebaseWorkouts: any, internetConnected: any,
+    userWorkoutsCollectionRef: any
+) => {
     try {
         const email = await getEmail();
         if (!email) return;
@@ -26,6 +30,19 @@ export const deleteSelectedWorkouts = async (selectedWorkouts: any, setWorkouts:
         console.log('Selected workouts deleted');
     } catch (err) {
         console.error(err);
+    }
+
+    if (internetConnected) {
+        try {
+            for (const selectedWorkout of selectedWorkouts) {
+                const selectedWorkoutID = selectedWorkout.id;
+                const selectedWorkoutDoc = doc(userWorkoutsCollectionRef, selectedWorkoutID);
+                await deleteDoc(selectedWorkoutDoc);
+                console.log(`Workout with ID ${selectedWorkoutID} deleted from Firebase`);
+            }
+        } catch (err) {
+            console.error(err);
+        }
     }
 };
 
@@ -52,7 +69,10 @@ export const copySelectedWorkouts = async (selectedWorkouts: any) => {
     }
 }
 
-export const cutSelectedWorkouts = async (selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any) => {
+export const cutSelectedWorkouts = async (
+    selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, firebaseWorkouts: any, internetConnected: any,
+    userWorkoutsCollectionRef: any
+) => {
     try {
         const email = await getEmail();
         if (!email) return;
@@ -70,7 +90,20 @@ export const cutSelectedWorkouts = async (selectedWorkouts: any, setWorkouts: an
         //logCutWorkouts();
 
         // Delete the selected workouts from the main workouts list
-        await deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode);
+        await deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef);
+
+        if (internetConnected) {
+            try {
+                for (const selectedWorkout of selectedWorkouts) {
+                    const selectedWorkoutID = selectedWorkout.id;
+                    const selectedWorkoutDoc = doc(userWorkoutsCollectionRef, selectedWorkoutID);
+                    await deleteDoc(selectedWorkoutDoc);
+                    console.log(`Workout with ID ${selectedWorkoutID} deleted from Firebase`);
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
 
         console.log('Selected workouts cut');
     } catch (err) {

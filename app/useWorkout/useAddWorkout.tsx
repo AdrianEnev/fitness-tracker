@@ -2,7 +2,7 @@ import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/fires
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import generateRandomColour from '../use/useGenerateColour';
 
-const addWorkout = async (exercises: any, workoutTitle: string, id: any) => {
+const addWorkout = async (exercises: any, workoutTitle: string, id: any, folder?: any) => {
 
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -12,7 +12,8 @@ const addWorkout = async (exercises: any, workoutTitle: string, id: any) => {
         title: workoutTitle.trim(),
         created: serverTimestamp(),
         colour: generateRandomColour(),
-        numberOfExercises: exercises.length
+        numberOfExercises: exercises.length,
+        folderId: folder ? folder.id : null
     });
     const workoutInfoCollectionRef = collection(workoutDocRef, "info");
 

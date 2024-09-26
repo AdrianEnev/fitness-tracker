@@ -149,7 +149,6 @@ const App = () => {
     const [friendRequestsNumber, setFriendRequestsNumber] = useState("");
     const [receiveFriendRequests, setReceiveFriendRequests] = useState(false);
     const [faceIdEnabled, setFaceIdEnabled] = useState(false);
-    const [lastSyncTime, setLastSyncTime] = useState(0)
     const [isAccountDeleted, setIsAccountDeleted] = useState(false);
 
     const [isConnected, setIsConnected] = useState(false)
@@ -344,7 +343,7 @@ const App = () => {
         <GlobalContext.Provider value={{
             setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber,
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
-            internetConnected: isConnected, lastSyncTime, setLastSyncTime, isAccountDeleted, setIsAccountDeleted
+            internetConnected: isConnected, isAccountDeleted, setIsAccountDeleted
         }}>
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />

@@ -68,7 +68,7 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
                                     await addWorkoutLocally(exercises, workoutTitle, id, folder);
                                     
                                     if (internetConnected) {
-                                        addWorkout(exercises, workoutTitle, id);
+                                        addWorkout(exercises, workoutTitle, id, folder);
                                     }
                                     
                                     navigation.navigate('Тренировки');

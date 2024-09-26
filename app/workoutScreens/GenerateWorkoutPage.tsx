@@ -1,5 +1,5 @@
 import { View, Text, Pressable, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView } from 'react-native'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useContext } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
 
@@ -13,10 +13,13 @@ import generateWorkout from '../useWorkout/useGenerateWorkout'
 import GenerateWorkoutModal from '../modals/GeneratingWorkoutModal'
 import { BlurView } from 'expo-blur'
 import addGeneratedWorkoutLocally from '../useWorkout/useAddGeneratedWorkoutLocally'
+import GlobalContext from '../../GlobalContext'
 
 const GenerateWorkoutPage = ({navigation, route}: any) => {
 
     const {folder = null} = route.params || {};
+
+    const {internetConnected} = useContext(GlobalContext)
 
     const nextPage = async () => {
         
@@ -113,7 +116,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
             setIsGenerateWorkoutModalVisible(true);
 
             const generatedWorkout = await generateWorkout(level, goal, numberOfDays, location, specificBodyparts, group, equipment);
-            await addGeneratedWorkoutLocally(generatedWorkout, folder)
+            await addGeneratedWorkoutLocally(generatedWorkout, internetConnected, folder)
             
             if (folder) {
                 navigation.navigate('Тренировки');

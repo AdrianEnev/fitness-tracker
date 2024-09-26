@@ -1,5 +1,5 @@
 import { View, Text, Pressable, FlatList, Alert } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import tw from 'twrnc';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
@@ -11,6 +11,10 @@ import getWorkoutInfoLocally from '../useWorkout/useGetWorkoutInfoLocally';
 import { BlurView } from 'expo-blur';
 import { copySelectedWorkoutsInFolder, cutSelectedWorkoutsInFolder, deleteSelectedWorkoutsInFolder, pasteCopiedWorkoutsInFolder, pasteCutWorkoutsInFolder } from '../useWorkout/handleSelectionModeForFolders';
 import PasteWorkoutsInFolderModal from '../modals/PasteWorkoutsInFolderModal';
+import { useFocusEffect } from '@react-navigation/native';
+import GlobalContext from '../../GlobalContext';
+import { collection, doc, getDocs } from 'firebase/firestore';
+import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 
 const WorkoutFolder = ({ route, navigation }: any) => {
     const { folderId } = route.params;
@@ -21,6 +25,10 @@ const WorkoutFolder = ({ route, navigation }: any) => {
     const [selectedWorkouts, setSelectedWorkouts] = useState<any[]>([]);
     const [selectionMode, setSelectionMode] = useState(false);
     const [isPasteWorkoutsInFolderModalVisible, setIsPasteWorkoutsInFolderModalVisible] = useState(false);
+
+    const [userWorkoutsCollectionRef, setUserWorkoutsCollectionRef] = useState<any>();
+
+    const {internetConnected} = useContext(GlobalContext)
 
     const fetchFolderDetails = async () => {
         try {
@@ -40,6 +48,21 @@ const WorkoutFolder = ({ route, navigation }: any) => {
     useEffect(() => {
         fetchFolderDetails();
     }, [folder]);
+
+    useFocusEffect(
+        useCallback(() => {
+            if (internetConnected) {
+                    // set the firebase path to the workouts so it can be passed to functions faster
+                    const usersCollectionRef = collection(FIRESTORE_DB, "users");
+                    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+                    const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
+                    setUserWorkoutsCollectionRef(userWorkoutsCollectionRef);
+
+                    // get the workouts from firebase
+                    getWorkouts();
+                }
+            }, [])
+    );
 
     const getInitials = (name: string) => {
         const dayMatch = name.match(/^Day (\d) - /);
@@ -187,13 +210,26 @@ const WorkoutFolder = ({ route, navigation }: any) => {
         }
     };
 
+    const [firebaseWorkouts, setFirebaseWorkouts] = useState<Workout[]>([]);
+
+    const getWorkouts = async () => {
+        const usersCollectionRef = collection(FIRESTORE_DB, "users");
+        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+        const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
+
+        const userWorkoutsSnapshot = await getDocs(userWorkoutsCollectionRef);
+        const userWorkoutsData = userWorkoutsSnapshot.docs.map(doc => doc.data() as Workout);
+
+        setFirebaseWorkouts(userWorkoutsData);
+    }
+
     const deleteWorkouts = () => {
-        deleteSelectedWorkoutsInFolder(selectedWorkouts, folder.id, setSelectedWorkouts, setSelectionMode);
+        deleteSelectedWorkoutsInFolder(selectedWorkouts, folder.id, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef);
         setSelectedWorkouts([]);
     };
 
     const cutWorkouts = () => {
-        cutSelectedWorkoutsInFolder(selectedWorkouts, folder.id, setSelectedWorkouts, setSelectionMode);
+        cutSelectedWorkoutsInFolder(selectedWorkouts, folder.id, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef);
         setSelectedWorkouts([]);
     };
 

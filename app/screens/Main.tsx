@@ -27,6 +27,7 @@ import syncSavedWorkouts from '../syncData/useSyncSavedWorkouts';
 import syncNutrients from '../syncData/useSyncNutrients';
 import syncFood from '../syncData/useSyncFood';
 import syncWorkouts from '../syncData/useSyncWorkouts';
+import syncWorkoutsInFolders from '../syncData/useSyncWorkoutsInFolders';
 
 //bg-[#fd3e6b]
 //bg-[#3d5875]
@@ -37,7 +38,7 @@ const Main = ({navigation}: any) => {
 
     const { t } = useTranslation();
 
-    const { internetConnected, setLastSyncTime, lastSyncTime } = useContext(GlobalContext);
+    const { internetConnected } = useContext(GlobalContext);
 
     const [currentFormattedDate, setCurrentFormattedDate] = useState<any>();
     const {friendRequestsNumber} = useContext(GlobalContext);
@@ -66,14 +67,14 @@ const Main = ({navigation}: any) => {
 
         setCurrentFormattedDate(formattedDate)
 
-        const now = Date.now();
-        if (internetConnected && (now - lastSyncTime > 5000)) {
+        
+        if (internetConnected) {
             updateCurrentNutrients();
             syncWorkouts();
             syncSavedWorkouts();
             syncNutrients();
             syncFood();
-            setLastSyncTime(now);
+            syncWorkoutsInFolders();
         }
        
          // console log all asyncstorage items
@@ -88,7 +89,7 @@ const Main = ({navigation}: any) => {
         /*AsyncStorage.clear().then(() => {
             console.log('cleared')
         })*/
-    }, [internetConnected, lastSyncTime])
+    }, [internetConnected])
 
     // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk
     let [currentNutrients, setCurrentNutrients] = useState<GoalNutrients[]>([]);

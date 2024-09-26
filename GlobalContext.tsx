@@ -9,14 +9,12 @@ interface GlobalContextType {
     receiveFriendRequests: boolean;
     faceIdEnabled: boolean;
     internetConnected: boolean;
-    lastSyncTime: number;
     isAccountDeleted: boolean;
     setFaceIdEnabled: (value: boolean) => void;
     setReceiveFriendRequests: (value: boolean) => void;
     setProfilePicture: (profilePicture: string) => void;
     setSetupRan: (value: boolean) => void;
     //setGoalNutrients: (value: GoalNutrients | null) => void; // Updated the type here as well
-    setLastSyncTime: (value: number) => void;
     setIsAccountDeleted: (value: boolean) => void;
 }
 
@@ -28,13 +26,11 @@ const defaultValues: GlobalContextType = {
     receiveFriendRequests: false,
     faceIdEnabled: false,
     internetConnected: false,
-    lastSyncTime: 0,
     isAccountDeleted: false,
     setFaceIdEnabled: () => {},
     setReceiveFriendRequests: () => {},
     setProfilePicture: () => {},
     setSetupRan: () => {},
-    setLastSyncTime: () => {},
     setIsAccountDeleted: () => {}
     //setGoalNutrients: () => {},
 };

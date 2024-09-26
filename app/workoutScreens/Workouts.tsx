@@ -3,7 +3,7 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from 'rea
 import tw from 'twrnc'
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
-import { collection, doc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Exercise, Workout } from '../../interfaces';
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -25,8 +25,11 @@ const Workouts = ({navigation}: any) => {
     const { internetConnected } = useContext(GlobalContext);
 
     const [workouts, setWorkouts] = useState<Workout[]>([]);
+    const [firebaseWorkouts, setFirebaseWorkouts] = useState<Workout[]>([]);
     const [folders, setFolders] = useState<any[]>([]);
     const [viewWorkoutButtonDisabled, setViewWorkoutButtonDisabled] = useState(false);
+
+    const [userWorkoutsCollectionRef, setUserWorkoutsCollectionRef] = useState<any>();
 
     const addEmptyFolder = async () => {
         try {
@@ -87,12 +90,33 @@ const Workouts = ({navigation}: any) => {
         }
     };
 
+    const getWorkouts = async () => {
+        const usersCollectionRef = collection(FIRESTORE_DB, "users");
+        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+        const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
+
+        const userWorkoutsSnapshot = await getDocs(userWorkoutsCollectionRef);
+        const userWorkoutsData = userWorkoutsSnapshot.docs.map(doc => doc.data() as Workout);
+
+        setFirebaseWorkouts(userWorkoutsData);
+    }
+
     useFocusEffect(
         useCallback(() => {
             if (!initialLoad) {
                 setTimeout(() => {
                     getWorkoutsLocally();
                     getFoldersLocally();
+                    getWorkouts();
+
+
+                    if (internetConnected) {
+                        const usersCollectionRef = collection(FIRESTORE_DB, "users");
+                        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+                        const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
+                        setUserWorkoutsCollectionRef(userWorkoutsCollectionRef);
+                    }
+
                 }, 100)
             }else{
                 getWorkoutsLocally();
@@ -347,12 +371,12 @@ const Workouts = ({navigation}: any) => {
     const combinedData = [...folders, ...workouts];
 
     const deleteWorkouts = () => {
-        deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode)
+        deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef)
         setSelectedWorkouts([])
     }
 
     const cutWorkouts = () => {
-        cutSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode)
+        cutSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef)
         setSelectedWorkouts([])
     }
 
