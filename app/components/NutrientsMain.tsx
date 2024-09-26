@@ -97,13 +97,13 @@ const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate}: 
 
     // key v animatedcircularprogress sluji da updateva stoinostta na fill zashtoto purvonachalno e 0 dokato ne se predade ot main kum nutrients
     return (
-        <Pressable style={tw`mt-3 mx-2 w-full h-full`} onPress={() => {
+        <Pressable style={tw`mt-3 mx-2 w-full h-66`} onPress={() => {
             
             navigation.navigate("Хранене-Ден", {date: formattedDate});
            
         }}>
 
-            <View style={tw`h-[33%] shadow-lg pt-2 pl-3 w-[96.5%] bg-white rounded-lg`}>
+            <View style={tw` w-[96.5%] h-66 shadow-lg pt-2 pl-3 bg-white rounded-lg`}>
                 
                 <View style={tw`flex flex-row justify-between`}>
 

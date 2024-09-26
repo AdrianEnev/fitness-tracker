@@ -28,6 +28,7 @@ import syncNutrients from '../syncData/useSyncNutrients';
 import syncFood from '../syncData/useSyncFood';
 import syncWorkouts from '../syncData/useSyncWorkouts';
 import syncWorkoutsInFolders from '../syncData/useSyncWorkoutsInFolders';
+import StatisticsComponent from '../components/StatisticsComponent';
 
 //bg-[#fd3e6b]
 //bg-[#3d5875]
@@ -76,7 +77,7 @@ const Main = ({navigation}: any) => {
             syncFood();
             syncWorkoutsInFolders();
         }
-       
+        
          // console log all asyncstorage items
         /*AsyncStorage.getAllKeys().then(keys => {
             console.log(keys)
@@ -128,9 +129,9 @@ const Main = ({navigation}: any) => {
     }
 
     return (
-        <SafeAreaView style={tw``}>
+        <SafeAreaView style={tw`h-full`}>
 
-            <ScrollView style={tw`h-full w-full`}>
+            <ScrollView style={tw`h-full w-full`} contentContainerStyle={tw`pb-24`} showsVerticalScrollIndicator={false}>
 
                 <View style={tw`flex flex-row justify-between mt-2 mx-1`}>
 
@@ -168,7 +169,7 @@ const Main = ({navigation}: any) => {
                 </View>
 
                 {/* Celi */}
-                <View style={tw`mx-1`}>
+                <View style={tw`mx-1 h-full`}>
                     
                     <HorizontalCalendar navigation={navigation} />
                     <WorkoutFoodButtons navigation={navigation} />
@@ -178,8 +179,8 @@ const Main = ({navigation}: any) => {
                         navigation={navigation} 
                         formattedDate={currentFormattedDate} 
                         regularDate={getCurrentDate(true)} 
-                    />
-                    
+                    /> 
+
                 </View>
 
             </ScrollView>

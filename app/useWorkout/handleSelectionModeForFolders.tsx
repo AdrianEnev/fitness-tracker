@@ -81,19 +81,6 @@ export const cutSelectedWorkoutsInFolder = async (
     } catch (err) {
         console.error(err);
     }
-
-    if (internetConnected) {
-        try {
-            for (const selectedWorkout of selectedWorkouts) {
-                const selectedWorkoutID = selectedWorkout.id;
-                const selectedWorkoutDoc = doc(userWorkoutsCollectionRef, selectedWorkoutID);
-                await deleteDoc(selectedWorkoutDoc);
-                console.log(`Workout with ID ${selectedWorkoutID} deleted from Firebase`);
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    }
 };
 
 export const pasteCutWorkoutsInFolder = async (folderId: string) => {

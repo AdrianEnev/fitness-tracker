@@ -29,7 +29,7 @@ const DeleteExerciseModal: React.FC<DeleteExerciseModalProps> = ({
                     <Pressable style={tw`bg-white w-full h-[26%] rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
 
                         <Text style={tw`text-lg text-center font-medium mt-1`}>Изтриване на упражнение</Text>
-                        <Text style={tw`text-lg text-center text-gray-500 font-medium my-2`}>Ще бъде перманетно изтрито само при запазване на тренировка!</Text>
+                        <Text style={tw`text-lg text-center text-gray-500 font-medium my-2`}>Ще бъде перманетно изтрито само при запазване на тренировката!</Text>
 
                         <View style={tw`flex items-center mt-2`}>
                             <Pressable style={tw`bg-[#e83d50] w-full h-10 rounded-xl flex items-center justify-center`} onPress={() => {

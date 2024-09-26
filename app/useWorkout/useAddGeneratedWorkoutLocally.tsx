@@ -55,7 +55,7 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, internetConnect
                 sets: Array.from({ length: exercise.sets }, (_, setIndex) => ({
                     id: Math.random().toString(),
                     reps: exercise.reps,
-                    weight: "", // Assuming weight is not provided by the AI model
+                    weight: exercise.weight, 
                     intensity: null, // Assuming intensity is not provided by the AI model
                     setIndex: setIndex + 1
                 }))

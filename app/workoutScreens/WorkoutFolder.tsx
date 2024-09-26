@@ -13,7 +13,7 @@ import { copySelectedWorkoutsInFolder, cutSelectedWorkoutsInFolder, deleteSelect
 import PasteWorkoutsInFolderModal from '../modals/PasteWorkoutsInFolderModal';
 import { useFocusEffect } from '@react-navigation/native';
 import GlobalContext from '../../GlobalContext';
-import { collection, doc, getDocs } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 
 const WorkoutFolder = ({ route, navigation }: any) => {
@@ -88,6 +88,24 @@ const WorkoutFolder = ({ route, navigation }: any) => {
             navigation.goBack();
         } catch (err) {
             console.error(err);
+        }
+
+        // delete firebase items as well
+        if (internetConnected) {
+            try {
+                const usersCollectionRef = collection(FIRESTORE_DB, "users");
+                const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+                const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
+
+                for (const workout of folder.workouts) {
+                    const workoutDocRef = doc(userWorkoutsCollectionRef, workout.id);
+                    await deleteDoc(workoutDocRef);
+                }
+
+                console.log('Folder deleted from Firebase');
+            } catch (err) {
+                console.error(err);
+            }
         }
     };
 

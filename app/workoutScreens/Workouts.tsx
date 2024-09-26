@@ -415,7 +415,7 @@ const Workouts = ({navigation}: any) => {
                     navigation={navigation}
                     pasteCopiedWorkouts={pasteCopiedWorkoutsFunc}
                     pasteCutWorkouts={pasteCutWorkoutsFunc}
-                ></PasteWorkoutsModal>
+                />
 
                 <Pressable style={tw`bg-gray-100 h-[15%] w-full flex justify-end`} onPress={() => setIsPasteWorkoutsModalVisible(true)}>
                     <Text style={tw`text-4xl font-medium text-black m-3`}>{t('workouts')}</Text>
@@ -428,7 +428,7 @@ const Workouts = ({navigation}: any) => {
                         keyExtractor={(item: any) => item.id}
                         ListEmptyComponent={() => (
                             <View style={tw``}>
-                                <Text style={tw`text-2xl font-medium text-gray-500 ml-3`}>test</Text>
+                                <Text style={tw`text-2xl font-medium text-gray-500 ml-3`}>No workouts available</Text>
                             </View>
                         )}
                         showsVerticalScrollIndicator={false}

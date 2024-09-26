@@ -255,14 +255,11 @@ const BottomNavigationBar = (
                         <Pressable onPress={backButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
                             <Ionicons name='chevron-back-circle-outline' color='#3b82f6' size={72}/>
                         </Pressable>
-                        <Pressable onPress={deleteSavedWorkout} style={tw``}>
-                            <Ionicons name='close-circle-outline' color='#ef4444' size={72}/>
-                        </Pressable>
                         <Pressable onPress={startWorkout} style={tw``}>
-                            <Ionicons name='play-circle-outline' color='#3b82f6' size={72}/>
+                            <Ionicons name='play-circle-outline' color='#22c55e' size={72}/>
                         </Pressable>
                         <Pressable onPress={saveViewWorkoutChanges} style={tw``}>
-                            <Ionicons name='checkmark-circle-outline' color='#22c55e' size={72}/>
+                            <Ionicons name='checkmark-circle-outline' color='#fbbf24' size={72}/>
                         </Pressable>
                         
                         <Pressable onPress={forwardButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>

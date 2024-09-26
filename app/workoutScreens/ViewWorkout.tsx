@@ -266,25 +266,6 @@ const ViewWorkout = ({route, navigation}: any) => {
         }
     };
 
-    const [topMargin, setTopMargin] = useState<number | null>(null);
-    
-    useEffect(() => {
-        //const { height } = Dimensions.get('window');
-        const model = Device.modelName;
-
-        let margin = 15; // Default margin
-
-        if (model && model.includes('iPhone')) {
-            if (model.includes('X') || model.includes('11') || model.includes('12') || model.includes('13')) {
-                margin = 12;
-            } else if (model.includes('8') || model.includes('7') || model.includes('6')) {
-                margin = 5;
-            }
-        }
-
-        setTopMargin(margin);
-    }, []);
-
     const deleteExercise = (exerciseId: any) => {
 
         const updatedExercises = newExercises.filter((ex: any) => ex.id !== exerciseId);
