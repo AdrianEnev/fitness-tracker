@@ -15,7 +15,6 @@ import saveWorkoutEditsLocally from '../useWorkout/useSaveWorkoutEditsLocally';
 import GlobalContext from '../../GlobalContext';
 import getEmail from '../use/useGetEmail';
 import saveWorkoutEditsFromFolderLocally from '../useWorkout/useSaveWorkoutEditsFromFolderLocally';
-import * as Device from 'expo-device';
 import DeleteExerciseModal from '../modals/DeleteExerciseModal';
 
 const ViewWorkout = ({route, navigation}: any) => {
@@ -107,7 +106,7 @@ const ViewWorkout = ({route, navigation}: any) => {
         
     const addExercise = () => {
         console.log('add exercise ran');
-        console.log('Current exercises:', newExercises); // Debug log
+        console.log('Current exercises:', newExercises);
 
         if (newExercises.length < 9) {
             const newSet = {
@@ -318,6 +317,8 @@ const ViewWorkout = ({route, navigation}: any) => {
                         deleteExercise={deleteExercise}
                         currentExerciseId={currentExerciseId}
                     />
+
+                    
                     
                     <TextInput 
                         style={tw`text-2xl font-bold mx-3 mb-5 max-w-[81%]`}
@@ -345,7 +346,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                                             numberOfLines={2}
                                             maxLength={50}
                                             placeholder={exercise.title}
-                                            placeholderTextColor='#93c5fd'
+                                            placeholderTextColor='#93c5fd' 
                                             defaultValue={exercise.title}
                                             onChangeText={(text) => updateExerciseTitle(exercise.id, text)}
                                             onContentSizeChange={handleContentSizeChange}
@@ -411,13 +412,15 @@ const ViewWorkout = ({route, navigation}: any) => {
                                                                         </View>
         
                                                                         <View style={tw`w-[39%]`}>
-                                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
+                                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>
+                                                                                Тежест
+                                                                            </Text>
         
                                                                             <TextInput
                                                                                 style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
                                                                                 keyboardType='number-pad'
                                                                                 maxLength={4}
-                                                                                placeholder={set.weight === "" ? 'Тежест' : set.weight.toString()}
+                                                                                placeholder={set.weight === "" ? 'Тежест' : set.weight.toString() + ' kg'}
                                                                                 value={userInputs[index].sets[mapIndex].weight}
                                                                                 onChangeText={(text) => {
                                                                                     let updatedInputs = [...userInputs];

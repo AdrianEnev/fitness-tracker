@@ -44,12 +44,13 @@ const BottomNavigationBar = (
         addActiveWorkoutExercise,
         addEmptyFolder, folder, deleteFolder,
         selectionMode, deleteSelectedWorkouts, cutSelectedWorkouts, copySelectedWorkouts,
-        copySelectedWorkoutsInFolder, cutSelectedWorkoutsInFolder, deleteSelectedWorkoutsInFolder
+        copySelectedWorkoutsInFolder, cutSelectedWorkoutsInFolder, deleteSelectedWorkoutsInFolder,
+        viewSavedWorkoutDate, viewSavedWorkoutStartEnd, viewSavedWorkoutNumberOfExercises
 
     }: 
     {
         currentPage: string, navigation: any, internetConnected?: boolean,
-        forwardButton?: () => void, backButton?: () => void
+        forwardButton?: any, backButton?: any,
         deleteSavedWorkout?: () => void, toggleEndWorkoutModal?: () => void,
         foodDayDate?: any, clearDay?: () => void, 
         saveCustomFood?: () => void,
@@ -71,7 +72,8 @@ const BottomNavigationBar = (
         addEmptyFolder?: () => void,
         folder?: any, deleteFolder?: () => void,
         selectionMode?: boolean, deleteSelectedWorkouts?: () => void, cutSelectedWorkouts?: () => void, copySelectedWorkouts?: () => void,
-        copySelectedWorkoutsInFolder?: () => void, cutSelectedWorkoutsInFolder?: () => void, deleteSelectedWorkoutsInFolder?: () => void
+        copySelectedWorkoutsInFolder?: () => void, cutSelectedWorkoutsInFolder?: () => void, deleteSelectedWorkoutsInFolder?: () => void,
+        viewSavedWorkoutDate?: any, viewSavedWorkoutStartEnd?: any, viewSavedWorkoutNumberOfExercises?: any
     }
 ) => {
     //AddCustomFood
@@ -98,31 +100,47 @@ const BottomNavigationBar = (
                 <View style={tw`flex flex-row justify-between w-full`}>
 
                     <Pressable onPress={backButton}>
-                        <Ionicons name='chevron-back' color='#fd1c47' size={64}/>
+                        <Ionicons name='chevron-back-circle-outline' color='#fd1c47' size={72}/>
                     </Pressable>
 
                     <Pressable onPress={toggleEndWorkoutModal}>
-                        <Ionicons name='stop-outline' color='#fd1c47' size={64}/>
+                        <Ionicons name='stop-circle-outline' color='#fd1c47' size={72}/>
                     </Pressable>
 
                     <Pressable onPress={forwardButton}>
-                        <Ionicons name='chevron-forward' color='#fd1c47' size={64}/>
+                        <Ionicons name='chevron-forward-circle-outline' color='#fd1c47' size={72}/>
                     </Pressable>
                 </View>
             </View>
             ) : currentPage === 'SavedWorkout' ? (
                 <View style={tw`flex flex-row justify-between w-full`}>
 
-                    <Pressable onPress={backButton}>
-                        <Ionicons name='chevron-back' color='#fd1c47' size={64}/>
+                    <View style={tw`w-full h-16 flex gap-y-2 flex-row justify-between absolute bottom-18`}>
+                        <View style={tw`w-[49%] bg-green-500 h-13 rounded-lg shadow-md flex items-center justify-center`}>
+                            <Text style={tw`text-white font-medium text-xl`}>{viewSavedWorkoutDate}</Text>
+                        </View>
+                       
+                        <View style={tw`w-[49%] bg-yellow-400 h-13 rounded-lg shadow-md flex items-center justify-center`}>
+                            <Text style={tw`text-white font-medium text-xl`}>
+                                {viewSavedWorkoutStartEnd}
+                            </Text>
+                        </View>
+                        
+                    </View>
+                    
+                    <Pressable onPress={() => {
+                        backButton();
+                        console.log(viewSavedWorkoutNumberOfExercises)
+                    }} style={tw`${viewSavedWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
+                        <Ionicons name='chevron-back-circle-outline' color='#3b82f6' size={72}/>
                     </Pressable>
 
                     <Pressable onPress={deleteSavedWorkout}>
-                        <Ionicons name='trash-outline' color='#fd1c47' size={64}/>
+                        <Ionicons name='close-circle-outline' color='#fd1c47' size={72}/>
                     </Pressable>
 
-                    <Pressable onPress={forwardButton}>
-                        <Ionicons name='chevron-forward' color='#fd1c47' size={64}/>
+                    <Pressable onPress={forwardButton} style={tw`${viewSavedWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
+                        <Ionicons name='chevron-forward-circle-outline' color='#3b82f6' size={72}/>
                     </Pressable>
                 </View>
             ) : currentPage === 'AddWorkout' ? (

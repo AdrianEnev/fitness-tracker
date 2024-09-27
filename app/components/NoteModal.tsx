@@ -23,12 +23,10 @@ const NoteModal: React.FC<NoteModalProps> = ({ isNoteModalVisible, setIsNoteModa
                 <View style={tw`flex-1 justify-center items-center mx-3`}>
                     <Pressable style={tw`bg-white w-full h-[28%] rounded-2xl pt-3 px-2`}>
 
-                        <Text style={tw`text-lg text-center font-medium`}>Добави Бележка</Text>
+                        <Text style={tw`text-lg text-center font-medium`}>Add a Note</Text>
 
                         <TextInput 
-                            style={tw`w-full h-[65%]`}
-                            placeholder='Бележка'
-                            placeholderTextColor={'#a0aec0'}
+                            style={tw`w-full h-[65%] bg-white border border-gray-200 shadow-md rounded-xl p-3`} 
                             maxLength={200}
                             multiline={true}
                             value={userInputs[currentIndex].note}
@@ -36,8 +34,8 @@ const NoteModal: React.FC<NoteModalProps> = ({ isNoteModalVisible, setIsNoteModa
                         />
                         
                         <View style={tw`flex items-center mt-2`}>
-                            <Pressable style={tw`bg-green-500 w-1/2 h-10 rounded-xl flex items-center justify-center`} onPress={() => setIsNoteModalVisible(false)}>
-                                <Text style={tw`text-white text-lg font-medium`}>Готово</Text>
+                            <Pressable style={tw`bg-green-500 w-full h-10 rounded-xl flex items-center justify-center`} onPress={() => setIsNoteModalVisible(false)}>
+                                <Text style={tw`text-white text-lg font-medium`}>Done</Text>
                             </Pressable>
                         </View>
                         

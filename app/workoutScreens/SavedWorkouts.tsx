@@ -37,6 +37,7 @@ const Workouts = ({navigation}: any) => {
             convertedWorkouts = convertedWorkouts.reverse();
     
             setSavedWorkouts(convertedWorkouts);
+            //console.log('Saved workouts: ', convertedWorkouts);
         } catch (err) {
             console.error(err);
         }
@@ -57,7 +58,9 @@ const Workouts = ({navigation}: any) => {
         if (workoutInfo) {
 
             const { exercisesData, workoutTitle } = workoutInfo;
-            navigation.navigate('Виж-Запазенa-Тренировка', {exercises: exercisesData, workoutTitle: workoutTitle, date: date, time: time, workout: workout});
+            navigation.navigate('Виж-Запазенa-Тренировка', {
+                exercises: exercisesData, workoutTitle: workoutTitle, date: date, time: time, workout: workout
+            });
 
         }
         
@@ -75,7 +78,7 @@ const Workouts = ({navigation}: any) => {
         // Convert the created property to a Firestore Timestamp object
         const timestamp = new Timestamp(savedWorkout.created.seconds, savedWorkout.created.nanoseconds);
         const date = timestamp.toDate();
-        const formattedDate = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+        const formattedDate = date.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }).replace(/\//g, '.');
         const formattedTime = date.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' }) + 'ч.';
     
         return (

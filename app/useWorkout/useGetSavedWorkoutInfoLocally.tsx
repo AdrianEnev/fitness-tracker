@@ -1,34 +1,28 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import generateID from '../use/useGenerateID';
-import getEmail from '../use/useGetEmail';
 
-const getSavedWorkoutInfoLocally = async (workoutID: string) => {
+const getSavedWorkoutInfoLocally = async (workoutId: string) => {
     try {
-        const email = await getEmail();
-        if (!email) return null;
-
-        const savedWorkouts = await AsyncStorage.getItem(`savedWorkouts_${email}`);
-        const savedWorkoutsArray = savedWorkouts ? JSON.parse(savedWorkouts) : [];
-
-        const workout = savedWorkoutsArray.find((workout: any) => workout.id === workoutID);
-
-        if (!workout) {
-            console.error('WorkoutID not found in local storage');
+        const savedWorkouts = await AsyncStorage.getItem('savedWorkouts');
+        if (!savedWorkouts) {
+            console.log('No saved workouts found in local storage.');
             return null;
         }
 
-        const workoutTitle = workout.title;
-        const exercisesData = workout.exercises.map((exercise: any) => ({
-            ...exercise,
-            sets: exercise.sets.map((set: any) => ({
-                ...set,
-                id: generateID()
-            }))
-        }));
+        const savedWorkoutsArray = JSON.parse(savedWorkouts);
+        console.log('Saved Workouts:', savedWorkoutsArray);
 
-        return { workoutTitle, exercisesData };
+        const workout = savedWorkoutsArray.find((workout: any) => workout.id === workoutId);
+        if (!workout) {
+            console.log(`WorkoutID ${workoutId} not found in local storage.`);
+            return null;
+        }
+
+        return {
+            exercisesData: workout.exercises,
+            workoutTitle: workout.title,
+        };
     } catch (err) {
-        console.error('Error retrieving workout from local storage: ' + err);
+        console.error('Error retrieving saved workout info:', err);
         return null;
     }
 };

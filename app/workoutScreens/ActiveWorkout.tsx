@@ -189,14 +189,14 @@ const ActiveWorkout = ({route, navigation}: any) => {
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <SafeAreaView style={tw`w-full h-full bg-white`}>
 
-                    <NoteModal
+                      <NoteModal
                         isNoteModalVisible={isNoteModalVisible}
                         setIsNoteModalVisible={setIsNoteModalVisible}
                         userInputs={userInputs}
                         currentIndex={currentIndex}
                         updateNote={updateNote}
                     />
-
+            
                     <EndWorkoutModal
                         isEndWorkoutModalVisible={isEndWorkoutModalVisible}
                         setIsEndWorkoutModalVisible={setIsEndWorkoutModalVisible}
@@ -206,7 +206,6 @@ const ActiveWorkout = ({route, navigation}: any) => {
                         duration={getWorkoutDuration()}
                         internetConnected={internetConnected}
                     />
-                    
 
                     <View style={tw`flex flex-row justify-between mx-3 w-[95%]`}>
                         <TouchableOpacity style={tw`w-22 h-10 bg-[#fd354a] shadow-md rounded-xl flex justify-center items-center`}>
@@ -220,7 +219,6 @@ const ActiveWorkout = ({route, navigation}: any) => {
                         
                     </View>
 
-                    
                     <Text style={tw`text-2xl font-bold ml-3 my-5`} ellipsizeMode='tail' numberOfLines={3}>{workoutTitle}</Text>
                     
                     <View style={tw`flex flex-col gap-y-1`}>
@@ -229,14 +227,8 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                 return (
                                     <View key={exercise.id} style={tw`w-full`}>
                                         
-                                        <View style={tw`flex flex-row gap-x-3 mx-3 mb-3`}>
-                                            <Text style={tw`text-xl text-blue-400 font-medium max-w-[85%]`} ellipsizeMode='tail' numberOfLines={3}>{exercise.title}</Text>
-                                            
-                                            <Pressable style={tw`w-12 h-8 bg-blue-200 rounded-xl flex items-center justify-center mt-[2px]`}
-                                            onPress={() => setIsNoteModalVisible(true)}
-                                            >
-                                                <Ionicons name='folder-outline' color='#60a5fa' style={tw`mt-[-1px]`} size={24}/>
-                                            </Pressable>
+                                        <View style={tw`gap-x-3 mx-3 mb-3`}>
+                                            <Text style={tw`text-xl text-blue-500 font-medium max-w-[85%]`} ellipsizeMode='tail' numberOfLines={3}>{exercise.title}</Text>
                                         </View>
 
                                         <ScrollView style={tw`h-[75%] mb-3`}>
@@ -325,6 +317,14 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                                             }}
                                                                         />
                                                                     </View>
+
+                                                                    <Pressable style={tw`absolute right-[22px] w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${mapIndex != 0 ? 'hidden' : ''}`}
+                                                                        onPress={() => {
+                                                                            setIsNoteModalVisible(true);
+                                                                        }} 
+                                                                    >
+                                                                        <Ionicons name='ellipsis-horizontal' size={24} color='black' />
+                                                                    </Pressable>
 
                                                                     <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
                                                                     onPress={() => removeSet(exercise.exerciseIndex, set.id)}

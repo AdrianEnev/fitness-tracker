@@ -1,11 +1,10 @@
-import { addDoc, collection, doc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
+import { addDoc, collection, deleteDoc, doc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import generateRandomColour from "../use/useGenerateColour";
 import getEmail from "../use/useGetEmail";
 
 const syncWorkouts = async () => {
-
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userWorkoutsCollectionRef = collection(userDocRef, 'workouts');
@@ -72,7 +71,17 @@ const syncWorkouts = async () => {
 
         console.log('Workouts synced');
     } else {
-        //console.log('No workouts to sync');
+        const firebaseWorkoutIds = userWorkoutsSnapshot.docs.map(doc => doc.id);
+        const localWorkoutIds = parsedLocalWorkouts.map((workout: any) => workout.id);
+
+        const workoutsToDelete = firebaseWorkoutIds.filter(id => !localWorkoutIds.includes(id));
+
+        workoutsToDelete.forEach(async (workoutId: string) => {
+            const workoutDocRef = doc(userWorkoutsCollectionRef, workoutId);
+            await deleteDoc(workoutDocRef);
+        });
+
+        console.log('Deleted workouts from Firebase that are not in AsyncStorage');
     }
 };
 

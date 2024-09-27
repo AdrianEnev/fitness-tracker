@@ -39,6 +39,7 @@ const saveWorkoutEditsFromFolderLocally = async (workout: any, userInputs: any, 
                     setIndex: index + 1
                 }));
                 updatedWorkout.info[exerciseIndex] = updatedExercise;
+                
             }
         });
 
@@ -58,8 +59,10 @@ const saveWorkoutEditsFromFolderLocally = async (workout: any, userInputs: any, 
                         setIndex: index + 1
                     })),
                     numberOfExercises: newExercise.sets.length
+                    
                 };
                 updatedWorkout.info.push(newExerciseInfo);
+                
             }
         });
 
