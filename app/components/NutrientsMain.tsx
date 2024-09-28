@@ -12,26 +12,12 @@ type RenderNutrientsProps = {
     currentNutrients: any;
     navigation: any;
     formattedDate: any;
-    regularDate: any
+    regularDate: any;
+    goalNutrients: any;
 };
 
-const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate}: RenderNutrientsProps) => {
+const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate, goalNutrients}: RenderNutrientsProps) => {
     
-    const [goalNutrients, setGoalNutrients] = useState<any>(null);
-   
-    useEffect(() => {
-        const fetch = async () => {
-            
-            const n = await AsyncStorage.getItem(`goal_nutrients_${await getEmail()}`);
-           
-            if (n) {
-                setGoalNutrients(JSON.parse(n))
-            }
-           
-        }
-        fetch();
-    }, [])
-
     const currentCalories = currentNutrients?.calories || 0;
     const currentProtein = currentNutrients?.protein || 0;
     const currentCarbs = currentNutrients?.carbs || 0;

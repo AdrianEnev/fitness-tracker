@@ -67,16 +67,6 @@ const Main = ({navigation}: any) => {
         }
 
         setCurrentFormattedDate(formattedDate)
-
-        
-        if (internetConnected) {
-            updateCurrentNutrients();
-            syncWorkouts();
-            syncSavedWorkouts();
-            syncNutrients();
-            syncFood();
-            syncWorkoutsInFolders();
-        }
         
          // console log all asyncstorage items
         /*AsyncStorage.getAllKeys().then(keys => {
@@ -93,9 +83,65 @@ const Main = ({navigation}: any) => {
     }, [internetConnected])
 
     // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk
-    let [currentNutrients, setCurrentNutrients] = useState<GoalNutrients[]>([]);
+    let [currentNutrients, setCurrentNutrients] = useState<any>(null);
+    const [goalNutrients, setGoalNutrients] = useState<any>(null);
 
-    const updateCurrentNutrients = async () => {
+    useFocusEffect(
+        React.useCallback(() => {
+            if (!internetConnected || !currentFormattedDate) return;
+    
+            const getGoalNutrientslocally = async () => {
+                try {
+                    const localNutrients = await AsyncStorage.getItem(`goal_nutrients_${await getEmail()}`);
+                    if (localNutrients) {
+                        const parsedLocalNutrients = JSON.parse(localNutrients);
+                        setGoalNutrients(parsedLocalNutrients);
+                    }
+                } catch (error) {
+                    console.error('Error getting nutrients from AsyncStorage:', error);
+                }
+            }
+            getGoalNutrientslocally();
+    
+            const getCurrentNutrientsLocally = async () => {
+                try {
+                    const email = await getEmail();
+                    const storedData = await AsyncStorage.getItem(`${email}-foodDay-${currentFormattedDate.day}-${currentFormattedDate.month}-${currentFormattedDate.year}`);
+                    const data = storedData ? JSON.parse(storedData) : [];
+    
+                    //console.log(`${email}-foodDay-${currentFormattedDate.day}-${currentFormattedDate.month}-${currentFormattedDate.year}`)
+    
+                    let totalCalories = 0;
+                    let totalProtein = 0;
+                    let totalCarbs = 0;
+                    let totalFat = 0;
+    
+                    data.forEach((food: any) => {
+                        totalCalories += food.calories || 0;
+                        totalProtein += food.protein || 0;
+                        totalCarbs += food.carbs || 0;
+                        totalFat += food.fat || 0;
+                    });
+    
+                    const updatedNutrients = {
+                        calories: totalCalories,
+                        protein: totalProtein,
+                        carbs: totalCarbs,
+                        fat: totalFat
+                    };
+    
+                    setCurrentNutrients(updatedNutrients);
+                } catch (err) {
+                    console.error(err);
+                }
+            }
+            getCurrentNutrientsLocally();
+    
+        }, [internetConnected, currentFormattedDate])
+    );
+
+
+    /*const updateCurrentNutrients = async () => {
          
         try {
             const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -113,7 +159,8 @@ const Main = ({navigation}: any) => {
         } catch (err) {
             console.error(err);
         }
-    }
+
+    }**/
 
     const getHelloText = (): string => {
         const date = new Date();
@@ -179,6 +226,7 @@ const Main = ({navigation}: any) => {
                         navigation={navigation} 
                         formattedDate={currentFormattedDate} 
                         regularDate={getCurrentDate(true)} 
+                        goalNutrients={goalNutrients}
                     /> 
 
                 </View>

@@ -19,6 +19,8 @@ const Settings = ({navigation}: any) => {
 
     const [tempNutrients, setTempNutrients] = useState<Record<string, number>>({});
 
+    const {internetConnected} = useContext(GlobalContext);
+
     /*const updateNutrients = async () => {
         try {
             const docSnap = await getDoc(nutrientsDocRef);
@@ -63,6 +65,21 @@ const Settings = ({navigation}: any) => {
             console.log('saved successfuly (locally)')
         } catch (error) {
             console.log('Error saving nutrients to AsyncStorage:', error);
+        }
+
+        if (internetConnected) {
+            // save nutrients to firestore
+            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+            const userInfoCollectionRef = collection(userDocRef, 'user_info');
+            const nutrientsDocRef = doc(userInfoCollectionRef, 'nutrients');
+
+            try {
+                await setDoc(nutrientsDocRef, tempNutrients);
+                console.log('saved successfuly (firestore)')
+            } catch (error) {
+                console.error('Error saving nutrients to Firestore:', error);
+            }
         }
 
     };

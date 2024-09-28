@@ -70,19 +70,7 @@ const syncWorkouts = async () => {
         });
 
         console.log('Workouts synced');
-    } else {
-        const firebaseWorkoutIds = userWorkoutsSnapshot.docs.map(doc => doc.id);
-        const localWorkoutIds = parsedLocalWorkouts.map((workout: any) => workout.id);
-
-        const workoutsToDelete = firebaseWorkoutIds.filter(id => !localWorkoutIds.includes(id));
-
-        workoutsToDelete.forEach(async (workoutId: string) => {
-            const workoutDocRef = doc(userWorkoutsCollectionRef, workoutId);
-            await deleteDoc(workoutDocRef);
-        });
-
-        console.log('Deleted workouts from Firebase that are not in AsyncStorage');
-    }
+    } 
 };
 
 export default syncWorkouts;

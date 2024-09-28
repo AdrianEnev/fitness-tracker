@@ -30,6 +30,11 @@ import EmailNotVerified from './app/screens/EmailNotVerified';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getLocalLanguageSet from './app/use/useGetLocalLanguageSet';
 import LanguageScreen from './app/screens/LanguageScreen';
+import syncWorkouts from './app/syncData/useSyncWorkouts';
+import syncSavedWorkouts from './app/syncData/useSyncSavedWorkouts';
+import syncNutrients from './app/syncData/useSyncNutrients';
+import syncFood from './app/syncData/useSyncFood';
+import syncWorkoutsInFolders from './app/syncData/useSyncWorkoutsInFolders';
 
 const Stack = createStackNavigator();
 
@@ -48,6 +53,7 @@ const SetupPage = () => {
 }
 
 const AuthenticatedTabNavigator = ({ setupRan }: any) => {
+    
     return (
         <Stack.Navigator initialRouteName={setupRan ? "Главна-Страница" : "Първоначални-Настройки"}>
             <Stack.Screen
@@ -158,6 +164,8 @@ const App = () => {
 
     const [localLanguageSet, setLocalLanguageSet] = useState(false);
     const [emailVerifiedChanged, setEmailVerifiedChanged] = useState(false); // New state
+
+    const [hasSynced, setHasSynced] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -314,6 +322,18 @@ const App = () => {
             fetchData();
         }
     }, [emailVerifiedChanged]);
+
+    useEffect(() => {
+        if (isConnected && isAuthenticated && !hasSynced) {
+            setHasSynced(true);
+
+            syncWorkouts();
+            syncSavedWorkouts();
+            syncNutrients();
+            syncFood();
+            syncWorkoutsInFolders();
+        }
+    }, [isConnected, isAuthenticated, hasSynced]);
 
     if (loading || checkingSetup) {
         return (

@@ -49,7 +49,7 @@ const FoodDay = ({route, navigation}: any) => {
             }
     
             setCurrentFoods(filteredData);
-            console.log(`Data retrieved for key ${email}-foodDay-${date.day}-${date.month}-${date.year}:`, filteredData);
+            //console.log(`Data retrieved for key ${email}-foodDay-${date.day}-${date.month}-${date.year}:`, filteredData);
         } catch (err) {
             console.error(err);
         }
@@ -132,33 +132,6 @@ const FoodDay = ({route, navigation}: any) => {
     );
 
 
-    const clearDay = async () => {
-
-        if (currentFoods.length === 0) {
-            console.log('No foods to clear');
-            return;
-        }
-
-
-        try {
-            const email = await getEmail();
-    
-            await AsyncStorage.removeItem(`${email}-foodDay-${date.day}-${date.month}-${date.year}`);
-    
-            await AsyncStorage.setItem(`${email}-nutrients-${date.day}-${date.month}-${date.year}`, JSON.stringify({
-                calories: 0,
-                protein: 0,
-                carbs: 0,
-                fat: 0
-            }));
-    
-            await updateCurrentFoods();
-            setCurrentNutrients({ calories: 0, protein: 0, carbs: 0, fat: 0, id: generateID() });
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
     const {t} = useTranslation();
 
     const {internetConnected} = useContext(GlobalContext);
@@ -194,7 +167,6 @@ const FoodDay = ({route, navigation}: any) => {
                 currentPage='FoodDay' 
                 navigation={navigation} 
                 foodDayDate={date}
-                clearDay={clearDay}
                 internetConnected={internetConnected}
             />
 

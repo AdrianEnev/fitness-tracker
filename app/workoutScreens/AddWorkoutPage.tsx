@@ -161,15 +161,16 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
     const [isExerciseOptionsModalVisible, setIsExerciseOptionsModalVisible] = useState(false);
 
     const addRestDay = async () => {
-        //add empty workout with name 'Rest Day'
 
         const email = await getEmail();
 
         const existingWorkouts = await AsyncStorage.getItem(`workouts_${email}`);
         const workouts = existingWorkouts ? JSON.parse(existingWorkouts) : [];
 
+        const id = generateID();
+
         const newWorkout = {
-            id: generateID(),
+            id: id,
             title: 'Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($',
             created: new Date().toISOString(),
             colour: generateRandomColour(),
@@ -187,6 +188,15 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
             await AsyncStorage.setItem(`folders_${email}`, JSON.stringify(folders));
         }else{
             await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(workouts));
+        }
+
+        if (internetConnected) {
+            addWorkout(
+                [], 
+                'Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($', 
+                id, 
+                folder
+            );
         }
     }
 

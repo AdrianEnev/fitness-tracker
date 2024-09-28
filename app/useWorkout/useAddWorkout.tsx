@@ -3,50 +3,58 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import generateRandomColour from '../use/useGenerateColour';
 
 const addWorkout = async (exercises: any, workoutTitle: string, id: any, folder?: any) => {
-
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
-    const workoutDocRef = doc(userWorkoutsCollectionRef, id); // Use the provided id here
-    await setDoc(workoutDocRef, {
-        title: workoutTitle.trim(),
-        created: serverTimestamp(),
-        colour: generateRandomColour(),
-        numberOfExercises: exercises.length,
-        folderId: folder ? folder.id : null
-    });
-    const workoutInfoCollectionRef = collection(workoutDocRef, "info");
+    const workoutDocRef = doc(userWorkoutsCollectionRef, id);
 
-    try {
-        exercises.forEach((exercise: any) => {
-            exercise.sets.forEach(async (set: any, index: any) => {
-
-                if (exercise.title === '') {
-                    exercise.title = "Упражнение " + (exercise.exerciseIndex + 1);
-                }
-
-                const exerciseDocRef = doc(workoutInfoCollectionRef, (exercise.exerciseIndex + 1).toString());
-                await setDoc(exerciseDocRef, {
-                    title: exercise.title.trim(),
-                    exerciseIndex: exercise.exerciseIndex + 1,
-                });
-
-                const exerciseSets = collection(exerciseDocRef, "sets");
-                await addDoc(exerciseSets, {
-                    reps: set.reps,
-                    weight: set.weight,
-                    intensity: set.intensity ? set.intensity : null,
-                    setIndex: index + 1
-                });
-                
-            });
-            
+    if (exercises.length === 0) {
+        // Add rest day workout
+        await setDoc(workoutDocRef, {
+            title: workoutTitle.trim(),
+            created: serverTimestamp(),
+            colour: generateRandomColour(),
+            numberOfExercises: 0,
+            folderId: folder ? folder.id : null
         });
-        
-    } catch (err) {
-        console.error(err);
+    } else {
+        // Add regular workout
+        await setDoc(workoutDocRef, {
+            title: workoutTitle.trim(),
+            created: serverTimestamp(),
+            colour: generateRandomColour(),
+            numberOfExercises: exercises.length,
+            folderId: folder ? folder.id : null
+        });
+
+        const workoutInfoCollectionRef = collection(workoutDocRef, "info");
+
+        try {
+            exercises.forEach((exercise: any) => {
+                exercise.sets.forEach(async (set: any, index: any) => {
+                    if (exercise.title === '') {
+                        exercise.title = "Упражнение " + (exercise.exerciseIndex + 1);
+                    }
+
+                    const exerciseDocRef = doc(workoutInfoCollectionRef, (exercise.exerciseIndex + 1).toString());
+                    await setDoc(exerciseDocRef, {
+                        title: exercise.title.trim(),
+                        exerciseIndex: exercise.exerciseIndex + 1,
+                    });
+
+                    const exerciseSets = collection(exerciseDocRef, "sets");
+                    await addDoc(exerciseSets, {
+                        reps: set.reps,
+                        weight: set.weight,
+                        intensity: set.intensity ? set.intensity : null,
+                        setIndex: index + 1
+                    });
+                });
+            });
+        } catch (err) {
+            console.error(err);
+        }
     }
-    
 }
 
 export default addWorkout;

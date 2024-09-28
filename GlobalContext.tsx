@@ -5,7 +5,6 @@ interface GlobalContextType {
     profilePicture: string;
     setupRan: boolean;
     friendRequestsNumber: string;
-    //goalNutrients: GoalNutrients | null; // Changed to a single object or null
     receiveFriendRequests: boolean;
     faceIdEnabled: boolean;
     internetConnected: boolean;
@@ -14,7 +13,6 @@ interface GlobalContextType {
     setReceiveFriendRequests: (value: boolean) => void;
     setProfilePicture: (profilePicture: string) => void;
     setSetupRan: (value: boolean) => void;
-    //setGoalNutrients: (value: GoalNutrients | null) => void; // Updated the type here as well
     setIsAccountDeleted: (value: boolean) => void;
 }
 
@@ -22,7 +20,6 @@ const defaultValues: GlobalContextType = {
     profilePicture: '',
     setupRan: false,
     friendRequestsNumber: "",
-    //goalNutrients: null,
     receiveFriendRequests: false,
     faceIdEnabled: false,
     internetConnected: false,
@@ -31,8 +28,7 @@ const defaultValues: GlobalContextType = {
     setReceiveFriendRequests: () => {},
     setProfilePicture: () => {},
     setSetupRan: () => {},
-    setIsAccountDeleted: () => {}
-    //setGoalNutrients: () => {},
+    setIsAccountDeleted: () => {},
 };
 
 const GlobalContext = React.createContext<GlobalContextType>(defaultValues);

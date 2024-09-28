@@ -35,7 +35,7 @@ const syncFood = async () => {
         // Retrieve food items from Firebase
         const usersCollectionRef = collection(FIRESTORE_DB, 'users');
         const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const userDaysCollectionRef = collection(userDocRef, 'days');
+        const userDaysCollectionRef = collection(userDocRef, 'food_days');
         const userDaysSnapshot = await getDocs(userDaysCollectionRef);
 
         const firebaseDays = userDaysSnapshot.docs.map(doc => ({
