@@ -146,7 +146,7 @@ const FoodInfo = ({route}: any) => {
             await removeFromAsyncStorage();
             recalculateNutrientsAsyncStorage();
 
-            if (internetConnected) {
+            /*if (internetConnected) {
                 const date = formatDate(formalDate);
 
                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -156,7 +156,7 @@ const FoodInfo = ({route}: any) => {
 
                 await removeFromFirebase(foodDayDocRef)
                 recalculateNutrientsFirebase(foodDayDocRef);
-            }
+        }*/
            
             navigation.goBack();
             

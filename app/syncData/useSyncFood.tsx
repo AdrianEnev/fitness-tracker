@@ -1,7 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
-import { collection, doc, setDoc, getDoc, getDocs, addDoc } from "firebase/firestore";
+import { collection, doc, setDoc, deleteDoc, getDocs } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
+import generateID from "../use/useGenerateID";
 
 const syncFood = async () => {
 
@@ -39,20 +40,29 @@ const syncFood = async () => {
         const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
         const foodDaysCollectionRef = collection(userDocRef, 'food_days');  
         
-        // Add or update a document for each food day
-        // Calculate total nutrients for each food day
+        // Add or update a document for each food day and add a "foods" collection inside each document
         await Promise.all(
             foodDays.map(async ({ key, data }) => {
-                const foodDayDocRef = doc(foodDaysCollectionRef, key);
-                await setDoc(foodDayDocRef, { title: key }, { merge: true });
+                // Extract the date and format it as YY-MM-DD with leading zeros
+                const dateParts = key.split('-').slice(-3);
+                const formattedDate = `${dateParts[2].padStart(2, '0')}-${dateParts[1].padStart(2, '0')}-${dateParts[0]}`;
+
+                const foodDayDocRef = doc(foodDaysCollectionRef, formattedDate);
+
+                await setDoc(foodDayDocRef, { title: formattedDate }, { merge: true });
 
                 const foodsCollectionRef = collection(foodDayDocRef, 'foods');
+
+                // Clear existing foods in the collection
+                const existingFoods = await getDocs(foodsCollectionRef);
+                await Promise.all(existingFoods.docs.map(doc => deleteDoc(doc.ref)));
+
                 let totalNutrients = { calories: 0, protein: 0, carbs: 0, fat: 0 };
 
                 if (data) {
                     await Promise.all(
                         data.map(async (foodItem: any, index: any) => {
-                            const foodDocRef = doc(foodsCollectionRef, `food-${index + 1}`);
+                            const foodDocRef = doc(foodsCollectionRef, generateID());
                             await setDoc(foodDocRef, foodItem);
 
                             // Accumulate nutrients
@@ -73,7 +83,6 @@ const syncFood = async () => {
         console.error("Error fetching food days from AsyncStorage:", error);
     }
 
-    
 }
 
 export default syncFood;

@@ -117,7 +117,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
             carbs: Math.round(carbs),
             fat: Math.round(fat),
             grams: Math.round(grams),
-            timestamp: serverTimestamp()
+            //timestamp: serverTimestamp()
         };
     
         data.push(documentInfo);
