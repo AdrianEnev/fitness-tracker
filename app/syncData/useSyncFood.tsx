@@ -1,138 +1,79 @@
-import { addDoc, collection, doc, getDocs, serverTimestamp, setDoc, deleteDoc } from "firebase/firestore";
-import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
-
-type FoodItem = {
-    id: string;
-    date: string;
-    title: string;
-    calories: number;
-    protein: number;
-    carbs: number;
-    fat: number;
-    // Add other properties if necessary
-};
+import { collection, doc, setDoc, getDoc, getDocs, addDoc } from "firebase/firestore";
+import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 
 const syncFood = async () => {
+
+    /*
+    
+    All food items: [["enevadrian@gmail.com-foodDay-27-9-2024-nutrients", "{\"calories\":4,\"protein\":4,\"carbs\":4,\"fat\":4}"], ["enevadrian@gmail.com-foodDay-25-9-2024", "[{\"id\":\"s3iez1c48j8123mc5k298e\",\"title\":\"S\",\"date\":\"2024-09-28T12:30:43.533Z\",\"calories\":4,\"protein\":4,\"carbs\":4,\"fat\":4,\"grams\":0,\"timestamp\":{\"_methodName\":\"serverTimestamp\"}},{\"id\":\"wxeyl0yftfolvrjphtkf\",\"title\":\"S\",\"date\":\"2024-09-28T12:30:47.797Z\",\"calories\":4,\"protein\":4,\"carbs\":4,\"fat\":4,\"grams\":4,\"timestamp\":{\"_methodName\":\"serverTimestamp\"}}]"], ["enevadrian@gmail.com-foodDay-27-9-2024", "[{\"id\":\"56zb875ljsb2btc5hy8cym\",\"title\":\"Sf\",\"date\":\"2024-09-28T12:30:31.322Z\",\"calories\":4,\"protein\":4,\"carbs\":4,\"fat\":4,\"grams\":4,\"timestamp\":{\"_methodName\":\"serverTimestamp\"}}]"], ["enevadrian@gmail.com-foodDay-28-9-2024", "[{\"id\":\"1ad8qrm4l2m6mgwwslg1xq\",\"title\":\"Sx\",\"date\":\"2024-09-28T12:24:41.357Z\",\"calories\":4,\"protein\":4,\"carbs\":4,\"fat\":4,\"grams\":4,\"timestamp\":{\"_methodName\":\"serverTimestamp\"}},{\"id\":\"30fwd4wd48pazglvcw7oy\",\"title\":\"Ss\",\"date\":\"2024-09-28T12:24:45.573Z\",\"calories\":4,\"protein\":4,\"carbs\":4,\"fat\":4,\"grams\":4,\"timestamp\":{\"_methodName\":\"serverTimestamp\"}},{\"id\":\"dgoiotapgxwqyjhy4q53m\",\"title\":\"Sf\",\"date\":\"2024-09-28T12:24:50.804Z\",\"calories\":4,\"protein\":4,\"carbs\":4,\"fat\":5,\"grams\":5,\"timestamp\":{\"_methodName\":\"serverTimestamp\"}}]"], ["enevadrian@gmail.com-foodDay-28-9-2024-nutrients", "{\"calories\":12,\"protein\":12,\"carbs\":12,\"fat\":13}"], ["enevadrian@gmail.com-foodDay-25-9-2024-nutrients", "{\"calories\":8,\"protein\":8,\"carbs\":8,\"fat\":8}"], ["enevadrian@gmail.com-foodDay-17-9-2024-nutrients", "{}"]]
+
+    */
+
+    /*
+     
+    const foodDayDocRef = doc(foodDaysCollectionRef, date);
+    const foodDayFoodsCollectionRef = collection(foodDayDocRef, 'foods');
+     
+    */
+
+    const email = await getEmail();
+    const foodDayKeyPrefix = `${email}-foodDay-`;
+
     try {
-        const email = await getEmail();
-        if (!email) return;
-
-        // Retrieve all keys from AsyncStorage
+        // Get all food days from asyncstorage 
+        //Example:  [{"data": [[Object], [Object]], "key": "enevadrian@gmail.com-foodDay-25-9-2024"}, {"data": [[Object]], "key": "enevadrian@gmail.com-foodDay-27-9-2024"}, {"data": [[Object], [Object], [Object]], "key": "enevadrian@gmail.com-foodDay-28-9-2024"}]
         const keys = await AsyncStorage.getAllKeys();
-        const foodDayKeys = keys.filter(key => key.includes(`${email}-foodDay-`));
+        const foodDayKeys = keys.filter(key => key.startsWith(foodDayKeyPrefix) && !key.endsWith('-nutrients'));
 
-        // Retrieve food items from AsyncStorage
-        const foodItems = await AsyncStorage.multiGet(foodDayKeys);
-        const asyncStorageFoods = foodItems
-            .filter(([key, value]) => !key.includes('nutrients'))
-            .map(([key, value]) => JSON.parse(value || '[]'));
+        const foodDays = await Promise.all(
+            foodDayKeys.map(async key => {
+                const data = await AsyncStorage.getItem(key);
+                return { key, data: data ? JSON.parse(data) : null };
+            })
+        );
 
-        // Flatten the array of arrays
-        const flatAsyncStorageFoods = asyncStorageFoods.flat();
-
-        // Retrieve food items from Firebase
+        // Create firebase instance
         const usersCollectionRef = collection(FIRESTORE_DB, 'users');
         const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const userDaysCollectionRef = collection(userDocRef, 'food_days');
-        const userDaysSnapshot = await getDocs(userDaysCollectionRef);
+        const foodDaysCollectionRef = collection(userDocRef, 'food_days');  
+        
+        // Add or update a document for each food day
+        // Calculate total nutrients for each food day
+        await Promise.all(
+            foodDays.map(async ({ key, data }) => {
+                const foodDayDocRef = doc(foodDaysCollectionRef, key);
+                await setDoc(foodDayDocRef, { title: key }, { merge: true });
 
-        const firebaseDays = userDaysSnapshot.docs.map(doc => ({
-            id: doc.id,
-            ...doc.data(),
-            calories: doc.data().calories, 
-            protein: doc.data().protein || 0, 
-            carbs: doc.data().carbs || 0, 
-            fat: doc.data().fat || 0 
-        }));
+                const foodsCollectionRef = collection(foodDayDocRef, 'foods');
+                let totalNutrients = { calories: 0, protein: 0, carbs: 0, fat: 0 };
 
-        // Flag to track if any changes were made
-        let changesMade = false;
+                if (data) {
+                    await Promise.all(
+                        data.map(async (foodItem: any, index: any) => {
+                            const foodDocRef = doc(foodsCollectionRef, `food-${index + 1}`);
+                            await setDoc(foodDocRef, foodItem);
 
-        // Compare and add missing items to Firebase
-        for (const food of flatAsyncStorageFoods) {
-            const foodDate = new Date(food.date).toISOString().split('T')[0]; // Get date in YYYY-MM-DD format
-            let dayDocRef = firebaseDays.find(day => day.id === foodDate);
-
-            if (!dayDocRef) {
-                // Create a new day document if it doesn't exist
-                await setDoc(doc(userDaysCollectionRef, foodDate), {
-                    date: foodDate,
-                    calories: 0,
-                    protein: 0,
-                    carbs: 0,
-                    fat: 0,
-                    timestamp: serverTimestamp()
-                });
-                // Add the new day document to firebaseDays
-                dayDocRef = { id: foodDate, calories: 0, protein: 0, carbs: 0, fat: 0 };
-                firebaseDays.push(dayDocRef);
-                changesMade = true;
-            }
-
-            const dayFoodsCollectionRef = collection(userDaysCollectionRef, foodDate, 'foods');
-            const dayFoodsSnapshot = await getDocs(dayFoodsCollectionRef);
-            const firebaseFoods = dayFoodsSnapshot.docs.map(doc => doc.data());
-
-            const existsInFirebase = firebaseFoods.some(fbFood => fbFood.date === food.date && fbFood.title === food.title);
-            if (!existsInFirebase) {
-                await addDoc(dayFoodsCollectionRef, {
-                    ...food,
-                    timestamp: serverTimestamp()
-                });
-
-                // Update the day's nutrient counts
-                const newCalories = (dayDocRef.calories || 0) + food.calories;
-                const newProtein = (dayDocRef.protein || 0) + food.protein;
-                const newCarbs = (dayDocRef.carbs || 0) + food.carbs;
-                const newFat = (dayDocRef.fat || 0) + food.fat;
-                await setDoc(doc(userDaysCollectionRef, foodDate), {
-                    calories: newCalories,
-                    protein: newProtein,
-                    carbs: newCarbs,
-                    fat: newFat
-                }, { merge: true });
-                changesMade = true;
-            }
-        }
-
-        // Handle deletion of foods
-        for (const day of firebaseDays) {
-            const dayFoodsCollectionRef = collection(userDaysCollectionRef, day.id, 'foods');
-            const dayFoodsSnapshot = await getDocs(dayFoodsCollectionRef);
-            const firebaseFoods: FoodItem[] = dayFoodsSnapshot.docs.map(doc => ({
-                ...doc.data() as FoodItem, // Type assertion to ensure the correct structure
-                id: doc.id // Ensure the id is set correctly
-            }));
-            
-            for (const fbFood of firebaseFoods) {
-                const existsInAsyncStorage = flatAsyncStorageFoods.some(food => food.date === fbFood.date && food.title === fbFood.title);
-                if (!existsInAsyncStorage) {
-                    await deleteDoc(doc(dayFoodsCollectionRef, fbFood.id));
-                
-                    // Update the day's nutrient counts
-                    const newCalories = day.calories - fbFood.calories;
-                    const newProtein = (day.protein || 0) - fbFood.protein;
-                    const newCarbs = (day.carbs || 0) - fbFood.carbs;
-                    const newFat = (day.fat || 0) - fbFood.fat;
-                    await setDoc(doc(userDaysCollectionRef, day.id), {
-                        calories: newCalories,
-                        protein: newProtein,
-                        carbs: newCarbs,
-                        fat: newFat
-                    }, { merge: true });
-                    changesMade = true;
+                            // Accumulate nutrients
+                            totalNutrients.calories += foodItem.calories || 0;
+                            totalNutrients.protein += foodItem.protein || 0;
+                            totalNutrients.carbs += foodItem.carbs || 0;
+                            totalNutrients.fat += foodItem.fat || 0;
+                        })
+                    );
                 }
-            }
-        }
 
-        if (changesMade) {
-            console.log('Sync complete');
-        }
-    } catch (err) {
-        console.error('Error syncing food items:', err);
+                // Update the parent document with the total nutrients
+                await setDoc(foodDayDocRef, totalNutrients, { merge: true });
+            })
+        );
+
+    } catch (error) {
+        console.error("Error fetching food days from AsyncStorage:", error);
     }
+
+    
 }
 
 export default syncFood;

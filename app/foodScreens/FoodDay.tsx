@@ -63,7 +63,7 @@ const FoodDay = ({route, navigation}: any) => {
             const keys = await AsyncStorage.getAllKeys();
             const foodDayKeys = keys.filter(key => key.includes(`${email}-foodDay-`));
             const foodItems = await AsyncStorage.multiGet(foodDayKeys);
-            console.log('All food items:', foodItems);
+            //console.log('All food items:', foodItems);
         } catch (err) {
             console.error(err);
         }

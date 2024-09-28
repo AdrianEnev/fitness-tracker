@@ -58,7 +58,6 @@ const FoodInfo = ({route}: any) => {
     }
 
     const removeFromFirebase = async (foodDayDocRef: any) => {
-        const date = formatDate(formalDate);
         
         // delete from firebase
         const foodDayFoodsCollectionRef = collection(foodDayDocRef, 'foods');
@@ -157,17 +156,6 @@ const FoodInfo = ({route}: any) => {
 
                 await removeFromFirebase(foodDayDocRef)
                 recalculateNutrientsFirebase(foodDayDocRef);
-            }
-
-            // log all food items in the end
-            try {
-                const email = await getEmail();
-                const keys = await AsyncStorage.getAllKeys();
-                const foodDayKeys = keys.filter(key => key.includes(`${email}-foodDay-`));
-                const foodItems = await AsyncStorage.multiGet(foodDayKeys);
-                console.log('All food items:', foodItems);
-            } catch (err) {
-                console.error(err);
             }
            
             navigation.goBack();

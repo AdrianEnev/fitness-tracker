@@ -35,6 +35,7 @@ import syncSavedWorkouts from './app/syncData/useSyncSavedWorkouts';
 import syncNutrients from './app/syncData/useSyncNutrients';
 import syncFood from './app/syncData/useSyncFood';
 import syncWorkoutsInFolders from './app/syncData/useSyncWorkoutsInFolders';
+import getEmail from './app/use/useGetEmail';
 
 const Stack = createStackNavigator();
 
@@ -324,6 +325,7 @@ const App = () => {
     }, [emailVerifiedChanged]);
 
     useEffect(() => {
+
         if (isConnected && isAuthenticated && !hasSynced) {
             setHasSynced(true);
 

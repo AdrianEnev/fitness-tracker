@@ -1,21 +1,27 @@
 import { View, Text, TextInput, Pressable, ActivityIndicator, Button, Keyboard } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlatList, TouchableWithoutFeedback } from 'react-native-gesture-handler';
-import { addDoc, collection, doc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc, getDocs, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Food } from '../../interfaces';
 import getNutrients from '../use/useGetNutrients';
 import { useTranslation } from 'react-i18next';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import GlobalContext from '../../GlobalContext';
+import getEmail from '../use/useGetEmail';
+import generateID from '../use/useGenerateID';
 
 const AddFoodPage = ({route, navigation}: any) => {
     
     const {t} = useTranslation();
 
     const { date } = route.params;
+
+    const {internetConnected} = useContext(GlobalContext);
 
     const [searchQuery, setSearchQuery] = useState('');
     const [grams, setGrams] = useState('');
@@ -40,6 +46,12 @@ const AddFoodPage = ({route, navigation}: any) => {
         fat: number | undefined; 
     }[] | undefined>([]);
 
+    const formatDate = (date: any) => {
+        const year = date.year;
+        const month = String(date.month).padStart(2, '0');
+        const day = String(date.day).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
 
     const displayFoods = async () => {
 
@@ -72,9 +84,13 @@ const AddFoodPage = ({route, navigation}: any) => {
 
     const updateCurrentNutrients = async () => {
         try {
-            const data = await getDocs(foodDayCollectionRef);
+            const email = await getEmail();
+            const storedData = await AsyncStorage.getItem(`${email}-foodDay-${date.day}-${date.month}-${date.year}`);
+            const data = storedData ? JSON.parse(storedData) : [];
 
-            if (data.empty) {
+            const formattedDate = formatDate(date);
+
+            if (data.length === 0) {
                 return;
             }
 
@@ -83,8 +99,7 @@ const AddFoodPage = ({route, navigation}: any) => {
             let totalCarbs = 0;
             let totalFat = 0;
 
-            data.forEach((doc) => {
-                const food = doc.data() as Food;
+            data.forEach((food: any) => {
                 totalCalories += food.calories || 0;
                 totalProtein += food.protein || 0;
                 totalCarbs += food.carbs || 0;
@@ -98,49 +113,74 @@ const AddFoodPage = ({route, navigation}: any) => {
                 fat: totalFat
             };
 
-            await updateDoc(foodDayDocRef, updatedNutrients);
+            await AsyncStorage.setItem(`${email}-foodDay-${date.day}-${date.month}-${date.year}-nutrients`, JSON.stringify(updatedNutrients));
+
+            if (internetConnected) {
+                const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+                const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+                const foodDaysCollectionRef = collection(userDocRef, 'food_days');  
+                const foodDayDocRef = doc(foodDaysCollectionRef, formattedDate);
+
+                const docSnapshot = await getDoc(foodDayDocRef);
+
+                if (docSnapshot.exists()) {
+                    await updateDoc(foodDayDocRef, updatedNutrients);
+                } else {
+                    await setDoc(foodDayDocRef, updatedNutrients);
+                }
+            }
         } catch (err) {
             console.error(err);
         }
     };
 
+    const addItem = async (item: any) => { 
+
+        if (itemAdded) {
+            return;
+        }
+
+        setItemAdded(true);
+
+        const email = await getEmail();
+        const foodDayKey = `${email}-foodDay-${date.day}-${date.month}-${date.year}`;
+        const storedData = await AsyncStorage.getItem(foodDayKey);
+        const data = storedData ? JSON.parse(storedData) : [];
+
+        const formattedDate = formatDate(date);
+
+        const documentInfo = {
+            id: generateID(),
+            title: item.title,
+            date: new Date().toISOString(),
+            calories: Math.round(item.calories),
+            protein: Math.round(item.protein),
+            carbs: Math.round(item.carbs),
+            fat: Math.round(item.fat),
+            grams: Math.round(item.grams),
+            timestamp: serverTimestamp()
+        };
+
+        data.push(documentInfo);
+        await AsyncStorage.setItem(foodDayKey, JSON.stringify(data));
+
+        if (internetConnected) {
+            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+            const foodDaysCollectionRef = collection(userDocRef, 'food_days');  
+            const foodDayDocRef = doc(foodDaysCollectionRef, formattedDate);
+            const foodDayFoodsCollectionRef = collection(foodDayDocRef, 'foods');
+            const foodDocRef = doc(foodDayFoodsCollectionRef, documentInfo.id);
+
+            await setDoc(foodDocRef, documentInfo);
+        }
+
+        updateCurrentNutrients();
+        navigation.goBack();
+    }
+
     const renderSearchedFoods = (item: any) => {
 
-        const addItem = async (item: any) => { 
-
-            if (itemAdded) {
-                return;
-            }
-
-            setItemAdded(true);
-
-            const foodDayDocRef = doc(foodDaysCollectionRef, `${date.day}-${date.month}-${date.year}`);
-            
-            await setDoc(foodDayDocRef, {
-                calories: 0,
-                protein: 0,
-                carbs: 0,
-                fat: 0
-            })
-
-            const foodDayCollectionRef = collection(foodDayDocRef, 'foods');
-            
-            const documentInfo = {
-                title: item.title,
-                date: serverTimestamp(),
-                calories: Math.round(item.calories),
-                protein: Math.round(item.protein),
-                carbs: Math.round(item.carbs),
-                fat: Math.round(item.fat),
-                grams: Math.round(item.grams)
-            };
-
-            await addDoc(foodDayCollectionRef, documentInfo);
-            updateCurrentNutrients();
-            navigation.goBack();
-            
-        }
-        
         const foodTitle = item.title;
         const foodGrams = item.grams;
 
