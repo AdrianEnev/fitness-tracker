@@ -23,6 +23,10 @@ const AddFoodChangeNutrientModal = ({ nutrient, oldValue, setName, setCalories, 
         setIsAddFoodChangeNutrientModalVisible(!isAddFoodChangeNutrientModalVisible);
         Keyboard.dismiss();
 
+        if (nutrient === 'Food Name') {
+            setName(tempValue);
+            return;
+        }
         tempValue = Math.ceil(Number(normalizeValue(tempValue)));
 
         switch (nutrient) {
