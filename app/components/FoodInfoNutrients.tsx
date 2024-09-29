@@ -135,7 +135,7 @@ const FoodInfoNutrients = (
                         <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Calories</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
-                            <Text style={tw`text-4xl text-white font-medium text-center`}>{newCalories}kcal</Text>
+                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!newCalories ? '0' : newCalories}kcal</Text>
                         </View>
 
                     </Pressable>
@@ -145,7 +145,7 @@ const FoodInfoNutrients = (
                         <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Protein</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
-                            <Text style={tw`text-4xl text-white font-medium text-center`}>{newProtein}g</Text>
+                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!newProtein ? '0' : newProtein}g</Text>
                         </View>
 
                     </Pressable>
@@ -155,7 +155,7 @@ const FoodInfoNutrients = (
                         <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Carbs</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
-                            <Text style={tw`text-4xl text-white font-medium text-center`}>{newCarbs}g</Text>
+                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!newCarbs ? '0' : newCarbs}g</Text>
                         </View>
 
                     </Pressable>
@@ -165,7 +165,7 @@ const FoodInfoNutrients = (
                         <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Fat</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
-                            <Text style={tw`text-4xl text-white font-medium text-center`}>{newFat}g</Text>
+                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!newFat ? '0' : newFat}g</Text>
                         </View>
 
                     </Pressable>

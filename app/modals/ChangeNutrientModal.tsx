@@ -27,7 +27,14 @@ const ChangeNutrientModal = ({ nutrient, oldValue, setNewCalories, setNewProtein
         >
             <Pressable style={[tw`w-full h-[15%] mx-1 mt-1 absolute`, { top: position.top, left: position.left }]} onPress={Keyboard.dismiss}>
 
-                <Pressable style={tw`w-[44%] h-full bg-[#3f8aff] rounded-xl`}>
+                <Pressable style={tw` 
+                    w-[44%] h-full rounded-xl
+                    ${nutrient === 'Calories' ? 'bg-[#3f8aff]' : 
+                    nutrient === 'Protein' ? 'bg-[#fd3e54]' : 
+                    nutrient === "Carbs" ? 'bg-[#0fbf8f]' :
+                    'bg-[#ffca2c]'} 
+                    `
+                }>
 
                     <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{nutrient}</Text>
 
@@ -35,7 +42,7 @@ const ChangeNutrientModal = ({ nutrient, oldValue, setNewCalories, setNewProtein
                         <TextInput
                             style={tw`text-4xl text-white font-medium text-center`}
                             onChangeText={text => tempValue = text}
-                            defaultValue={tempValue.toString()}
+                            defaultValue={!tempValue.toString() ? '0' : tempValue.toString()}
                             keyboardType='numeric'
                             autoFocus={true}
                             
@@ -61,7 +68,7 @@ const ChangeNutrientModal = ({ nutrient, oldValue, setNewCalories, setNewProtein
                     }}>
                         <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Save</Text>
                     </Pressable>
-                    <Pressable style={tw`w-[49%] h-12 bg-red-500 rounded-xl`}>
+                    <Pressable style={tw`w-[49%] h-12 bg-red-500 rounded-xl`} onPress={() => setIsChangeNutrientModalVisible(false)}>
                         <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Cancel</Text>
                     </Pressable>
                 </View>
