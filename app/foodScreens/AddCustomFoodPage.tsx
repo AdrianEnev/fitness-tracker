@@ -10,6 +10,7 @@ import GlobalContext from '../../GlobalContext';
 import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import generateID from '../use/useGenerateID';
+import AddFoodNutrientsComponent from './AddFoodNutrientsComponent';
 
 const AddCustomFoodPage = ({navigation, route}: any) => {
 
@@ -19,7 +20,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
 
     const {internetConnected} = useContext(GlobalContext);
 
-    const [name, setName] = useState("");
+    const [name, setName] = useState("Example");
     const [calories, setCalories] = useState(0);
     const [protein, setProtein] = useState(0);
     const [carbs, setCarbs] = useState(0);
@@ -32,6 +33,13 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         const day = String(date.day).padStart(2, '0');
         return `${year}-${month}-${day}`;
     };
+
+    const formatDatePretty = (date: any) => {
+        const year = date.year;
+        const month = String(date.month).padStart(2, '0');
+        const day = String(date.day).padStart(2, '0');
+        return `${day}.${month}.${year}`;
+    }
 
     const updateCurrentNutrients = async () => {
 
@@ -182,31 +190,33 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
     );
 
     return (
-        <SafeAreaView style={tw`flex-1 bg-white`}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={tw`flex-1 mx-3`}>
+        <View style={tw`h-full w-full bg-white`}>
+            
+            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>Add Food-</Text>
+            </View>
 
-                    <View style={tw`flex-1 flex-row flex-wrap w-full gap-x-3 gap-y-3 mt-3`}>
+            <View style={tw`flex flex-row justify-between mx-4`}>
+                <Text style={tw`text-xl font-medium text-gray-500 mt-2`}>Add food manually</Text>
+                <Text style={tw`text-xl font-medium text-gray-500 mt-2`}>{formatDatePretty(date)}</Text>
+            </View>
 
-                        {box(t('food'), 'name')}
-                        {box(t('calories'), 'calories')}
-                        {box(t('protein'), 'protein')}
-                        {box(t('carbs'), 'carbs')}
-                        {box(t('fat'), 'fat')}
-                        {box(t('grams'), 'grams')}
-
-                    </View>
-                </View>
-
-            </TouchableWithoutFeedback>
-
-            <BottomNavigationBar 
-                currentPage='AddCustomFood' 
+            <AddFoodNutrientsComponent
                 navigation={navigation} 
-                foodDayDate={date}
-                saveCustomFood={() => saveFood()}
+                calories={calories} 
+                protein={protein} 
+                carbs={carbs} 
+                fat={fat} 
+                setCalories={setCalories} 
+                setProtein={setProtein} 
+                setCarbs={setCarbs} 
+                setFat={setFat}    
+                saveFood={saveFood} 
+                name={name}
+                setName={setName}           
             />
-        </SafeAreaView>
+            
+        </View>
     )
 }
 

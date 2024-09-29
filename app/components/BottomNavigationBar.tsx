@@ -27,7 +27,6 @@ const BottomNavigationBar = (
         forwardButton, backButton,
         deleteSavedWorkout, toggleEndWorkoutModal,
         foodDayDate, clearDay,
-        saveCustomFood,
         displayFoods,
         startWorkout,
         viewWorkoutNumberOfExercises,
@@ -45,7 +44,8 @@ const BottomNavigationBar = (
         addEmptyFolder, folder, deleteFolder,
         selectionMode, deleteSelectedWorkouts, cutSelectedWorkouts, copySelectedWorkouts,
         copySelectedWorkoutsInFolder, cutSelectedWorkoutsInFolder, deleteSelectedWorkoutsInFolder,
-        viewSavedWorkoutDate, viewSavedWorkoutStartEnd, viewSavedWorkoutNumberOfExercises
+        viewSavedWorkoutDate, viewSavedWorkoutStartEnd, viewSavedWorkoutNumberOfExercises,
+        addCustomFoodPageAddFood
 
     }: 
     {
@@ -53,7 +53,6 @@ const BottomNavigationBar = (
         forwardButton?: any, backButton?: any,
         deleteSavedWorkout?: () => void, toggleEndWorkoutModal?: () => void,
         foodDayDate?: any, clearDay?: () => void, 
-        saveCustomFood?: () => void,
         displayFoods?: () => void,
         workout?: any,
         viewWorkoutNumberOfExercises?: number,
@@ -73,7 +72,8 @@ const BottomNavigationBar = (
         folder?: any, deleteFolder?: () => void,
         selectionMode?: boolean, deleteSelectedWorkouts?: () => void, cutSelectedWorkouts?: () => void, copySelectedWorkouts?: () => void,
         copySelectedWorkoutsInFolder?: () => void, cutSelectedWorkoutsInFolder?: () => void, deleteSelectedWorkoutsInFolder?: () => void,
-        viewSavedWorkoutDate?: any, viewSavedWorkoutStartEnd?: any, viewSavedWorkoutNumberOfExercises?: any
+        viewSavedWorkoutDate?: any, viewSavedWorkoutStartEnd?: any, viewSavedWorkoutNumberOfExercises?: any,
+        addCustomFoodPageAddFood?: () => void
     }
 ) => {
     //AddCustomFood
@@ -194,10 +194,10 @@ const BottomNavigationBar = (
                         <Ionicons name="search-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
                 </View>
-            ) : currentPage === "AddCustomFood" ? (
+            ) : currentPage === "AddCustomFoodPage" ? (
                 <View style={tw`flex items-center justify-center`}>
-                    <Pressable onPress={saveCustomFood}>
-                        <Ionicons name='checkmark-done' color='white' size={64}/>
+                    <Pressable onPress={addCustomFoodPageAddFood}>
+                        <Text style={tw`text-4xl font-semibold text-red-500`}>Add</Text>
                     </Pressable>
                 </View>
             ) : currentPage === "AddFoodPage" ? (
