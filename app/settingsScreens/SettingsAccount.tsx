@@ -172,7 +172,12 @@ const SettingsAccount = ({navigation}: any) => {
                         
                         <View style={tw`flex justify-center`}>
                             <Text style={tw`text-lg font-medium`}>{title}</Text>
-                            {(title === t('change-username') || title === t('change-password') || title === t('delete-account') || title === t(`log-out`)) && (
+                            {(
+                                title === t('change-username') && !internetConnected || 
+                                title === t('change-password') && !internetConnected || 
+                                title === t('delete-account') && !internetConnected || 
+                                title === t(`log-out`) && !internetConnected
+                            ) && (
                                 <Text style={tw`text-gray-500 mb-[8px]`}>Requires internet</Text>
                             )}
                         </View>

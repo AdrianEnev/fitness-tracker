@@ -36,8 +36,8 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
                 <View style={tw`flex-1 justify-center items-center mx-3`}>
                     <Pressable style={tw`bg-gray-50 w-full h-[29%] rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
 
-                        <Text style={tw`text-lg text-center font-medium mt-1`}>Запазване на тренировка</Text>
-                        <Text style={tw`text-lg text-center text-gray-500 font-medium my-2`}>Моля въведи име за тази тренировка!</Text>
+                        <Text style={tw`text-xl text-center font-medium mt-1`}>Запазване на тренировка</Text>
+                        <Text style={tw`text-lg text-center text-gray-500 font-medium mb-2`}>Моля въведи име за тази тренировка!</Text>
 
 
                         <TextInput

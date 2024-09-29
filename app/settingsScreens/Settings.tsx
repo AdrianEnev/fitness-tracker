@@ -57,7 +57,11 @@ const Settings = ({navigation}: any) => {
                         
                         <View style={tw`flex justify-center`}>
                             <Text style={tw`text-lg font-medium`}>{title}</Text>
-                            {(title === t('stats') || title === t('friends') || title === t('account')) && (
+                            {(
+                                title === t('stats') && !internetConnected || 
+                                title === t('friends') && !internetConnected || 
+                                title === t('account') && !internetConnected
+                            ) && (
                                 <Text style={tw`text-gray-500 mb-[8px]`}>Requires internet</Text>
                             )}
                         </View>

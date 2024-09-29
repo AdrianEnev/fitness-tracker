@@ -1,5 +1,5 @@
-import { View, Text, Pressable } from 'react-native'
-import React from 'react'
+import { View, Text, Pressable } from 'react-native';
+import React from 'react';
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
 
@@ -14,7 +14,7 @@ const RenderAddedFood = ({item, navigation}: any) => {
 
                 <View style={tw`flex flex-row`}>
 
-                    <View style={tw`w-16 h-10 bg-[#fd3e6b] rounded-xl flex items-center justify-center mr-2`}>
+                    <View style={tw`w-16 h-10 bg-[#fd1c47] rounded-xl flex items-center justify-center mr-2`}>
                         <Text style={tw`text-lg font-medium text-white`} ellipsizeMode='tail' numberOfLines={1}>{date}</Text>
                     </View>
                     
@@ -31,4 +31,5 @@ const RenderAddedFood = ({item, navigation}: any) => {
         </Pressable>
     )
 }
+
 export default RenderAddedFood;

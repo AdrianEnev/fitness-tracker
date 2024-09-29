@@ -16,10 +16,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
 import generateID from '../use/useGenerateID';
 import GlobalContext from '../../GlobalContext';
+import generateRandomColour from '../use/useGenerateColour';
 
 const FoodDay = ({route, navigation}: any) => {
 
     const { date } = route.params;
+
+    let [foodColors, setFoodColors] = useState<{ [key: string]: string }>({});
 
     const getDate = () => {
         if (date.day < 10 && date.month < 10) {
@@ -50,6 +53,7 @@ const FoodDay = ({route, navigation}: any) => {
     
             setCurrentFoods(filteredData);
             //console.log(`Data retrieved for key ${email}-foodDay-${date.day}-${date.month}-${date.year}:`, filteredData);
+
         } catch (err) {
             console.error(err);
         }

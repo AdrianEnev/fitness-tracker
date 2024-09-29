@@ -96,6 +96,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
 
     const saveFood = async () => {
         if (!name && saveFoodRan) {
+            console.log('save food already ran')
             return;
         }
 
@@ -123,6 +124,8 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         data.push(documentInfo);
         await AsyncStorage.setItem(foodDayKey, JSON.stringify(data));
 
+        navigation.goBack();
+
         if (internetConnected) {
             const usersCollectionRef = collection(FIRESTORE_DB, 'users');
             const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -135,8 +138,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         }
         
         updateCurrentNutrients();
-        setSaveFoodRan(false)
-        navigation.goBack();
+        
     }
 
     const setNutrient = (value: any, nutrientType: any) => {

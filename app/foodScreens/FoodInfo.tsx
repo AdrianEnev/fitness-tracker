@@ -10,6 +10,7 @@ import GlobalContext from '../../GlobalContext';
 import getEmail from '../use/useGetEmail';
 import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import FoodInfoNutrients from '../components/FoodInfoNutrients';
 
 const FoodInfo = ({route}: any) => {
 
@@ -68,10 +69,6 @@ const FoodInfo = ({route}: any) => {
     }
 
     const recalculateNutrientsFirebase = async (foodDayDocRef: any) => {
-
-        // get proprties of foodDayDocRef (calories, carbs, fat, protein)
-        // subtract the nutrients that are going to be deleted/were deleted from the properties of foodDayDocRef
-        // set the properties of foodDayDocRef to the new values
 
         try {
             // Retrieve the current nutrient values from the foodDayDocRef
@@ -146,7 +143,7 @@ const FoodInfo = ({route}: any) => {
             await removeFromAsyncStorage();
             recalculateNutrientsAsyncStorage();
 
-            /*if (internetConnected) {
+            if (internetConnected) {
                 const date = formatDate(formalDate);
 
                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -156,7 +153,7 @@ const FoodInfo = ({route}: any) => {
 
                 await removeFromFirebase(foodDayDocRef)
                 recalculateNutrientsFirebase(foodDayDocRef);
-        }*/
+            }
            
             navigation.goBack();
             
@@ -172,20 +169,19 @@ const FoodInfo = ({route}: any) => {
             
 
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
-                <Text style={tw`text-4xl font-medium text-black m-3`}>{t('food-info')}</Text>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>Macronutrients</Text>
             </View>
 
-            <View style={tw`mx-3 my-2`}>
+            <Text style={tw`text-2xl font-medium text-center mt-3 mb-1`}>{food.title} - {food.grams}g</Text>
 
-                <Text style={tw`text-black text-2xl font-medium`}>{food.title}</Text>
-                <Text style={tw`text-black text-xl font-medium`}>{date}ч.</Text>
-                <Text>{calories} cals</Text>
-                <Text>{protein} protein</Text>
-                <Text>{carbs} carbs</Text>
-                <Text>{fat} fat</Text>
-                <Text>{food.grams} grams</Text>
-                
-            </View>
+            <FoodInfoNutrients
+                calories={calories}
+                protein={protein}
+                carbs={carbs}
+                fat={fat}
+                formalDate={formalDate}
+                foodId={food.id}
+            />
             
             <BottomNavigationBar currentPage='FoodInfo' navigation={navigation} deleteFood={removeFood}/>
         </View>

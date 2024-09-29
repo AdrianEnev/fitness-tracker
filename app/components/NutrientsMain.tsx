@@ -2,11 +2,8 @@ import { View, Text, Pressable } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import GlobalContext from '../../GlobalContext';
-import getCurrentDate from '../use/useGetCurrentDate';
 import { t } from 'i18next';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import getEmail from '../use/useGetEmail';
+
 
 type RenderNutrientsProps = {
     currentNutrients: any;
