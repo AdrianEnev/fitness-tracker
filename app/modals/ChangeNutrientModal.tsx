@@ -1,9 +1,11 @@
 import { Keyboard, Modal, Pressable, View, Text, TextInput } from "react-native";
 import tw from 'twrnc'
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface ChangeNutrientModalProps {
     nutrient: string;
     oldValue: string | number;
+    setNewName: any;
     setNewCalories: any;
     setNewProtein: any;
     setNewCarbs: any;
@@ -12,9 +14,72 @@ interface ChangeNutrientModalProps {
     setIsChangeNutrientModalVisible: (isVisible: boolean) => void;
 }
 
-const ChangeNutrientModal = ({ nutrient, oldValue, setNewCalories, setNewProtein, setNewCarbs, setNewFat, isChangeNutrientModalVisible, setIsChangeNutrientModalVisible, position }: ChangeNutrientModalProps & { position: { top: number, left: number } }) => {
-
+const ChangeNutrientModal = ({ nutrient, oldValue, setNewName, setNewCalories, setNewProtein, setNewCarbs, setNewFat, isChangeNutrientModalVisible, setIsChangeNutrientModalVisible, position }: ChangeNutrientModalProps & { position: { top: number, left: number } }) => {
     let tempValue = oldValue;
+
+    const saveButtonPressed = () => {
+        setIsChangeNutrientModalVisible(!isChangeNutrientModalVisible);
+        Keyboard.dismiss();
+        if (nutrient === 'Calories') {
+            setNewCalories(tempValue);
+        } else if (nutrient === 'Protein') {
+            setNewProtein(tempValue);
+        } else if (nutrient === 'Carbs') {
+            setNewCarbs(tempValue);
+        } else if (nutrient === 'Fat') {
+            setNewFat(tempValue);
+        } else {
+            setNewName(tempValue);
+        }
+    };
+    
+    const SaveAndCancelButtons = () => {
+        return (
+            <View 
+                style={tw
+                `
+                    w-[94%] flex flex-row justify-between mt-3
+                `}>
+
+                <Pressable style={tw`w-[49%] h-12 bg-[#fd3e54] rounded-xl shadow-lg`} onPress={() => setIsChangeNutrientModalVisible(false)}>
+                    <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Cancel</Text>
+                </Pressable>
+
+                <Pressable style={tw`w-[49%] h-12 bg-[#0fbf70] rounded-xl shadow-lg`}
+                    onPress={() => {
+                        saveButtonPressed()
+                    }}
+                >
+                    <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Save</Text>
+                </Pressable>
+
+            </View>
+        );
+    };
+
+    const SaveAndCancelIcons = () => {
+        return (
+            <View 
+                style={tw
+                `
+                   w-[94%] flex-row gap-x-1 ml-[-3px] gap-y-2 ${nutrient === "Protein" ? 'mt-2' : nutrient === "Calories" ? 'mt-2' : 'mt-[-60px] mb-2'}
+                `}>
+
+                <Pressable style={tw`w-[24%] h-12 bg-[#fd3e54] rounded-xl shadow-lg flex items-center justify-center`} onPress={() => setIsChangeNutrientModalVisible(false)}>
+                    <Ionicons name='close-outline' size={48} color='white' />
+                </Pressable>
+
+                <Pressable style={tw`w-[24%] h-12 bg-[#0fbf70] rounded-xl shadow-lg flex items-center justify-center`}
+                    onPress={() => {
+                        saveButtonPressed()
+                    }}
+                >
+                    <Ionicons name='checkmark' size={48} color='white' />
+                </Pressable>
+                
+            </View>
+        );
+    };
 
     return (
         <Modal
@@ -25,56 +90,52 @@ const ChangeNutrientModal = ({ nutrient, oldValue, setNewCalories, setNewProtein
                 setIsChangeNutrientModalVisible(!isChangeNutrientModalVisible);
             }}
         >
-            <Pressable style={[tw`w-full h-[15%] mx-1 mt-1 absolute`, { top: position.top, left: position.left }]} onPress={Keyboard.dismiss}>
+            <View style={[tw`w-full h-[15%] mx-1 mt-1 absolute`, { top: position.top, left: position.left }]}>
 
-                <Pressable style={tw` 
-                    w-[44%] h-full rounded-xl
-                    ${nutrient === 'Calories' ? 'bg-[#3f8aff]' : 
-                    nutrient === 'Protein' ? 'bg-[#fd3e54]' : 
-                    nutrient === "Carbs" ? 'bg-[#0fbf8f]' :
-                    'bg-[#ffca2c]'} 
-                    `
+                {((nutrient === 'Carbs' || nutrient === 'Fat')) && (
+                    <SaveAndCancelIcons />
+                )}
+
+                <View style={tw` 
+                    ${nutrient === 'Food Name' ? 'w-[92.5%] h-[70%] mr-[8px]' : 'w-[44%] h-full'}  rounded-xl
+                    ${nutrient === 'Calories' ? 'bg-[#3f8aff] ml-[1.5px]' : 
+                    nutrient === 'Protein' ? 'bg-[#fd3e54] ml-[1px]' : 
+                    nutrient === "Carbs" ? 'bg-[#0fbf8f] ml-[1.5px]' :
+                    nutrient === "Fat" ? 'bg-[#ffca2c] mr-[1.5px]' :
+                    'bg-[#9263fa]'
+                    }`
                 }>
 
                     <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{nutrient}</Text>
 
-                    <View style={tw`flex-1 items-center justify-center mb-4`}>
+                    <View style={tw`flex-1 items-center justify-center mb-1`}>
                         <TextInput
                             style={tw`text-4xl text-white font-medium text-center`}
                             onChangeText={text => tempValue = text}
-                            defaultValue={!tempValue.toString() ? '0' : tempValue.toString()}
-                            keyboardType='numeric'
+                            defaultValue={
+                                nutrient !== 'Food name' ? !tempValue.toString() ? '0' : 
+                                tempValue.toString() : oldValue.toString()
+                            }
+                            keyboardType={
+                                nutrient !== 'Food Name' ? 'numeric' : 'default'
+                            }
                             autoFocus={true}
-                            
+                            maxLength={nutrient === 'Food Name' ? 100 : nutrient === 'Calories' ? 4 : 3}
+                            selectionColor={'white'}
                         />
                     </View>
 
-                </Pressable>
-
-                <View style={tw`w-[94%] flex-col gap-y-2 mt-2`}>
-                    <Pressable style={tw`w-[49%] h-12 bg-green-500 rounded-xl`}
-                    onPress={() => {
-                        setIsChangeNutrientModalVisible(!isChangeNutrientModalVisible);
-                        Keyboard.dismiss();
-                        if (nutrient === 'Calories') {
-                            setNewCalories(tempValue);
-                        } else if (nutrient === 'Protein') {
-                            setNewProtein(tempValue);
-                        } else if (nutrient === 'Carbs') {
-                            setNewCarbs(tempValue);
-                        } else {
-                            setNewFat(tempValue);
-                        }
-                    }}>
-                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Save</Text>
-                    </Pressable>
-                    <Pressable style={tw`w-[49%] h-12 bg-red-500 rounded-xl`} onPress={() => setIsChangeNutrientModalVisible(false)}>
-                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Cancel</Text>
-                    </Pressable>
                 </View>
 
+                {((nutrient !== 'Carbs' && nutrient !== 'Fat') && nutrient !== 'Food Name') && (
+                    <SaveAndCancelIcons />
+                )}
+                {(nutrient === 'Food Name') && (
+                    <SaveAndCancelButtons />
+                )}
 
-            </Pressable>
+
+            </View>
         </Modal>
     );
 }

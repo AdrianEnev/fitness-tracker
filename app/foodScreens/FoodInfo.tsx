@@ -143,6 +143,8 @@ const FoodInfo = ({route}: any) => {
             await removeFromAsyncStorage();
             recalculateNutrientsAsyncStorage();
 
+            navigation.goBack();
+
             if (internetConnected) {
                 const date = formatDate(formalDate);
 
@@ -155,8 +157,6 @@ const FoodInfo = ({route}: any) => {
                 recalculateNutrientsFirebase(foodDayDocRef);
             }
            
-            navigation.goBack();
-            
         } catch (err) {
             console.error("Error in removeFood function:", err);
         }
@@ -172,7 +172,7 @@ const FoodInfo = ({route}: any) => {
                 <Text style={tw`text-4xl font-medium text-black m-3`}>Macronutrients</Text>
             </View>
 
-            <Text style={tw`text-2xl font-medium text-center mt-3 mb-1`}>{food.title} - {food.grams}g</Text>
+            {/* <Text style={tw`text-2xl font-medium text-center mt-3 mb-1`}>{food.grams}g</Text> */}
 
             <FoodInfoNutrients
                 calories={calories}
@@ -180,7 +180,7 @@ const FoodInfo = ({route}: any) => {
                 carbs={carbs}
                 fat={fat}
                 formalDate={formalDate}
-                foodId={food.id}
+                food={food}
             />
             
             <BottomNavigationBar currentPage='FoodInfo' navigation={navigation} deleteFood={removeFood}/>

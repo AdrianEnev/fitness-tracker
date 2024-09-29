@@ -116,21 +116,35 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         const data = storedData ? JSON.parse(storedData) : [];
 
         const formattedDate = formatDate(date);
+
+        let newCalories = Number(String(calories).replace(',', '.'));
+        newCalories = Math.ceil(newCalories);
     
+        let newProtein = Number(String(protein).replace(',', '.'));
+        newProtein = Math.ceil(newProtein);
+        
+        let newCarbs = Number(String(carbs).replace(',', '.'));
+        newCarbs = Math.ceil(newCarbs);
+        
+        let newFat = Number(String(fat).replace(',', '.'));
+        newFat = Math.ceil(newFat);
+        
         const documentInfo = {
             id: generateID(),
             title: name.trim(),
             date: new Date().toISOString(),
-            calories: Math.round(calories),
-            protein: Math.round(protein),
-            carbs: Math.round(carbs),
-            fat: Math.round(fat),
+            calories: newCalories,
+            protein: newProtein,
+            carbs: newCarbs,
+            fat: newFat,
             grams: Math.round(grams),
             //timestamp: serverTimestamp()
         };
     
         data.push(documentInfo);
         await AsyncStorage.setItem(foodDayKey, JSON.stringify(data));
+
+        
 
         navigation.goBack();
 

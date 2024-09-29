@@ -1,6 +1,7 @@
 import { Keyboard, Modal, Pressable, View, Text, TextInput } from "react-native";
 import tw from 'twrnc';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { normalizeValue } from "../use/useNormalizeValue";
 
 interface AddFoodChangeNutrientModalProps {
     nutrient: string;
@@ -16,21 +17,32 @@ interface AddFoodChangeNutrientModalProps {
 
 const AddFoodChangeNutrientModal = ({ nutrient, oldValue, setName, setCalories, setProtein, setCarbs, setFat, isAddFoodChangeNutrientModalVisible, setIsAddFoodChangeNutrientModalVisible, position }: AddFoodChangeNutrientModalProps & { position: { top: number, left: number } }) => {
 
+    let tempValue = oldValue;
+
     const saveButtonPressed = () => {
         setIsAddFoodChangeNutrientModalVisible(!isAddFoodChangeNutrientModalVisible);
         Keyboard.dismiss();
-        if (nutrient === 'Calories') {
-            setCalories(tempValue);
-        } else if (nutrient === 'Protein') {
-            setProtein(tempValue);
-        } else if (nutrient === 'Carbs') {
-            setCarbs(tempValue);
-        } else if (nutrient === 'Fat') {
-            setFat(tempValue);
-        } else {
-            setName(tempValue);
+
+        tempValue = Math.ceil(Number(normalizeValue(tempValue)));
+
+        switch (nutrient) {
+            case 'Calories':
+                setCalories(tempValue);
+                break;
+            case 'Protein':
+                setProtein(tempValue);
+                break;
+            case 'Carbs':
+                setCarbs(tempValue);
+                break;
+            case 'Fat':
+                setFat(tempValue);
+                break;
+            default:
+                setName(tempValue);
+                break;
         }
-    }
+    };
     
     const SaveAndCancelButtons = () => {
         return (
@@ -80,8 +92,6 @@ const AddFoodChangeNutrientModal = ({ nutrient, oldValue, setName, setCalories, 
         );
     };
 
-    let tempValue = oldValue;
-
     return (
         <Modal
             animationType="fade"
@@ -120,7 +130,7 @@ const AddFoodChangeNutrientModal = ({ nutrient, oldValue, setName, setCalories, 
                                 nutrient !== 'Food Name' ? 'numeric' : 'default'
                             }
                             autoFocus={true}
-                            maxLength={nutrient !== 'Food Name' ? 3 : 100}
+                            maxLength={nutrient === 'Food Name' ? 100 : nutrient === 'Calories' ? 4 : 3}
                             selectionColor={'white'}
                         />
                     </View>
