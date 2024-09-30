@@ -24,6 +24,7 @@ Yellow: #ffca2c
 Pink: #f053a3
 Purple: #9263fa
 Cyan: #07c0da
+Orange: #ff7f50
 */
 
 // darker red #fd1c47

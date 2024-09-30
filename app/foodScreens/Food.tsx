@@ -4,6 +4,8 @@ import tw from 'twrnc'
 import { bgLocaleConfig, deLocaleConfig, enLocaleConfig, frLocaleConfig, ruLocaleConfig } from "../../CalendarConfig";
 import { CalendarList, LocaleConfig } from 'react-native-calendars';
 import i18next from '../../services/i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import getEmail from '../use/useGetEmail';
 
 LocaleConfig.locales['bg'] = bgLocaleConfig;
 LocaleConfig.locales['en'] = enLocaleConfig;
@@ -56,6 +58,37 @@ const Food = ({navigation}: any) => {
     }, []);
 
     const currentDate = new Date().toISOString().split('T')[0].split('-').join('-');
+
+    const checkAsyncStorageDates = async () => {
+        // get all foodDays from async storage (example: 'email-foodDay-30-9-2024)
+        const email = await getEmail();
+        const keys = await AsyncStorage.getAllKeys();
+        const foodDayKeys = keys.filter((key: string) => key.includes(`${email}-foodDay`) && !key.includes('nutrients'));
+        const dates = foodDayKeys.map((key: string) => key.split('-').slice(-3).join('-'));
+        const uniqueDates = Array.from(new Set(dates));
+    
+        const formattedDates = uniqueDates.map(date => {
+            const [day, month, year] = date.split('-');
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+        });
+        
+        const newMarkedDates = formattedDates.reduce((acc: {[key: string]: any}, date) => {
+            acc[date] = { selected: true, selectedColor: '#ff7f50', textColor: 'white' };
+            return acc;
+        }, {});
+    
+        setMarkedDates(newMarkedDates);
+    };
+    
+    const [markedDates, setMarkedDates] = useState<{[key: string]: any}>({});
+
+    useEffect(() => {
+        const unsubscribe = navigation.addListener('focus', () => {
+            checkAsyncStorageDates();
+        });
+
+        return unsubscribe;
+    }, [navigation]);
    
     return (
         <View style={tw`bg-white`}>
@@ -73,7 +106,9 @@ const Food = ({navigation}: any) => {
                         navigation.navigate("Хранене-Ден", {date: day});
                     }}
                     markedDates={{
+                        ...markedDates,
                         [currentDate]: {selected: true, selectedColor: '#fd3e6b', textColor: 'white'},
+
                     }}
                 />
                 

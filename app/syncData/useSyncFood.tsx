@@ -62,7 +62,7 @@ const syncFood = async () => {
                 if (data) {
                     await Promise.all(
                         data.map(async (foodItem: any, index: any) => {
-                            const foodDocRef = doc(foodsCollectionRef, generateID());
+                            const foodDocRef = doc(foodsCollectionRef, foodItem.id);
                             await setDoc(foodDocRef, foodItem);
 
                             // Accumulate nutrients

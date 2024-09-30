@@ -146,8 +146,6 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         data.push(documentInfo);
         await AsyncStorage.setItem(foodDayKey, JSON.stringify(data));
 
-        
-
         navigation.goBack();
 
         if (internetConnected) {
