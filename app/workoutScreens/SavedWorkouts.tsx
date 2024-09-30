@@ -44,10 +44,12 @@ const Workouts = ({navigation}: any) => {
     };
 
     useEffect(() => {
-        
-        getWorkoutsLocally();
-        
-    }, [])
+        const unsubscribe = navigation.addListener('focus', () => {
+            getWorkoutsLocally();
+        });
+
+        return unsubscribe;
+    }, [navigation]);
 
     const viewWorkout = async (workout: Workout, date: any, time: any) => {
 

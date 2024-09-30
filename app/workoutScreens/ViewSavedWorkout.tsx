@@ -6,6 +6,8 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { collection, deleteDoc, doc, getDoc } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalContext from '../../GlobalContext';
+import { BlurView } from 'expo-blur';
+import DeleteSavedWorkoutModal from '../modals/DeleteSavedWorkoutModal';
 
 const ViewSavedWorkout = ({navigation, route}: any) => {
 
@@ -17,61 +19,30 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
 
     const deleteSavedWorkout = async () => {
 
-        const deleteWorkout = async () => {
+        // Delete the workout from AsyncStorage
+        const savedWorkouts = await AsyncStorage.getItem('savedWorkouts');
+        const savedWorkoutsArray = savedWorkouts ? JSON.parse(savedWorkouts) : [];
 
-            if (internetConnected ) {
-                const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-                const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-                const savedWorkoutsCollectionRef = collection(userDocRef, 'saved_workouts');
+        const updatedWorkoutsArray = savedWorkoutsArray.filter((savedWorkout: any) => savedWorkout.id !== workout.id);
+        await AsyncStorage.setItem('savedWorkouts', JSON.stringify(updatedWorkoutsArray));
 
-                const workoutDocRef = doc(savedWorkoutsCollectionRef, workout.id);
-                const workoutDocSnapshot = await getDoc(workoutDocRef);
+        navigation.goBack();
+       
+        if (internetConnected ) {
+            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+            const savedWorkoutsCollectionRef = collection(userDocRef, 'saved_workouts');
 
-                if (workoutDocSnapshot.exists()) {
-                    await deleteDoc(workoutDocRef);
-                    
-                }
+            const workoutDocRef = doc(savedWorkoutsCollectionRef, workout.id);
+            const workoutDocSnapshot = await getDoc(workoutDocRef);
+
+            if (workoutDocSnapshot.exists()) {
+                await deleteDoc(workoutDocRef);
+                
             }
-
-            // Delete the workout from AsyncStorage
-            const savedWorkouts = await AsyncStorage.getItem('savedWorkouts');
-            const savedWorkoutsArray = savedWorkouts ? JSON.parse(savedWorkouts) : [];
-
-            const updatedWorkoutsArray = savedWorkoutsArray.filter((savedWorkout: any) => savedWorkout.id !== workout.id);
-            await AsyncStorage.setItem('savedWorkouts', JSON.stringify(updatedWorkoutsArray));
-
-            navigation.navigate('Главна Страница');
         }
-
-        Alert.alert(
-            'Изтриване на Тренировка',
-            'Сигурен ли си, че искаш да изтриеш тази тренировка?',
-            [
-            {
-                text: 'Отказ',
-                onPress: () => console.log('Cancel Pressed'),
-                style: 'cancel'
-            },
-            { text: 'Изтрий', onPress: () => deleteWorkout() }
-            ],
-            { cancelable: false }
-        );
        
     }
-
-    const formatTime = (seconds: number) => {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const remainingSeconds = seconds % 60;
-        const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-        return timeString;
-    }
-
-    //<Text style={tw`text-2xl font-medium`}>krai: {time}</Text>
-
-    //<Text style={tw`text-2xl font-medium`}>date: {date}</Text>
-                    
-    //<Text style={tw`text-2xl font-medium`}>{formatTime(workout.duration)}</Text>
 
     useEffect(() => {
         getStartEnd();
@@ -98,117 +69,143 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
         const formattedStartTime = `${String(startHour).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}`;
         const formattedEndTime = `${String(endHour).padStart(2, '0')}:${String(endMinute).padStart(2, '0')}`;
 
-        //return `${formattedStartTime} -> ${formattedEndTime}`;
         setStartEnd(`${formattedStartTime} -> ${formattedEndTime}`);
     }
 
     const [startEnd, setStartEnd] = useState<any>();
 
+    const [isDeleteSavedWorkoutModalVisible, setIsDeleteSavedWorkoutModalVisible] = useState(false);
+
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            
-            <SafeAreaView style={tw`w-full h-full bg-white`}>
+        <>
 
-                <Text style={tw`text-2xl font-bold mx-3 mb-5 max-w-[81%] mt-2`}>
-                    {workoutTitle}
-                </Text>
+            { isDeleteSavedWorkoutModalVisible && (
 
-                <View style={tw`flex flex-col gap-y-1`}>
-                    {exercises.map((exercise: any, index: any) => {
-                        if (exercise.exerciseIndex === currentIndex + 1) {
-                            return (
-                                <View key={index} style={tw`w-full`}>
-                                    <Text style={tw`text-xl text-blue-500 font-medium max-w-[85%] min-h-16 max-h-32 ml-3 mt-1 mb-[-10px]`}>
-                                        {exercise.title}
-                                    </Text>
-                                    
-                                    <ScrollView style={tw``}>
-                                        {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => 
-                                        {
-                                            // Get the intensity value
-                                            const intensity = set.intensity;  // Assuming you want to get the intensity from newExercises or userInputs
+                <BlurView
+                    style={tw`absolute w-full h-full z-10`}
+                    intensity={50}
+                    tint='dark'
+                />
+            )}
 
-                                            // Determine the background color based on the intensity value
-                                            let backgroundColor = 'bg-neutral-100';
-                                            let textColor = 'text-black';
-                                            if (intensity === 1) {
-                                                backgroundColor = 'bg-green-500';
-                                                textColor = 'text-white';
-                                            } else if (intensity === 2) {
-                                                backgroundColor = 'bg-yellow-400';
-                                                textColor = 'text-white';
-                                            } else if (intensity === 3) {
-                                                backgroundColor = 'bg-red-500';
-                                                textColor = 'text-white';
-                                            }
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                
+                <SafeAreaView style={tw`w-full h-full bg-white`}>
 
-                                            return (
-                                                <View key={set.id} style={tw`ml-3`}>
-                                                    <View style={tw`flex flex-row gap-x-2`}>
+                    <DeleteSavedWorkoutModal
+                        isDeleteSavedWorkoutModalVisible={isDeleteSavedWorkoutModalVisible}
+                        setIsDeleteSavedWorkoutModalVisible={setIsDeleteSavedWorkoutModalVisible}
+                        deleteSavedWorkout={deleteSavedWorkout}
+                    />
 
-                                                        <View style={tw`flex flex-col`}>
-                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
-                                                            <View style={tw`w-10 h-10 ${backgroundColor} rounded-xl flex items-center justify-center`}>
-                                                                <Text style={tw`text-base ml-5 absolute font-medium ${textColor}`}>{mapIndex + 1}</Text>
-                                                            </View>
-                                                        </View>
+                    <Text style={tw`text-2xl font-bold mx-3 mb-5 max-w-[81%] mt-2`}>
+                        {workoutTitle}
+                    </Text>
 
-                                                        <View style={tw`flex flex-row gap-x-2 mb-3 w-full`}>
+                    <View style={tw`flex flex-col gap-y-1`}>
+                        {exercises.map((exercise: any, index: any) => {
+                            if (exercise.exerciseIndex === currentIndex + 1) {
+                                return (
+                                    <View key={index} style={tw`w-full`}>
+                                        <Text style={tw`text-xl text-blue-500 font-medium max-w-[85%] min-h-16 max-h-32 ml-3 mt-1 mb-[-10px]`}>
+                                            {exercise.title}
+                                        </Text>
+                                        
+                                        <ScrollView style={tw``}>
+                                            {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => 
+                                            {
+                                                // Get the intensity value
+                                                const intensity = set.intensity;  // Assuming you want to get the intensity from newExercises or userInputs
 
-                                                            <View style={tw`w-[30%]`}>
-                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повторения</Text>
-                                                                <View style={tw`w-full h-10 bg-neutral-100 rounded-2xl flex items-start justify-center`}>
-                                                                    <Text style={tw`ml-3`}>{set.reps === "" ? '0' : set.reps.toString()}</Text>
+                                                // Determine the background color based on the intensity value
+                                                let backgroundColor = 'bg-neutral-100';
+                                                let textColor = 'text-black';
+                                                if (intensity === 1) {
+                                                    backgroundColor = 'bg-green-500';
+                                                    textColor = 'text-white';
+                                                } else if (intensity === 2) {
+                                                    backgroundColor = 'bg-yellow-400';
+                                                    textColor = 'text-white';
+                                                } else if (intensity === 3) {
+                                                    backgroundColor = 'bg-red-500';
+                                                    textColor = 'text-white';
+                                                }
+
+                                                return (
+                                                    <View key={set.id} style={tw`ml-3`}>
+                                                        <View style={tw`flex flex-row gap-x-2`}>
+
+                                                            <View style={tw`flex flex-col`}>
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+                                                                <View style={tw`w-10 h-10 ${backgroundColor} rounded-xl flex items-center justify-center`}>
+                                                                    <Text style={tw`text-base ml-5 absolute font-medium ${textColor}`}>{mapIndex + 1}</Text>
                                                                 </View>
                                                             </View>
 
-                                                            <View style={tw`w-[26%]`}>
-                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
-                                                                <View style={tw`w-full h-10 bg-neutral-100 rounded-2xl flex items-start justify-center`}>
-                                                                    <Text style={tw`ml-3`}>{set.weight === "" ? '0' : set.weight.toString()}</Text>
-                                                                </View>
-                                                            </View>
+                                                            <View style={tw`flex flex-row gap-x-2 mb-3 w-full`}>
 
-                                                            <View style={tw`w-[26%]`}>
-                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>RPE</Text>
-                                                                <View style={tw`w-full h-10 bg-neutral-100 rounded-2xl flex items-start justify-center`}>
-                                                                    <Text style={tw`ml-3`}>{set.rpe === "" ? '0' : set.rpe.toString()}</Text>
+                                                                <View style={tw`w-[30%]`}>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повторения</Text>
+                                                                    <View style={tw`w-full h-10 bg-neutral-100 rounded-2xl flex items-start justify-center`}>
+                                                                        <Text style={tw`ml-3`}>{set.reps === "" ? '0' : set.reps.toString()}</Text>
+                                                                    </View>
+                                                                </View>
+
+                                                                <View style={tw`w-[26%]`}>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
+                                                                    <View style={tw`w-full h-10 bg-neutral-100 rounded-2xl flex items-start justify-center`}>
+                                                                        <Text style={tw`ml-3`}>{set.weight === "" ? '0' : set.weight.toString()}</Text>
+                                                                    </View>
+                                                                </View>
+
+                                                                <View style={tw`w-[26%]`}>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>RPE</Text>
+                                                                    <View style={tw`w-full h-10 bg-neutral-100 rounded-2xl flex items-start justify-center`}>
+                                                                        <Text style={tw`ml-3`}>{set.rpe === "" ? '0' : set.rpe.toString()}</Text>
+                                                                    </View>
                                                                 </View>
                                                             </View>
                                                         </View>
                                                     </View>
-                                                </View>
-                                            )
-                                        })}
-                                    </ScrollView>
-                                </View>
-                            );
-                        }
-                    })}
-                </View>
+                                                )
+                                            })}
+                                        </ScrollView>
+                                    </View>
+                                );
+                            }
+                        })}
+                    </View>
 
-                <BottomNavigationBar
-                    currentPage='SavedWorkout'
-                    navigation={navigation}
-                    forwardButton={() => {
-                        if (workout.numberOfExercises > 1) {
-                            setCurrentIndex((currentIndex + 1) % exercises.length)
-                        }
-                    }}
-                    backButton={exercises.lenght === 1 ? null : () => {
-                        if (workout.numberOfExercises > 1) {
-                            setCurrentIndex((currentIndex - 1 + exercises.length) % exercises.length)
-                        }
-                    }}
-                    deleteSavedWorkout={deleteSavedWorkout}
-                    viewSavedWorkoutNumberOfExercises={exercises.length}
-                    viewSavedWorkoutDate={date}
-                    viewSavedWorkoutStartEnd={startEnd}
-                />
+                    <BottomNavigationBar
+                        currentPage='SavedWorkout'
+                        navigation={navigation}
+                        forwardButton={() => {
+                            
+                            setCurrentIndex((prevIndex) => {
+                                const newIndex = (prevIndex + 1) % exercises.length;
+                                
+                                return newIndex;
+                            });
+                        }}
+                        backButton={exercises.length === 1 ? null : () => {
+                            
+                            setCurrentIndex((prevIndex) => {
+                                const newIndex = (prevIndex - 1 + exercises.length) % exercises.length;
+                                
+                                return newIndex;
+                            });
+                        }}
+                        deleteSavedWorkout={() => setIsDeleteSavedWorkoutModalVisible(true)}
+                        viewSavedWorkoutNumberOfExercises={exercises.length}
+                        viewSavedWorkoutDate={date}
+                        viewSavedWorkoutStartEnd={startEnd}
+                    />
 
-            </SafeAreaView>
-            
-        </TouchableWithoutFeedback>
+                </SafeAreaView>
+                
+            </TouchableWithoutFeedback>
+
+        </>
     );
 }
 

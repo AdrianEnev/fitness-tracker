@@ -26,7 +26,8 @@ const endWorkoutLocally = async (exercises: any, workoutTitle: string, duration:
                 reps: set.reps,
                 weight: set.weight,
                 rpe: set.rpe !== undefined ? set.rpe : "0",
-                setIndex: index + 1
+                setIndex: index + 1,
+                intensity: set.intensity || "0"
             }))
         }))
     };
