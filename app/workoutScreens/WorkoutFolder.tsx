@@ -60,7 +60,7 @@ const WorkoutFolder = ({ route, navigation }: any) => {
 
                     // get the workouts from firebase
                     getWorkouts();
-                }
+                } 
             }, [])
     );
 
@@ -264,6 +264,8 @@ const WorkoutFolder = ({ route, navigation }: any) => {
     const pasteCopiedWorkoutsFunc = () => {
         pasteCopiedWorkoutsInFolder(folder.id);
     };
+
+    
 
     return (
         <>

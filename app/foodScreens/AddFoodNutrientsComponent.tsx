@@ -4,6 +4,8 @@ import tw from 'twrnc'
 import { BlurView } from 'expo-blur';
 import AddFoodChangeNutrientModal from '../modals/AddFoodChangeNutrientModal';
 import BottomNavigationBar from '../components/BottomNavigationBar';
+import { Slider } from 'react-native-awesome-slider';
+import { useSharedValue } from 'react-native-reanimated';
 
 const AddFoodNutrientsComponent = (
     {navigation, name, setName, calories, protein, carbs, fat, setCalories, setProtein, setCarbs, setFat, saveFood}: 
@@ -28,6 +30,10 @@ const AddFoodNutrientsComponent = (
             setIsChangeValueModalVisible(true);
         });
     };
+
+    const progress = useSharedValue(30);
+    const minimumValue = useSharedValue(0);
+    const maximumValue = useSharedValue(100);
 
     return (
 
@@ -118,8 +124,6 @@ const AddFoodNutrientsComponent = (
 
                     </Pressable>
                 </View>
-
-                <BottomNavigationBar currentPage='AddCustomFoodPage' navigation={navigation} addCustomFoodPageAddFood={saveFood}/>
 
             </View>
         </>

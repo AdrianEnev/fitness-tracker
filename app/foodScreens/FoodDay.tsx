@@ -156,7 +156,7 @@ const FoodDay = ({route, navigation}: any) => {
 
                     <FlatList 
                         data={currentFoods}
-                        renderItem={({ item }) => <RenderAddedFood item={item} navigation={navigation} />}
+                        renderItem={({ item }) => <RenderAddedFood item={item} navigation={navigation} date={date}/>}
                         showsVerticalScrollIndicator={false} 
                         ListEmptyComponent={
                             <Text style={tw`text-xl font-medium text-center mt-2`}>{t('no-saved-foods')}</Text>

@@ -16,6 +16,7 @@ import GlobalContext from '../../GlobalContext';
 import getEmail from '../use/useGetEmail';
 import saveWorkoutEditsFromFolderLocally from '../useWorkout/useSaveWorkoutEditsFromFolderLocally';
 import DeleteExerciseModal from '../modals/DeleteExerciseModal';
+import startWorkoutInFolder from '../useWorkout/useStartWorkoutInFolder';
 
 const ViewWorkout = ({route, navigation}: any) => {
 
@@ -284,6 +285,15 @@ const ViewWorkout = ({route, navigation}: any) => {
     const [isDeleteExerciseModalVisible, setIsDeleteExerciseModalVisible] = useState(false);
     const [currentExerciseId, setCurrentExerciseId] = useState('');
 
+    const startWorkoutFunction = async () => {
+        if (folder) {
+            startWorkoutInFolder(workout, folder, navigation)
+        }else{
+            startWorkout(workout, navigation);
+        }
+        
+    }
+
     return (
         <>
 
@@ -471,7 +481,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                         viewWorkoutNumberOfExercises={newExercises.length}
                         saveViewWorkoutChanges={saveChanges}
                         viewWorkoutAddExercise={addExercise}
-                        startWorkout={() => startWorkout(workout, navigation)}
+                        startWorkout={() => startWorkoutFunction()}
                     />
                     
                 </SafeAreaView>

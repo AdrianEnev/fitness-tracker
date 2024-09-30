@@ -37,6 +37,9 @@ const FoodInfoNutrients = (
     const [nutrientPosition, setNutrientPosition] = useState({ top: 0, left: 0 });
     
     const handleSaveChanges = async (nutrient: string) => {
+
+        console.log("formal", formalDate)
+
         const email = await getEmail();
         const foodDayKey = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}`;
         const storedData = await AsyncStorage.getItem(foodDayKey);

@@ -1,4 +1,4 @@
-import { View, Text, TouchableWithoutFeedback, Button, Keyboard, TextInput } from 'react-native'
+import { View, Text, TouchableWithoutFeedback, Button, Keyboard, TextInput, ScrollView } from 'react-native'
 import React, { useContext, useState } from 'react'
 import tw from "twrnc"
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -11,6 +11,8 @@ import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } f
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import generateID from '../use/useGenerateID';
 import AddFoodNutrientsComponent from './AddFoodNutrientsComponent';
+import { Slider } from 'react-native-awesome-slider';
+import { useSharedValue } from 'react-native-reanimated';
 
 const AddCustomFoodPage = ({navigation, route}: any) => {
 
@@ -229,6 +231,8 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
                 name={name}
                 setName={setName}           
             />
+
+            <BottomNavigationBar currentPage='AddCustomFoodPage' navigation={navigation} addCustomFoodPageAddFood={saveFood}/>
             
         </View>
     )

@@ -26,7 +26,7 @@ const FoodInfo = ({route}: any) => {
     const carbs = Number(food?.carbs ?? 0).toFixed(0);
     const fat = Number(food?.fat ?? 0).toFixed(0);
 
-    const parsedDate = new Date(unformattedDate);
+    const parsedDate = new Date(unformattedDate.timestamp);
     const formalDate = {
         dateString: parsedDate.toISOString().split('T')[0],
         day: parsedDate.getDate(),
