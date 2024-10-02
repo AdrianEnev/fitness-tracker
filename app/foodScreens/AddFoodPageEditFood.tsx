@@ -158,11 +158,11 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
             id: generateID(),
             title: item.title,
             date: new Date().toISOString(),
-            calories: Math.round(item.calories),
-            protein: Math.round(item.protein),
-            carbs: Math.round(item.carbs),
-            fat: Math.round(item.fat),
-            grams: Math.round(item.grams),
+            calories: Number(newCalories),
+            protein: Number(newProtein),
+            carbs: Number(newCarbs),
+            fat: Number(newCarbs),
+            grams: Number(newCarbs),
             timestamp: serverTimestamp()
         };
 
@@ -172,7 +172,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
         navigation.goBack();
         navigation.goBack();
 
-        if (internetConnected || false) {
+        if (internetConnected) {
             const usersCollectionRef = collection(FIRESTORE_DB, 'users');
             const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
             const foodDaysCollectionRef = collection(userDocRef, 'food_days');  
