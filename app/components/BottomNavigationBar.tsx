@@ -45,7 +45,7 @@ const BottomNavigationBar = (
         selectionMode, deleteSelectedWorkouts, cutSelectedWorkouts, copySelectedWorkouts,
         copySelectedWorkoutsInFolder, cutSelectedWorkoutsInFolder, deleteSelectedWorkoutsInFolder,
         viewSavedWorkoutDate, viewSavedWorkoutStartEnd, viewSavedWorkoutNumberOfExercises,
-        addCustomFoodPageAddFood
+        addCustomFoodPageAddFood, addFoodPageAddButton
 
     }: 
     {
@@ -73,7 +73,7 @@ const BottomNavigationBar = (
         selectionMode?: boolean, deleteSelectedWorkouts?: () => void, cutSelectedWorkouts?: () => void, copySelectedWorkouts?: () => void,
         copySelectedWorkoutsInFolder?: () => void, cutSelectedWorkoutsInFolder?: () => void, deleteSelectedWorkoutsInFolder?: () => void,
         viewSavedWorkoutDate?: any, viewSavedWorkoutStartEnd?: any, viewSavedWorkoutNumberOfExercises?: any,
-        addCustomFoodPageAddFood?: () => void
+        addCustomFoodPageAddFood?: () => void, addFoodPageAddButton?: () => void
     }
 ) => {
     //AddCustomFood
@@ -209,6 +209,12 @@ const BottomNavigationBar = (
                     <Pressable onPress={displayFoods}>
                         <Ionicons name="search-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>  
+                </View>
+            ) : currentPage === "AddFoodPageEditFood" ? (
+                <View style={tw`flex flex-row justify-around w-full`}>
+                    <Pressable onPress={addFoodPageAddButton}>
+                        <Text style={tw`text-red-500 font-semibold text-4xl`}>Add Food</Text>
+                    </Pressable> 
                 </View>
             ) : currentPage === 'Workouts' ? (
                 <View>

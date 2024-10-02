@@ -25,6 +25,7 @@ import DonateScreen from "../settingsScreens/DonateScreen";
 import GenerateWorkoutPage from "../workoutScreens/GenerateWorkoutPage";
 import ScanFood from "../foodScreens/ScanFood";
 import WorkoutFolder from "../workoutScreens/WorkoutFolder";
+import AddFoodPageEditFood from "../foodScreens/AddFoodPageEditFood";
 
 const Stack = createNativeStackNavigator();
 /* 
@@ -166,6 +167,14 @@ const MainPageComponent = () => {
                   headerShown: false,
               }}
           />
+          <Stack.Screen
+              name="Храна-Добави-Подробности"
+              component={AddFoodPageEditFood}
+              options={{
+                  headerShown: false,
+              }}
+          />
+
           <Stack.Screen
               name="Храна-Подробности"
               component={FoodInfo}

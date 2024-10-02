@@ -1,5 +1,5 @@
 import { View, Text, Button } from 'react-native'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigationBar from '../components/BottomNavigationBar';
@@ -11,6 +11,7 @@ import getEmail from '../use/useGetEmail';
 import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import FoodInfoNutrients from '../components/FoodInfoNutrients';
+import Slider from '@react-native-community/slider';
 
 const FoodInfo = ({route}: any) => {
 

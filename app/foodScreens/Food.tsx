@@ -73,7 +73,7 @@ const Food = ({navigation}: any) => {
         });
         
         const newMarkedDates = formattedDates.reduce((acc: {[key: string]: any}, date) => {
-            acc[date] = { selected: true, selectedColor: '#ff7f50', textColor: 'white' };
+            acc[date] = { selected: true, selectedColor: '#3f8aff', textColor: 'white' };
             return acc;
         }, {});
     
@@ -108,7 +108,9 @@ const Food = ({navigation}: any) => {
                     markedDates={{
                         ...markedDates,
                         [currentDate]: {selected: true, selectedColor: '#fd3e6b', textColor: 'white'},
-
+                    }}
+                    onDayLongPress={(day: any) => {
+                        console.log('held')
                     }}
                 />
                 

@@ -8,6 +8,7 @@ import ChangeNutrientModal from '../modals/ChangeNutrientModal';
 import getEmail from '../use/useGetEmail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { normalizeValue } from '../use/useNormalizeValue';
+import Slider from '@react-native-community/slider';
 
 const FoodInfoNutrients = (
     {calories, protein, carbs, fat, formalDate, food}: 
