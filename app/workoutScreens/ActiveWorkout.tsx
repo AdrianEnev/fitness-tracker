@@ -37,7 +37,9 @@ const ActiveWorkout = ({route, navigation}: any) => {
                 const newSet = {
                     id: Math.random().toString(),
                     reps: "",
-                    weight: ""
+                    weight: "",
+                    rpe: "",
+                    intensity: 0
                 };
     
                 // Update both exercises and userInputs
@@ -53,27 +55,50 @@ const ActiveWorkout = ({route, navigation}: any) => {
         }
     }
 
+    const [exercisesAdded, setExercisesAdded] = useState(1)
+
     const addExercise = () => {
         // Use newExercises for updates to ensure UI consistency
         const updatedExercises = [...newExercises];
         const updatedUserInputs = [...userInputs]; // Clone userInputs for updates
     
+        if (updatedExercises.length >= 9) return;
+
+        /**
+         * reps: set.reps,
+                    weight: set.weight,
+                    rpe: set.rpe !== undefined ? set.rpe : "0",
+                    setIndex: index + 1,
+                    intensity: set.intensity,
+         */
+
         const newExercise = {
             id: Math.random().toString(),
-            title: "New Exercise",
-            sets: [{id: Math.random().toString(), reps: "", weight: ""}],
+            title: "New Exercise " + "(" + Number(updatedExercises.length + 1) + ")",
+            sets: [{id: Math.random().toString(), reps: "", weight: "", rpe: "", intensity: 0}],
             exerciseIndex: updatedExercises.length + 1
         };
     
         updatedExercises.push(newExercise);
         updatedUserInputs.push({
             ...newExercise,
-            sets: [{id: Math.random().toString(), reps: "", weight: ""}],
+            sets: [{id: Math.random().toString(), reps: "", weight: "", rpe: "", intensity: 0}],
             note: ""
         });
     
         setNewExercises(updatedExercises);
         setUserInputs(updatedUserInputs);
+
+        
+        // Ensure currentIndex is within bounds
+        const newIndex = exercises.length + exercisesAdded; // Calculate new index
+        if (newIndex < updatedExercises.length) {
+            setCurrentIndex(newIndex);
+        } else {
+            setCurrentIndex(updatedExercises.length - 1); // Set to last valid index
+        }
+
+        setExercisesAdded(exercisesAdded + 1);
     }
 
     useEffect(() => {
@@ -172,9 +197,14 @@ const ActiveWorkout = ({route, navigation}: any) => {
     };
 
     const getWorkoutDuration = () => {
-       
         return time;
     }
+
+    /**
+     * <TouchableOpacity style={tw`w-22 h-10 bg-[#2fc766] rounded-xl flex justify-center items-center`} onPress={addSet}>
+                            <Text style={tw`text-base font-medium text-white`}>+ Серия</Text>
+                        </TouchableOpacity>
+     */
 
     return (
         <>
@@ -207,19 +237,13 @@ const ActiveWorkout = ({route, navigation}: any) => {
                         internetConnected={internetConnected}
                     />
 
-                    <View style={tw`flex flex-row justify-between mx-3 w-[95%]`}>
-                        <TouchableOpacity style={tw`w-22 h-10 bg-[#fd354a] shadow-md rounded-xl flex justify-center items-center`}>
-                            <Text style={tw`text-white font-medium text-base`}>{formatTime(time)}</Text>
+                    <View style={tw`flex items-center mx-3 w-[95%]`}>
+                        <TouchableOpacity style={tw`w-32 h-10 bg-white shadow-lg rounded-xl flex justify-center items-center`}>
+                            <Text style={tw`text-red-500 font-semibold text-lg`}>{formatTime(time)}</Text>
                         </TouchableOpacity>
-
-                        
-                        <TouchableOpacity style={tw`w-22 h-10 bg-[#2fc766] rounded-xl flex justify-center items-center`} onPress={addSet}>
-                            <Text style={tw`text-base font-medium text-white`}>+ Серия</Text>
-                        </TouchableOpacity>
-                        
                     </View>
 
-                    <Text style={tw`text-2xl font-bold ml-3 my-5`} ellipsizeMode='tail' numberOfLines={3}>{workoutTitle}</Text>
+                    <Text style={tw`text-2xl font-bold ml-3 mb-5 mt-2`} ellipsizeMode='tail' numberOfLines={3}>{workoutTitle}</Text>
                     
                     <View style={tw`flex flex-col gap-y-1`}>
                         {newExercises.map((exercise: any, index: any) => {

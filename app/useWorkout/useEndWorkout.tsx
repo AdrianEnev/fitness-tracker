@@ -48,7 +48,7 @@ const endWorkout = async (exercises: any, workoutTitle: string, duration: any, i
                     weight: set.weight,
                     rpe: set.rpe !== undefined ? set.rpe : "0",
                     setIndex: index + 1,
-                    intensity: set.intensity,
+                    intensity: set.intensity || 0,
                 });
     
                 const weight = parseFloat(set.weight);
