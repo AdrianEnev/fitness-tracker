@@ -11,6 +11,7 @@ import BottomNavigationBar from '../components/BottomNavigationBar';
 import { collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import generateID from '../use/useGenerateID';
+import Slider from '@react-native-community/slider';
 
 const AddFoodPageEditFood = ({route, navigation}: any) => {
 
@@ -162,7 +163,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
             protein: Number(newProtein),
             carbs: Number(newCarbs),
             fat: Number(newCarbs),
-            grams: Number(newCarbs),
+            grams: Number(newGrams),
             timestamp: serverTimestamp()
         };
 
@@ -337,6 +338,26 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
                             </View>
 
                         </Pressable>
+
+                        <View style={tw`w-full h-12 flex flex-col`}>
+
+                        <View style={tw`flex flex-row justify-between`}>
+                            <Text style={tw`text-xl font-medium text-gray-500`}>Grams</Text>
+                            <Text style={tw`text-xl font-medium text-gray-500 mr-1`}>{newGrams}</Text>
+                        </View>
+                        
+
+                        <Slider
+                            style={tw`w-full h-12 mt-[-4px]`}
+                            value={newGrams}
+                            onValueChange={(value) => setNewGrams(Math.round(value))}
+                            minimumValue={0}
+                            maximumValue={1000}
+                            minimumTrackTintColor="#6b7280"
+                            maximumTrackTintColor="#6b7280"
+                            />
+                        </View>
+
                     </View>
 
                 </View>

@@ -227,7 +227,9 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
                 setFat={setFat}    
                 saveFood={saveFood} 
                 name={name}
-                setName={setName}           
+                setName={setName}        
+                grams={grams}
+                setGrams={setGrams}   
             />
 
             <BottomNavigationBar currentPage='AddCustomFoodPage' navigation={navigation} addCustomFoodPageAddFood={saveFood}/>

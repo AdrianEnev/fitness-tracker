@@ -1,7 +1,7 @@
-import { View, Text, Pressable, Alert } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import { View, Text, Pressable, Alert } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import tw from 'twrnc'
+import tw from 'twrnc';
 import { useTranslation } from 'react-i18next';
 import { BlurView } from 'expo-blur';
 import ChangeNutrientModal from '../modals/ChangeNutrientModal';
@@ -11,22 +11,21 @@ import { normalizeValue } from '../use/useNormalizeValue';
 import Slider from '@react-native-community/slider';
 
 const FoodInfoNutrients = (
-    {calories, protein, carbs, fat, formalDate, food}: 
-    {calories: number, protein: string, carbs: string, fat: string, formalDate: any, food: any}
+    { calories, grams, protein, carbs, fat, formalDate, food }: 
+    { calories: number, grams: any, protein: string, carbs: string, fat: string, formalDate: any, food: any }
 ) => {
-
-    const {t} = useTranslation();
-
+    const { t } = useTranslation();
+    
     const [isChangeValueModalVisible, setIsChangeValueModalVisible] = useState(false);
-
     const [selectedNutrient, setSelectedNutrient] = useState('');
-
+    
     const [newName, setNewName] = useState(food.title);
     const [newCalories, setNewCalories] = useState(calories);
+    const [newGrams, setNewGrams] = useState(grams);
     const [newProtein, setNewProtein] = useState(Number(protein));
     const [newCarbs, setNewCarbs] = useState(Number(carbs));
     const [newFat, setNewFat] = useState(Number(fat));
-
+    
     const [initialLoad, setInitialLoad] = useState(true);
 
     const prevNameRef = useRef(newName);
@@ -36,9 +35,11 @@ const FoodInfoNutrients = (
     const prevFatRef = useRef(Number(fat));
 
     const [nutrientPosition, setNutrientPosition] = useState({ top: 0, left: 0 });
-    
-    const handleSaveChanges = async (nutrient: string) => {
 
+    // Ref to manage the timeout
+    const timeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+    const handleSaveChanges = async (nutrient: string) => {
         const email = await getEmail();
         const foodDayKey = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}`;
         const storedData = await AsyncStorage.getItem(foodDayKey);
@@ -85,6 +86,42 @@ const FoodInfoNutrients = (
         }
     };
 
+    const updateGrams = async () => {
+        const email = await getEmail();
+        const foodDayKey = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}`;
+        const storedData = await AsyncStorage.getItem(foodDayKey);
+
+        if (storedData) {
+            const foodItems = JSON.parse(storedData);
+            const foodItem = foodItems.find((item: any) => item.id === food.id);
+
+            if (foodItem) {
+                foodItem.grams = newGrams;
+            }
+
+            await AsyncStorage.setItem(foodDayKey, JSON.stringify(foodItems));
+        }
+    };
+
+    useEffect(() => {
+        // Clear the previous timeout if it exists
+        if (timeoutRef.current) {
+            clearTimeout(timeoutRef.current);
+        }
+
+        // Set a new timeout
+        timeoutRef.current = setTimeout(() => {
+            updateGrams();
+        }, 50);
+
+        // Cleanup function to clear the timeout when the component unmounts or before setting a new timeout
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, [newGrams]);
+
     useEffect(() => {
         if (initialLoad) {
             setInitialLoad(false);
@@ -122,7 +159,7 @@ const FoodInfoNutrients = (
         });
     };
 
-    const nameRef = useRef(null)
+    const nameRef = useRef(null);
     const calorieRef = useRef(null);
     const proteinRef = useRef(null);
     const carbRef = useRef(null);
@@ -159,64 +196,63 @@ const FoodInfoNutrients = (
                 />
 
                 <View style={tw`w-[94.5%] h-[20%] mx-3 mt-2 flex flex-row justify-between flex-wrap gap-y-3`}>
-
-
                     <Pressable ref={nameRef} style={tw`w-[100%] h-[70%] bg-[#9263fa] rounded-xl`} onPress={() => {
-                        handlePress('Food Name', nameRef)
+                        handlePress('Food Name', nameRef);
                     }}>
-
                         <Text style={tw`text-2xl text-white font-medium text-center my-1`}>Food Name</Text>
-
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
                             <Text style={tw`text-4xl text-white font-medium text-center`}>{newName}</Text>
                         </View>
-
                     </Pressable>
 
                     <Pressable ref={calorieRef} style={tw`w-[49%] h-full bg-[#3f8aff] rounded-xl`} onPress={() => handlePress('Calories', calorieRef)}>
-
                         <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Calories</Text>
-
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
                             <Text style={tw`text-4xl text-white font-medium text-center`}>{!newCalories ? '0' : newCalories}kcal</Text>
                         </View>
-
                     </Pressable>
 
                     <Pressable ref={proteinRef} style={tw`w-[49%] h-full bg-[#fd3e54] rounded-xl`} onPress={() => handlePress('Protein', proteinRef)}>
-
                         <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Protein</Text>
-
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
                             <Text style={tw`text-4xl text-white font-medium text-center`}>{!newProtein ? '0' : newProtein}g</Text>
                         </View>
-
                     </Pressable>
 
                     <Pressable ref={carbRef} style={tw`w-[49%] h-full bg-[#0fbf8f] rounded-xl`} onPress={() => handlePress('Carbs', carbRef)}>
-
                         <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Carbs</Text>
-
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
                             <Text style={tw`text-4xl text-white font-medium text-center`}>{!newCarbs ? '0' : newCarbs}g</Text>
                         </View>
-
                     </Pressable>
                     
                     <Pressable ref={fatRef} style={tw`w-[49%] h-full bg-[#ffca2c] rounded-xl`} onPress={() => handlePress('Fat', fatRef)}>
-
                         <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Fat</Text>
-
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
                             <Text style={tw`text-4xl text-white font-medium text-center`}>{!newFat ? '0' : newFat}g</Text>
                         </View>
-
                     </Pressable>
-                </View>
 
+                    <View style={tw`w-full h-12 flex flex-col`}>
+                        <View style={tw`flex flex-row justify-between`}>
+                            <Text style={tw`text-xl font-medium text-gray-500`}>Grams</Text>
+                            <Text style={tw`text-xl font-medium text-gray-500 mr-1`}>{newGrams}</Text>
+                        </View>
+                        
+                        <Slider
+                            style={tw`w-full h-12 mt-[-4px]`}
+                            value={grams}
+                            onValueChange={(value) => setNewGrams(Math.round(value))}
+                            minimumValue={0}
+                            maximumValue={1000}
+                            minimumTrackTintColor="#6b7280"
+                            maximumTrackTintColor="#6b7280"
+                        />
+                    </View>
+                </View>
             </View>
         </>
-    )
+    );
 }
 
-export default FoodInfoNutrients
+export default FoodInfoNutrients;

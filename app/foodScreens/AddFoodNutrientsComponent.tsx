@@ -4,12 +4,12 @@ import tw from 'twrnc'
 import { BlurView } from 'expo-blur';
 import AddFoodChangeNutrientModal from '../modals/AddFoodChangeNutrientModal';
 import BottomNavigationBar from '../components/BottomNavigationBar';
-import { Slider } from 'react-native-awesome-slider';
+import Slider from '@react-native-community/slider';
 import { useSharedValue } from 'react-native-reanimated';
 
 const AddFoodNutrientsComponent = (
-    {navigation, name, setName, calories, protein, carbs, fat, setCalories, setProtein, setCarbs, setFat, saveFood}: 
-    {navigation: any, name: string, setName: any, calories: any, protein: any, carbs: any, fat: any, setCalories: any, setProtein: any, setCarbs: any, setFat: any, saveFood: () => void}
+    {navigation, name, setName, calories, grams, protein, carbs, fat, setCalories, setGrams, setProtein, setCarbs, setFat, saveFood}: 
+    {navigation: any, name: string, setName: any, calories: any, grams: any, protein: any, carbs: any, fat: any, setCalories: any, setGrams: any, setProtein: any, setCarbs: any, setFat: any, saveFood: () => void}
 ) => {
 
     const [isChangeValueModalVisible, setIsChangeValueModalVisible] = useState(false);
@@ -123,6 +123,26 @@ const AddFoodNutrientsComponent = (
                         </View>
 
                     </Pressable>
+
+                    <View style={tw`w-full h-12 flex flex-col`}>
+
+                        <View style={tw`flex flex-row justify-between`}>
+                            <Text style={tw`text-xl font-medium text-gray-500`}>Grams</Text>
+                            <Text style={tw`text-xl font-medium text-gray-500 mr-1`}>{grams}</Text>
+                        </View>
+                        
+
+                        <Slider
+                            style={tw`w-full h-12 mt-[-4px]`}
+                            value={grams}
+                            onValueChange={(value) => setGrams(Math.round(value))}
+                            minimumValue={0}
+                            maximumValue={1000}
+                            minimumTrackTintColor="#6b7280"
+                            maximumTrackTintColor="#6b7280"
+                        />
+                    </View>
+
                 </View>
 
             </View>

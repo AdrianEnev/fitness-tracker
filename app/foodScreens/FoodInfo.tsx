@@ -26,6 +26,7 @@ const FoodInfo = ({route}: any) => {
     const protein = Number(food?.protein ?? 0).toFixed(0);
     const carbs = Number(food?.carbs ?? 0).toFixed(0);
     const fat = Number(food?.fat ?? 0).toFixed(0);
+    const grams = Number(food?.grams ?? 0).toFixed(0);
 
     const parsedDate = new Date(unformattedDate.timestamp);
     const formalDate = {
@@ -182,7 +183,10 @@ const FoodInfo = ({route}: any) => {
                 fat={fat}
                 formalDate={formalDate}
                 food={food}
+                grams={grams}
             />
+
+            
             
             <BottomNavigationBar currentPage='FoodInfo' navigation={navigation} deleteFood={removeFood}/>
         </View>

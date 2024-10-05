@@ -476,8 +476,12 @@ const ViewWorkout = ({route, navigation}: any) => {
                         deleteSavedWorkout={folder ? deleteWorkoutFromFolder : deleteWorkout}
                         addSetButton={addSet}
                         workout={workout}
-                        forwardButton={() => setCurrentIndex((currentIndex + 1) % newExercises.length)}
-                        backButton={() => setCurrentIndex((currentIndex - 1 + newExercises.length) % newExercises.length)}
+                        forwardButton={() => {
+                            setCurrentIndex((currentIndex + 1) % newExercises.length)
+                        }}
+                        backButton={() => {
+                            setCurrentIndex((currentIndex - 1 + newExercises.length) % newExercises.length)
+                        }}
                         viewWorkoutNumberOfExercises={newExercises.length}
                         saveViewWorkoutChanges={saveChanges}
                         viewWorkoutAddExercise={addExercise}
