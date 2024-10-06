@@ -18,7 +18,10 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSFaceIDUsageDescription": "This app uses FaceID to secure your data. (app.json - ios)",
-        "NSPhotoLibraryUsageDescription": "This app uses the photo library to save your photos. (app.json - ios)"
+        "NSPhotoLibraryUsageDescription": "This app uses the photo library to upload profile pictures. (app.json - ios)",
+        "UIBackgroundModes": [
+          "fetch"
+        ]
       }
     },
     "android": {

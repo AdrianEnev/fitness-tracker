@@ -60,7 +60,8 @@
     "react-native-wheel-pick": "^1.2.2",
     "react-native-wheel-scrollview-picker": "^2.0.4",
     "string-similarity": "^4.0.4",
-    "twrnc": "^3.6.7"
+    "twrnc": "^3.6.7",
+    "expo-background-fetch": "~12.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.24.0",

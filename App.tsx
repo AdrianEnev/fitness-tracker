@@ -112,7 +112,7 @@ const UnauthenticatedTabNavigator = () => (
     </Stack.Navigator>
 );
 
-const App = () => {
+function App() {
 
     const clearAsyncStorage = async () => {
         await AsyncStorage.clear();
@@ -186,7 +186,15 @@ const App = () => {
             const isFaceIdEnabled = await checkFaceIdEnabledLocally();
     
             setProfilePicture(profilePic || '');
-            setFriendRequestsNumber(friendRequests <= 9 ? friendRequests.toString() : "9+" || 0);
+
+            if (friendRequests <= 9 && friendRequests > 0) {
+                setFriendRequestsNumber(friendRequests.toString())
+            }else if (friendRequests == 0){
+                setFriendRequestsNumber('');
+            }else{
+                setFriendRequestsNumber('9+');
+            }
+            
             setReceiveFriendRequests(receiveFriendRequests);
             setFaceIdEnabled(isFaceIdEnabled);
             setCheckingSetup(false);

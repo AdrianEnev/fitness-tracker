@@ -1,12 +1,14 @@
-import { View, Text, SafeAreaView, TextInput, TouchableWithoutFeedback, Pressable, TouchableOpacity, ScrollView, Keyboard, Modal } from 'react-native'
+import { View, Text, SafeAreaView, TextInput, TouchableWithoutFeedback, Pressable, TouchableOpacity, ScrollView, Keyboard, Modal, AppState } from 'react-native'
 import { Ionicons } from '@expo/vector-icons';
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect, useRef, useState } from 'react'
 import tw from 'twrnc'
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { BlurView } from 'expo-blur';
 import NoteModal from '../components/NoteModal';
 import EndWorkoutModal from '../modals/EndWorkoutModal';
 import GlobalContext from '../../GlobalContext';
+import { diffTime, formatTime, getCurrentTimeWithMoment } from '../useWorkout/handleActiveWorkoutTimer';
+import { addExercise, addSet, handleEndWorkoutVisibility, removeSet } from '../useWorkout/handleActiveWorkoutExercises';
 
 const ActiveWorkout = ({route, navigation}: any) => {
 
@@ -25,105 +27,19 @@ const ActiveWorkout = ({route, navigation}: any) => {
     const [isNoteModalVisible, setIsNoteModalVisible] = useState(false);
     const [isEndWorkoutModalVisible, setIsEndWorkoutModalVisible] = useState(false);
 
-    const addSet = () => {
-        // Use newExercises for updates to ensure UI consistency
-        const updatedExercises = [...newExercises];
-        const updatedUserInputs = [...userInputs]; // Clone userInputs for updates
-    
-        const currentExerciseIndex = updatedExercises.findIndex((exercise: any) => exercise.exerciseIndex === currentIndex + 1);
-        if (currentExerciseIndex !== -1) {
-            // Check if the current number of sets is less than 20
-            if (updatedExercises[currentExerciseIndex].sets.length < 15) {
-                const newSet = {
-                    id: Math.random().toString(),
-                    reps: "",
-                    weight: "",
-                    rpe: "",
-                    intensity: 0
-                };
-    
-                // Update both exercises and userInputs
-                updatedExercises[currentExerciseIndex].sets.push(newSet);
-                updatedUserInputs[currentExerciseIndex].sets.push({...newSet}); // Clone newSet for userInputs
-    
-                setNewExercises(updatedExercises);
-                setUserInputs(updatedUserInputs); // Update userInputs to reflect the new set
-            } else {
-                // Optionally, you can show a message to the user indicating the max limit has been reached
-                console.log("Maximum number of sets reached");
-            }
-        }
-    }
-
     const [exercisesAdded, setExercisesAdded] = useState(1)
 
-    const addExercise = () => {
-        // Use newExercises for updates to ensure UI consistency
-        const updatedExercises = [...newExercises];
-        const updatedUserInputs = [...userInputs]; // Clone userInputs for updates
-    
-        if (updatedExercises.length >= 9) return;
-
-        /**
-         * reps: set.reps,
-                    weight: set.weight,
-                    rpe: set.rpe !== undefined ? set.rpe : "0",
-                    setIndex: index + 1,
-                    intensity: set.intensity,
-         */
-
-        const newExercise = {
-            id: Math.random().toString(),
-            title: "New Exercise " + "(" + Number(updatedExercises.length + 1) + ")",
-            sets: [{id: Math.random().toString(), reps: "", weight: "", rpe: "", intensity: 0}],
-            exerciseIndex: updatedExercises.length + 1
-        };
-    
-        updatedExercises.push(newExercise);
-        updatedUserInputs.push({
-            ...newExercise,
-            sets: [{id: Math.random().toString(), reps: "", weight: "", rpe: "", intensity: 0}],
-            note: ""
-        });
-    
-        setNewExercises(updatedExercises);
-        setUserInputs(updatedUserInputs);
-
-        
-        // Ensure currentIndex is within bounds
-        const newIndex = exercises.length + exercisesAdded; // Calculate new index
-        if (newIndex < updatedExercises.length) {
-            setCurrentIndex(newIndex);
-        } else {
-            setCurrentIndex(updatedExercises.length - 1); // Set to last valid index
-        }
-
-        setExercisesAdded(exercisesAdded + 1);
+    const addExerciseFunc = () => {
+        addExercise(newExercises, userInputs, setNewExercises, setUserInputs, exercises, exercisesAdded, setCurrentIndex, setExercisesAdded)
     }
 
-    useEffect(() => {
-        if (exercises.length > 0) {
-            setNewExercises([...exercises]);
-        }
-    }, [exercises]);
+    const addSetFunc = () => {
+        addSet(newExercises, userInputs, currentIndex, setNewExercises, setUserInputs)
+    }
 
-    const removeSet = (exerciseIndex: number, setId: string) => {
-        // Update newExercises
-        const updatedExercises = [...newExercises];
-        const currentExercise = updatedExercises.find((exercise: any) => exercise.exerciseIndex === exerciseIndex);
-        if (currentExercise) {
-            currentExercise.sets = currentExercise.sets.filter((set: any) => set.id !== setId);
-        }
-        setNewExercises(updatedExercises);
-    
-        // Update userInputs to reflect the change
-        const updatedUserInputs = [...userInputs];
-        const currentUserInputExercise = updatedUserInputs.find((input: any) => input.exerciseIndex === exerciseIndex);
-        if (currentUserInputExercise) {
-            currentUserInputExercise.sets = currentUserInputExercise.sets.filter((set: any) => set.id !== setId);
-        }
-        setUserInputs(updatedUserInputs);
-    };
+    const handleEndWorkoutVisibilityFunc = () => {
+        handleEndWorkoutVisibility(userInputs, setIsEndWorkoutModalVisible, navigation)
+    }
 
     const updateNote = (exerciseIndex: number, note: string) => {
         const updatedInputs = [...userInputs];
@@ -133,16 +49,43 @@ const ActiveWorkout = ({route, navigation}: any) => {
         }
     };
 
+    useEffect(() => {
+        if (exercises.length > 0) {
+            setNewExercises([...exercises]);
+        }
+    }, [exercises]);
+
+    // timer - start ----------------------------------------------------------------------------------------------------
+
     const [time, setTime] = useState(0);
+    const appState = useRef<any>(AppState.currentState);
+    const backgroundTime = useRef<string | null>(null);
 
-    const formatTime = (seconds: number) => {
-        const hours = Math.floor(seconds / 3600);
-        const minutes = Math.floor((seconds % 3600) / 60);
-        const remainingSeconds = seconds % 60;
-        const timeString = `${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
-        return timeString;
-    }
+    const handleAppStateChange = (nextAppState: string) => {
+        if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
+          // App has come to the foreground
+          if (backgroundTime.current) {
+            const now = getCurrentTimeWithMoment();
+            const elapsedTime = diffTime(backgroundTime.current, now); // Calculate the elapsed time while app was in background
+            setTime((prevTime) => prevTime + elapsedTime); // Adjust the timer
+          }
+          backgroundTime.current = null; // Reset the background time
+        } else if (nextAppState.match(/inactive|background/)) {
+          // App is going to the background
+          backgroundTime.current = getCurrentTimeWithMoment(); // Store the current time when going to the background
+        }
+    
+        appState.current = nextAppState; // Update the current app state
+      };
 
+    useEffect(() => {
+        AppState.addEventListener('change', handleAppStateChange);
+
+        return () => {
+            //AppState.removeEventListener('change', handleAppStateChange);
+        };
+    }, []);
+    
     useEffect(() => {
         const interval = setInterval(() => {
             setTime((prevTime) => prevTime + 1);
@@ -152,59 +95,23 @@ const ActiveWorkout = ({route, navigation}: any) => {
         return () => clearInterval(interval);
     }, []);
 
+    // timer - end ----------------------------------------------------------------------------------------------------
+
     const forwardButton = () => {
-
-       
-
         if (workout.numberOfExercises > 1) {
             setCurrentIndex((currentIndex + 1) % newExercises.length);
         } else {
             setCurrentIndex(0);
         }
-        
     }
     
     const backButton = () => {
-       
-
         if (workout.numberOfExercises > 1) {
             setCurrentIndex((currentIndex - 1 + newExercises.length) % newExercises.length);
         } else {
             setCurrentIndex(0);
         }
-        
     }
-
-    const handleEndWorkoutVisibility = () => {
-        // Check if userInputs are not empty and at least one userInput has sets with meaningful input
-        const shouldShowModal = userInputs.length && userInputs.some((userInput: any) => {
-            return userInput.sets && 
-            userInput.sets.length > 0 && 
-            userInput.sets.some((set: any) => set.reps !== '' || set.weight !== '');
-        });
-    
-        // Additional check: Consider workout empty if all sets in all userInputs have no reps and weight input
-        const isEverySetEmpty = userInputs.every((userInput: any) => {
-            return userInput.sets.every((set: any) => set.reps === '' && set.weight === '');
-        });
-    
-        if (shouldShowModal && !isEverySetEmpty) {
-            setIsEndWorkoutModalVisible(true);
-        } else {
-            // If the condition is not met or all sets are empty, navigate to the main page directly
-            navigation.navigate('Главна Страница');
-        }
-    };
-
-    const getWorkoutDuration = () => {
-        return time;
-    }
-
-    /**
-     * <TouchableOpacity style={tw`w-22 h-10 bg-[#2fc766] rounded-xl flex justify-center items-center`} onPress={addSet}>
-                            <Text style={tw`text-base font-medium text-white`}>+ Серия</Text>
-                        </TouchableOpacity>
-     */
 
     return (
         <>
@@ -233,7 +140,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                         navigation={navigation}
                         exercises={userInputs}
                         workoutTitle={workoutTitle}
-                        duration={getWorkoutDuration()}
+                        duration={time}
                         internetConnected={internetConnected}
                     />
 
@@ -351,11 +258,11 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                                     </Pressable>
 
                                                                     <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
-                                                                    onPress={() => removeSet(exercise.exerciseIndex, set.id)}
+                                                                    onPress={() => removeSet(exercise.exerciseIndex, set.id, setUserInputs, setNewExercises, userInputs, newExercises)}
                                                                     >
                                                                         <Ionicons name='close' size={36} color='white' />
                                                                     </TouchableOpacity>
-
+                                                                
                                                                 </View>
                                                             </View>
                                                         </View>
@@ -365,6 +272,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                             }
 
                                         </ScrollView>
+                                        
                                     </View>
                                 );
                             }
@@ -374,11 +282,11 @@ const ActiveWorkout = ({route, navigation}: any) => {
                     <BottomNavigationBar
                         currentPage='ActiveWorkout'
                         navigation={navigation}
-                        toggleEndWorkoutModal={handleEndWorkoutVisibility}
+                        toggleEndWorkoutModal={handleEndWorkoutVisibilityFunc}
                         forwardButton={forwardButton}
                         backButton={backButton}
-                        addActiveWorkoutSet={addSet}
-                        addActiveWorkoutExercise={addExercise}
+                        addActiveWorkoutSet={addSetFunc}
+                        addActiveWorkoutExercise={addExerciseFunc}
                     />
 
                 </SafeAreaView>
