@@ -35,6 +35,10 @@ const EmailNotVerified = () => {
         }
     };
 
+    const deleteAccount = () => {
+        console.log('deleting account');
+    }
+
     return (
         <View style={tw`flex-1 bg-white`}>
             <View style={tw`h-full justify-center`}>
@@ -44,6 +48,9 @@ const EmailNotVerified = () => {
                 </Text>
                 <Text style={tw`font-medium text-base text-center mt-2`}>
                     Didn't receive the email yet? <Text onPress={resendEmail} style={tw`font-bold underline`}>Send Again</Text> ({countDown})
+                </Text>
+                <Text style={tw`font-medium text-base text-center mt-2`}>
+                    Or <Text onPress={deleteAccount} style={tw`font-bold underline`}>delete account</Text>
                 </Text>
             </View>
         </View>

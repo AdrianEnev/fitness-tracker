@@ -119,6 +119,7 @@ function App() {
         console.log('async storage cleared')
     }
 
+
     const onAuthenticate = async () => {
         const auth = await LocalAuthentication.authenticateAsync({
             promptMessage: 'Аутентикация с биометрия',
@@ -344,6 +345,35 @@ function App() {
         }
     }, [isConnected, isAuthenticated, hasSynced]);
 
+    useEffect(() => {
+        //clearAsyncStorage()
+    })
+
+    const handleNavigation = () => {
+        // Handles the logic for navigation based on language and authentication
+        if (!localLanguageSet) {
+            return <LanguageScreen setLocalLanguageSet={setLocalLanguageSet} />;
+        }
+
+        if (!localEmail) {
+            // Unauthenticated flow
+            return <UnauthenticatedTabNavigator />;
+        } else {
+            // Authenticated or setup flow
+            return isAccountDeleted ? (
+                <UnauthenticatedTabNavigator />
+            ) : setupRan && isAuthenticated ? (
+                <AuthenticatedTabNavigator setupRan={setupRan} />
+            ) : setupRan && !isAuthenticated ? (
+                <BiometricsFailed />
+            ) : !isEmailVerified ? (
+                <EmailNotVerified />
+            ) : (
+                <SetupPage />
+            );
+        }
+    };
+
     if (loading || checkingSetup) {
         return (
             <View style={tw`flex-1 justify-center items-center bg-red-500`}>
@@ -377,21 +407,7 @@ function App() {
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />
                 
-                <NavigationContainer>
-                    {   
-                        localEmail ? 
-                        (
-                            isConnected ? 
-                            (isAccountDeleted ? <UnauthenticatedTabNavigator /> :
-                            setupRan && isAuthenticated ? <AuthenticatedTabNavigator setupRan={setupRan} /> : 
-                            setupRan && !isAuthenticated ? <BiometricsFailed /> :
-                            !isEmailVerified ? <EmailNotVerified /> :
-                            <SetupPage />) :
-                            <AuthenticatedTabNavigator setupRan={setupRan} />
-                        ) : 
-                        (localLanguageSet ? <UnauthenticatedTabNavigator /> : <LanguageScreen setLocalLanguageSet={setLocalLanguageSet}/>)
-                    }
-                </NavigationContainer>
+                <NavigationContainer>{handleNavigation()}</NavigationContainer>
             </GestureHandlerRootView>
         </GlobalContext.Provider>
     );

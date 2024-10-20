@@ -50,7 +50,10 @@ const Main = ({navigation}: any) => {
         const email = await getEmail();
 
         const AsyncStorageUsername = await AsyncStorage.getItem(`username_${email}`);
-        setUsername(AsyncStorageUsername);
+        if (AsyncStorageUsername) {
+            setUsername(AsyncStorageUsername);
+        }
+       
     }
 
     useEffect(() => {
