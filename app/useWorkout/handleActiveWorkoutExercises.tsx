@@ -10,7 +10,6 @@ export const removeSet = (exerciseIndex: number, setId: string, setUserInputs: a
         }
     }
     
-    
     if (currentExercise) {
         currentExercise.sets = currentExercise.sets.filter((set: any) => set.id !== setId);
     }

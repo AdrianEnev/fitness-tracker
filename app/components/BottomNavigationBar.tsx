@@ -75,7 +75,7 @@ const BottomNavigationBar = (
         copySelectedWorkoutsInFolder?: () => void, cutSelectedWorkoutsInFolder?: () => void, deleteSelectedWorkoutsInFolder?: () => void,
         viewSavedWorkoutDate?: any, viewSavedWorkoutStartEnd?: any, viewSavedWorkoutNumberOfExercises?: any,
         addCustomFoodPageAddFood?: () => void, addFoodPageAddButton?: () => void,
-        activeWorkoutNumberOfExercises: any
+        activeWorkoutNumberOfExercises?: any
     }
 ) => {
     //AddCustomFood
@@ -102,7 +102,7 @@ const BottomNavigationBar = (
                 <View style={tw`flex flex-row ${activeWorkoutNumberOfExercises === 1 ? 'justify-center' : 'justify-between'} w-full`}>
 
                     <Pressable onPress={backButton} style={tw`${activeWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
-                        <Ionicons name='chevron-back-circle-outline' color='#fd1c47' size={72}/>
+                        <Ionicons name='chevron-back-circle-outline' color='#3b82f6' size={72}/>
                     </Pressable>
 
                         <Pressable onPress={toggleEndWorkoutModal}>
@@ -110,7 +110,7 @@ const BottomNavigationBar = (
                         </Pressable>
 
                     <Pressable onPress={forwardButton} style={tw`${activeWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
-                        <Ionicons name='chevron-forward-circle-outline' color='#fd1c47' size={72}/>
+                        <Ionicons name='chevron-forward-circle-outline' color='#3b82f6' size={72}/>
                     </Pressable>
                 </View>
             </View>

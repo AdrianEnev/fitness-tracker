@@ -61,9 +61,18 @@ const ViewWorkout = ({route, navigation}: any) => {
     }
 
     const removeSet = (exerciseIndex: number, setId: string) => {
+
         const updatedExercises = [...newExercises];
         const updatedUserInputs = [...userInputs];
         const currentExerciseIndex = updatedExercises.findIndex((exercise: any) => exercise.exerciseIndex === exerciseIndex);
+
+        const currentExercise = updatedExercises.find((exercise: any) => exercise.exerciseIndex === exerciseIndex);
+      
+        if (currentExercise && currentExercise.sets.length === 1) {
+            if (currentIndex == 0) {
+                return;
+            }
+        }
     
         if (currentExerciseIndex !== -1) {
             updatedExercises[currentExerciseIndex].sets = updatedExercises[currentExerciseIndex].sets.filter((set: any) => set.id !== setId);
@@ -73,7 +82,6 @@ const ViewWorkout = ({route, navigation}: any) => {
             setUserInputs(updatedUserInputs); // Ensure userInputs is also updated
         }
 
-        const currentExercise = updatedExercises.find(exercise => exercise.exerciseIndex === exerciseIndex);
         if (currentExercise) {
             currentExercise.sets.forEach((set: any, index: any) => {
                 set.setIndex = index + 1;
@@ -293,6 +301,36 @@ const ViewWorkout = ({route, navigation}: any) => {
         }
         
     }
+
+    const removeExercise = (index: number) => {
+        const updatedExercises = [...newExercises];
+        const updatedUserInputs = [...userInputs];
+
+        // Remove the exercise from both newExercises and userInputs
+        updatedExercises.splice(index, 1);
+        updatedUserInputs.splice(index, 1);
+
+        // Update the state
+        setNewExercises(updatedExercises);
+        setUserInputs(updatedUserInputs);
+
+        // Adjust currentIndex to prevent it from being out of bounds
+        if (index >= updatedExercises.length) {
+            setCurrentIndex(Math.max(0, updatedExercises.length - 1));
+        }
+
+    };
+
+    useEffect(() => {
+        const currentExercise = newExercises[currentIndex];
+        
+        if (currentExercise && currentExercise.sets.length === 0) {
+            if (currentIndex != 0) {
+                removeExercise(currentIndex);
+            }
+            
+        }
+    }, [currentIndex, newExercises]);
 
     return (
         <>
