@@ -98,20 +98,58 @@ const ActiveWorkout = ({route, navigation}: any) => {
     // timer - end ----------------------------------------------------------------------------------------------------
 
     const forwardButton = () => {
-        if (workout.numberOfExercises > 1) {
+        if (workout.numberOfExercises + exercisesAdded > 1) {
             setCurrentIndex((currentIndex + 1) % newExercises.length);
         } else {
             setCurrentIndex(0);
         }
+
+        console.log(currentIndex)
     }
     
     const backButton = () => {
-        if (workout.numberOfExercises > 1) {
+        if (workout.numberOfExercises + exercisesAdded > 1) {
             setCurrentIndex((currentIndex - 1 + newExercises.length) % newExercises.length);
         } else {
             setCurrentIndex(0);
         }
+
+        console.log(currentIndex)
     }
+
+    // Function to remove an exercise by index
+    const removeExercise = (index: number) => {
+        const updatedExercises = [...newExercises];
+        const updatedUserInputs = [...userInputs];
+
+        // Remove the exercise from both newExercises and userInputs
+        updatedExercises.splice(index, 1);
+        updatedUserInputs.splice(index, 1);
+
+        // Update the state
+        setNewExercises(updatedExercises);
+        setUserInputs(updatedUserInputs);
+
+        // Adjust currentIndex to prevent it from being out of bounds
+        if (index >= updatedExercises.length) {
+            setCurrentIndex(Math.max(0, updatedExercises.length - 1));
+        }
+
+        setExercisesAdded(exercisesAdded - 1)
+    };
+
+    // useEffect to check if the current exercise has 0 sets, and remove it if so
+    useEffect(() => {
+        const currentExercise = newExercises[currentIndex];
+        
+        if (currentExercise && currentExercise.sets.length === 0) {
+            if (currentIndex != 0) {
+                removeExercise(currentIndex);
+            }
+            
+        }
+    }, [currentIndex, newExercises]);
+
 
     return (
         <>
@@ -258,7 +296,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                                     </Pressable>
 
                                                                     <TouchableOpacity style={tw`bg-[#fd354a] rounded-2xl w-10 h-10 flex items-center justify-center ${mapIndex != 0 ? '' : 'mt-[30px]'}`} 
-                                                                    onPress={() => removeSet(exercise.exerciseIndex, set.id, setUserInputs, setNewExercises, userInputs, newExercises)}
+                                                                    onPress={() => removeSet(exercise.exerciseIndex, set.id, setUserInputs, setNewExercises, userInputs, newExercises, currentIndex)}
                                                                     >
                                                                         <Ionicons name='close' size={36} color='white' />
                                                                     </TouchableOpacity>
@@ -287,6 +325,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                         backButton={backButton}
                         addActiveWorkoutSet={addSetFunc}
                         addActiveWorkoutExercise={addExerciseFunc}
+                        activeWorkoutNumberOfExercises={workout.numberOfExercises + exercisesAdded - 1}
                     />
 
                 </SafeAreaView>

@@ -45,7 +45,8 @@ const BottomNavigationBar = (
         selectionMode, deleteSelectedWorkouts, cutSelectedWorkouts, copySelectedWorkouts,
         copySelectedWorkoutsInFolder, cutSelectedWorkoutsInFolder, deleteSelectedWorkoutsInFolder,
         viewSavedWorkoutDate, viewSavedWorkoutStartEnd, viewSavedWorkoutNumberOfExercises,
-        addCustomFoodPageAddFood, addFoodPageAddButton
+        addCustomFoodPageAddFood, addFoodPageAddButton,
+        activeWorkoutNumberOfExercises
 
     }: 
     {
@@ -73,7 +74,8 @@ const BottomNavigationBar = (
         selectionMode?: boolean, deleteSelectedWorkouts?: () => void, cutSelectedWorkouts?: () => void, copySelectedWorkouts?: () => void,
         copySelectedWorkoutsInFolder?: () => void, cutSelectedWorkoutsInFolder?: () => void, deleteSelectedWorkoutsInFolder?: () => void,
         viewSavedWorkoutDate?: any, viewSavedWorkoutStartEnd?: any, viewSavedWorkoutNumberOfExercises?: any,
-        addCustomFoodPageAddFood?: () => void, addFoodPageAddButton?: () => void
+        addCustomFoodPageAddFood?: () => void, addFoodPageAddButton?: () => void,
+        activeWorkoutNumberOfExercises: any
     }
 ) => {
     //AddCustomFood
@@ -97,17 +99,17 @@ const BottomNavigationBar = (
                     
                 </View>
 
-                <View style={tw`flex flex-row justify-between w-full`}>
+                <View style={tw`flex flex-row ${activeWorkoutNumberOfExercises === 1 ? 'justify-center' : 'justify-between'} w-full`}>
 
-                    <Pressable onPress={backButton}>
+                    <Pressable onPress={backButton} style={tw`${activeWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
                         <Ionicons name='chevron-back-circle-outline' color='#fd1c47' size={72}/>
                     </Pressable>
 
-                    <Pressable onPress={toggleEndWorkoutModal}>
-                        <Ionicons name='stop-circle-outline' color='#fd1c47' size={72}/>
-                    </Pressable>
+                        <Pressable onPress={toggleEndWorkoutModal}>
+                            <Ionicons name='stop-circle-outline' color='#fd1c47' size={72}/>
+                        </Pressable>
 
-                    <Pressable onPress={forwardButton}>
+                    <Pressable onPress={forwardButton} style={tw`${activeWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
                         <Ionicons name='chevron-forward-circle-outline' color='#fd1c47' size={72}/>
                     </Pressable>
                 </View>

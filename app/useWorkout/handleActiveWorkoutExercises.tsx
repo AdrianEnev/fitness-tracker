@@ -1,7 +1,16 @@
-export const removeSet = (exerciseIndex: number, setId: string, setUserInputs: any, setNewExercises: any, userInputs: any, newExercises: any) => {
+export const removeSet = (exerciseIndex: number, setId: string, setUserInputs: any, setNewExercises: any, userInputs: any, newExercises: any, currentIndex: any) => {
+    
     // Update newExercises
     const updatedExercises = [...newExercises];
     const currentExercise = updatedExercises.find((exercise: any) => exercise.exerciseIndex === exerciseIndex);
+        
+    if (currentExercise && currentExercise.sets.length === 1) {
+        if (currentIndex == 0) {
+            return;
+        }
+    }
+    
+    
     if (currentExercise) {
         currentExercise.sets = currentExercise.sets.filter((set: any) => set.id !== setId);
     }
@@ -57,7 +66,6 @@ export const addExercise = (
     setNewExercises(updatedExercises);
     setUserInputs(updatedUserInputs);
 
-    
     // Ensure currentIndex is within bounds
     const newIndex = exercises.length + exercisesAdded; // Calculate new index
     if (newIndex < updatedExercises.length) {
