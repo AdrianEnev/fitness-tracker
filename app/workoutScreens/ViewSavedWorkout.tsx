@@ -45,33 +45,7 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
        
     }
 
-    useEffect(() => {
-        getStartEnd();
-    }, [])
-   
-    const getStartEndT = () => {
-
-       const cleanedTime = time.replace(/[^\d:]/g, '');
-    
-        // Extract hours and minutes from the cleaned 'time' prop
-        const [startHour, startMinute] = cleanedTime.split(':').map(Number);
-
-        // Calculate the total minutes from the start time
-        const startTotalMinutes = startHour * 60 + startMinute;
-
-        // Calculate the end total minutes by adding the workout duration (in seconds converted to minutes)
-        const endTotalMinutes = startTotalMinutes + Math.floor(workout.duration / 60);
-
-        // Calculate the end hour and minute
-        const endHour = Math.floor(endTotalMinutes / 60) % 24; // Ensure it wraps around 24 hours
-        const endMinute = endTotalMinutes % 60;
-
-        // Format the start and end time as "HH:MM - HH:MM"
-        const formattedStartTime = `${String(startHour).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}`;
-        const formattedEndTime = `${String(endHour).padStart(2, '0')}:${String(endMinute).padStart(2, '0')}`;
-
-        setStartEnd(`${formattedStartTime} -> ${formattedEndTime}`);
-    }
+    const [startEnd, setStartEnd] = useState<any>();
     
     const getStartEnd = () => {
         // Assume 'time' is your formatted end time, like '18:46'
@@ -101,7 +75,9 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
         setStartEnd(`${formattedStartTime} -> ${formattedEndTime}`);
     };
 
-    const [startEnd, setStartEnd] = useState<any>();
+    useEffect(() => {
+        getStartEnd();
+    }, [])
 
     const [isDeleteSavedWorkoutModalVisible, setIsDeleteSavedWorkoutModalVisible] = useState(false);
 

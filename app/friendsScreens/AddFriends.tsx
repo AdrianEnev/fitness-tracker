@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, TextInput, TouchableWithoutFeedback, Keyboard, Pressable, ActivityIndicator } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import searchForFriend from '../use/useSearchForFriend'
@@ -9,11 +9,23 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import sendFriendRequest from '../use/useSendFriendRequest'
 import BottomNavigationBar from '../components/BottomNavigationBar'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import getEmail from '../use/useGetEmail'
 
 const AddFriends = ({route, navigation}: any) => {
 
     // imeto na potrebitelq koito e lognat
-    const {username} = route.params;
+    const [username, setUsername] = useState<any>('');
+
+    useEffect(() => {
+        const fetch = async () => {
+            const email = await getEmail();
+            const asyncStorageUsername = await AsyncStorage.getItem(`username_${email}`);
+            setUsername(asyncStorageUsername)
+        }
+        fetch();
+        
+    }, [])
 
     const [searchQuery, setSearchQuery] = useState('');
     const [searchResults, setSearchResults] = useState<any[]>([]);
@@ -64,12 +76,9 @@ const AddFriends = ({route, navigation}: any) => {
         }
     }*/
 
-    const isFriendAlready = async (checkUser: any) => {
+    const isFriendAlready = async (checkUser: any, currentUserInfoCollectionRef: any) => {
 
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const userInfoCollectionRef = collection(userDocRef, 'user_info');
-        const friendsDocRef = doc(userInfoCollectionRef, 'friends');
+        const friendsDocRef = doc(currentUserInfoCollectionRef, 'friends');
         const listCollectionRef = collection(friendsDocRef, 'list');
 
         const friendDocRef = doc(listCollectionRef, checkUser.id);
@@ -82,12 +91,10 @@ const AddFriends = ({route, navigation}: any) => {
         }
     }
     
-    const isRequestPending = async (checkUser: any) => {
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const currentUserDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const currentUserInfoCollectionRef = collection(currentUserDocRef, 'user_info');
+    const isRequestPending = async (checkUser: any, currentUserInfoCollectionRef: any, usersCollectionRef: any) => {
+        
         const currentUserSentRequestsCollectionRef = collection(currentUserInfoCollectionRef, 'friendRequests', 'sent');
-        const currentUserReceivedRequestsCollectionRef = collection(currentUserInfoCollectionRef, 'friendRequests', 'received');
+        //const currentUserReceivedRequestsCollectionRef = collection(currentUserInfoCollectionRef, 'friendRequests', 'received');
     
         const otherUserDocRef = doc(usersCollectionRef, checkUser.id);
         const otherUserInfoCollectionRef = collection(otherUserDocRef, 'user_info');
@@ -134,18 +141,40 @@ const AddFriends = ({route, navigation}: any) => {
             setSearchingAnimation(false); // Stop the searching animation in case of error
         }
     };
+
+    const userAddedThemself = async (username: string) => {
+        const email = await getEmail()
+        const asyncStorageUsername = await AsyncStorage.getItem(`username_${email}`)
+
+        if (asyncStorageUsername == username) {
+            return true
+        }else {
+            return false
+        }
+    }
     
     const addToSuggestions = async (users: any) => {
+
+        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+        const currentUserDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+        const currentUserInfoCollectionRef = collection(currentUserDocRef, 'user_info');
+
         const suggestions = await Promise.all(users.map(async (user: any) => {
             if (user.username !== username) {
 
-                const alreadyFriend = await isFriendAlready(user);
+                const userAddedThemselfBool = await userAddedThemself(user.username);
+                if (userAddedThemselfBool) {
+                    console.log('You cannot add yourself!')
+                    return null;
+                }
+
+                const alreadyFriend = await isFriendAlready(user, currentUserInfoCollectionRef);
                 if (alreadyFriend) {
                     console.log(user.username, 'is already a friend, not adding to suggestions');
                     return null;
                 }
 
-                const pending = await isRequestPending(user);
+                const pending = await isRequestPending(user, currentUserInfoCollectionRef, usersCollectionRef);
                 if (pending) {
                     return null;
                 }
@@ -168,7 +197,6 @@ const AddFriends = ({route, navigation}: any) => {
         setSuggestedFriends(suggestions.filter(user => user !== null));
         setSearchingAnimation(false); // Stop the searching animation after processing suggestions
     };
-
 
     const [noUserFoundMessage, setNoUserFoundMessage] = useState("");
 

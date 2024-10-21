@@ -290,7 +290,7 @@ const Workouts = ({navigation}: any) => {
                         </View>
     
                         <View style={tw`flex justify-center`}>
-                            <Ionicons name='chevron-forward' size={36} color='black'/>
+                            <Ionicons name='chevron-forward' size={36} color='#9ca3af'/>
                         </View>
                     </View>
                 </Pressable>
@@ -358,9 +358,7 @@ const Workouts = ({navigation}: any) => {
                         </View>
                     </View>
 
-                    <View style={tw`flex justify-center`}>
-                        <Ionicons name='chevron-forward' size={36} color='black'/>
-                    </View>
+                    
                 </View>
             </Pressable>
         )

@@ -5,6 +5,7 @@ import { User } from "firebase/auth";
 
 // Function to send a friend request to a user
 const sendFriendRequestToUser = async (user: Friend, loggedInUser: User, loggedInUserUsername: string) => {
+
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, user.id);
     const userInfoCollectionRef = collection(userDocRef, 'user_info');
@@ -24,7 +25,7 @@ const sendFriendRequestToUser = async (user: Friend, loggedInUser: User, loggedI
 }
 
 // Function to send a friend request from the logged in user
-const sendFriendRequestFromUser = async (user: Friend, loggedInUser: User, loggedInUserUsername: string) => {
+const sendFriendRequestFromUser = async (user: Friend, loggedInUser: User) => {
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const loggedInUserDocRef = doc(usersCollectionRef, loggedInUser.uid);
     const userInfoCollectionRef = collection(loggedInUserDocRef, 'user_info');
@@ -55,8 +56,6 @@ const sendFriendRequest = async (user: Friend, loggedInUserUsername: string, nav
 
     const loggedInUser = FIREBASE_AUTH.currentUser;
 
-   
-
     if (loggedInUser) {
         try {
 
@@ -65,7 +64,7 @@ const sendFriendRequest = async (user: Friend, loggedInUserUsername: string, nav
             // Send a friend request to the user
             await sendFriendRequestToUser(user, loggedInUser, loggedInUserUsername);
             // Send a friend request from the logged in user
-            await sendFriendRequestFromUser(user, loggedInUser, loggedInUserUsername);
+            await sendFriendRequestFromUser(user, loggedInUser);
             
             navigation.goBack();
 
