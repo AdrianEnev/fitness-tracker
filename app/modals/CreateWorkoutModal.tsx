@@ -43,7 +43,7 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
                         <TextInput
                             style={tw`w-full h-12 rounded-xl bg-white shadow-md my-1 text-black font-medium pl-3`}
                             maxLength={30}
-                            placeholder='Име на тренировка'
+                            placeholder='Workout name'
                             placeholderTextColor='#6b7280'
                             onChangeText={(text) => setWorkoutTitle(text)}
                         />

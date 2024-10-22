@@ -1,12 +1,26 @@
 import { addDoc, collection, doc, serverTimestamp, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import generateRandomColour from '../use/useGenerateColour';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const addWorkout = async (exercises: any, workoutTitle: string, id: any, folder?: any) => {
+    
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
     const workoutDocRef = doc(userWorkoutsCollectionRef, id);
+
+    let exerciseTitle = "Exercise "
+    const currentLanguage = await AsyncStorage.getItem('language')
+    if (currentLanguage == "bg") {
+        exerciseTitle = "Упражнение "
+    }
+    else if (currentLanguage == "de") {
+        exerciseTitle = "Übung "
+
+    }else if (currentLanguage == "ru") {
+        exerciseTitle = "Упражнение "
+    }
 
     if (exercises.length === 0) {
         // Add rest day workout
@@ -33,7 +47,7 @@ const addWorkout = async (exercises: any, workoutTitle: string, id: any, folder?
             exercises.forEach((exercise: any) => {
                 exercise.sets.forEach(async (set: any, index: any) => {
                     if (exercise.title === '') {
-                        exercise.title = "Упражнение " + (exercise.exerciseIndex + 1);
+                        exercise.title = exerciseTitle + (exercise.exerciseIndex + 1);
                     }
 
                     const exerciseDocRef = doc(workoutInfoCollectionRef, (exercise.exerciseIndex + 1).toString());

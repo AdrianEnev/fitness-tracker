@@ -21,6 +21,36 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
     const {internetConnected} = useContext(GlobalContext);
 
     const { folder } = route.params;
+    
+    const getExerciseTitle = async () => {
+
+        let exerciseTitle= "Exercise "
+
+        const currentLanguage = await AsyncStorage.getItem('language')
+        if (currentLanguage == "bg") {
+            return "Упражнение "
+        }
+        else if (currentLanguage == "de") {
+            return "Übung "
+
+        }else if (currentLanguage == "ru") {
+            return "Упражнение "
+
+        }else{
+            return exerciseTitle
+        }
+    }
+
+    const [exerciseTitle, setExerciseTitle] = useState<string>("Exercise");
+
+    useEffect(() => {
+        const fetchExerciseTitle = async () => {
+            const title = await getExerciseTitle();
+            setExerciseTitle(title);
+        };
+
+        fetchExerciseTitle();
+    }, []);
 
     const newExercise: any = {
         title: '',
@@ -64,11 +94,13 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
         ));
     };
 
-    const nextExercise = () => {
+    const nextExercise = async () => {
         if (pageIndex < exercises.length && exercises.length < 9) {
-            // Move to the next existing exercise
+            
             setPageIndex(pageIndex + 1);
+            
         } else if (exercises.length < 9) {
+
             // Create a new exercise
             const newExercise: Exercise = {
                 title: '',
@@ -105,10 +137,6 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
         ));
     };
 
-    // dont remove set if set number == 1
-
-    //colors={['#FFEFBA', '#FF7F7F']}
-
     const [isCreateWorkoutModalVisible, setIsCreateWorkoutModalVisible] = useState(false)
 
     const handleContentSizeChange = (event: any) => {
@@ -134,7 +162,6 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
         return width;
     }
 
-    
     const [isSetIntensityModalVisible, setIsSetIntensityModalVisible] = useState(false)
     const [currentSelectedSet, setCurrentSelectedSet] = useState(0)
     const [intensityBoxSelected, setIntensityBoxSelected] = useState(0)
@@ -199,7 +226,6 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
             );
         }
     }
-
 
     const deleteCurrentExercise = () => {
 
@@ -269,7 +295,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                                             multiline={true}
                                             numberOfLines={2}
                                             maxLength={50}
-                                            placeholder={`Упражнение ${exercise.exerciseIndex + 1}`}
+                                            placeholder={`${exerciseTitle} ${exercise.exerciseIndex + 1}`}
                                             placeholderTextColor='#93c5fd'
                                             value={exercise.title || ''}
                                             onChangeText={(text) => updateExerciseTitle(exercise.id, text)}

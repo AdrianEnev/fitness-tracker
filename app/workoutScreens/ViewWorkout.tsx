@@ -27,7 +27,7 @@ const ViewWorkout = ({route, navigation}: any) => {
     const [newWorkoutTitle, setNewWorkoutTitle] = useState('');
 
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [newExercises, setNewExercises] = useState<any>([...exercises]); // newExercises = copy of exercises
+    const [newExercises, setNewExercises] = useState<any>([...exercises]);
     const [userInputs, setUserInputs] = useState<any>(newExercises.map((exercise: any) => ({
         ...exercise,
         sets: exercise.sets.map((set: any) => ({...set, reps: set.reps, weight: set.weight}))
@@ -112,7 +112,6 @@ const ViewWorkout = ({route, navigation}: any) => {
         
     }
     
-        
     const addExercise = () => {
         console.log('add exercise ran');
         console.log('Current exercises:', newExercises);
@@ -366,8 +365,6 @@ const ViewWorkout = ({route, navigation}: any) => {
                         currentExerciseId={currentExerciseId}
                     />
 
-                    
-                    
                     <TextInput 
                         style={tw`text-2xl font-bold mx-3 mb-5 max-w-[81%]`}
                         keyboardType='default'
@@ -385,7 +382,6 @@ const ViewWorkout = ({route, navigation}: any) => {
                             if (exercise.exerciseIndex === currentIndex + 1) {
                                 return (
                                     <View key={exercise.id} style={tw`w-full h-[82%]`}>
-                                    
 
                                         <TextInput 
                                             style={textInputStyle}
