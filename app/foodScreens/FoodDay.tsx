@@ -90,9 +90,6 @@ const FoodDay = ({route, navigation}: any) => {
         //clearAllFoodItems();
     }, []);
 
-    
-
-
     const updateCurrentNutrients = () => {
         let totalCalories = 0;
         let totalProtein = 0;

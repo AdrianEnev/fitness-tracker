@@ -15,6 +15,8 @@ import { useTranslation } from 'react-i18next'
 import { deleteObject, getStorage, ref } from 'firebase/storage'
 import getEmail from '../use/useGetEmail'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { BlurView } from 'expo-blur'
+import SyncingInfoModal from '../modals/SyncingInfoModal'
 
 const SettingsAccount = ({navigation}: any) => {
 
@@ -285,80 +287,98 @@ const SettingsAccount = ({navigation}: any) => {
 
     }, [])
 
+    const [isSyncingInfoModalVisible, setIsSyncingInfoModalVisible] = useState(false)
+
     return (
-        <SafeAreaView style={tw`w-full h-full bg-white`}>
+        <>
 
-            <View style={tw`h-full pt-2`}>
+            {isSyncingInfoModalVisible && (
+                <BlurView
+                    style={tw`absolute w-full h-full z-10`}
+                    intensity={50}
+                    tint='dark'
+                />
+            )}
 
-                {/* Profile Picture + Username + Email */}
-                <View style={tw`w-full flex flex-row mb-3`}>
+            <SafeAreaView style={tw`w-full h-full bg-white`}>
 
-                    <ProfilePicture page='SettingsAccount'/>
+                <SyncingInfoModal
+                    isSyncingInfoModalVisible={isSyncingInfoModalVisible}
+                    setIsSyncingInfoModalVisible={setIsSyncingInfoModalVisible}
+                />
 
-                    <View style={tw`flex flex-col justify-center ml-2`}>
+                <View style={tw`h-full pt-2`}>
 
-                        <Text style={tw`text-xl font-medium`}>{username}</Text>
-                        <Text style={tw`text-base text-gray-500`}>{email}</Text>
+                    {/* Profile Picture + Username + Email */}
+                    <View style={tw`w-full flex flex-row mb-3`}>
+
+                        <ProfilePicture page='SettingsAccount'/>
+
+                        <View style={tw`flex flex-col justify-center ml-2`}>
+
+                            <Text style={tw`text-xl font-medium`}>{username}</Text>
+                            <Text style={tw`text-base text-gray-500`}>{email}</Text>
+
+                        </View>
 
                     </View>
 
+                    {/* Seperator */}
+                    <View style={tw`h-[2px] w-[94%] bg-gray-300 rounded-full mx-2`}></View>
+
+                    {/* Icons */}
+                    {button(t('change-username'), 'text-outline', 'yellow-300', '#eab308', 24, () => {
+                        if (internetConnected) {
+                            changeUsername()
+                        }else{
+                            Vibration.vibrate()
+                        }
+                    })}
+
+
+
+                    {button(t('change-password'), 'create-outline', 'green-300', '#22c55e', 26, () => {
+                        
+                        if (internetConnected) {
+                            const auth = getAuth();
+                            const user = auth.currentUser;
+                            changePassword(email, user, auth)
+                        }else{
+                            Vibration.vibrate()
+                        }
+                        
+                    })}
+                    {button(t('log-out'), 'log-out-outline', 'blue-300', '#3b82f6', 28, () => {
+                        if (internetConnected) {
+                            logOut()
+                        }else{
+                            Vibration.vibrate()
+                        }
+                    })}
+                    {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, () => {
+
+                        if (internetConnected) {
+                            const auth = getAuth();
+                            const user = auth.currentUser;
+                            
+                            deleteAccount(email, user, setProfilePicture, setSetupRan, setIsAccountDeleted, setIsSyncingInfoModalVisible)
+                            
+                        }else{
+                            Vibration.vibrate()
+                        }
+                        
+                    })}
+
+                    {switchButton(t('face-id'), 'eye-outline', 'orange-300', '#d97706', 30)}
+                    {switchButton(t('receive-friend-requests'), 'notifications-outline', 'purple-300', '#8b5cf6', 24)}
+                    
+
                 </View>
 
-                {/* Seperator */}
-                <View style={tw`h-[2px] w-[94%] bg-gray-300 rounded-full mx-2`}></View>
+                <BottomNavigationBar currentPage='Settings' navigation={navigation}/>
 
-                {/* Icons */}
-                {button(t('change-username'), 'text-outline', 'yellow-300', '#eab308', 24, () => {
-                    if (internetConnected) {
-                        changeUsername()
-                    }else{
-                        Vibration.vibrate()
-                    }
-                })}
-
-
-
-                {button(t('change-password'), 'create-outline', 'green-300', '#22c55e', 26, () => {
-                    
-                    if (internetConnected) {
-                        const auth = getAuth();
-                        const user = auth.currentUser;
-                        changePassword(email, user, auth)
-                    }else{
-                        Vibration.vibrate()
-                    }
-                    
-                })}
-                {button(t('log-out'), 'log-out-outline', 'blue-300', '#3b82f6', 28, () => {
-                    if (internetConnected) {
-                        logOut()
-                    }else{
-                        Vibration.vibrate()
-                    }
-                })}
-                {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, () => {
-
-                    if (internetConnected) {
-                        const auth = getAuth();
-                        const user = auth.currentUser;
-                        
-                        deleteAccount(email, user, setProfilePicture, setSetupRan, setIsAccountDeleted)
-                        
-                    }else{
-                        Vibration.vibrate()
-                    }
-                    
-                })}
-
-                {switchButton(t('face-id'), 'eye-outline', 'orange-300', '#d97706', 30)}
-                {switchButton(t('receive-friend-requests'), 'notifications-outline', 'purple-300', '#8b5cf6', 24)}
-                
-
-            </View>
-
-            <BottomNavigationBar currentPage='Settings' navigation={navigation}/>
-
-        </SafeAreaView>
+            </SafeAreaView>
+        </>
     )
 }
 

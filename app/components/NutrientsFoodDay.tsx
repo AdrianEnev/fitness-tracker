@@ -75,7 +75,7 @@ const Nutrients = ({ currentNutrients, regularDate}: RenderNutrientsProps) => {
                         <View style={tw`w-[${blueWidthPercentage}%] h-4 bg-[#3d5875] rounded-r-lg`}></View>
                     </View>
     
-                    <Text style={tw`font-bold text-sm text-center mt-1`}>{currentProgress}/{goalProgress}g</Text>
+                    <Text style={tw`font-bold text-sm text-center mt-1`}>{currentProgress <= 9999 ? currentProgress : '9999'}/{goalProgress}g</Text>
     
                 </View>
             )
@@ -87,7 +87,7 @@ const Nutrients = ({ currentNutrients, regularDate}: RenderNutrientsProps) => {
     
                     <View style={tw`w-full h-4 bg-[#3d5875] rounded-lg`}></View>
                         
-                    <Text style={tw`font-bold text-sm text-center mt-1`}>{currentProgress}/{goalProgress}g</Text>
+                    <Text style={tw`font-bold text-sm text-center mt-1`}>{currentProgress <= 9999 ? currentProgress : '9999'}/{goalProgress}g</Text>
     
                 </View>
             )
@@ -123,7 +123,7 @@ const Nutrients = ({ currentNutrients, regularDate}: RenderNutrientsProps) => {
                         {() => (
                             <View style={tw`flex flex-row items-center justify-center`}>
                             
-                                <Text style={tw`text-2xl font-medium`}>{currentCalories}/</Text>
+                                <Text style={tw`${currentCalories <= 9999 ? 'text-2xl' : 'text-xl'} font-medium`}>{currentCalories <= 50000 ? currentCalories : '50000'}/</Text>
                                 <Text style={tw`text-base font-medium mt-2`}>{goalCalories}</Text>
                                 
                             </View>

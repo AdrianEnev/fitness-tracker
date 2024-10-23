@@ -31,10 +31,6 @@ const AddFoodNutrientsComponent = (
         });
     };
 
-    const progress = useSharedValue(30);
-    const minimumValue = useSharedValue(0);
-    const maximumValue = useSharedValue(100);
-
     return (
 
         <>

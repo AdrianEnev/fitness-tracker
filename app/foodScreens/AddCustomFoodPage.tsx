@@ -71,6 +71,16 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
                 totalFat += food.fat || 0;
             });
 
+            /*if (totalCalories >= 9999) {
+                totalCalories = 9999;
+            }else if (totalProtein >= 9999) {
+                totalProtein = 9999;
+            }else if (totalCarbs >= 9999) {
+                totalCarbs = 9999;
+            }else if (totalFat >= 9999) {
+                totalFat = 9999;
+            }*/
+
             const updatedNutrients = {
                 calories: totalCalories,
                 protein: totalProtein,
@@ -130,6 +140,18 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         
         let newFat = Number(String(fat).replace(',', '.'));
         newFat = Math.ceil(newFat);
+
+        /*if (newCalories >= 9999) {
+            newCalories = 9999;
+        }else if (newProtein >= 9999) {
+            newProtein = 9999;
+        }else if (newProtein >= 9999) {
+            newProtein = 9999;
+        }else if (newCarbs >= 9999) {
+            newCarbs = 9999;
+        }else if (newFat >= 9999) {
+            newFat = 9999;
+        }*/
         
         const documentInfo = {
             id: generateID(),
@@ -162,46 +184,6 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         updateCurrentNutrients();
         
     }
-
-    const setNutrient = (value: any, nutrientType: any) => {
-        switch (nutrientType) {
-            case 'name':
-                setName(value);
-                break;
-            case 'calories':
-                setCalories(Number(value));
-                break;
-            case 'protein':
-                setProtein(Number(value));
-                break;
-            case 'carbs':
-                setCarbs(Number(value));
-                break;
-            case 'fat':
-                setFat(Number(value));
-                break;
-            case 'grams':
-                setGrams(Number(value));
-                break;
-            default:
-                break;
-        }
-    }
-
-    const box = (title: string, identifier: string) => (
-        <View style={tw`w-[48%]`}>
-
-            <Text style={tw`text-xl font-medium text-black ml-[6px] mb-1`}>{title}</Text>
-
-            <TextInput 
-                style={tw`w-full h-12 rounded-2xl bg-[#fd1c47] px-3 pb-2 text-white font-medium text-xl`} 
-                keyboardType={title === t('food') ? 'default' : 'number-pad'} 
-                maxLength={title === t('food') ? 40 : 5} 
-                onChangeText={(text) => setNutrient(text, identifier)}
-            />
-
-        </View>
-    );
 
     return (
         <View style={tw`h-full w-full bg-white`}>

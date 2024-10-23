@@ -103,7 +103,6 @@ const Settings = ({navigation}: any) => {
 
                 {button('Настройки-Акаунт', 'person-outline', '#3b82f6', 'blue-300', t('account'))}
 
-
                 <View style={tw`flex flex-row`}>
                     {button('Настройки-Статистика', 'stats-chart-outline', '#eab308', 'yellow-300', t('stats'))}
                 </View>
