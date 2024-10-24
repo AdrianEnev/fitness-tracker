@@ -282,10 +282,12 @@ const ViewWorkout = ({route, navigation}: any) => {
         setUserInputs(updatedUserInputs);
 
         if (currentIndex !== newExercises.length - 1) {
-           setCurrentIndex(currentIndex + 1) 
+           setCurrentIndex(currentIndex + 1)  
         }else{
             setCurrentIndex(currentIndex - 1)
         }
+
+        console.log('deleted exercise')
           
     }
 
@@ -317,6 +319,8 @@ const ViewWorkout = ({route, navigation}: any) => {
         if (index >= updatedExercises.length) {
             setCurrentIndex(Math.max(0, updatedExercises.length - 1));
         }
+
+        
 
     };
 

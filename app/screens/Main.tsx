@@ -23,12 +23,6 @@ import ProfilePicture from '../components/ProfilePicture';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
 import { getLanguageLocally } from '../use/useGetLanguageLocally';
-import syncSavedWorkouts from '../syncData/useSyncSavedWorkouts';
-import syncNutrients from '../syncData/useSyncNutrients';
-import syncFood from '../syncData/useSyncFood';
-import syncWorkouts from '../syncData/useSyncWorkouts';
-import syncWorkoutsInFolders from '../syncData/useSyncWorkoutsInFolders';
-import StatisticsComponent from '../components/StatisticsComponent';
 
 //bg-[#fd3e6b]
 //bg-[#3d5875]
@@ -52,6 +46,7 @@ const Main = ({navigation}: any) => {
         const AsyncStorageUsername = await AsyncStorage.getItem(`username_${email}`);
         if (AsyncStorageUsername) {
             setUsername(AsyncStorageUsername);
+            //setUsername("тесттесттесттесттесттесттест");
         }
        
     }
@@ -192,14 +187,14 @@ const Main = ({navigation}: any) => {
                         </View>
 
                         {/* Zdravei User */}
-                        <View style={tw`flex flex-col ml-3`}>
+                        <View style={tw`flex flex-col ml-3 w-full`}>
                             <Text style={tw`text-lg text-gray-500`}>{getHelloText()} 👋</Text>
-                            <Text style={tw`text-xl font-medium`}>{username}</Text>
+                            <Text style={tw`text-xl font-medium max-w-[85%]`}>{username}</Text>
                         </View>
                             
                     </View>
 
-                    <View>
+                    <View style={tw`absolute top-0 right-2`}>
                         <TouchableWithoutFeedback onPress={() => navigation.navigate("Настройки-Страница")} 
                                 style={tw`bg-white w-16 h-16 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
                             <View>

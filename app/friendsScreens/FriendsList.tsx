@@ -9,10 +9,24 @@ import GlobalContext from '../../GlobalContext';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { useTranslation } from 'react-i18next';
 import { Ionicons } from '@expo/vector-icons';
+import getEmail from '../use/useGetEmail';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FriendsList = ({navigation, route}: any) => {
 
-    const { username, friendRequestsNumber } = useContext(GlobalContext);
+    const { friendRequestsNumber } = useContext(GlobalContext);
+
+    const [username, setUsername] = useState<any>('');
+
+    useEffect(() => {
+        const fetch = async () => {
+            const email = await getEmail();
+            const asyncStorageUsername = await AsyncStorage.getItem(`username_${email}`);
+            setUsername(asyncStorageUsername)
+        }
+        fetch();
+        
+    }, [])
 
     const [friends, setFriends] = useState<Friend[]>([]);
 

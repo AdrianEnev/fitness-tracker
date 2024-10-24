@@ -7,10 +7,22 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import { Friend } from '../../interfaces';
 import { useTranslation } from 'react-i18next';
 import BottomNavigationBar from '../components/BottomNavigationBar';
+import getEmail from '../use/useGetEmail';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FriendRequestsRecieved = ({route, navigation}: any) => {
 
-    const {username} = route.params;
+    const [username, setUsername] = useState<any>('');
+
+    useEffect(() => {
+        const fetch = async () => {
+            const email = await getEmail();
+            const asyncStorageUsername = await AsyncStorage.getItem(`username_${email}`);
+            setUsername(asyncStorageUsername)
+        }
+        fetch();
+        
+    }, [])
     
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);

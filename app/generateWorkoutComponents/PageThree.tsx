@@ -3,6 +3,7 @@ import React from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { Picker } from 'react-native-wheel-pick'
+import { useTranslation } from 'react-i18next'
 
 const PageThree = ({numberOfDays, setNumberOfDays}: any) => {
 
@@ -10,12 +11,16 @@ const PageThree = ({numberOfDays, setNumberOfDays}: any) => {
         1,2,3,4,5,6,7
     ]
 
+    const {t} = useTranslation()
+
+    //How many days a week do you plan to work out?
+
     return (
         <View style={tw`flex flex-col mt-[10%] h-full`}>
 
             <View style={tw`mx-5`}>
-                <Text style={tw`font-medium text-2xl text-center`}>How many days a week do you plan to work out?</Text>
-                <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>This will <Text style={tw`font-bold`}>only</Text> be used to generate a custom workout!</Text>
+                <Text style={tw`font-medium text-2xl text-center`}>{t(`how-many-days-a-week-do-you-plan-to-work-out`)}</Text>
+                <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>{t(`this-will`)} <Text style={tw`font-bold`}>{t(`only`)}</Text> {t(`be-used-to-generate-a-custom-workout`)}!</Text>
             </View>
 
             <View style={tw`flex-1 items-center mt-[5%]`}>

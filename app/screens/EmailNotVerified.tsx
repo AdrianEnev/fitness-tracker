@@ -1,11 +1,16 @@
-import { FIREBASE_AUTH } from '../../firebaseConfig';
-import { useEffect, useState } from 'react';
-import { sendEmailVerification } from 'firebase/auth';
+import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { useContext, useEffect, useState } from 'react';
+import { deleteUser, sendEmailVerification } from 'firebase/auth';
 import { View, Text } from 'react-native';
 import tw from 'twrnc';
+import { deleteObject, getStorage, ref } from 'firebase/storage';
+import { deleteDoc, doc } from 'firebase/firestore';
+import GlobalContext from '../../GlobalContext';
 
 const EmailNotVerified = () => {
     const [countDown, setCountDown] = useState(60);
+
+    const {setIsAccountDeleted} = useContext(GlobalContext);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -36,7 +41,33 @@ const EmailNotVerified = () => {
     };
 
     const deleteAccount = () => {
-        console.log('deleting account');
+
+        const user = FIREBASE_AUTH.currentUser;
+        if (!user) return
+        
+        deleteUser(user).then(() => {
+            FIREBASE_AUTH.signOut();
+            setIsAccountDeleted(true)
+        }).catch((error: any) => {
+            console.log(error);
+        });
+
+        const userDocRef = doc(FIRESTORE_DB, 'users', user.uid);
+        deleteDoc(userDocRef).catch((error) => {
+            console.log(error);
+        });
+
+        const storage = getStorage();
+        const desertRef = ref(storage, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
+
+        deleteObject(desertRef).then(() => {
+            console.log("File deleted successfully");
+        }).catch((error) => {
+            if (error !== "[FirebaseError: Firebase Storage: Object 'users/undefined/profile_picture' does not exist. (storage/object-not-found)]"){
+                console.log(error)
+            }
+        });
+            
     }
 
     return (

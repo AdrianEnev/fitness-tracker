@@ -11,7 +11,6 @@ import Setup from './app/screens/Setup';
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from './app/screens/Welcome';
-import getUsername from './app/use/useGetUsername';
 import getProfilePicture from './app/use/useGetProfilePicture';
 import GlobalContext from './GlobalContext';
 import getFriendRequests from './app/use/useGetFriendRequestsRecieved';
@@ -35,6 +34,7 @@ import syncSavedWorkouts from './app/syncData/useSyncSavedWorkouts';
 import syncNutrients from './app/syncData/useSyncNutrients';
 import syncFood from './app/syncData/useSyncFood';
 import syncWorkoutsInFolders from './app/syncData/useSyncWorkoutsInFolders';
+import { useNavigationContainerRef } from '@react-navigation/native';
 
 const Stack = createStackNavigator();
 
@@ -147,6 +147,8 @@ function App() {
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const {t} = useTranslation();
+
+    const navigationRef = useNavigationContainerRef();
 
     const [user, setUser] = useState<User | null>(null);
     const [loading, setLoading] = useState(false);
@@ -337,17 +339,33 @@ function App() {
         if (isConnected && isAuthenticated && !hasSynced) {
             setHasSynced(true);
 
-            syncWorkouts();
-            syncSavedWorkouts();
-            syncNutrients();
-            syncFood();
-            syncWorkoutsInFolders();
+            const sync = async () => {
+                await syncSavedWorkouts();
+                await syncFood();
+                await syncNutrients();
+                await syncWorkouts();
+                syncWorkoutsInFolders();
+            }
+            
+            sync()
         }
     }, [isConnected, isAuthenticated, hasSynced]);
 
     useEffect(() => {
         //clearAsyncStorage()
     })
+
+    // listen for firebase.logOut and navigate to unauthenticated screen if called
+    useEffect(() => {
+        const unsubscribe = FIREBASE_AUTH.onAuthStateChanged((user) => {
+            if (!user && isConnected) {
+                setIsAuthenticated(false)
+            }
+          });
+      
+          // Clean up the subscription
+          return () => unsubscribe();
+    }, [navigationRef])
 
     const handleNavigation = () => {
         // Handles the logic for navigation based on language and authentication
@@ -364,12 +382,14 @@ function App() {
                 <UnauthenticatedTabNavigator />
             ) : setupRan && isAuthenticated ? (
                 <AuthenticatedTabNavigator setupRan={setupRan} />
-            ) : setupRan && !isAuthenticated ? (
-                <BiometricsFailed />
-            ) : !isEmailVerified ? (
+            ) : !isEmailVerified && user ? (
                 <EmailNotVerified />
-            ) : (
+            ) : setupRan && !isAuthenticated && user ? (
+                <BiometricsFailed />
+            )  : user ? (
                 <SetupPage />
+            ): (
+                <UnauthenticatedTabNavigator />
             );
         }
     };
@@ -407,7 +427,7 @@ function App() {
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />
                 
-                <NavigationContainer>{handleNavigation()}</NavigationContainer>
+                <NavigationContainer ref={navigationRef}>{handleNavigation()}</NavigationContainer>
             </GestureHandlerRootView>
         </GlobalContext.Provider>
     );

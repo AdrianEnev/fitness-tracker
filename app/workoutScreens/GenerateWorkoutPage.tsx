@@ -14,8 +14,11 @@ import GenerateWorkoutModal from '../modals/GeneratingWorkoutModal'
 import { BlurView } from 'expo-blur'
 import addGeneratedWorkoutLocally from '../useWorkout/useAddGeneratedWorkoutLocally'
 import GlobalContext from '../../GlobalContext'
+import { useTranslation } from 'react-i18next'
 
 const GenerateWorkoutPage = ({navigation, route}: any) => {
+
+    const {t} = useTranslation();
 
     const {folder = null} = route.params || {};
 
@@ -221,13 +224,13 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
 
                 <Pressable style={tw`w-[30%] h-[60%] flex flex-row items-center gap-x-1 mb-2`} onPress={previousPage}>
                     <Ionicons name='arrow-back-outline' size={32} color='white'/>
-                    <Text style={tw`text-white font-medium text-2xl`}>Back</Text>
+                    <Text style={tw`text-white font-medium text-2xl`}>{t(`back`)}</Text>
                 </Pressable>
 
                 <Pressable style={tw`bg-white rounded-2xl w-[50%] h-[55%] flex flex-row pl-4 pr-2 items-center justify-between mb-2`} onPress={() => {
                     nextPage();
                 }}>
-                    <Text style={tw`font-medium text-xl`}>{currentPage === 5 ? 'Finish' : 'Next'}</Text>
+                    <Text style={tw`font-medium text-xl`}>{currentPage === 5 ? t(`finish`) : t(`next`)}</Text>
                     <Ionicons name='arrow-forward-outline' size={32}/>
                 </Pressable>
 
