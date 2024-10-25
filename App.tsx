@@ -170,6 +170,9 @@ function App() {
 
     const [hasSynced, setHasSynced] = useState(false);
 
+    const [generatingWorkout, setGeneratingWorkout] = useState(false);
+    const [generatingWorkoutInFolder, setGeneratingWorkoutInFolder] = useState('');
+
     const fetchData = async () => {
         try {
             const setupHasRanLocally = await checkUserInfoCollectionLocally();
@@ -422,7 +425,8 @@ function App() {
         <GlobalContext.Provider value={{
             setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber,
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
-            internetConnected: isConnected, isAccountDeleted, setIsAccountDeleted
+            internetConnected: isConnected, isAccountDeleted, setIsAccountDeleted, generatingWorkout, setGeneratingWorkout,
+            generatingWorkoutInFolder, setGeneratingWorkoutInFolder
         }}>
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />

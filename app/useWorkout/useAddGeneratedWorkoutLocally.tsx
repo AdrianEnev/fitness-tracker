@@ -5,7 +5,7 @@ import generateID from "../use/useGenerateID";
 import { collection, doc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 
-const addGeneratedWorkoutLocally = async (generatedWorkout: any, internetConnected: boolean, folder?: any) => {
+const addGeneratedWorkoutLocally = async (generatedWorkout: any, internetConnected: boolean, setGeneratingWorkout: any, folder?: any) => {
     const usedColours: string[] = [];
 
     const getUniqueColour = () => {
@@ -124,8 +124,11 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, internetConnect
                 });
                 await AsyncStorage.setItem(`folders_${email}`, JSON.stringify(folders));
             }
+
+
         }
 
+        setGeneratingWorkout(false)
         console.log('Generated workouts saved locally:', workouts);
     } catch (err) {
         console.error('Error saving generated workouts locally:', err);

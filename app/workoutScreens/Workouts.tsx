@@ -1,4 +1,4 @@
-import { View, Text, Button, SafeAreaView, TouchableOpacity, FlatList, Pressable, Alert, TextInput } from 'react-native'  
+import { View, Text, Button, SafeAreaView, TouchableOpacity, FlatList, Pressable, Alert, TextInput, ActivityIndicator } from 'react-native'  
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import tw from 'twrnc'
 import i18next from '../../services/i18next';
@@ -17,12 +17,14 @@ import GlobalContext from '../../GlobalContext';
 import { copySelectedWorkouts, cutSelectedWorkouts, deleteSelectedWorkouts, pasteCopiedWorkouts, pasteCutWorkouts } from '../useWorkout/handleSelectionMode';
 import PasteWorkoutsModal from '../modals/PasteWorkoutsModal';
 import { BlurView } from 'expo-blur';
+import GenerateWorkoutModal from '../modals/GeneratingWorkoutModal';
+import GeneratingWorkoutAnimationModal from '../modals/GeneratingWorkoutAnimationModal';
 
 const Workouts = ({navigation}: any) => {
 
     const [initialLoad, setInitialLoad] = useState(true);
 
-    const { internetConnected } = useContext(GlobalContext);
+    const { internetConnected, generatingWorkoutInFolder, generatingWorkout } = useContext(GlobalContext);
 
     const [workouts, setWorkouts] = useState<Workout[]>([]);
     const [firebaseWorkouts, setFirebaseWorkouts] = useState<Workout[]>([]);
@@ -342,7 +344,10 @@ const Workouts = ({navigation}: any) => {
                         navigation.navigate('Папка', {folderId: folder.id})
                     }
                 }} 
-                onLongPress={() => renameFolder(folder.id)}
+                onLongPress={() => {
+                    if (generatingWorkout) return
+                    renameFolder(folder.id)
+                }}
             >
                 <View style={tw`flex flex-row justify-between`}>
                     <View style={tw`flex-1 flex-row`}>
@@ -393,11 +398,20 @@ const Workouts = ({navigation}: any) => {
     }
 
     const [isPasteWorkoutsModalVisible, setIsPasteWorkoutsModalVisible] = useState(false)
+    const [isGeneratingWorkoutAnimationModalVisible, setIsGeneratingWorkoutAnimationModalVisible] = useState(false);
+
+    useEffect(() => {
+        
+        if (!generatingWorkout) {
+            setIsGeneratingWorkoutAnimationModalVisible(false)
+        }
+
+    }, [generatingWorkout])
 
     return (
         <>
 
-            { isPasteWorkoutsModalVisible && (
+            { (isPasteWorkoutsModalVisible || isGeneratingWorkoutAnimationModalVisible) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -415,8 +429,29 @@ const Workouts = ({navigation}: any) => {
                     pasteCutWorkouts={pasteCutWorkoutsFunc}
                 />
 
+                <GeneratingWorkoutAnimationModal
+
+                    isGeneratingWorkoutAnimationModalVisible={isGeneratingWorkoutAnimationModalVisible}
+                    setIsGeneratingWorkoutAnimationModalVisible={setIsGeneratingWorkoutAnimationModalVisible}
+                    generatingWorkoutInFolder={generatingWorkoutInFolder}
+                    
+                />
+
                 <Pressable style={tw`bg-gray-100 h-[15%] w-full flex justify-end`} onPress={() => setIsPasteWorkoutsModalVisible(true)}>
-                    <Text style={tw`text-4xl font-medium text-black m-3`}>{t('workouts')}</Text>
+                    <View style={tw`flex flex-row justify-between`}>
+                        <Text style={tw`text-4xl font-medium text-black m-3`}>{t('workouts')}</Text>
+
+                        {(generatingWorkout) &&  (
+                            <Pressable style={tw`w-12 h-12 mr-3 mt-3`} onPress={() => {
+                                setIsPasteWorkoutsModalVisible(false)
+                                setIsGeneratingWorkoutAnimationModalVisible(true)
+                            }}>
+                                <ActivityIndicator size="large" color="#fd1c47"/>
+                            </Pressable>
+                        )}
+                        
+                        
+                    </View>
                 </Pressable>
 
                 <View style={tw`w-[96%] h-[71%] mt-4 mx-2`}>

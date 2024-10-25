@@ -1,4 +1,4 @@
-import { View, Text, Pressable, FlatList, Alert } from 'react-native';
+import { View, Text, Pressable, FlatList, Alert, ActivityIndicator } from 'react-native';
 import React, { useCallback, useContext, useEffect, useState } from 'react';
 import tw from 'twrnc';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -15,6 +15,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import GlobalContext from '../../GlobalContext';
 import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import GeneratingWorkoutAnimationModal from '../modals/GeneratingWorkoutAnimationModal';
 
 const WorkoutFolder = ({ route, navigation }: any) => {
     const { folderId } = route.params;
@@ -24,11 +25,10 @@ const WorkoutFolder = ({ route, navigation }: any) => {
     const [viewWorkoutButtonDisabled, setViewWorkoutButtonDisabled] = useState(false);
     const [selectedWorkouts, setSelectedWorkouts] = useState<any[]>([]);
     const [selectionMode, setSelectionMode] = useState(false);
-    const [isPasteWorkoutsInFolderModalVisible, setIsPasteWorkoutsInFolderModalVisible] = useState(false);
 
     const [userWorkoutsCollectionRef, setUserWorkoutsCollectionRef] = useState<any>();
 
-    const {internetConnected} = useContext(GlobalContext)
+    const {internetConnected, generatingWorkout, generatingWorkoutInFolder, setGeneratingWorkoutInFolder} = useContext(GlobalContext)
 
     const fetchFolderDetails = async () => {
         try {
@@ -265,11 +265,20 @@ const WorkoutFolder = ({ route, navigation }: any) => {
         pasteCopiedWorkoutsInFolder(folder.id);
     };
 
-    
+    const [isPasteWorkoutsInFolderModalVisible, setIsPasteWorkoutsInFolderModalVisible] = useState(false);
+    const [isGeneratingWorkoutAnimationModalVisible, setIsGeneratingWorkoutAnimationModalVisible] = useState(false)
+
+    useEffect(() => {
+        
+        if (!generatingWorkout) {
+            setIsGeneratingWorkoutAnimationModalVisible(false)
+        }
+
+    }, [generatingWorkout])
 
     return (
         <>
-            {isPasteWorkoutsInFolderModalVisible && (
+            {(isPasteWorkoutsInFolderModalVisible || isGeneratingWorkoutAnimationModalVisible) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -286,8 +295,27 @@ const WorkoutFolder = ({ route, navigation }: any) => {
                     pasteCutWorkouts={pasteCutWorkoutsFunc}
                 />
 
+                <GeneratingWorkoutAnimationModal
+
+                    isGeneratingWorkoutAnimationModalVisible={isGeneratingWorkoutAnimationModalVisible}
+                    setIsGeneratingWorkoutAnimationModalVisible={setIsGeneratingWorkoutAnimationModalVisible}
+                    generatingWorkoutInFolder={generatingWorkoutInFolder}
+
+                />
+
                 <Pressable style={tw`bg-gray-100 h-[15%] w-full flex justify-end`} onPress={() => setIsPasteWorkoutsInFolderModalVisible(true)}>
-                    <Text style={tw`text-4xl font-medium text-black m-3`}>{folder?.title}</Text>
+                    <View style={tw`flex flex-row justify-between`}>
+                        <Text style={tw`text-4xl font-medium text-black m-3`}>{folder?.title}</Text>
+
+                        {(generatingWorkout) &&  (
+                                <Pressable style={tw`w-12 h-12 mr-3 mt-3`} onPress={() => {
+                                    setIsPasteWorkoutsInFolderModalVisible(false)
+                                    setIsGeneratingWorkoutAnimationModalVisible(true)
+                                }}>
+                                    <ActivityIndicator size="large" color="#fd1c47"/>
+                                </Pressable>
+                        )}
+                    </View>
                 </Pressable>
 
                 <View style={tw`w-full h-[73%] p-3`}>

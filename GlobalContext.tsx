@@ -1,5 +1,4 @@
 import React from 'react';
-import { GoalNutrients } from './interfaces';
 
 interface GlobalContextType {
     profilePicture: string;
@@ -9,11 +8,15 @@ interface GlobalContextType {
     faceIdEnabled: boolean;
     internetConnected: boolean;
     isAccountDeleted: boolean;
+    generatingWorkout: boolean;
+    generatingWorkoutInFolder: any;
     setFaceIdEnabled: (value: boolean) => void;
     setReceiveFriendRequests: (value: boolean) => void;
     setProfilePicture: (profilePicture: string) => void;
     setSetupRan: (value: boolean) => void;
     setIsAccountDeleted: (value: boolean) => void;
+    setGeneratingWorkout: (value: boolean) => void;
+    setGeneratingWorkoutInFolder: (value: any) => void;
 }
 
 const defaultValues: GlobalContextType = {
@@ -24,11 +27,16 @@ const defaultValues: GlobalContextType = {
     faceIdEnabled: false,
     internetConnected: false,
     isAccountDeleted: false,
+    generatingWorkout: false,
+    generatingWorkoutInFolder: '',
     setFaceIdEnabled: () => {},
     setReceiveFriendRequests: () => {},
     setProfilePicture: () => {},
     setSetupRan: () => {},
     setIsAccountDeleted: () => {},
+    setGeneratingWorkout: () => {},
+    setGeneratingWorkoutInFolder: () => {},
+
 };
 
 const GlobalContext = React.createContext<GlobalContextType>(defaultValues);

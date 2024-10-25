@@ -22,7 +22,11 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
 
     const {folder = null} = route.params || {};
 
-    const {internetConnected} = useContext(GlobalContext)
+    const {internetConnected, setGeneratingWorkout, setGeneratingWorkoutInFolder} = useContext(GlobalContext)
+
+    function sleep(ms: number): Promise<void> {
+        return new Promise(resolve => setTimeout(resolve, ms));
+    }
 
     const nextPage = async () => {
         
@@ -116,16 +120,23 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
                     break;
             }
 
-            setIsGenerateWorkoutModalVisible(true);
+            //setIsGenerateWorkoutModalVisible(true);
+            setGeneratingWorkout(true)
 
-            const generatedWorkout = await generateWorkout(level, goal, numberOfDays, location, specificBodyparts, group, equipment);
-            await addGeneratedWorkoutLocally(generatedWorkout, internetConnected, folder)
+            if (folder) {
+                setGeneratingWorkoutInFolder(folder)
+            }
             
             if (folder) {
                 navigation.navigate('Тренировки');
             }else{
                 navigation.goBack();
             }
+
+            const generatedWorkout = await generateWorkout(level, goal, numberOfDays, location, specificBodyparts, group, equipment);
+            await addGeneratedWorkoutLocally(generatedWorkout, internetConnected, setGeneratingWorkout, folder)
+            
+            
         }
 
     }

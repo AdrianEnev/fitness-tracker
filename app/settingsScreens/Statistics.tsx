@@ -383,7 +383,7 @@ const Statistics = () => {
 
             <View style={tw`h-full w-full bg-white`}>
                 <Text style={tw`m-3 text-lg font-medium`}>Weight lifted: {weightLifted} KG</Text>
-                <Text style={tw`m-3 text-lg font-medium`}>Брой Тренировки: {workoutsFinished}</Text>
+                <Text style={tw`m-3 text-lg font-medium`}>Number of workouts: {workoutsFinished}</Text>
                 <Text style={tw`m-3 text-lg font-medium`}>Total workouts duration: {formattedTotalWorkoutsDuration}</Text>
                 <Text style={tw`m-3 text-lg font-medium`}>Average workout duration: {formattedAverageWorkoutDuration}</Text>
                 <Text style={tw`m-3 text-lg font-medium`}>Last workout: {formattedLastWorkoutDate}</Text>
