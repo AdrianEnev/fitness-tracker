@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import generateID from '../use/useGenerateID';
 import { serverTimestamp } from 'firebase/firestore';
+import getEmail from '../use/useGetEmail';
 
 const endWorkoutLocally = async (exercises: any, workoutTitle: string, duration: any, id: any) => {
 
@@ -54,7 +55,8 @@ const endWorkoutLocally = async (exercises: any, workoutTitle: string, duration:
             });
         });
 
-        const statistics = await AsyncStorage.getItem('statistics');
+        const email = await getEmail();
+        const statistics = await AsyncStorage.getItem(`statistics_${email}`);
         const statisticsData = statistics ? JSON.parse(statistics) : { weightLifted: 0, finishedWorkouts: 0 };
 
         statisticsData.weightLifted += totalWeight;

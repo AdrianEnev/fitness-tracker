@@ -37,7 +37,7 @@ const Settings = ({navigation}: any) => {
         return (
             <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => {
 
-                if (title === t('stats') && !internetConnected) {
+                if (title === t('account') && !internetConnected) {
                     Vibration.vibrate();
                     return;
                 }
@@ -58,7 +58,6 @@ const Settings = ({navigation}: any) => {
                         <View style={tw`flex justify-center`}>
                             <Text style={tw`text-lg font-medium`}>{title}</Text>
                             {(
-                                title === t('stats') && !internetConnected || 
                                 title === t('friends') && !internetConnected || 
                                 title === t('account') && !internetConnected
                             ) && (

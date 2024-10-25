@@ -148,8 +148,9 @@ const deleteAccount = async (
     
                         AsyncStorage.removeItem(`username_${asyncStorageEmail}`)
                         AsyncStorage.removeItem(`email`)
+                        AsyncStorage.removeItem(`statistics_${asyncStorageEmail}`)
                         AsyncStorage.removeItem(`workouts_${asyncStorageEmail}`)
-                        AsyncStorage.removeItem(`saved_workouts_${asyncStorageEmail}`)
+                        AsyncStorage.removeItem(`savedWorkouts`)
                         AsyncStorage.removeItem(`goal_nutrients_${asyncStorageEmail}`)
     
                         // Reset GlobalContext to default values

@@ -4,6 +4,8 @@ import { collection, doc, getDocs, onSnapshot } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import getEmail from '../use/useGetEmail';
 
 const Statistics = () => {
 
@@ -18,11 +20,74 @@ const Statistics = () => {
     const userInfoCollectionRef = collection(userDocRef, "user_info");
     const statisticsDocRef = doc(userInfoCollectionRef, "statistics");
 
-    const [getTotalWorkoutsDurationRan, setGetTotalWorkoutsDurationRan] = useState(false);
-    const [getAverageWorkoutDurationRan, setGetAverageWorkoutDurationRan] = useState(false);
-    const [getLastWorkoutDateRan, setGetLastWorkoutDateRan] = useState(false);
+    const getTotalWorkoutsDurationAsyncStorage = async () => {
+        
+        const savedWorkoutsAS = await AsyncStorage.getItem('savedWorkouts')
 
-    const getTotalWorkoutsDuration = async () => {
+        if (!savedWorkoutsAS) {
+            setFormattedTotalWorkoutsDuration('No workouts')
+            return
+        }
+
+        const workoutsData = JSON.parse(savedWorkoutsAS);
+
+        if (!workoutsData || workoutsData.length === 0) {
+            setFormattedTotalWorkoutsDuration('No workouts')
+            return
+        }
+        
+        let totalSeconds = 0
+
+        workoutsData.forEach((workout: any) => {
+            if (workout.duration !== undefined) {
+                totalSeconds = totalSeconds + workout.duration;
+            }
+        });
+
+        const hours = Math.floor(totalSeconds / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        setFormattedTotalWorkoutsDuration(
+            (() => {
+                switch (true) {
+                    case hours === 0 && minutes === 0 && seconds === 1:
+                        return `${seconds} second`;
+                    case hours === 0 && minutes === 0 && seconds > 1:
+                        return `${seconds} seconds`;
+                    case hours === 0 && minutes === 1 && seconds === 1:
+                        return `${minutes} minute and ${seconds} second`;
+                    case hours === 0 && minutes > 1 && seconds === 1:
+                        return `${minutes} minutes and ${seconds} second`;
+                    case hours === 0 && minutes === 1 && seconds > 1:
+                        return `${minutes} minute and ${seconds} seconds`;
+                    case hours === 0 && minutes > 1 && seconds > 1:
+                        return `${minutes} minutes and ${seconds} seconds`;
+                    case hours === 1 && minutes === 1:
+                        return `${hours} hour and ${minutes} minute`;
+                    case hours === 1 && minutes > 1:
+                        return `${hours} hour and ${minutes} minutes`;
+                    case hours === 1 && minutes === 0 && seconds === 0:
+                        return `${hours} hour`;
+                    case hours > 1 && minutes === 0 && seconds === 0:
+                        return `${hours} hours`;
+                    case hours > 1 && minutes === 1:
+                        return `${hours} hours and ${minutes} minute`;
+                    case hours > 1 && minutes > 1:
+                        return `${hours} hours and ${minutes} minutes`;
+                    case hours === 1 && minutes === 0 && seconds >= 1:
+                        return `${hours} hour`;
+                    case hours > 1 && minutes === 0 && seconds >= 1:
+                        return `${hours} hours`;
+                    default:
+                        return `${hours} hours, ${minutes} minutes and ${seconds} seconds`;
+                }
+            })()
+        );
+
+    }
+
+    /*const getTotalWorkoutsDuration = async () => {
 
         const savedWorkoutsCollectionRef = collection(userDocRef, "saved_workouts");
     
@@ -31,7 +96,6 @@ const Statistics = () => {
             querySnapshot.forEach((doc) => {
                 totalDuration += doc.data().duration; // Accumulate durations
             });
-            
             
             // totalDuration is in seconds, convert it to hours, minutes and seconds
             const hours = Math.floor(totalDuration / 3600);
@@ -81,9 +145,79 @@ const Statistics = () => {
         });
     
         setGetTotalWorkoutsDurationRan(true);
-    };
+    };*/
 
-    const getAverageWorkoutDuration = async () => {
+    const getAverageWorkoutsDurationAsyncStorage = async () => {
+
+        // get total seconds
+        const savedWorkoutsAS = await AsyncStorage.getItem('savedWorkouts')
+        if (!savedWorkoutsAS) {
+            setFormattedAverageWorkoutDuration('No workouts')
+            return
+        }
+
+        const workoutsData = JSON.parse(savedWorkoutsAS);
+        if (!workoutsData || workoutsData.length === 0) {
+            setFormattedAverageWorkoutDuration('No workouts')
+            return
+        }
+        
+        let totalSeconds = 0
+        workoutsData.forEach((workout: any) => {
+            if (workout.duration !== undefined) {
+                totalSeconds = totalSeconds + workout.duration;
+            }
+        });
+
+        let workoutCount = 0
+        workoutsData.forEach(() => {
+            workoutCount = workoutCount + 1
+        });
+
+        const averageDuration = totalSeconds / workoutCount;
+        const hours = Math.floor(averageDuration / 3600) || 0;
+        const minutes = Math.floor((averageDuration % 3600) / 60) || 0;
+        const seconds = averageDuration % 60 || 0;
+
+        setFormattedAverageWorkoutDuration(
+            (() => {
+                switch (true) {
+                    case hours === 0 && minutes === 0 && seconds === 1:
+                        return `${seconds} second`;
+                    case hours === 0 && minutes === 0 && seconds > 1:
+                        return `${seconds} seconds`;
+                    case hours === 0 && minutes === 1 && seconds === 1:
+                        return `${minutes} minute and ${seconds} second`;
+                    case hours === 0 && minutes > 1 && seconds === 1:
+                        return `${minutes} minutes and ${seconds} second`;
+                    case hours === 0 && minutes === 1 && seconds > 1:
+                        return `${minutes} minute and ${seconds} seconds`;
+                    case hours === 0 && minutes > 1 && seconds > 1:
+                        return `${minutes} minutes and ${seconds} seconds`;
+                    case hours === 1 && minutes === 1:
+                        return `${hours} hour and ${minutes} minute`;
+                    case hours === 1 && minutes > 1:
+                        return `${hours} hour and ${minutes} minutes`;
+                    case hours === 1 && minutes === 0 && seconds === 0:
+                        return `${hours} hour`;
+                    case hours > 1 && minutes === 0 && seconds === 0:
+                        return `${hours} hours`;
+                    case hours > 1 && minutes === 1:
+                        return `${hours} hours and ${minutes} minute`;
+                    case hours > 1 && minutes > 1:
+                        return `${hours} hours and ${minutes} minutes`;
+                    case hours === 1 && minutes === 0 && seconds >= 1:
+                        return `${hours} hour`;
+                    case hours > 1 && minutes === 0 && seconds >= 1:
+                        return `${hours} hours`;
+                    default:
+                        return `${hours} hours, ${minutes} minutes and ${seconds} seconds`;
+                }
+            })()
+        );
+    }
+
+    /*const getAverageWorkoutDuration = async () => {
         const savedWorkoutsCollectionRef = collection(userDocRef, "saved_workouts");
 
         getDocs(savedWorkoutsCollectionRef).then((querySnapshot) => {
@@ -142,9 +276,36 @@ const Statistics = () => {
         });
 
         setGetAverageWorkoutDurationRan(true);
-    };
+    };*/
 
-    const getLastWorkoutDate = async () => {
+    const getLastWorkoutDateAsyncStorage = async () => {
+        const savedWorkoutsAS = await AsyncStorage.getItem('savedWorkouts')
+        if (!savedWorkoutsAS) {
+            setFormattedLastWorkoutDate('No workouts')
+            return
+        }
+
+        const workoutsData = JSON.parse(savedWorkoutsAS);
+        if (!workoutsData || workoutsData.length === 0) {
+            setFormattedLastWorkoutDate('No workouts')
+            return
+        }
+
+        let lastWorkoutDate = new Date(0);
+
+        workoutsData.forEach((workout: any) => {
+            const workoutDate = new Date(workout.created);
+            
+            if (workoutDate > lastWorkoutDate) {
+                lastWorkoutDate = workoutDate;
+            }
+        });
+
+        setFormattedLastWorkoutDate(lastWorkoutDate.toString());
+
+    }
+
+    /*const getLastWorkoutDate = async () => {
         const savedWorkoutsCollectionRef = collection(userDocRef, "saved_workouts");
 
         getDocs(savedWorkoutsCollectionRef).then((querySnapshot) => {
@@ -173,45 +334,45 @@ const Statistics = () => {
         });
 
         setGetLastWorkoutDateRan(true);
+    }*/
+
+    const getWeightLiftedAndFinishedWorkouts = async () => {
+
+        const email = await getEmail();
+        //const statisticsAS = await AsyncStorage.getItem(`statistics_${email}`);
+        const statisticsAS = await AsyncStorage.getItem(`statistics`);
+
+        if (!statisticsAS) return
+
+        const statistics = JSON.parse(statisticsAS)
+
+        setWorkoutsFinished(statistics.finishedWorkouts)
+        setWeightLifted(statistics.weightLifted)
+
     }
 
-
     useEffect(() => {
-        const unsubscribe = onSnapshot(statisticsDocRef, (doc) => {
+        
+        /*const unsubscribe = onSnapshot(statisticsDocRef, (doc) => {
             setWeightLifted(doc.data()?.weightLifted || 0);
             setWorkoutsFinished(doc.data()?.finishedWorkouts || 0);
-        });
-
-        if (!getTotalWorkoutsDurationRan) {
-            getTotalWorkoutsDuration();
-        }
-
-        if (!getAverageWorkoutDurationRan) {
-            getAverageWorkoutDuration();
-        }
-
-        if (!getLastWorkoutDateRan) {
-            getLastWorkoutDate();
-
-        }
+        });*/
+        getWeightLiftedAndFinishedWorkouts();
+        
+        //getTotalWorkoutsDuration();
+        getTotalWorkoutsDurationAsyncStorage();
+    
+        //getAverageWorkoutDuration();
+        getAverageWorkoutsDurationAsyncStorage();
+    
+        //getLastWorkoutDate();
+        getLastWorkoutDateAsyncStorage();
 
         // Cleanup function
-        return () => unsubscribe();
+        //return () => unsubscribe();
     }, []);
 
     const {t} = useTranslation();
-
-
-
-    const barData1 = [
-        {value: 250, label: 'M'},
-        {value: 500, label: 'T', frontColor: '#177AD5'},
-        {value: 745, label: 'W', frontColor: '#177AD5'},
-        {value: 320, label: 'T'},
-        {value: 600, label: 'F', frontColor: '#177AD5'},
-        {value: 256, label: 'S'},
-        {value: 300, label: 'S'},
-      ];
     
     return (
         <View style={tw`h-full`}>
@@ -223,8 +384,6 @@ const Statistics = () => {
             <View style={tw`h-full w-full bg-white`}>
                 <Text style={tw`m-3 text-lg font-medium`}>Weight lifted: {weightLifted} KG</Text>
                 <Text style={tw`m-3 text-lg font-medium`}>Брой Тренировки: {workoutsFinished}</Text>
-                <Text style={tw`m-3 text-lg font-medium`}>Total-weight-lifted: {weightLifted} KG</Text>
-                <Text style={tw`m-3 text-lg font-medium`}>Number-of-workouts: {workoutsFinished}</Text>
                 <Text style={tw`m-3 text-lg font-medium`}>Total workouts duration: {formattedTotalWorkoutsDuration}</Text>
                 <Text style={tw`m-3 text-lg font-medium`}>Average workout duration: {formattedAverageWorkoutDuration}</Text>
                 <Text style={tw`m-3 text-lg font-medium`}>Last workout: {formattedLastWorkoutDate}</Text>
