@@ -1,5 +1,12 @@
 const useGenerateWorkout = async (
-    experienceLevel: any, primaryGoal: any, numberOfDays: any, workoutLocation: any, specificBodyparts: any, equipmentGroup: any, equipment: any
+    experienceLevel: any, 
+    primaryGoal: any, 
+    numberOfDays: any, 
+    workoutLocation: any, 
+    specificBodyparts: any, 
+    equipmentGroup: any, 
+    equipment: any,
+    language: any
 ) => {
 
     console.log('useGenerateWorkout called')
@@ -31,6 +38,8 @@ const useGenerateWorkout = async (
     If an exercise requires bodyweight, the weight value should be set to 0.
     Do not add any comments and if you think the weight should be adjusted according to my one rep max, set the weight to whatever you think would suit my current level based on the information I've given you.
     Try not to overshoot with the weight on single-arm exercises.
+    The names of the days and exercises should be in this language: ${language}.
+    
 
     Please provide the workout plan in the following JSON format:
     {
@@ -67,7 +76,7 @@ const useGenerateWorkout = async (
     }
     `;
 
-    console.log(RAW_TEXT);
+    console.log("Generating workout...");
 
     const raw = JSON.stringify({
         "user_app_id": {

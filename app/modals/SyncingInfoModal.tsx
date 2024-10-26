@@ -2,6 +2,7 @@ import { View, Text, Modal, Pressable, Keyboard, Dimensions } from 'react-native
 import React from 'react'
 import tw from 'twrnc'
 import { Swing } from 'react-native-animated-spinkit'
+import Ionicons from '@expo/vector-icons/Ionicons';
 
 interface ScanFoodModalProps {
     isSyncingInfoModalVisible: boolean;
@@ -26,17 +27,31 @@ const SyncingInfoModal: React.FC<ScanFoodModalProps> = ({
             }}
             >
                 <View style={tw`flex-1 justify-center items-center mx-3`}>
-                    <Pressable style={tw`bg-white w-[80%] h-[30%] rounded-[30px] pt-3 px-2`} onPress={Keyboard.dismiss}>
 
-                        <View style={tw`flex-1 justify-center items-center mt-9`}>
+                    <View style={tw`bg-white w-[96%] h-[35%] rounded-[30px] pt-3 px-2`}>
+
+                        <View style={tw`absolute top-2 left-2`}>
+                            <Ionicons name='help-circle-outline' size={48} color='#3b82f6' />
+                        </View>
+                        <Pressable style={tw`absolute top-2 right-2`}
+                            onPress={() => {
+                                setIsSyncingInfoModalVisible(false)
+                            }}
+                        >
+                            <Ionicons name='close-circle-outline' size={48} color='#f87171' />
+                        </Pressable>
+
+                        <View style={tw`flex-1 justify-center items-center mt-14`}>
                             <Swing color={`#3d5875`} size={thirtyPercentScreenWidth} />
                         </View>
                             
-                        <View style={tw`flex-1 justify-end items-center mb-3`}>
+                        <View style={tw`flex-1 justify-end items-center mb-5`}>
                             <Text style={tw`text-2xl font-bold text-[#3d5875]`}>Syncing Info...</Text>
                             <Text style={tw`text-xl font-medium text-[#3d5875] mt-[-4px]`}>This may take a while!</Text>
                         </View>
-                    </Pressable>
+                    </View>
+
+                    
                 </View>
         </Modal>
     )

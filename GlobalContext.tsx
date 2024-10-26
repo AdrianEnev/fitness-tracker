@@ -10,6 +10,7 @@ interface GlobalContextType {
     isAccountDeleted: boolean;
     generatingWorkout: boolean;
     generatingWorkoutInFolder: any;
+    syncingInfoRunning: any;
     setFaceIdEnabled: (value: boolean) => void;
     setReceiveFriendRequests: (value: boolean) => void;
     setProfilePicture: (profilePicture: string) => void;
@@ -17,6 +18,7 @@ interface GlobalContextType {
     setIsAccountDeleted: (value: boolean) => void;
     setGeneratingWorkout: (value: boolean) => void;
     setGeneratingWorkoutInFolder: (value: any) => void;
+    setSyncingInfoRunning: (value: any) => void;
 }
 
 const defaultValues: GlobalContextType = {
@@ -29,6 +31,8 @@ const defaultValues: GlobalContextType = {
     isAccountDeleted: false,
     generatingWorkout: false,
     generatingWorkoutInFolder: '',
+    syncingInfoRunning: false,
+    setSyncingInfoRunning: () => {},
     setFaceIdEnabled: () => {},
     setReceiveFriendRequests: () => {},
     setProfilePicture: () => {},

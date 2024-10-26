@@ -35,6 +35,7 @@ import syncNutrients from './app/syncData/useSyncNutrients';
 import syncFood from './app/syncData/useSyncFood';
 import syncWorkoutsInFolders from './app/syncData/useSyncWorkoutsInFolders';
 import { useNavigationContainerRef } from '@react-navigation/native';
+import syncInformation from './app/use/useSyncInfo';
 
 const Stack = createStackNavigator();
 
@@ -172,6 +173,8 @@ function App() {
 
     const [generatingWorkout, setGeneratingWorkout] = useState(false);
     const [generatingWorkoutInFolder, setGeneratingWorkoutInFolder] = useState('');
+
+    const [syncingInfoRunning, setSyncingInfoRunning] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -342,15 +345,12 @@ function App() {
         if (isConnected && isAuthenticated && !hasSynced) {
             setHasSynced(true);
 
-            const sync = async () => {
-                await syncSavedWorkouts();
-                await syncFood();
-                await syncNutrients();
-                await syncWorkouts();
-                syncWorkoutsInFolders();
+            const query = async () => {
+                setSyncingInfoRunning(true)
+                await syncInformation();
+                setSyncingInfoRunning(false)
             }
-            
-            sync()
+            query();
         }
     }, [isConnected, isAuthenticated, hasSynced]);
 
@@ -426,7 +426,7 @@ function App() {
             setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber,
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
             internetConnected: isConnected, isAccountDeleted, setIsAccountDeleted, generatingWorkout, setGeneratingWorkout,
-            generatingWorkoutInFolder, setGeneratingWorkoutInFolder
+            generatingWorkoutInFolder, setGeneratingWorkoutInFolder, syncingInfoRunning, setSyncingInfoRunning
         }}>
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />

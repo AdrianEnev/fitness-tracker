@@ -40,14 +40,14 @@ const GeneratingWorkoutAnimationModal: React.FC<ScanFoodModalProps> = ({
                             <Text style={tw`text-2xl font-bold text-[#3d5875]`}>{generatingWorkoutInFolder ? "in '" + generatingWorkoutInFolder.title + "'" : "..."}</Text>
                             <Text style={tw`text-xl font-medium text-[#3d5875] mt-1`}>This may take a while!</Text>
                         </View>
+                    </Pressable>
 
-                        <Pressable style={tw`w-[98%] h-12 bg-gray-200 shadow-md rounded-xl flex items-center justify-center mb-5 mt-[-5px] self-center`}
+                    <Pressable style={tw`w-[98%] h-12 bg-gray-200 shadow-md rounded-xl flex items-center justify-center mb-5 mt-[-5px] self-center`}
                             onPress={() => {
                                 setIsGeneratingWorkoutAnimationModalVisible(false)
                             }}
                         >
                             <Text style={tw`text-2xl font-medium`}>Hide</Text>
-                        </Pressable>
                     </Pressable>
                 </View>
         </Modal>

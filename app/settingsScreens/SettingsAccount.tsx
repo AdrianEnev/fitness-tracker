@@ -1,4 +1,4 @@
-import { View, Text, Button, Pressable, Image, Alert, Switch, Vibration } from 'react-native'
+import { View, Text, Button, Pressable, Image, Alert, Switch, Vibration, ActivityIndicator } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 import tw from 'twrnc'
@@ -17,12 +17,13 @@ import getEmail from '../use/useGetEmail'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from 'expo-blur'
 import SyncingInfoModal from '../modals/SyncingInfoModal'
+import syncInformation from '../use/useSyncInfo'
 
 const SettingsAccount = ({navigation}: any) => {
 
     const 
     { receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled, internetConnected,
-        setProfilePicture, setSetupRan, setIsAccountDeleted } = useContext(GlobalContext);
+        setProfilePicture, setSetupRan, setIsAccountDeleted, syncingInfoRunning, setSyncingInfoRunning } = useContext(GlobalContext);
 
     const logOut = () => {
 
@@ -184,10 +185,19 @@ const SettingsAccount = ({navigation}: any) => {
                             )}
                         </View>
                     </View>
+                    
+                    {(title != t(`sync-info`) || !syncingInfoRunning) && (
+                        <View style={tw`flex justify-center`}>
+                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
+                        </View>
+                    )}
 
-                    <View style={tw`flex justify-center`}>
-                        <Ionicons name='chevron-forward' size={24} color='#6b7280' />
-                    </View>
+                    {(title == t(`sync-info`) && syncingInfoRunning) && (
+                        <View style={tw`flex justify-center`}>
+                            <ActivityIndicator size="small" color="#6b7280"/>
+                        </View>
+                    )}
+                    
 
                 </View>
             </Pressable>
@@ -287,7 +297,7 @@ const SettingsAccount = ({navigation}: any) => {
 
     }, [])
 
-    const [isSyncingInfoModalVisible, setIsSyncingInfoModalVisible] = useState(false)
+    const [isSyncingInfoModalVisible, setIsSyncingInfoModalVisible] = useState(true)
 
     return (
         <>
@@ -366,6 +376,17 @@ const SettingsAccount = ({navigation}: any) => {
                         }else{
                             Vibration.vibrate()
                         }
+                        
+                    })}
+                    {button(t('sync-info'), 'sync-outline', 'indigo-300', '#4f46e5', 34, async () => {
+
+                        if (syncingInfoRunning) return
+
+                        setSyncingInfoRunning(true)
+                        setIsSyncingInfoModalVisible(true)
+                        await syncInformation();
+                        setIsSyncingInfoModalVisible(false)
+                        setSyncingInfoRunning(false)
                         
                     })}
 

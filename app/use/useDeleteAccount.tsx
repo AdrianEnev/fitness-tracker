@@ -12,6 +12,7 @@ import syncNutrients from '../syncData/useSyncNutrients';
 import syncSavedWorkouts from '../syncData/useSyncSavedWorkouts';
 import syncWorkouts from '../syncData/useSyncWorkouts';
 import syncWorkoutsInFolders from '../syncData/useSyncWorkoutsInFolders';
+import syncInformation from './useSyncInfo';
 
 const changeUsername = async (user: any) => {
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -108,14 +109,6 @@ const deleteAccount = async (
                             },
                         ],
                     );
-
-                    const syncInformation = async () => {
-                        await syncFood()
-                        await syncNutrients()
-                        await syncSavedWorkouts()
-                        await syncWorkouts()
-                        syncWorkoutsInFolders()
-                    }
 
                     const proceedDeletion = async () => {
                         deleteUser(user).then(() => {

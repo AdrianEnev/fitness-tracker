@@ -15,6 +15,7 @@ import { BlurView } from 'expo-blur'
 import addGeneratedWorkoutLocally from '../useWorkout/useAddGeneratedWorkoutLocally'
 import GlobalContext from '../../GlobalContext'
 import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const GenerateWorkoutPage = ({navigation, route}: any) => {
 
@@ -24,9 +25,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
 
     const {internetConnected, setGeneratingWorkout, setGeneratingWorkoutInFolder} = useContext(GlobalContext)
 
-    function sleep(ms: number): Promise<void> {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
+    
 
     const nextPage = async () => {
         
@@ -120,6 +119,22 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
                     break;
             }
 
+            let language = i18next.language;
+
+            if (language == "en") {
+                language = "english"
+            }else if (language == "bg") {
+                language = "bulgarian"
+            }else if (language == "de") {
+                language = "german"
+            }else if (language == "rs") {
+                language = "russian"
+            }else if (language == "fr") {
+                language = "french"
+            }else {
+                language = "'no language was selected, proceed in english'"
+            }
+
             //setIsGenerateWorkoutModalVisible(true);
             setGeneratingWorkout(true)
 
@@ -133,7 +148,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
                 navigation.goBack();
             }
 
-            const generatedWorkout = await generateWorkout(level, goal, numberOfDays, location, specificBodyparts, group, equipment);
+            const generatedWorkout = await generateWorkout(level, goal, numberOfDays, location, specificBodyparts, group, equipment, language);
             await addGeneratedWorkoutLocally(generatedWorkout, internetConnected, setGeneratingWorkout, folder)
             
             
