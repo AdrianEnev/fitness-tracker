@@ -126,6 +126,15 @@ const ActiveWorkout = ({route, navigation}: any) => {
         updatedExercises.splice(index, 1);
         updatedUserInputs.splice(index, 1);
 
+        // Re-index the remaining exercises
+        updatedExercises.forEach((exercise: any, newIndex: number) => {
+            exercise.exerciseIndex = newIndex + 1;
+        });
+
+        updatedUserInputs.forEach((input: any, newIndex: number) => {
+            input.exerciseIndex = newIndex + 1;
+        });
+
         // Update the state
         setNewExercises(updatedExercises);
         setUserInputs(updatedUserInputs);

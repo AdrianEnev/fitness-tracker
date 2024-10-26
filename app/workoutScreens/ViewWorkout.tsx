@@ -274,22 +274,40 @@ const ViewWorkout = ({route, navigation}: any) => {
     };
 
     const deleteExercise = (exerciseId: any) => {
-
+        console.log('before deletion');
+        console.log(newExercises);
+    
         const updatedExercises = newExercises.filter((ex: any) => ex.id !== exerciseId);
         const updatedUserInputs = userInputs.filter((input: any) => input.id !== exerciseId);
     
+        // Re-index the remaining exercises
+        updatedExercises.forEach((exercise: any, index: number) => {
+            exercise.exerciseIndex = index + 1; 
+        });
+    
+        updatedUserInputs.forEach((input: any, index: number) => {
+            input.exerciseIndex = index + 1;
+        });
+    
+        console.log('after deletion');
+        console.log(updatedExercises);
+    
         setNewExercises(updatedExercises);
         setUserInputs(updatedUserInputs);
-
-        if (currentIndex !== newExercises.length - 1) {
-           setCurrentIndex(currentIndex + 1)  
-        }else{
-            setCurrentIndex(currentIndex - 1)
+    
+        // Find the index of the deleted exercise
+        const deletedIndex = newExercises.findIndex((ex: any) => ex.id === exerciseId);
+    
+        // Adjust currentIndex based on the deleted exercise's position
+        if (currentIndex > deletedIndex) {
+            setCurrentIndex(currentIndex - 1);
+        } else if (currentIndex === deletedIndex && currentIndex === newExercises.length) {
+            setCurrentIndex(currentIndex - 1); 
         }
-
-        console.log('deleted exercise')
-          
-    }
+    
+        console.log('deleted exercise');
+    };
+    
 
     const [isDeleteExerciseModalVisible, setIsDeleteExerciseModalVisible] = useState(false);
     const [currentExerciseId, setCurrentExerciseId] = useState('');
