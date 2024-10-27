@@ -108,6 +108,39 @@ const Register = ({navigation}: any) => {
     const [confirmPasswordCharacters, setConfirmPasswordCharacters] = useState(65);
 
     const [registerButtonDisabled, setRegisterButtonDisabled] = useState(false);
+    const [passwordStrength, setPasswordStrength] = useState('')
+    const [confirmPasswordStrength, setConfirmPasswordStrength] = useState('')
+
+    const checkPasswordStrength = (password: string): string => {
+
+        if (password.length <= 8) {
+            return 'weak';
+        }
+        if (password.length <= 12) {
+            let hasNumber = /\d/.test(password);
+            let hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+            if (hasNumber && hasSpecialChar) {
+                return 'strong';
+            } else if (hasNumber || hasSpecialChar) {
+                return 'decent';
+            } else {
+                return 'weak';
+            }
+        }
+        if (password.length > 12) {
+            let hasNumber = /\d/.test(password);
+            let hasSpecialChar = /[^A-Za-z0-9]/.test(password);
+            if (hasNumber && hasSpecialChar) {
+                return 'very strong';
+            } else if (hasNumber || hasSpecialChar) {
+                return 'good';
+            } else {
+                return 'decent';
+            }
+        }
+        return 'weak';
+    }
+
 
     useEffect(() => {
 
@@ -117,18 +150,23 @@ const Register = ({navigation}: any) => {
         setConfirmPasswordCharacters(65 - confirmPassword.length);
 
         // console log all asyncstorage items
-        AsyncStorage.getAllKeys().then(keys => {
+        /*AsyncStorage.getAllKeys().then(keys => {
             console.log(keys)
             return AsyncStorage.multiGet(keys)
         }).then(keyValue => {
                 console.log(keyValue)
-        })
+        })*/
 
         // clear all asyncstorage items
         /*AsyncStorage.clear().then(() => {
             console.log('cleared')
         })*/
 
+        const strength = checkPasswordStrength(password);
+        setPasswordStrength(strength)
+        
+        const confirmStrenght = checkPasswordStrength(confirmPassword);
+        setConfirmPasswordStrength(confirmStrenght)
 
     }, [password, confirmPassword])
     
@@ -172,7 +210,17 @@ const Register = ({navigation}: any) => {
                             <View style={tw`mb-2`}>
                                 
                                 <View style={tw`flex flex-row justify-between`}>
-                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('password')}</Text>
+
+                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>
+                                        {t('password')} <Text style={tw`${passwordStrength == "weak" ? "text-red-500" : 
+                                            passwordStrength == "decent" ? "text-yellow-500" : 
+                                            passwordStrength == "good" ? "text-orange-500" : 
+                                            passwordStrength == "strong" ? "text-green-500" : 
+                                            passwordStrength == "very strong" ? "text-blue-500" : 
+                                            ""
+                                        }`}>{password.length > 0 ? '(' + passwordStrength + ')' : ''}
+                                    </Text></Text>
+
                                     <Text style={tw`font-medium text-gray-400 mb-1 mr-2`}>{passwordCharacters}</Text>
                                 </View>
 
@@ -189,7 +237,16 @@ const Register = ({navigation}: any) => {
                             <View style={tw`mb-2`}>
 
                                 <View style={tw`flex flex-row justify-between`}>
-                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('confirm-password')}</Text>
+                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>
+                                        {t('confirm-password')} <Text style={tw`${confirmPasswordStrength == "weak" ? "text-red-500" : 
+                                            confirmPasswordStrength == "decent" ? "text-yellow-500" :
+                                            confirmPasswordStrength == "good" ? "text-orange-500" : 
+                                            confirmPasswordStrength == "strong" ? "text-green-500" : 
+                                            confirmPasswordStrength == "very strong" ? "text-blue-500" :
+                                            ""
+                                        }`}>{confirmPassword.length > 0 ? '(' + confirmPasswordStrength + ')' : ''}
+                                    </Text></Text>
+
                                     <Text style={tw`font-medium text-gray-400 mb-1 mr-2`}>{confirmPasswordCharacters}</Text>
                                 </View>
 
@@ -207,7 +264,7 @@ const Register = ({navigation}: any) => {
                                 onPress={() => {
                                     setRegisterButtonDisabled(true)
                                     signUp()
-                                }}>
+                                }} disabled={registerButtonDisabled}>
 
                                 <Text style={tw`text-2xl text-white`}>{t('register')}</Text>
 

@@ -167,7 +167,7 @@ function App() {
     const [localEmail, setLocalEmail] = useState<string | null>(null);
 
     const [localLanguageSet, setLocalLanguageSet] = useState(false);
-    const [emailVerifiedChanged, setEmailVerifiedChanged] = useState(false); // New state
+    const [emailVerifiedChanged, setEmailVerifiedChanged] = useState(false);
 
     const [hasSynced, setHasSynced] = useState(false);
 
@@ -383,7 +383,7 @@ function App() {
             // Authenticated or setup flow
             return isAccountDeleted ? (
                 <UnauthenticatedTabNavigator />
-            ) : setupRan && isAuthenticated ? (
+            ) : setupRan && isAuthenticated && user ? (
                 <AuthenticatedTabNavigator setupRan={setupRan} />
             ) : !isEmailVerified && user ? (
                 <EmailNotVerified />

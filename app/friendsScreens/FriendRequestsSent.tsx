@@ -107,7 +107,7 @@ const FriendRequestsSent = ({route, navigation}: any) => {
                     data={sentFriendRequests}
                     keyExtractor={(item) => item.id}
                     renderItem={({item}) => (
-                        <View style={tw`w-[96.5%] h-14 bg-white shadow-md border border-gray-200 rounded-xl mb-[2px] mt-3 mx-2 px-2 py-3 flex flex-row justify-between`}>
+                        <View style={tw`w-full h-14 bg-white shadow-md border border-gray-200 rounded-xl mb-[2px] px-2 py-3 flex flex-row justify-between`}>
                             
                             <Text style={tw`text-lg font-medium max-w-[90%]`} ellipsizeMode='tail' numberOfLines={1}>{item.username}</Text>
 

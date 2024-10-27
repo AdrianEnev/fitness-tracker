@@ -297,7 +297,7 @@ const SettingsAccount = ({navigation}: any) => {
 
     }, [])
 
-    const [isSyncingInfoModalVisible, setIsSyncingInfoModalVisible] = useState(true)
+    const [isSyncingInfoModalVisible, setIsSyncingInfoModalVisible] = useState(false)
 
     return (
         <>
