@@ -1,12 +1,12 @@
 const useGenerateWorkout = async (
-    experienceLevel: any, 
-    primaryGoal: any, 
-    numberOfDays: any, 
-    workoutLocation: any, 
-    specificBodyparts: any, 
-    equipmentGroup: any, 
-    equipment: any,
-    language: any
+  experienceLevel: any, 
+  primaryGoal: any, 
+  numberOfDays: any, 
+  workoutLocation: any, 
+  specificBodyparts: any, 
+  equipmentGroup: any, 
+  equipment: any,
+  language: any
 ) => {
 
     console.log('useGenerateWorkout called')
@@ -15,8 +15,6 @@ const useGenerateWorkout = async (
 
     const USER_ID = 'openai';    
     const APP_ID = 'chat-completion';
-
-    //${equipment ? `I have access to the following equpment: ${equipment}` : 'I have access to absolutely no equipment'}.
 
     const MODEL_ID = 'gpt-4-turbo';
     const MODEL_VERSION_ID = '182136408b4b4002a920fd500839f2c8'; 
@@ -38,7 +36,7 @@ const useGenerateWorkout = async (
     If an exercise requires bodyweight, the weight value should be set to 0.
     Do not add any comments and if you think the weight should be adjusted according to my one rep max, set the weight to whatever you think would suit my current level based on the information I've given you.
     Try not to overshoot with the weight on single-arm exercises.
-    The names of the days and exercises should be in this language: ${language}.
+    The names of the days and exercises should be in this language: ${language}. Only the name of a rest day should always remain "Rest Day" regardless of the language.
     
 
     Please provide the workout plan in the following JSON format:
@@ -102,35 +100,44 @@ const useGenerateWorkout = async (
         },
         body: raw
     };
-    
-    try {
-        const response = await fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", requestOptions);
-        const responseText = await response.text(); // Get raw response text
-        console.log('Raw response:', responseText); // Log raw response
-        const data = JSON.parse(responseText); // Attempt to parse JSON
-    
-        if (data.status.code !== 10000) {
-            console.log(data.status);
-            return null;
-        } else {
-            // Extract the embedded JSON string
-            const embeddedJsonString = data.outputs[0].data.text.raw;
-            // Remove the triple backticks and parse the JSON string
-            const cleanedJsonString = embeddedJsonString.replace(/```json|```/g, '').trim();
-            // Remove invalid characters
-            const validJsonString = cleanedJsonString.replace(/ per leg| per set for distance or time/g, '');
-            // Extract only the JSON part
-            const jsonStartIndex = validJsonString.indexOf('{');
-            const jsonEndIndex = validJsonString.lastIndexOf('}') + 1;
-            const jsonString = validJsonString.substring(jsonStartIndex, jsonEndIndex);
-            console.log('Extracted JSON string:', jsonString);
-            const workoutPlan = JSON.parse(jsonString);
-            return workoutPlan;
-        }
-    } catch (error) {
-        console.log('error', error);
-    }
 
+    
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 120000); 
+
+    try {
+      const response = await fetch("https://api.clarifai.com/v2/models/" + MODEL_ID + "/versions/" + MODEL_VERSION_ID + "/outputs", {
+        ...requestOptions,
+        signal: controller.signal,
+      });
+
+      const responseText = await response.text();
+      const data = JSON.parse(responseText); 
+
+      if (data.status.code !== 10000) {
+          console.log(data.status);
+          return null;
+      } else {
+          const embeddedJsonString = data.outputs[0].data.text.raw;
+          const cleanedJsonString = embeddedJsonString.replace(/```json|```/g, '').trim();
+          const validJsonString = cleanedJsonString.replace(/ per leg| per set for distance or time/g, '');
+          const jsonStartIndex = validJsonString.indexOf('{');
+          const jsonEndIndex = validJsonString.lastIndexOf('}') + 1;
+          const jsonString = validJsonString.substring(jsonStartIndex, jsonEndIndex);
+          const workoutPlan = JSON.parse(jsonString);
+          return workoutPlan;
+      }
+    } catch (error: any) {
+        if (error.name === 'AbortError') {
+          console.log('Workout generation timed out');
+          return null;
+        } else {
+          console.log('Error during workout generation:', error);
+          return null; 
+        }
+    } finally {
+      clearTimeout(timeoutId); 
+    }
 };
 
 export default useGenerateWorkout;

@@ -7,7 +7,6 @@ import { Friend } from '../../interfaces'
 import { FlatList } from 'react-native-gesture-handler'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
-import sendFriendRequest from '../use/useSendFriendRequest'
 import BottomNavigationBar from '../components/BottomNavigationBar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import getEmail from '../use/useGetEmail'
@@ -33,8 +32,6 @@ const AddFriends = ({route, navigation}: any) => {
     const [suggestedFriends, setSuggestedFriends] = useState<Friend[]>([]);
 
     const [searchingAnimation, setSearchingAnimation] = useState(false);
-
-    const [friendRequestButtonDisabled, setFriendRequestButtonDisabled] = useState(false);
 
     const userDisabledFriendRequests = async (checkUser: any) => {
 
@@ -99,7 +96,6 @@ const AddFriends = ({route, navigation}: any) => {
         const otherUserDocRef = doc(usersCollectionRef, checkUser.id);
         const otherUserInfoCollectionRef = collection(otherUserDocRef, 'user_info');
         const otherUserSentRequestsCollectionRef = collection(otherUserInfoCollectionRef, 'friendRequests', 'sent');
-        const otherUserReceivedRequestsCollectionRef = collection(otherUserInfoCollectionRef, 'friendRequests', 'received');
     
         // Check if the current user has sent a request to the other user
         const sentRequestDocRef = doc(currentUserSentRequestsCollectionRef, checkUser.id);
@@ -209,6 +205,7 @@ const AddFriends = ({route, navigation}: any) => {
                     <TextInput
                         placeholder="Потърси някого..."
                         style={tw`w-[83%] h-13 bg-white shadow-md rounded-xl pl-4 border border-gray-200`}
+                        autoCapitalize='none'
                         value={searchQuery}
                         onChangeText={setSearchQuery}
                     />
@@ -236,16 +233,13 @@ const AddFriends = ({route, navigation}: any) => {
                                 data={suggestedFriends}
                                 keyExtractor={(item) => item.id}
                                 renderItem={({item}) => (
-                                    <Pressable disabled={friendRequestButtonDisabled} onPress={async () => {
-                                        setFriendRequestButtonDisabled(true);
-                                        console.log('sending friend request...');
-                                        await sendFriendRequest(item, username, navigation)
-                                        setFriendRequestButtonDisabled(false);
+                                    <Pressable onPress={async () => {
+                                        navigation.navigate('Виж-Потърсен-Потребител', {friend: item, page: "searchedUsers"})
                                     }}>
                                         <View style={tw`w-[96%] h-16 bg-white shadow-lg border border-gray-200 mt-3 mx-2 rounded-lg flex flex-row justify-between items-center px-2`}>
                                             
                                             <Text style={tw`text-lg font-medium max-w-[88%]`} ellipsizeMode='tail' numberOfLines={1}>{item.username}</Text>
-                                            <Ionicons name='add-circle-outline' size={42} color='#1db858' style={tw`ml-2`}/>
+                                            <Ionicons name='chevron-forward-outline' size={42} color='#9ca3af' style={tw`ml-2`}/>
 
                                         </View>
                                     </Pressable>

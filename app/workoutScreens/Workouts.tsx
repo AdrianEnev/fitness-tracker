@@ -34,13 +34,26 @@ const Workouts = ({navigation}: any) => {
     const [userWorkoutsCollectionRef, setUserWorkoutsCollectionRef] = useState<any>();
 
     const addEmptyFolder = async () => {
+
+        let folderTitle = "New Folder"
+        const currentLanguage = await AsyncStorage.getItem('language')
+        if (currentLanguage == "bg") {
+            folderTitle = "Нова Папка"
+        }
+        else if (currentLanguage == "de") {
+            folderTitle = "Neuer Ordner"
+
+        }else if (currentLanguage == "ru") {
+            folderTitle = "Новая папка"
+        }
+
         try {
             const email = await getEmail();
             if (!email) return;
     
             const newFolder = {
                 id: `folder_${Date.now()}`,
-                title: 'New Folder',
+                title: folderTitle,
                 type: 'folder',
                 workouts: []
             };

@@ -59,7 +59,7 @@ const sendFriendRequest = async (user: Friend, loggedInUserUsername: string, nav
     if (loggedInUser) {
         try {
 
-            alert('Пращане на покана')
+            //alert('Пращане на покана')
 
             // Send a friend request to the user
             await sendFriendRequestToUser(user, loggedInUser, loggedInUserUsername);

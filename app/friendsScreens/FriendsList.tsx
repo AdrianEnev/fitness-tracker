@@ -14,7 +14,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FriendsList = ({navigation, route}: any) => {
 
-    const { friendRequestsNumber } = useContext(GlobalContext);
+    //const { friendRequestsNumber } = useContext(GlobalContext);
 
     const [username, setUsername] = useState<any>('');
 

@@ -149,8 +149,8 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
             }
 
             const generatedWorkout = await generateWorkout(level, goal, numberOfDays, location, specificBodyparts, group, equipment, language);
+
             await addGeneratedWorkoutLocally(generatedWorkout, internetConnected, setGeneratingWorkout, folder)
-            
             
         }
 

@@ -26,6 +26,7 @@ import GenerateWorkoutPage from "../workoutScreens/GenerateWorkoutPage";
 import ScanFood from "../foodScreens/ScanFood";
 import WorkoutFolder from "../workoutScreens/WorkoutFolder";
 import AddFoodPageEditFood from "../foodScreens/AddFoodPageEditFood";
+import ViewSearchedUser from "../friendsScreens/ViewSearchedUser";
 
 const Stack = createNativeStackNavigator();
 /* 
@@ -216,20 +217,25 @@ const MainPageComponent = () => {
               }}
           />
 
-          <Stack.Screen
+          {/* 
+            <Stack.Screen
               name="Дарения"
               component={Donate}
               options={{
                   headerShown: false,
               }}
-          />
-          <Stack.Screen
-              name="Дарение"
-              component={DonateScreen}
-              options={{
-                  headerShown: false,
-              }}
-          />
+            />
+
+
+            <Stack.Screen
+                name="Дарение"
+                component={DonateScreen}
+                options={{
+                    headerShown: false,
+                }}
+            />
+          */}
+          
           <Stack.Screen
               name="Приятели"
               component={FriendsList}
@@ -267,6 +273,15 @@ const MainPageComponent = () => {
                   headerShown: false,
               }}
           />
+          <Stack.Screen
+              name="Виж-Потърсен-Потребител"
+              component={ViewSearchedUser}
+              options={{
+                  headerShown: false,
+              }}
+          />
+
+          
 
       </Stack.Navigator>
     );
