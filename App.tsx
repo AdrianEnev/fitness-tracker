@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, View, Text, Image, Button } from 'react-native';
+import { StatusBar, View, Text, Image, Button, AppState } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { FIREBASE_AUTH, FIRESTORE_DB } from './firebaseConfig';
@@ -369,6 +369,44 @@ function App() {
           // Clean up the subscription
           return () => unsubscribe();
     }, [navigationRef])
+
+    const handleAppForeground = async (userDocRef: any) => {
+        try {
+          await setDoc(userDocRef, {
+            'activity': "online"
+          }, { merge: true }); // Use merge to avoid overwriting other data
+        } catch (error) {
+          console.error('Error updating online status:', error);
+        }
+    };
+
+    const handleAppBackground = async (userDocRef: any) => {
+        try {
+          await setDoc(userDocRef, {
+            'activity': "offline"
+          }, { merge: true });
+        } catch (error) {
+          console.error('Error updating offline status:', error);
+        }
+    };
+
+    useEffect(() => {
+        const subscription = AppState.addEventListener('change', (nextState) => {
+
+            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+
+            if (nextState === 'active') {
+                handleAppForeground(userDocRef)
+            } else if (nextState === 'background') {
+                handleAppBackground(userDocRef)
+            }
+        });
+      
+        return () => {
+            subscription.remove(); 
+        };
+    }, []);
 
     const handleNavigation = () => {
         // Handles the logic for navigation based on language and authentication

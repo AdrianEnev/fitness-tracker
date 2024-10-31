@@ -5,7 +5,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { FIREBASE_AUTH, FIREBASE_STORAGE, FIRESTORE_DB } from '../../firebaseConfig';
 import { useFocusEffect } from '@react-navigation/native';
-import { collection, doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import removeFriend from '../useFriends/useRemoveFriend';
 
@@ -23,8 +23,22 @@ const ViewFriendProfile = ({route, navigation}: any) => {
     const [isFriendPremium, setIsFriendPremium] = useState(true)
     const [isFriendOnline, setIsFriendOnline] = useState(false)
 
-    const getFriendProfilePicture = async () => {
+    const getIsFriendOnline = async () => {
+        const friendID = friend_info.id;
 
+        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+        const userDocRef = doc(usersCollectionRef, friendID);
+
+        // get the "activity" property from userDocRef
+        const unsubscribe = onSnapshot(userDocRef, (doc) => {
+            setIsFriendOnline(doc.data()?.activity === 'online');
+        });
+
+        return () => unsubscribe();
+    }
+
+    const getFriendProfilePicture = async () => {
+ 
         const imagePath = `users/${friend_info.id}/profile_picture`;
         const imageRef = ref(FIREBASE_STORAGE, imagePath);
 
