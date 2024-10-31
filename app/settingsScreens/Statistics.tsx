@@ -339,8 +339,7 @@ const Statistics = () => {
     const getWeightLiftedAndFinishedWorkouts = async () => {
 
         const email = await getEmail();
-        //const statisticsAS = await AsyncStorage.getItem(`statistics_${email}`);
-        const statisticsAS = await AsyncStorage.getItem(`statistics`);
+        const statisticsAS = await AsyncStorage.getItem(`statistics_${email}`);
 
         if (!statisticsAS) return
 

@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, TouchableOpacity } from 'react-native'
+import { View, Text, SafeAreaView, TouchableOpacity, Pressable } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { Friend } from '../../interfaces';
@@ -29,8 +29,6 @@ const FriendsList = ({navigation, route}: any) => {
     }, [])
 
     const [friends, setFriends] = useState<Friend[]>([]);
-
-    const [removeFriendDisabled, setRemoveFriendDisabled] = useState(false);
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -70,17 +68,19 @@ const FriendsList = ({navigation, route}: any) => {
                     data={friends}
                     keyExtractor={(item) => item.id}
                     renderItem={({item}) => (
-                        <View style={tw`flex flex-row justify-between items-center bg-white shadow-lg rounded-xl p-3 my-2`}>
+                        <Pressable style={tw`flex flex-row justify-between items-center bg-white shadow-lg rounded-xl p-3 my-2`}
+                            onPress={() => navigation.navigate('Приятел-Акаунт', {friend_info: item})}
+                        >
 
                             <Text style={tw`text-lg text-black font-medium`}>{item.username}</Text>
 
                             <View style={tw`flex flex-row gap-x-3`}>
-                                <TouchableOpacity style={tw`w-24 h-12 bg-blue-500 rounded-2xl flex items-center justify-center shadow-md`} onPress={() => navigation.navigate('Приятел-Акаунт', {friend_info: item})}>
-                                    <Text style={tw`text-lg text-white font-medium`}>Профил</Text>
-                                </TouchableOpacity>
+                                <Pressable style={tw`w-24 h-12 bg-blue-500 rounded-2xl flex items-center justify-center shadow-md`} onPress={() => navigation.navigate('Приятел-Акаунт', {friend_info: item})}>
+                                    <Text style={tw`text-xl text-white font-semibold`}>View</Text>
+                                </Pressable>
                             </View>
 
-                        </View>
+                        </Pressable>
                     )}
                     ListEmptyComponent={() => (
                         <Text style={tw`text-xl font-medium text-blue-500`}>{t('no-friends')}</Text>

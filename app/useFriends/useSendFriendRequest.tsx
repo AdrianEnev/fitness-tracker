@@ -2,9 +2,14 @@ import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import { Friend } from "../../interfaces";
 import { User } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import getEmail from "../use/useGetEmail";
 
 // Function to send a friend request to a user
-const sendFriendRequestToUser = async (user: Friend, loggedInUser: User, loggedInUserUsername: string) => {
+const sendFriendRequestToUser = async (user: Friend, loggedInUser: User) => {
+    
+    const email = await getEmail();
+    const loggedInUserUsername = await AsyncStorage.getItem(`username_${email}`)
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, user.id);
@@ -26,6 +31,10 @@ const sendFriendRequestToUser = async (user: Friend, loggedInUser: User, loggedI
 
 // Function to send a friend request from the logged in user
 const sendFriendRequestFromUser = async (user: Friend, loggedInUser: User) => {
+
+    console.log(loggedInUser.uid)
+    console.log(user.username)
+
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const loggedInUserDocRef = doc(usersCollectionRef, loggedInUser.uid);
     const userInfoCollectionRef = collection(loggedInUserDocRef, 'user_info');
@@ -52,17 +61,15 @@ const sendFriendRequestFromUser = async (user: Friend, loggedInUser: User) => {
 }
 
 // Function to send a friend request
-const sendFriendRequest = async (user: Friend, loggedInUserUsername: string, navigation: any) => {
+const sendFriendRequest = async (user: Friend, navigation: any) => {
 
     const loggedInUser = FIREBASE_AUTH.currentUser;
 
     if (loggedInUser) {
         try {
 
-            //alert('Пращане на покана')
-
             // Send a friend request to the user
-            await sendFriendRequestToUser(user, loggedInUser, loggedInUserUsername);
+            await sendFriendRequestToUser(user, loggedInUser);
             // Send a friend request from the logged in user
             await sendFriendRequestFromUser(user, loggedInUser);
             

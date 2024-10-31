@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Image, Pressable } from 'react-native'
+import { View, Text, SafeAreaView, Image, Pressable, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -7,7 +7,7 @@ import { FIREBASE_AUTH, FIREBASE_STORAGE, FIRESTORE_DB } from '../../firebaseCon
 import { useFocusEffect } from '@react-navigation/native';
 import { collection, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import BottomNavigationBar from '../components/BottomNavigationBar';
-import removeFriend from '../use/useRemoveFriend';
+import removeFriend from '../useFriends/useRemoveFriend';
 
 const ViewFriendProfile = ({route, navigation}: any) => {
 
@@ -18,6 +18,10 @@ const ViewFriendProfile = ({route, navigation}: any) => {
     const [friendRegistrationDate, setFriendRegistrationDate] = useState<React.ReactNode | null>(null);
 
     const [workoutsFinished, setWorkoutsFinished] = useState(0);
+    const [removingFriend, setRemovingFriend] = useState(false)
+
+    const [isFriendPremium, setIsFriendPremium] = useState(true)
+    const [isFriendOnline, setIsFriendOnline] = useState(false)
 
     const getFriendProfilePicture = async () => {
 
@@ -40,10 +44,10 @@ const ViewFriendProfile = ({route, navigation}: any) => {
         const usersCollectionRef = collection(FIRESTORE_DB, 'users');
         const userDocRef = doc(usersCollectionRef, friend_info.id);
         const userInfoCollectionRef = collection(userDocRef, 'user_info')
-        const userWeightLiftedDocRef = doc(userInfoCollectionRef, 'weight_lifted');
+        const userStatisticsDocRef = doc(userInfoCollectionRef, 'statistics');
 
-        const unsubscribe = onSnapshot(userWeightLiftedDocRef, (doc) => {
-            setWeightLifted(doc.data()?.weight);
+        const unsubscribe = onSnapshot(userStatisticsDocRef, (doc) => {
+            setWeightLifted(doc.data()?.weightLifted);
             setWorkoutsFinished(doc.data()?.finishedWorkouts || 0);
         });
 
@@ -68,7 +72,7 @@ const ViewFriendProfile = ({route, navigation}: any) => {
                     year: 'numeric'
                 });
 
-                setFriendRegistrationDate(<Text style={tw`text-lg m-2`}>Регистриран: {formattedDate}</Text>);
+                setFriendRegistrationDate(formattedDate);
 
             } else {
                 console.log("No such document!");
@@ -89,51 +93,116 @@ const ViewFriendProfile = ({route, navigation}: any) => {
         navigation.navigate('Приятели')
     }
 
-    return (
-        <SafeAreaView style={tw`w-full h-full`}>
+    /**
+     * 
+     * <>
+            <SafeAreaView style={tw`w-full h-full flex items-center justify-center`}>
+                <View style={tw`w-[80%] h-[30%] mb-8 bg-white shadow-md rounded-xl flex pt-2`}>
 
-            <View style={tw`flex flex-col items-center mb-5`}>
+                    <View style={tw`w-full flex flex-row mb-3`}>
 
-                <View style={tw`w-full`}>
-
-                    <View style={tw`flex items-center`}>
-                        {profilePicture === '' ? (
-                            <Pressable 
-                                style={tw`bg-white w-28 h-28 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}
-                                
-                            >
-                                <Ionicons name='person-outline' 
-                                    size={40}
-                                    color='#000000'  
-                                />
-
-                            </Pressable>
+                        {profilePicture === '' ? 
+                        (<View 
+                            style={tw`bg-white w-22 h-22 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
+                            <Ionicons name='person-outline' 
+                                size={40}
+                                color='#000000'  
+                            />
+                        </View>
                         ) : (
-                            <Pressable>
-                                <Image
-                                    source={{ uri: profilePicture }}
-                                    style={tw`w-28 h-28 rounded-full ml-2`}
-                                />
-                            </Pressable>
+                            <Image
+                            source={{ uri: profilePicture }}
+                            style={tw`w-22 h-22 border border-gray-300 rounded-full ml-2`}
+                            />
                         )}
+                        
+                        <View style={tw`flex flex-col justify-center ml-2`}>
+
+                            <Text style={tw`text-xl font-medium`}>{friend.username}</Text>
+                            <Text style={tw`text-base ${isUserPremium ? 'text-blue-500' : 'text-gray-400'}`}>{isUserPremium ? "Premium" : "Free"} User</Text>
+
+                        </View>
+
+                    </View>
+                    
+                    <View style={tw`ml-3`}>
+                        <Text style={tw`text-base font-medium text-gray-700`}>{workoutsCompleted} {workoutsCompleted > 1 ? "workouts" : "workout"} completed.</Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>First joined on {dateJoined ? dateJoined : "loading..."}</Text>
+                    </View>
+</View>
+
+                </View>
+
+            </SafeAreaView>
+        </>
+    )
+     * 
+     */
+
+    return (
+        <>
+            <SafeAreaView style={tw`w-full h-full flex items-center justify-center`}>
+                <View style={tw`w-[80%] h-[31%] mb-8 bg-white shadow-md rounded-xl flex pt-2`}>
+
+                    {isFriendPremium && (
+                        <View style={tw`absolute top-2 right-2`}>
+                            <Ionicons name='star' color={'#fde047'} size={24} />
+                        </View>
+                    )}
+
+                    <View style={tw`w-full flex flex-row mb-3`}>
+
+                        {profilePicture === '' ? 
+                        (<View 
+                            style={tw`bg-white w-22 h-22 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
+                            <Ionicons name='person-outline' 
+                                size={40}
+                                color='#000000'  
+                            />
+                        </View>
+                        ) : (
+                            <Image
+                            source={{ uri: profilePicture }}
+                            style={tw`w-22 h-22 border border-gray-300 rounded-full ml-2`}
+                            />
+                        )}
+                        
+                        <View style={tw`flex flex-col justify-center ml-2`}>
+
+                            <Text style={tw`text-xl font-medium`}>{friend_info.username}</Text>
+                            <Text style={tw`text-base ${isFriendOnline ? "text-green-500" : "text-red-500"}`}>{isFriendOnline ? "Online" : "Offline"}</Text>
+
+                        </View>
+
+                    </View>
+                    
+                    <View style={tw`ml-3`}>
+                        <Text style={tw`text-base font-medium text-gray-700`}>First joined on {friendRegistrationDate ? friendRegistrationDate : "loading..."}</Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>{workoutsFinished} {workoutsFinished > 1 || workoutsFinished == 0 ? "workouts" : "workout"} completed.</Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>{weightLifted}kg lifted in total</Text>
                     </View>
 
+                    <View style={tw`flex-1 justify-end items-center mb-3`}>
+
+                    <TouchableOpacity style={tw`w-64 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md`}
+                                onPress={async () => {
+                                    setRemovingFriend(true);
+                                    console.log('removing friend');
+                                    await deleteFriend()
+                                    navigation.goBack();
+                                    setRemovingFriend(false);
+                                }}
+                                disabled={removingFriend}
+                            >
+                                <Text style={tw`text-xl font-medium text-red-500`}>{removingFriend ? "Removing..." : "Remove Friend"}</Text>
+                            </TouchableOpacity>
+                    </View>
                 </View>
 
-                <View>
-                    <Text style={tw`text-xl`}>{friend_info.username}</Text>
-                </View>
-            </View>
+                
 
-            
-            <Text style={tw`text-lg m-2`}>Подвигната тежест: {weightLifted || 0} КГ</Text>
-            <Text style={tw`text-lg m-2`}>Брой Тренировки: {workoutsFinished}</Text>
-            {friendRegistrationDate}
-
-
-            <BottomNavigationBar currentPage='ViewFriendProfile' navigation={navigation} removeFriend={deleteFriend}/>
-
-        </SafeAreaView>
+            </SafeAreaView>
+        </>
     )
 }
 

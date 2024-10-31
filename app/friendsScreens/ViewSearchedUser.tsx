@@ -1,6 +1,6 @@
 import { View, Text, SafeAreaView, Image } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import sendFriendRequest from '../use/useSendFriendRequest'
+import sendFriendRequest from '../useFriends/useSendFriendRequest'
 import tw from 'twrnc'
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -8,12 +8,16 @@ import BottomNavigationBar from '../components/BottomNavigationBar';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { collection, doc, getDoc, getDocs, Timestamp } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
-import deleteFriendRequest from '../use/useDeleteFriendRequest'
+import deleteFriendRequest from '../useFriends/useDeleteFriendRequest'
+import acceptFriendRequest from '../useFriends/useAcceptFriendRequest';
+import declineFriendRequest from '../useFriends/useDeclineFriendRequest';
 
 
 const ViewSearchedUser = ({route, navigation}: any) => {
 
     const {friend, page} = route.params;
+
+    //console.log(friend)
     // contains id and username properties
 
     // if page = "sentRequests"
@@ -21,6 +25,8 @@ const ViewSearchedUser = ({route, navigation}: any) => {
     const [profilePicture, setProfilePicture] = useState('')
     const [friendRequestButtonDisabled, setFriendRequestButtonDisabled] = useState(false);
     const [cancellingFriendRequestButtonDisabled, setCancellingFriendRequestButtonDisabled] = useState(false);
+    const [acceptingFriendRequestButtonDisabled, setAcceptingFriendRequestButtonDisabled] = useState(false);
+    const [decliningFriendRequestButtonDisabled, setDecliningFriendRequestButtonDisabled] = useState(false);
 
     const getProfilePicture = async () => {
         const storage = getStorage();
@@ -40,6 +46,7 @@ const ViewSearchedUser = ({route, navigation}: any) => {
 
     const [usersCollectionRefState, setUsersCollectionRefState] = useState<any>(null)
 
+    const [isUserPremium, setIsUserPremium] = useState(true);
     
     useEffect(() => {
         getProfilePicture();
@@ -127,6 +134,7 @@ const ViewSearchedUser = ({route, navigation}: any) => {
         <>
             <SafeAreaView style={tw`w-full h-full flex items-center justify-center`}>
                 <View style={tw`w-[80%] h-[30%] mb-8 bg-white shadow-md rounded-xl flex pt-2`}>
+
                     <View style={tw`w-full flex flex-row mb-3`}>
 
                         {profilePicture === '' ? 
@@ -147,7 +155,7 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                         <View style={tw`flex flex-col justify-center ml-2`}>
 
                             <Text style={tw`text-xl font-medium`}>{friend.username}</Text>
-                            <Text style={tw`text-base text-blue-500`}>Male</Text>
+                            <Text style={tw`text-base ${isUserPremium ? 'text-blue-500' : 'text-gray-400'}`}>{isUserPremium ? "Premium" : "Free"} User</Text>
 
                         </View>
 
@@ -169,7 +177,7 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                                     navigation.goBack();
                                     setCancellingFriendRequestButtonDisabled(false);
                                 }}
-                                disabled={friendRequestButtonDisabled}
+                                disabled={cancellingFriendRequestButtonDisabled}
                             >
                                 <Text style={tw`text-xl font-medium text-red-500`}>{cancellingFriendRequestButtonDisabled ? "Cancelling..." : "Cancel Request"}</Text>
                             </TouchableOpacity>
@@ -179,18 +187,49 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                                 onPress={async () => {
                                     setFriendRequestButtonDisabled(true);
                                     console.log('sending friend request...');
-                                    await sendFriendRequest(friend, friend.username, navigation)
+                                    await sendFriendRequest(friend, navigation)
                                     navigation.goBack();
                                     setFriendRequestButtonDisabled(false);
 
                                 }}
                                 disabled={friendRequestButtonDisabled}
                             >
-                                <Text style={tw`text-xl font-medium text-blue-500`}>{friendRequestButtonDisabled ? "Sending..." : "Add Friend"}</Text>
+                                <Text style={tw`text-xl font-medium text-green-500`}>{friendRequestButtonDisabled ? "Sending..." : "Add Friend"}</Text>
                             </TouchableOpacity>
                         ) : 
-                        (
-                            <View></View>
+                        (   
+
+                            <View style={tw`flex flex-row gap-x-2`}>
+                                {/* ACCEPT */}
+                                <TouchableOpacity style={tw`w-40 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md`}
+                                    onPress={async () => {
+                                        setAcceptingFriendRequestButtonDisabled(true);
+                                        console.log('accepting friend request...');
+                                        acceptFriendRequest(friend, navigation);
+                                        navigation.goBack();
+                                        setAcceptingFriendRequestButtonDisabled(false);
+
+                                    }}
+                                    disabled={acceptingFriendRequestButtonDisabled}
+                                >
+                                    <Text style={tw`text-xl font-medium text-green-500`}>{acceptingFriendRequestButtonDisabled ? "Accepting..." : "Accept"}</Text>
+                                </TouchableOpacity>
+                                
+                                {/* DECLINE */}
+                                <TouchableOpacity style={tw`w-40 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md`}
+                                    onPress={async () => {
+                                        setDecliningFriendRequestButtonDisabled(true);
+                                        console.log('accepting friend request...');
+                                        declineFriendRequest(friend, navigation);
+                                        navigation.goBack();
+                                        setDecliningFriendRequestButtonDisabled(false);
+
+                                    }}
+                                    disabled={decliningFriendRequestButtonDisabled}
+                                >
+                                    <Text style={tw`text-xl font-medium text-red-500`}>{decliningFriendRequestButtonDisabled ? "Declining..." : "Decline"}</Text>
+                                </TouchableOpacity>
+                            </View>
                         )}
 
 
