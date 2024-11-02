@@ -82,8 +82,7 @@ const BottomNavigationBar = (
 
     return (
         <View style={tw`
-            absolute w-[96.5%] h-20 shadow-lg bottom-8 mx-2 rounded-2xl flex flex-row justify-around items-center
-            ${(currentPage === 'Settings-Macronutrients' || currentPage === 'AddCustomFood') ? 'bg-[#fd1c47]' : 'bg-white'}
+            absolute w-[96.5%] h-20 shadow-lg bottom-8 mx-2 rounded-2xl flex flex-row justify-around items-center bg-white
         `}>
         
             {currentPage === 'ActiveWorkout' ? (
@@ -322,7 +321,7 @@ const BottomNavigationBar = (
             ) : currentPage === "Settings-Macronutrients" ? (
                 <View>
                     <Pressable onPress={saveSettingsMacrosButton}>
-                        <Ionicons name='checkmark-done' color='white' size={64}/>
+                        <Text style={tw`text-red-500 font-semibold text-4xl`}>Save</Text>
                     </Pressable>
                 </View>
             ) : currentPage === "Folder" ? (
