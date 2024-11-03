@@ -138,6 +138,28 @@ const Settings = ({navigation}: any) => {
                     </View>
                 </Pressable>
 
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => (
+                    console.log('true')
+                )}>
+                    <View style={tw`flex flex-row justify-between`}>
+
+                        <View style={tw`flex flex-row`}>
+                            <View style={tw`w-10 h-10 bg-pink-300 rounded-full flex items-center justify-center mr-2`}>
+                                <Ionicons name='reload-outline' size={28} color='#ec4899' />
+                            </View>
+                            
+                            <View style={tw`flex justify-center`}>
+                                <Text style={tw`text-lg font-medium`}>{t('retreive-info')}</Text>
+                            </View>
+                        </View>
+
+                        <View style={tw`flex justify-center`}>
+                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
+                        </View>
+
+                    </View>
+                </Pressable>
+
                 {/* {button('Дарения', 'wallet-outline', '#ec4899', 'pink-300', t('donate'))} */}
 
             </View>

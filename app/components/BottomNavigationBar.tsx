@@ -50,7 +50,7 @@ const BottomNavigationBar = (
 
     }: 
     {
-        currentPage: string, navigation: any, internetConnected?: boolean,
+        currentPage: string, navigation?: any, internetConnected?: boolean,
         forwardButton?: any, backButton?: any,
         deleteSavedWorkout?: () => void, toggleEndWorkoutModal?: () => void,
         foodDayDate?: any, clearDay?: () => void, 

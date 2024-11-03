@@ -6,6 +6,7 @@ import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
+import BottomNavigationBar from '../components/BottomNavigationBar';
 
 const Statistics = () => {
 
@@ -380,15 +381,40 @@ const Statistics = () => {
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('stats')}</Text>
             </View>
 
-            <View style={tw`h-full w-full bg-white`}>
-                <Text style={tw`m-3 text-lg font-medium`}>Weight lifted: {weightLifted} KG</Text>
-                <Text style={tw`m-3 text-lg font-medium`}>Number of workouts: {workoutsFinished}</Text>
-                <Text style={tw`m-3 text-lg font-medium`}>Total workouts duration: {formattedTotalWorkoutsDuration}</Text>
-                <Text style={tw`m-3 text-lg font-medium`}>Average workout duration: {formattedAverageWorkoutDuration}</Text>
-                <Text style={tw`m-3 text-lg font-medium`}>Last workout: {formattedLastWorkoutDate}</Text>
+            <View style={tw`h-full w-full bg-white px-3 flex flex-col gap-y-2 pt-3`}>
+
+                <View style={tw`w-full h-64 mb-1 shadow-lg`}>
+                    <View style={tw`w-full h-full border border-gray-300`}>
+                        
+                    </View>
+                </View>
+                
+                <View style={tw`w-full h-12 bg-[#fd1c47] rounded-md`}>
+                    <Text style={tw`m-3 text-lg font-medium text-white`}>Weight lifted: {weightLifted} KG</Text>
+                </View>
+
+                <View style={tw`w-full h-12 bg-[#fd1c47] rounded-md`}>
+                    <Text style={tw`m-3 text-lg font-medium text-white`}>Number of workouts: {workoutsFinished}</Text>
+                </View>
+
+                <View style={tw`w-full h-12 bg-[#fd1c47] rounded-md`}>
+                    <Text style={tw`m-3 text-lg font-medium text-white`}>Total workouts duration: {formattedTotalWorkoutsDuration}</Text>
+                </View>
+
+                <View style={tw`w-full h-12 bg-[#fd1c47] rounded-md`}>
+                    <Text style={tw`m-3 text-lg font-medium text-white`}>Average workout duration: {formattedAverageWorkoutDuration}</Text>
+                </View>
+
+                <View style={tw`w-full h-12 bg-[#fd1c47] rounded-md`}>
+                    <Text style={tw`m-3 text-lg font-medium text-white`}>Last workout: {formattedLastWorkoutDate}</Text>
+                </View>
+                
             </View>
 
+            <BottomNavigationBar currentPage='Statistics'/>
+
         </View>
+
     )
 }
 

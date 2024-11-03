@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, View, Text, Image, Button, AppState } from 'react-native';
+import { StatusBar, View, Text, Image, Button, AppState, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { FIREBASE_AUTH, FIRESTORE_DB } from './firebaseConfig';
@@ -29,11 +29,6 @@ import EmailNotVerified from './app/screens/EmailNotVerified';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getLocalLanguageSet from './app/use/useGetLocalLanguageSet';
 import LanguageScreen from './app/screens/LanguageScreen';
-import syncWorkouts from './app/syncData/useSyncWorkouts';
-import syncSavedWorkouts from './app/syncData/useSyncSavedWorkouts';
-import syncNutrients from './app/syncData/useSyncNutrients';
-import syncFood from './app/syncData/useSyncFood';
-import syncWorkoutsInFolders from './app/syncData/useSyncWorkoutsInFolders';
 import { useNavigationContainerRef } from '@react-navigation/native';
 import syncInformation from './app/use/useSyncInfo';
 
@@ -123,9 +118,8 @@ function App() {
 
     const onAuthenticate = async () => {
         const auth = await LocalAuthentication.authenticateAsync({
-            promptMessage: 'Аутентикация с биометрия',
-            cancelLabel: 'Отказ',
-            fallbackLabel: 'Използвайте парола'
+            promptMessage: 'Authenticate to unlock Lunge',
+            cancelLabel: 'Cancel'
         });
 
         if (auth.success) {
@@ -138,9 +132,14 @@ function App() {
 
     const BiometricsFailed = () => {
         return (
-            <View style={tw`flex-1 justify-center items-center bg-red-500`}>
-                <Text style={tw`text-2xl font-bold text-white`}>Biometrics Failed</Text>
-                <Button title='Retry' onPress={() => onAuthenticate()} />
+            <View style={tw`flex-1 justify-center items-center bg-white`}>
+                
+                <TouchableOpacity style={tw`w-[75%] h-[6.5%] bg-gray-700 rounded-[30px] shadow-lg flex items-center justify-center`}
+                   onPress={() => onAuthenticate()} 
+                >
+                    <Text style={tw`text-3xl font-semibold text-white`}>Try Face ID Again</Text>
+                </TouchableOpacity>
+                
             </View>
         );
     }
@@ -469,7 +468,11 @@ function App() {
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />
                 
-                <NavigationContainer ref={navigationRef}>{handleNavigation()}</NavigationContainer>
+                {/*<NavigationContainer ref={navigationRef}>{handleNavigation()}</NavigationContainer> 
+                    <BiometricsFailed />
+                */}
+                
+                <NavigationContainer ref={navigationRef}>{handleNavigation()}</NavigationContainer> 
             </GestureHandlerRootView>
         </GlobalContext.Provider>
     );
