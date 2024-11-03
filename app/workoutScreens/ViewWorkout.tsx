@@ -100,7 +100,7 @@ const ViewWorkout = ({route, navigation}: any) => {
         if (folder) {
             await saveWorkoutEditsFromFolderLocally(workout, userInputs, newExercises, newWorkoutTitle, folder);
         }else{
-            await saveWorkoutEditsLocally(workout, userInputs, newExercises, newWorkoutTitle, folder);
+            await saveWorkoutEditsLocally(workout, userInputs, newExercises, newWorkoutTitle);
         }
 
         if (internetConnected) {
@@ -114,7 +114,7 @@ const ViewWorkout = ({route, navigation}: any) => {
     
     const addExercise = () => {
         console.log('add exercise ran');
-        console.log('Current exercises:', newExercises);
+        //console.log('Current exercises:', newExercises);
 
         if (newExercises.length < 9) {
             const newSet = {
@@ -313,9 +313,9 @@ const ViewWorkout = ({route, navigation}: any) => {
     const [currentExerciseId, setCurrentExerciseId] = useState('');
 
     const startWorkoutFunction = async () => {
-        if (folder) {
+        if (folder && !saveChangesRan) {
             startWorkoutInFolder(workout, folder, navigation)
-        }else{
+        }else if (!saveChangesRan){
             startWorkout(workout, navigation);
         }
         
@@ -337,9 +337,6 @@ const ViewWorkout = ({route, navigation}: any) => {
         if (index >= updatedExercises.length) {
             setCurrentIndex(Math.max(0, updatedExercises.length - 1));
         }
-
-        
-
     };
 
     useEffect(() => {

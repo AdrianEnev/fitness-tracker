@@ -62,7 +62,7 @@ const endWorkoutLocally = async (exercises: any, workoutTitle: string, duration:
         statisticsData.weightLifted += totalWeight;
         statisticsData.finishedWorkouts += 1;
 
-        await AsyncStorage.setItem('statistics', JSON.stringify(statisticsData));
+        await AsyncStorage.setItem(`statistics_${email}`, JSON.stringify(statisticsData));
         console.log('Workout saved locally');
     } catch (err) {
         console.error(err);

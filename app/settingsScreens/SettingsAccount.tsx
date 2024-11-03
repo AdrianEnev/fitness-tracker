@@ -18,12 +18,22 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from 'expo-blur'
 import SyncingInfoModal from '../modals/SyncingInfoModal'
 import syncInformation from '../use/useSyncInfo'
+import DeletingAccountModal from '../modals/DeletingAccountModal'
 
 const SettingsAccount = ({navigation}: any) => {
-
-    const 
-    { receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled, internetConnected,
-        setProfilePicture, setSetupRan, setIsAccountDeleted, syncingInfoRunning, setSyncingInfoRunning } = useContext(GlobalContext);
+ 
+    const { 
+        receiveFriendRequests, 
+        setReceiveFriendRequests, 
+        faceIdEnabled, 
+        setFaceIdEnabled, 
+        internetConnected,
+        setProfilePicture, 
+        setSetupRan, 
+        setIsAccountDeleted, 
+        syncingInfoRunning, 
+        setSyncingInfoRunning 
+    } = useContext(GlobalContext);
 
     const logOut = () => {
 
@@ -298,11 +308,12 @@ const SettingsAccount = ({navigation}: any) => {
     }, [])
 
     const [isSyncingInfoModalVisible, setIsSyncingInfoModalVisible] = useState(false)
+    const [isDeletingAccountModalVisible, setIsDeletingAccountModalVisible] = useState(false)
 
     return (
         <>
 
-            {isSyncingInfoModalVisible && (
+            {(isSyncingInfoModalVisible || isDeletingAccountModalVisible) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -316,6 +327,12 @@ const SettingsAccount = ({navigation}: any) => {
                     isSyncingInfoModalVisible={isSyncingInfoModalVisible}
                     setIsSyncingInfoModalVisible={setIsSyncingInfoModalVisible}
                 />
+
+                <DeletingAccountModal
+                    isDeletingAccountModalVisible={isDeletingAccountModalVisible}
+                    setIsDeletingAccountModalVisible={setIsDeletingAccountModalVisible}
+                />
+
 
                 <View style={tw`h-full pt-2`}>
 

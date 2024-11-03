@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import generateID from '../use/useGenerateID';
 import getEmail from '../use/useGetEmail';
 
-const saveWorkoutEditsLocally = async (workout: any, userInputs: any, newExercises: any, newWorkoutTitle: any, folder?: any) => {
+const saveWorkoutEditsLocally = async (workout: any, userInputs: any, newExercises: any, newWorkoutTitle: any) => {
     try {
         const email = await getEmail();
         if (!email) return;

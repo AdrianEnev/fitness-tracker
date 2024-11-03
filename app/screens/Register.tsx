@@ -13,12 +13,19 @@ import EmailNotVerified from './EmailNotVerified';
 
 const Register = ({navigation}: any) => {
 
+    const {internetConnected, setIsAccountDeleted} = useContext(GlobalContext);
+
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
 
-    const {internetConnected, setIsAccountDeleted} = useContext(GlobalContext);
+    const [passwordCharacters, setPasswordCharacters] = useState(65);
+    const [confirmPasswordCharacters, setConfirmPasswordCharacters] = useState(65);
+
+    const [registerButtonDisabled, setRegisterButtonDisabled] = useState(false);
+    const [passwordStrength, setPasswordStrength] = useState('')
+    const [confirmPasswordStrength, setConfirmPasswordStrength] = useState('')
 
     const auth = FIREBASE_AUTH;
 
@@ -56,7 +63,11 @@ const Register = ({navigation}: any) => {
             alert('Паролата не може да бъде същата като потребителското име!');
             return;
         }
-        
+
+        if (await isAccountLimitReached()) {
+            alert('You have reached the maximum number of accounts for this device.');
+            return;
+        }     
     
         let isUsernameTaken = false;
     
@@ -104,12 +115,12 @@ const Register = ({navigation}: any) => {
         }
     }
 
-    const [passwordCharacters, setPasswordCharacters] = useState(65);
-    const [confirmPasswordCharacters, setConfirmPasswordCharacters] = useState(65);
-
-    const [registerButtonDisabled, setRegisterButtonDisabled] = useState(false);
-    const [passwordStrength, setPasswordStrength] = useState('')
-    const [confirmPasswordStrength, setConfirmPasswordStrength] = useState('')
+    const isAccountLimitReached = async () => {
+        // Check if asyncstorage contains 5 usernames (username_email), if so, return true
+        const keys = await AsyncStorage.getAllKeys();
+        const usernameKeys = keys.filter(key => key.startsWith('username_'));
+        return usernameKeys.length >= 2;
+    }
 
     const checkPasswordStrength = (password: string): string => {
 
