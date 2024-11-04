@@ -101,7 +101,7 @@ const Register = ({navigation}: any) => {
             await setDoc(doc(userInfoCollectionRef, 'username'), { username: trimmedUsername });
 
             // save username locally using AsyncStorage
-            console.log(trimmedEmail)
+            //console.log(trimmedEmail)
             await AsyncStorage.setItem(`email`, trimmedEmail);
             await AsyncStorage.setItem(`username_${email}`, trimmedUsername);
 

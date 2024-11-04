@@ -5,7 +5,7 @@ import { User } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
 
-const getUserInfoCollection = async (user: any) => {
+const getUserInfoCollectionT = async (user: any) => {
     try {
         const usersCollectionRef = collection(FIRESTORE_DB, 'users');
         const userDocRef = doc(usersCollectionRef, user.id);
@@ -26,8 +26,9 @@ const sendFriendRequestToUser = async (user: Friend, loggedInUser: User) => {
     const email = await getEmail();
     const loggedInUserUsername = await AsyncStorage.getItem(`username_${email}`)
 
-    const userInfoCollectionRef: any = await getUserInfoCollection(user)
-
+    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+    const userDocRef = doc(usersCollectionRef, user.id);
+    const userInfoCollectionRef = collection(userDocRef, 'user_info');
     const friendRequestsDocRef = doc(userInfoCollectionRef, 'friendRequests');
     const friendRequestsDoc = await getDoc(friendRequestsDocRef);
 
@@ -45,8 +46,9 @@ const sendFriendRequestToUser = async (user: Friend, loggedInUser: User) => {
 // Function to send a friend request from the logged in user
 const sendFriendRequestFromUser = async (user: Friend, loggedInUser: User) => {
 
-    const userInfoCollectionRef: any = await getUserInfoCollection(loggedInUser)
-
+    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+    const loggedInUserDocRef = doc(usersCollectionRef, loggedInUser.uid);
+    const userInfoCollectionRef = collection(loggedInUserDocRef, 'user_info');
     const friendRequestsDocRef = doc(userInfoCollectionRef, 'friendRequests');
     const friendRequestsDoc = await getDoc(friendRequestsDocRef);
 
@@ -78,7 +80,10 @@ const sendFriendRequestFromUser = async (user: Friend, loggedInUser: User) => {
 }
 
 const isFriendLimitReached = async (loggedInUser: any) => {
-    const userInfoCollectionRef: any = await getUserInfoCollection(loggedInUser);
+
+    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+    const loggedInUserDocRef = doc(usersCollectionRef, loggedInUser.uid);
+    const userInfoCollectionRef = collection(loggedInUserDocRef, 'user_info');
     const friendsDocRef = doc(userInfoCollectionRef, 'friends');
     const friendsListCollectionRef = collection(friendsDocRef, 'list')
 

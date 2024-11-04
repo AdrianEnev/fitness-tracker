@@ -426,7 +426,7 @@ function App() {
                 <EmailNotVerified />
             ) : setupRan && !isAuthenticated && user ? (
                 <BiometricsFailed />
-            )  : user ? (
+            )  : user && !setupRan ?  (
                 <SetupPage />
             ): (
                 <UnauthenticatedTabNavigator />

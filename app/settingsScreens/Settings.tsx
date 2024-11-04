@@ -12,6 +12,7 @@ import GlobalContext from '../../GlobalContext';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import LanguageModal from '../modals/LanguageModal';
 import { BlurView } from 'expo-blur';
+import retreiveInfo from '../use/useRetreiveInfo';
 
 const Settings = ({navigation}: any) => {
 
@@ -139,7 +140,7 @@ const Settings = ({navigation}: any) => {
                 </Pressable>
 
                 <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => (
-                    console.log('true')
+                    retreiveInfo()
                 )}>
                     <View style={tw`flex flex-row justify-between`}>
 

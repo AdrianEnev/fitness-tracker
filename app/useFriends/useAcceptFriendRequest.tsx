@@ -4,7 +4,7 @@ import { Friend } from "../../interfaces";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
 
-const acceptFriendRequest = async (user: Friend, navigation: any) => {
+const handleAcceptFriendRequest = async (user: Friend, navigation: any) => {
 
     const email = await getEmail();
     const loggedInUserUsername = await AsyncStorage.getItem(`username_${email}`)
@@ -66,5 +66,14 @@ const acceptFriendRequest = async (user: Friend, navigation: any) => {
     }
     
 }
+
+const acceptFriendRequest = async (friend: any, navigation: any) => {
+    try {
+        await handleAcceptFriendRequest(friend, navigation);
+        navigation.goBack(); 
+    } catch (error) {
+        console.error('Error accepting friend request:', error);
+    }
+  };
 
 export default acceptFriendRequest

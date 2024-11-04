@@ -44,6 +44,7 @@ const Main = ({navigation}: any) => {
         const email = await getEmail();
 
         const AsyncStorageUsername = await AsyncStorage.getItem(`username_${email}`);
+        
         if (AsyncStorageUsername) {
             setUsername(AsyncStorageUsername);
             //setUsername("тесттесттесттесттесттесттест");

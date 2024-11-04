@@ -9,7 +9,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalContext from '../../GlobalContext'
 import ProfilePicture from '../components/ProfilePicture'
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, setDoc, writeBatch } from 'firebase/firestore'
 import BottomNavigationBar from '../components/BottomNavigationBar'
 import { useTranslation } from 'react-i18next'
 import { deleteObject, getStorage, ref } from 'firebase/storage'
@@ -58,6 +58,10 @@ const SettingsAccount = ({navigation}: any) => {
 
     }
 
+    const changeUsernameForFriends = async (userFriendsDocRef: any, newUsername: any) => {
+        console.log('TODO - change username for friends')
+    }
+
     const changeUsername = async () => {
 
         const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -74,7 +78,7 @@ const SettingsAccount = ({navigation}: any) => {
         const daysDifference = difference / (1000 * 3600 * 24);
 
         // if 7 days haven't passed since the last username change, alert the user that there is still a cooldown
-        if (daysDifference < 7) {
+        /*if (daysDifference < 7) {
             Alert.alert(
                 'Смяна на име',
                 'Можете да смените потребителското си име отново след ' + (7 - Math.floor(daysDifference)) + ' дни!',
@@ -88,7 +92,7 @@ const SettingsAccount = ({navigation}: any) => {
 
             return
             
-        }
+        }*/
 
         Alert.prompt(
             'Смяна на име',
@@ -148,13 +152,13 @@ const SettingsAccount = ({navigation}: any) => {
                                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');
                                 const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
                                 const userInfoCollectionRef = collection(userDocRef, 'user_info');
-
-
-                                // check if there is a 7 day difference between the current date and the date inside the database and if so, alert the user that there is still a cooldown
+                                const userFriendsDocRef = doc(userDocRef, 'friends');
                         
                                 // add a document inside userInfoCollectionRef and call that document "username"
                                 await setDoc(doc(userInfoCollectionRef, 'username'), { username: trimmedUsername, date: new Date()});
                                 setUsername(trimmedUsername);
+
+                                await changeUsernameForFriends(userFriendsDocRef, trimmedUsername);
 
                                 AsyncStorage.setItem(`username_${await getEmail()}`, trimmedUsername)
 

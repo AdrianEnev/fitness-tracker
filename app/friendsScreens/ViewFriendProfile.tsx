@@ -156,7 +156,7 @@ const ViewFriendProfile = ({route, navigation}: any) => {
     return (
         <>
             <SafeAreaView style={tw`w-full h-full flex items-center justify-center`}>
-                <View style={tw`w-[80%] h-[31%] mb-8 bg-white shadow-md rounded-xl flex pt-2`}>
+                <View style={tw`w-[80%] h-[33%] mb-8 bg-white shadow-md rounded-xl flex pt-2`}>
 
                     {isFriendPremium && (
                         <View style={tw`absolute top-2 right-2`}>
