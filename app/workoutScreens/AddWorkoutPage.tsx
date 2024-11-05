@@ -75,6 +75,9 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
     };
 
     const removeSet = (exerciseId: string, setId: string) => {
+
+        if (pageIndex == 1) return;
+
         setExercises(exercises.map(exercise => 
             exercise.id === exerciseId 
             ? { ...exercise, sets: exercise.sets.filter(set => set.id !== setId) } 
@@ -167,9 +170,6 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
     const [intensityBoxSelected, setIntensityBoxSelected] = useState(0)
     
     const setSetIntensity = (setIntensityNumber: number) => {
-        console.log('setSetIntensity called with:', setIntensityNumber);
-        console.log('currentSelectedSet:', currentSelectedSet);
-        console.log('pageIndex:', pageIndex);
     
         setExercises(exercises.map((exercise, exerciseIndex) => 
             exerciseIndex === pageIndex - 1
@@ -217,6 +217,8 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
             await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(workouts));
         }
 
+        navigation.goBack();
+
         if (internetConnected) {
             addWorkout(
                 [], 
@@ -229,15 +231,24 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
 
     const deleteCurrentExercise = () => {
 
+        if (pageIndex == 1) return;
+
         const currentExercise = exercises[pageIndex - 1];
         setExercises(exercises.filter((exercise) => exercise.id !== currentExercise.id));
         setExerciseIndex(exerciseIndex - 1); // decrement exerciseIndex
         
-        if (pageIndex !== 1) {
-            setPageIndex(pageIndex - 1);
-        }
+        setPageIndex(pageIndex - 1);
     }
 
+    useEffect(() => {
+        // Run when pageIndex or exercises change
+        const currentExercise = exercises[pageIndex - 1];
+    
+        if (currentExercise && currentExercise.sets.length === 0 && pageIndex != 1) {
+          deleteCurrentExercise();
+        }
+    }, [pageIndex, exercises]); 
+    
     return (
         <>
             
@@ -272,6 +283,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                         setSaveButtonDisabled={setSaveButtonDisabled}
                         internetConnected={internetConnected}
                         folder={folder}
+                        addRestDay={addRestDay}
                     />
 
                     <ExerciseOptionsModal 
@@ -365,10 +377,10 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
 
                                                                 <Pressable style={tw`absolute right-7 w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${mapIndex != 0 ? 'hidden' : ''}`}
                                                                     onPress={() => {
-                                                                        setIsExerciseOptionsModalVisible(true)
+                                                                        deleteCurrentExercise();
                                                                     }} 
                                                                 >
-                                                                    <Ionicons name='ellipsis-horizontal' size={24} color='black' />
+                                                                    <Ionicons name='close' size={24} color='black' />
                                                                 </Pressable>
 
                                                                 <TouchableOpacity
