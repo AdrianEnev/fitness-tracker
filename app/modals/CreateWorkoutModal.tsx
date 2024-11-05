@@ -5,6 +5,7 @@ import addWorkout from '../useWorkout/useAddWorkout';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import addWorkoutLocally from '../useWorkout/useAddWorkoutLocally';
 import generateID from '../use/useGenerateID';
+import { useTranslation } from 'react-i18next';
 
 interface CreateWorkoutModalProps {
     exercises: any;
@@ -25,6 +26,8 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
     setSaveButtonDisabled, saveButtonDisabled, internetConnected, folder, addRestDay
 }) => { 
     
+    const {t} = useTranslation();
+
     return (
         <Modal
             animationType="fade"
@@ -37,13 +40,13 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
                 <View style={tw`flex-1 justify-center items-center mx-3`}>
                     <Pressable style={tw`bg-gray-50 w-full h-[32%] rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
 
-                        <Text style={tw`text-xl text-center font-medium mt-1`}>Add Workout</Text>
-                        <Text style={tw`text-lg text-center text-gray-500 font-medium mb-2`}>Please enter a name for this workout!</Text>
+                        <Text style={tw`text-xl text-center font-medium mt-1`}>{t(`add-workout`)}</Text>
+                        <Text style={tw`text-lg text-center text-gray-500 font-medium mb-2`}>{t(`enter-workout-name`)}!</Text>
 
                         <TextInput
                             style={tw`w-full h-12 rounded-xl bg-white shadow-md my-1 text-black font-medium pl-3`}
                             maxLength={30}
-                            placeholder='Workout name'
+                            placeholder={t(`workout-name`)}
                             placeholderTextColor='#6b7280'
                             onChangeText={(text) => setWorkoutTitle(text)}
                         />
@@ -74,7 +77,7 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
                                     navigation.navigate('Тренировки');
                                 }}
                             >
-                                <Text style={tw`text-white text-lg font-medium`}>Save</Text>
+                                <Text style={tw`text-white text-lg font-medium`}>{t(`save`)}</Text>
                             </Pressable>
                         </View>
 
@@ -82,13 +85,13 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
 
                         <View style={tw`flex items-center mt-2`}>
                             <Pressable style={tw`bg-[#e83d50] w-full h-10 rounded-xl flex items-center justify-center`} onPress={() => setIsCreateWorkoutModalVisible(false)}>
-                                <Text style={tw`text-white text-lg font-medium`}>Cancel</Text>
+                                <Text style={tw`text-white text-lg font-medium`}>{t(`cancel`)}</Text>
                             </Pressable>
                         </View>
 
                         <View style={tw`flex items-center mt-2`}>
                             <Pressable style={tw`bg-blue-500 w-full h-10 rounded-xl flex items-center justify-center`} onPress={() => addRestDay()}>
-                                <Text style={tw`text-white text-lg font-medium`}>Rest Day</Text>
+                                <Text style={tw`text-white text-lg font-medium`}>{t(`rest-day`)}</Text>
                             </Pressable>
                         </View>
                         

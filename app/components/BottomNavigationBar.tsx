@@ -2,6 +2,7 @@ import { View, Text, Pressable } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 
 const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) => {
     return (
@@ -80,6 +81,8 @@ const BottomNavigationBar = (
 ) => {
     //AddCustomFood
 
+    const {t} = useTranslation();
+    
     return (
         <View style={tw`
             absolute w-[96.5%] h-20 shadow-lg bottom-8 mx-2 rounded-2xl flex flex-row justify-around items-center bg-white
@@ -90,7 +93,7 @@ const BottomNavigationBar = (
 
                 <View style={tw`w-full h-16 flex gap-y-2 flex-row justify-between absolute bottom-18`}>
                     <Pressable style={tw`w-[49%] bg-blue-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addActiveWorkoutSet}>
-                        <Text style={tw`text-white font-medium text-xl`}>+ Set</Text>
+                        <Text style={tw`text-white font-medium text-xl`}>+ {t(`set`)}</Text>
                     </Pressable>
                     <Pressable style={tw`w-[49%] bg-yellow-400 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addActiveWorkoutExercise}>
                         <Text style={tw`text-white font-medium text-xl`}>+ Exercise</Text>
@@ -150,10 +153,10 @@ const BottomNavigationBar = (
 
                     <View style={tw`w-full h-16 flex gap-y-2 flex-row justify-between absolute bottom-18`}>
                         <Pressable style={tw`w-[49%] bg-blue-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addSetButton}>
-                            <Text style={tw`text-white font-medium text-xl`}>+ Set</Text>
+                            <Text style={tw`text-white font-medium text-xl`}>+ {t(`set`)}</Text>
                         </Pressable>
                         <Pressable style={tw`w-[49%] bg-green-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addWorkoutButton}>
-                            <Text style={tw`text-white font-medium text-xl`}>Done</Text>
+                            <Text style={tw`text-white font-medium text-xl`}>{t(`add`)}</Text>
                         </Pressable>
                         
                     </View>
@@ -266,11 +269,11 @@ const BottomNavigationBar = (
 
                     <View style={tw`w-full h-16 flex gap-y-2 flex-row justify-between absolute bottom-18`}>
                         <Pressable style={tw`w-[49%] bg-blue-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addSetButton}>
-                            <Text style={tw`text-white font-medium text-xl`}>+ Set</Text>
+                            <Text style={tw`text-white font-medium text-xl`}>+ {t(`set`)}</Text>
                         </Pressable>
                        
                         <Pressable style={tw`w-[49%] bg-yellow-400 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={viewWorkoutAddExercise}>
-                            <Text style={tw`text-white font-medium text-xl`}>+ Exercise</Text>
+                            <Text style={tw`text-white font-medium text-xl`}>+ {t('exercise')}</Text>
                         </Pressable>
                         
                     </View>
