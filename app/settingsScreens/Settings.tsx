@@ -119,25 +119,6 @@ const Settings = ({navigation}: any) => {
                 {button('Настройки-Макронутриенти', 'flame-outline', '#d97706', 'orange-300', t('macronutrients'))}
                 {button('Запазени-Тренировки', 'cloud-outline', '#ef4444', 'red-300', t('saved-workouts'))}
 
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => setIsLanguageModalVisible(true)}>
-                    <View style={tw`flex flex-row justify-between`}>
-
-                        <View style={tw`flex flex-row`}>
-                            <View style={tw`w-10 h-10 bg-indigo-300 rounded-full flex items-center justify-center mr-2`}>
-                                <Ionicons name='globe-outline' size={28} color='#8b5cf6' />
-                            </View>
-                            
-                            <View style={tw`flex justify-center`}>
-                                <Text style={tw`text-lg font-medium`}>{t('language')}</Text>
-                            </View>
-                        </View>
-
-                        <View style={tw`flex justify-center`}>
-                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
-                        </View>
-
-                    </View>
-                </Pressable>
 
                 <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => (
                     retreiveInfo()
@@ -160,6 +141,28 @@ const Settings = ({navigation}: any) => {
 
                     </View>
                 </Pressable>
+
+                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => setIsLanguageModalVisible(true)}>
+                    <View style={tw`flex flex-row justify-between`}>
+
+                        <View style={tw`flex flex-row`}>
+                            <View style={tw`w-10 h-10 bg-indigo-300 rounded-full flex items-center justify-center mr-2`}>
+                                <Ionicons name='globe-outline' size={28} color='#8b5cf6' />
+                            </View>
+                            
+                            <View style={tw`flex justify-center`}>
+                                <Text style={tw`text-lg font-medium`}>{t('language')}</Text>
+                            </View>
+                        </View>
+
+                        <View style={tw`flex justify-center`}>
+                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
+                        </View>
+
+                    </View>
+                </Pressable>
+
+               
 
                 {/* {button('Дарения', 'wallet-outline', '#ec4899', 'pink-300', t('donate'))} */}
 

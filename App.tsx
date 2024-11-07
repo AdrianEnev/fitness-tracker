@@ -31,6 +31,7 @@ import getLocalLanguageSet from './app/use/useGetLocalLanguageSet';
 import LanguageScreen from './app/screens/LanguageScreen';
 import { useNavigationContainerRef } from '@react-navigation/native';
 import syncInformation from './app/use/useSyncInfo';
+import checkUsernameNSFW from './app/use/useCheckUsernameNSFW';
 
 const Stack = createStackNavigator();
 
@@ -355,6 +356,7 @@ function App() {
 
     useEffect(() => {
         //clearAsyncStorage()
+        //checkUsernameNSFW('jordan.nigga')
     })
 
     // listen for firebase.logOut and navigate to unauthenticated screen if called

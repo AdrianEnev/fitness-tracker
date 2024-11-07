@@ -19,6 +19,7 @@ import { BlurView } from 'expo-blur'
 import SyncingInfoModal from '../modals/SyncingInfoModal'
 import syncInformation from '../use/useSyncInfo'
 import DeletingAccountModal from '../modals/DeletingAccountModal'
+import checkUsernameNSFW from '../use/useCheckUsernameNSFW'
 
 const SettingsAccount = ({navigation}: any) => {
  
@@ -58,8 +59,47 @@ const SettingsAccount = ({navigation}: any) => {
 
     }
 
-    const changeUsernameForFriends = async (userFriendsDocRef: any, newUsername: any) => {
-        console.log('TODO - change username for friends')
+    const isUsernameNSFW = async (username: any) => {
+
+        const isNSFW = await checkUsernameNSFW(username);
+
+        if (isNSFW){
+            return true
+        }else{
+            return false
+        }
+    }
+
+    const changeUsernameForFriends = async (currentUserID: any, newUsername: any) => {
+        // go through all users -> userID -> userInfo -> friends and see if anyone has currentUserID as a document there 
+        // if they have currentUserID, set that document's username property as newUsername
+
+        try {
+            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+            const usersSnapshot = await getDocs(usersCollectionRef);
+
+            const batch = writeBatch(FIRESTORE_DB);
+
+            for (const userDoc of usersSnapshot.docs) {
+                const userInfoCollectionRef = collection(userDoc.ref, 'user_info');
+                const friendsDocRef = doc(userInfoCollectionRef, 'friends');
+                const friendsListCollectionRef = collection(friendsDocRef, 'list');
+                const friendDocRef = doc(friendsListCollectionRef, currentUserID);
+
+                const friendDocSnapshot = await getDoc(friendDocRef);
+
+                if (friendDocSnapshot.exists()) {
+                    // Update the friend's username
+                    batch.update(friendDocRef, { username: newUsername });
+                }
+            }
+
+            await batch.commit();
+            console.log('Successfully updated username for friends');
+        } catch (error) {
+            console.error("Error updating username for friends:", error);
+        }
+
     }
 
     const changeUsername = async () => {
@@ -78,7 +118,7 @@ const SettingsAccount = ({navigation}: any) => {
         const daysDifference = difference / (1000 * 3600 * 24);
 
         // if 7 days haven't passed since the last username change, alert the user that there is still a cooldown
-        /*if (daysDifference < 7) {
+        if (daysDifference < 7) {
             Alert.alert(
                 'Смяна на име',
                 'Можете да смените потребителското си име отново след ' + (7 - Math.floor(daysDifference)) + ' дни!',
@@ -92,7 +132,7 @@ const SettingsAccount = ({navigation}: any) => {
 
             return
             
-        }*/
+        }
 
         Alert.prompt(
             'Смяна на име',
@@ -119,6 +159,11 @@ const SettingsAccount = ({navigation}: any) => {
 
                             if (newUsername == username) {
                                 alert('Потребителското име не може да бъде същото като предишното!');
+                                return;
+                            }
+
+                            if (await isUsernameNSFW(newUsername)) {
+                                alert('This username is not allowed!');
                                 return;
                             }
 
@@ -152,13 +197,12 @@ const SettingsAccount = ({navigation}: any) => {
                                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');
                                 const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
                                 const userInfoCollectionRef = collection(userDocRef, 'user_info');
-                                const userFriendsDocRef = doc(userDocRef, 'friends');
                         
                                 // add a document inside userInfoCollectionRef and call that document "username"
                                 await setDoc(doc(userInfoCollectionRef, 'username'), { username: trimmedUsername, date: new Date()});
                                 setUsername(trimmedUsername);
 
-                                await changeUsernameForFriends(userFriendsDocRef, trimmedUsername);
+                                await changeUsernameForFriends(FIREBASE_AUTH.currentUser?.uid, trimmedUsername);
 
                                 AsyncStorage.setItem(`username_${await getEmail()}`, trimmedUsername)
 
