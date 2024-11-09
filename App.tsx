@@ -32,6 +32,7 @@ import LanguageScreen from './app/screens/LanguageScreen';
 import { useNavigationContainerRef } from '@react-navigation/native';
 import syncInformation from './app/use/useSyncInfo';
 import checkUsernameNSFW from './app/use/useCheckUsernameNSFW';
+import checkInternetSpeed from './app/use/useCheckInternetSpeed';
 
 const Stack = createStackNavigator();
 
@@ -277,11 +278,12 @@ function App() {
         await fetchData();
     }
 
+    const [internetSpeed, setInternetSpeed] = useState(0);
+
     useEffect(() => {
         const initializeApp = async () => {
-            await checkLocalEmail();
 
-            //AsyncStorage.removeItem('language');
+            await checkLocalEmail();
 
             const localLanguageSet = await getLocalLanguageSet();
             if (localLanguageSet) {
@@ -290,12 +292,14 @@ function App() {
     
             const netInfo = await NetInfo.fetch();
             setIsConnected(netInfo.isConnected ?? false);
-
+            if (netInfo.isConnected) {
+                const speed = await checkInternetSpeed()
+                setInternetSpeed(speed)
+            }
+            
             //const netInfo = { isConnected: false }
             //setIsConnected(false)
-    
-            console.log(`Network status: ${netInfo.isConnected ? 'Online' : 'Offline'}`);
-    
+        
             if (netInfo.isConnected) {
                 const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
                     setUser(user);
@@ -310,12 +314,35 @@ function App() {
     
         initializeApp();
     
-        const netListener = NetInfo.addEventListener(state => {
+        const netListener = NetInfo.addEventListener(async state => {
+            if (state.isConnected) {
+                const speed = await checkInternetSpeed()
+                setInternetSpeed(speed)
+            }
             setIsConnected(state.isConnected ?? false);
-            console.log(`Real-time Network status: ${state.isConnected ? 'Online' : 'Offline'}`);
         });
     
         return () => netListener();
+    }, []);
+
+    // check internet connection in the background
+    useEffect(() => {
+        const checkInternetConnection = async () => {
+            const netInfo = await NetInfo.fetch();
+
+            if (netInfo.isConnected) {
+                const speed = await checkInternetSpeed()
+                setInternetSpeed(speed);
+            }
+        };
+
+        // Run checkInternetConnection every 10 seconds
+        const interval = setInterval(() => {
+            checkInternetConnection();
+        }, 10000); // 10000 milliseconds = 10 seconds
+
+        // Clear interval on unmount
+        return () => clearInterval(interval);
     }, []);
 
     useEffect(() => {
@@ -353,11 +380,6 @@ function App() {
             query();
         }
     }, [isConnected, isAuthenticated, hasSynced]);
-
-    useEffect(() => {
-        //clearAsyncStorage()
-        //checkUsernameNSFW('jordan.nigga')
-    })
 
     // listen for firebase.logOut and navigate to unauthenticated screen if called
     useEffect(() => {
@@ -465,7 +487,7 @@ function App() {
             setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber,
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
             internetConnected: isConnected, isAccountDeleted, setIsAccountDeleted, generatingWorkout, setGeneratingWorkout,
-            generatingWorkoutInFolder, setGeneratingWorkoutInFolder, syncingInfoRunning, setSyncingInfoRunning
+            generatingWorkoutInFolder, setGeneratingWorkoutInFolder, syncingInfoRunning, setSyncingInfoRunning, internetSpeed
         }}>
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />

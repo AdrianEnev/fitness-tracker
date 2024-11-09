@@ -16,10 +16,11 @@ import { deleteObject, getStorage, ref } from 'firebase/storage'
 import getEmail from '../use/useGetEmail'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from 'expo-blur'
-import SyncingInfoModal from '../modals/SyncingInfoModal'
+import SyncingInfoModal from '../loadingModals/SyncingInfoModal'
 import syncInformation from '../use/useSyncInfo'
-import DeletingAccountModal from '../modals/DeletingAccountModal'
+import DeletingAccountModal from '../loadingModals/DeletingAccountModal'
 import checkUsernameNSFW from '../use/useCheckUsernameNSFW'
+import ChangingUsernameModal from '../loadingModals/ChangingUsernameModal'
 
 const SettingsAccount = ({navigation}: any) => {
  
@@ -35,6 +36,8 @@ const SettingsAccount = ({navigation}: any) => {
         syncingInfoRunning, 
         setSyncingInfoRunning 
     } = useContext(GlobalContext);
+
+    const [changingUsernameRunning, setChangingUsernameRunning] = useState(false);
 
     const logOut = () => {
 
@@ -120,7 +123,7 @@ const SettingsAccount = ({navigation}: any) => {
         // if 7 days haven't passed since the last username change, alert the user that there is still a cooldown
         if (daysDifference < 7) {
             Alert.alert(
-                'Смяна на име',
+                'Грешка!',
                 'Можете да смените потребителското си име отново след ' + (7 - Math.floor(daysDifference)) + ' дни!',
                 [
                     {
@@ -149,6 +152,13 @@ const SettingsAccount = ({navigation}: any) => {
 
                         if (newUsername) {
 
+                            if (await isUsernameNSFW(newUsername)) {
+                                alert('This username is not allowed!');
+                                return;
+                            }
+
+                            setChangingUsernameRunning(true)
+
                             const trimmedUsername = newUsername.trim();
                             console.log(trimmedUsername);
 
@@ -159,11 +169,6 @@ const SettingsAccount = ({navigation}: any) => {
 
                             if (newUsername == username) {
                                 alert('Потребителското име не може да бъде същото като предишното!');
-                                return;
-                            }
-
-                            if (await isUsernameNSFW(newUsername)) {
-                                alert('This username is not allowed!');
                                 return;
                             }
 
@@ -192,6 +197,10 @@ const SettingsAccount = ({navigation}: any) => {
                             }
                         
                             if (isUsernameTaken) return;
+
+                            AsyncStorage.setItem(`username_${await getEmail()}`, trimmedUsername)
+
+                            if (!internetConnected) return;
                         
                             try {
                                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -203,10 +212,10 @@ const SettingsAccount = ({navigation}: any) => {
                                 setUsername(trimmedUsername);
 
                                 await changeUsernameForFriends(FIREBASE_AUTH.currentUser?.uid, trimmedUsername);
+                                
+                                setChangingUsernameRunning(false)
 
-                                AsyncStorage.setItem(`username_${await getEmail()}`, trimmedUsername)
-
-                                alert('Името ви успешно беше сменено на ' + trimmedUsername);
+                                //alert('Името ви успешно беше сменено на ' + trimmedUsername);
                             } catch(err: any) {
                                 alert(err);
                             }
@@ -361,7 +370,7 @@ const SettingsAccount = ({navigation}: any) => {
     return (
         <>
 
-            {(isSyncingInfoModalVisible || isDeletingAccountModalVisible) && (
+            {(isSyncingInfoModalVisible || isDeletingAccountModalVisible || changingUsernameRunning) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -381,6 +390,10 @@ const SettingsAccount = ({navigation}: any) => {
                     setIsDeletingAccountModalVisible={setIsDeletingAccountModalVisible}
                 />
 
+                <ChangingUsernameModal
+                    isChangingUsernameModalVisible={changingUsernameRunning}
+                    setIsChangingUsernameModalVisible={setChangingUsernameRunning}
+                />
 
                 <View style={tw`h-full pt-2`}>
 
