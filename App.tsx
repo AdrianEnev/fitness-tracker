@@ -344,7 +344,7 @@ function App() {
                     setIsConnected(true)
                 }
 
-                console.log(speed)
+                //console.log(speed)
             }
         };
 

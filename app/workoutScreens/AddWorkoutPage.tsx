@@ -24,17 +24,17 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
     
     const getExerciseTitle = async () => {
 
-        let exerciseTitle= "Exercise "
+        let exerciseTitle= "Exercise"
 
         const currentLanguage = await AsyncStorage.getItem('language')
         if (currentLanguage == "bg") {
-            return "Упражнение "
+            return "Упражнение"
         }
         else if (currentLanguage == "de") {
-            return "Übung "
+            return "Übung"
 
         }else if (currentLanguage == "ru") {
-            return "Упражнение "
+            return "Упражнение"
 
         }else{
             return exerciseTitle
@@ -60,7 +60,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
     };
 
     const [exercises, setExercises] = useState<Exercise[]>([newExercise]);
-    const [pageIndex, setPageIndex] = useState(1)
+    const [pageNumber, setPageNumber] = useState(1)
 
     const [exerciseIndex, setExerciseIndex] = useState(1);
 
@@ -76,7 +76,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
 
     const removeSet = (exerciseId: string, setId: string) => {
 
-        if (pageIndex == 1) return;
+        if (pageNumber == 1) return;
 
         setExercises(exercises.map(exercise => 
             exercise.id === exerciseId 
@@ -98,9 +98,9 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
     };
 
     const nextExercise = async () => {
-        if (pageIndex < exercises.length && exercises.length < 9) {
+        if (pageNumber < exercises.length && exercises.length < 9) {
             
-            setPageIndex(pageIndex + 1);
+            setPageNumber(pageNumber + 1);
             
         } else if (exercises.length < 9) {
 
@@ -112,24 +112,24 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                 id: Math.random().toString(),
             };
             setExercises([...exercises, newExercise]);
-            setPageIndex(pageIndex + 1);
+            setPageNumber(pageNumber + 1);
             setExerciseIndex(exerciseIndex + 1); // increment exerciseIndex
         }
     };
     
     const previousExercise = () => {
 
-        if (pageIndex === 1) return;
+        if (pageNumber === 1) return;
 
         // before moving to the next exercise, check if the current one does not have any of its inputs filled and if so delete it
-        const currentExercise = exercises[pageIndex - 1];
+        const currentExercise = exercises[pageNumber - 1];
         let isCurrentExerciseEmpty = currentExercise.sets.every((set) => set.reps === '' && set.weight === '' && currentExercise.title === '') && currentExercise.sets.length === 1;
     
         if (isCurrentExerciseEmpty) {
             setExercises(exercises.filter((exercise) => exercise.id !== currentExercise.id));
             setExerciseIndex(exerciseIndex - 1); // decrement exerciseIndex
         }
-        setPageIndex(pageIndex - 1);
+        setPageNumber(pageNumber - 1);
     };
 
     const updateExerciseTitle = (exerciseId: string, title: string) => {
@@ -172,7 +172,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
     const setSetIntensity = (setIntensityNumber: number) => {
     
         setExercises(exercises.map((exercise, exerciseIndex) => 
-            exerciseIndex === pageIndex - 1
+            exerciseIndex === pageNumber - 1
             ? { 
                 ...exercise, 
                 sets: exercise.sets.map((set, setIndex) => 
@@ -231,23 +231,23 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
 
     const deleteCurrentExercise = () => {
 
-        if (pageIndex == 1) return;
+        if (pageNumber == 1) return;
 
-        const currentExercise = exercises[pageIndex - 1];
+        const currentExercise = exercises[pageNumber - 1];
         setExercises(exercises.filter((exercise) => exercise.id !== currentExercise.id));
         setExerciseIndex(exerciseIndex - 1); // decrement exerciseIndex
         
-        setPageIndex(pageIndex - 1);
+        setPageNumber(pageNumber - 1);
     }
 
     useEffect(() => {
-        // Run when pageIndex or exercises change
-        const currentExercise = exercises[pageIndex - 1];
+        // Run when pageNumber or exercises change
+        const currentExercise = exercises[pageNumber - 1];
     
-        if (currentExercise && currentExercise.sets.length === 0 && pageIndex != 1) {
+        if (currentExercise && currentExercise.sets.length === 0 && pageNumber != 1) {
           deleteCurrentExercise();
         }
-    }, [pageIndex, exercises]); 
+    }, [pageNumber, exercises]); 
     
     return (
         <>
@@ -291,13 +291,13 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                         isExerciseOptionsModalVisible={isExerciseOptionsModalVisible}
                         setIsExerciseOptionsModalVisible={setIsExerciseOptionsModalVisible}
                         addRestDay={addRestDay}
-                        pageIndex={pageIndex}
+                        pageIndex={pageNumber}
                         deleteCurrentExercise={deleteCurrentExercise}
                     />
 
                     <View style={tw`flex flex-col gap-y-1 max-h-[82%]`}>
                         {exercises.map((exercise, index) => {
-                            if (index === pageIndex - 1) {
+                            if (index === pageNumber - 1) {
                                 return (
                                     <View key={exercise.id} style={tw`w-full`}>
 
@@ -375,7 +375,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                                                                 </View>
 
 
-                                                                <Pressable style={tw`absolute right-7 w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${pageIndex == 1 ? 'hidden' : ''}`}
+                                                                <Pressable style={tw`absolute right-7 w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${pageNumber == 1 ? 'hidden' : ''}`}
                                                                     onPress={() => {
                                                                         deleteCurrentExercise();
                                                                     }} 
@@ -412,8 +412,8 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                 forwardButton={nextExercise}
                 backButton={previousExercise}
                 addWorkoutButton={() => setIsCreateWorkoutModalVisible(true)}
-                addSetButton={() => addSet(exercises[pageIndex - 1].id)}
-                addWorkoutPageCurrentExercise={pageIndex}
+                addSetButton={() => addSet(exercises[pageNumber - 1].id)}
+                addWorkoutPageCurrentExercise={pageNumber}
             />
             
         </>

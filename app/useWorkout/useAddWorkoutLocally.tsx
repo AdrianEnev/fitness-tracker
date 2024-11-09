@@ -26,16 +26,16 @@ const addWorkoutLocally = async (exercises: any, workoutTitle: string, id: any, 
         const existingWorkouts = await AsyncStorage.getItem(`workouts_${email}`);
         const workouts = existingWorkouts ? JSON.parse(existingWorkouts) : [];
 
-        let exerciseTitleLang = "Exercise "
+        let exerciseTitleLang = "Exercise"
         const currentLanguage = await AsyncStorage.getItem('language')
         if (currentLanguage == "bg") {
-            exerciseTitleLang = "Упражнение "
+            exerciseTitleLang = "Упражнение"
         }
         else if (currentLanguage == "de") {
-            exerciseTitleLang = "Übung "
+            exerciseTitleLang = "Übung"
 
         }else if (currentLanguage == "ru") {
-            exerciseTitleLang = "Упражнение "
+            exerciseTitleLang = "Упражнение"
         }
 
         // Create new workout object

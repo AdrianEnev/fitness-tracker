@@ -26,12 +26,13 @@ const ViewWorkout = ({route, navigation}: any) => {
 
     const [newWorkoutTitle, setNewWorkoutTitle] = useState('');
 
-    const [currentIndex, setCurrentIndex] = useState(0);
+    const [pageNumber, setPageNumber] = useState(0);
     const [newExercises, setNewExercises] = useState<any>([...exercises]);
     const [userInputs, setUserInputs] = useState<any>(newExercises.map((exercise: any) => ({
         ...exercise,
         sets: exercise.sets.map((set: any) => ({...set, reps: set.reps, weight: set.weight}))
     })));
+
 
     const [saveChangesRan, setSaveChangesRan] = useState(false);
 
@@ -40,7 +41,7 @@ const ViewWorkout = ({route, navigation}: any) => {
     const addSet = () => {
         const updatedExercises = [...newExercises];
         const updatedUserInputs = [...userInputs];
-        const currentExerciseIndex = updatedExercises.findIndex((exercise: any) => exercise.exerciseIndex === currentIndex + 1);
+        const currentExerciseIndex = updatedExercises.findIndex((exercise: any) => exercise.exerciseIndex === pageNumber + 1);
         
         if (currentExerciseIndex !== -1) {
             if (updatedExercises[currentExerciseIndex].sets.length < 15) { // Check if the number of sets is less than 20
@@ -69,7 +70,7 @@ const ViewWorkout = ({route, navigation}: any) => {
         const currentExercise = updatedExercises.find((exercise: any) => exercise.exerciseIndex === exerciseIndex);
       
         if (currentExercise && currentExercise.sets.length === 1) {
-            if (currentIndex == 0) {
+            if (pageNumber == 0) {
                 return;
             }
         }
@@ -113,30 +114,47 @@ const ViewWorkout = ({route, navigation}: any) => {
     }
     
     const addExercise = () => {
-        console.log('add exercise ran');
-        //console.log('Current exercises:', newExercises);
-
+        
         if (newExercises.length < 9) {
+            // Get the last exercise title
+            const lastExercise = newExercises[newExercises.length - 1];
+            let newTitle;
+    
+            // Check if the last exercise title matches the pattern "Упражнение + number"
+            if (lastExercise && /^Упражнение \d+$/.test(lastExercise.title)) {
+                // Extract the number from the last exercise title and increment it
+                const lastExerciseNumber = parseInt(lastExercise.title.split(' ')[1], 10);
+                newTitle = "Упражнение " + (lastExerciseNumber + 1);
+            } else {
+                // If no match, default to the normal title generation
+                newTitle = "Упражнение " + (newExercises.length + 1);
+            }
+    
+            // Create a new set and exercise object
             const newSet = {
                 id: generateID(),
                 reps: "",
                 weight: "" 
             };
-
+    
             const newExercise = {
                 id: generateID(),
-                title: "Упражнение " + (newExercises.length + 1),
+                title: newTitle,
                 exerciseIndex: newExercises.length + 1,
                 sets: [newSet]
             };
-
+    
+            // Update the state with the new exercise
             setNewExercises([...newExercises, newExercise]);
             setUserInputs([...userInputs, { ...newExercise, sets: [newSet] }]);
-
-            // Update currentIndex to the newly added exercise
-            setCurrentIndex(newExercises.length);
+    
+            // Update pageNumber to the newly added exercise
+            setPageNumber(newExercises.length);
+    
+            console.log(newExercises);
         }
     };
+    
 
     const deleteWorkoutFromFolder = async () => {
         try {
@@ -254,12 +272,12 @@ const ViewWorkout = ({route, navigation}: any) => {
     const [intensityBoxSelected, setIntensityBoxSelected] = useState(0);
 
     const setSetIntensity = (setIntensityNumber: number) => {
-        // Find the current exercise based on the currentIndex
+        // Find the current exercise based on the pageNumber
         const updatedExercises = [...newExercises];
         const updatedUserInputs = [...userInputs];
     
         const currentExerciseIndex = updatedExercises.findIndex(
-            (exercise: any) => exercise.exerciseIndex === currentIndex + 1
+            (exercise: any) => exercise.exerciseIndex === pageNumber + 1
         );
     
         if (currentExerciseIndex !== -1) {
@@ -297,18 +315,22 @@ const ViewWorkout = ({route, navigation}: any) => {
     
         // Find the index of the deleted exercise
         const deletedIndex = newExercises.findIndex((ex: any) => ex.id === exerciseId);
-    
-        // Adjust currentIndex based on the deleted exercise's position
-        if (currentIndex > deletedIndex) {
-            setCurrentIndex(currentIndex - 1);
-        } else if (currentIndex === deletedIndex) {
+
+        // Ne znam tva zashto raboti ama bez nego se minava nazad vmesto napred pri iztrivane na 1voto uprajnenie
+        if (pageNumber == 0 && updatedExercises.length > 0) {
+            return;
+        }
+
+        if (pageNumber > deletedIndex) {
+            setPageNumber(pageNumber - 1);
+        } else if (pageNumber === deletedIndex) {
             // If the deleted exercise is the current one
             if (updatedExercises.length > 0) {
-                // Set currentIndex to the last exercise if any exercises remain
-                setCurrentIndex(updatedExercises.length - 1);
+                // Set pageNumber to the last exercise if any exercises remain
+                setPageNumber(updatedExercises.length - 1);
             } else {
-                // If no exercises are left, set currentIndex to 0 (or keep it at 0 for an empty state)
-                setCurrentIndex(0);
+                // If no exercises are left, set pageNumber to 0 (or keep it at 0 for an empty state)
+                setPageNumber(0);
             }
         }
     
@@ -325,7 +347,6 @@ const ViewWorkout = ({route, navigation}: any) => {
         }else if (!saveChangesRan){
             startWorkout(workout, navigation);
         }
-        
     }
 
     const removeExercise = (index: number) => {
@@ -340,22 +361,22 @@ const ViewWorkout = ({route, navigation}: any) => {
         setNewExercises(updatedExercises);
         setUserInputs(updatedUserInputs);
 
-        // Adjust currentIndex to prevent it from being out of bounds
+        // Adjust pageNumber to prevent it from being out of bounds
         if (index >= updatedExercises.length) {
-            setCurrentIndex(Math.max(0, updatedExercises.length - 1));
+            setPageNumber(Math.max(0, updatedExercises.length - 1));
         }
     };
 
     useEffect(() => {
-        const currentExercise = newExercises[currentIndex];
+        const currentExercise = newExercises[pageNumber];
         
         if (currentExercise && currentExercise.sets.length === 0) {
-            if (currentIndex != 0) {
-                removeExercise(currentIndex);
+            if (pageNumber != 0) {
+                removeExercise(pageNumber);
             }
             
         }
-    }, [currentIndex, newExercises]);
+    }, [pageNumber, newExercises]);
 
     return (
         <>
@@ -405,7 +426,7 @@ const ViewWorkout = ({route, navigation}: any) => {
 
                     <View style={tw`flex flex-col gap-y-1`}>
                         {newExercises.map((exercise: any, index: any) => {
-                            if (exercise.exerciseIndex === currentIndex + 1) {
+                            if (exercise.exerciseIndex === pageNumber + 1) {
                                 return (
                                     <View key={exercise.id} style={tw`w-full h-[82%]`}>
 
@@ -537,10 +558,10 @@ const ViewWorkout = ({route, navigation}: any) => {
                         addSetButton={addSet}
                         workout={workout}
                         forwardButton={() => {
-                            setCurrentIndex((currentIndex + 1) % newExercises.length)
+                            setPageNumber((pageNumber + 1) % newExercises.length)
                         }}
                         backButton={() => {
-                            setCurrentIndex((currentIndex - 1 + newExercises.length) % newExercises.length)
+                            setPageNumber((pageNumber - 1 + newExercises.length) % newExercises.length)
                         }}
                         viewWorkoutNumberOfExercises={newExercises.length}
                         saveViewWorkoutChanges={saveChanges}
