@@ -34,7 +34,8 @@ const SettingsAccount = ({navigation}: any) => {
         setSetupRan, 
         setIsAccountDeleted, 
         syncingInfoRunning, 
-        setSyncingInfoRunning 
+        setSyncingInfoRunning,
+        internetSpeed
     } = useContext(GlobalContext);
 
     const [changingUsernameRunning, setChangingUsernameRunning] = useState(false);
@@ -60,17 +61,6 @@ const SettingsAccount = ({navigation}: any) => {
             ],
         );
 
-    }
-
-    const isUsernameNSFW = async (username: any) => {
-
-        const isNSFW = await checkUsernameNSFW(username);
-
-        if (isNSFW){
-            return true
-        }else{
-            return false
-        }
     }
 
     const changeUsernameForFriends = async (currentUserID: any, newUsername: any) => {
@@ -152,11 +142,19 @@ const SettingsAccount = ({navigation}: any) => {
 
                         if (newUsername) {
 
-                            if (await isUsernameNSFW(newUsername)) {
-                                alert('This username is not allowed!');
-                                return;
+                            try {
+                                if (await checkUsernameNSFW(newUsername)) {
+                                    alert('This username is not allowed!');
+                                    return;
+                                }
+                            } catch (error: any) {
+                                // Check if the error message contains the specific model loading error
+                                if (error && error.error && error.error.includes('Model facebook/bart-large-mnli is currently loading')) {
+                                    alert("Please try again later!");
+                                    return;
+                                }
                             }
-
+                            
                             setChangingUsernameRunning(true)
 
                             const trimmedUsername = newUsername.trim();
@@ -248,7 +246,7 @@ const SettingsAccount = ({navigation}: any) => {
                                 title === t('delete-account') && !internetConnected || 
                                 title === t(`log-out`) && !internetConnected
                             ) && (
-                                <Text style={tw`text-gray-500 mb-[8px]`}>Requires internet</Text>
+                                <Text style={tw`text-gray-500 mb-[8px]`}>Requires Stable Internet</Text>
                             )}
                         </View>
                     </View>
@@ -445,13 +443,14 @@ const SettingsAccount = ({navigation}: any) => {
                     })}
                     {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, () => {
 
-                        if (internetConnected) {
+                        if (internetConnected && internetSpeed > 32) {
                             const auth = getAuth();
                             const user = auth.currentUser;
                             
                             deleteAccount(email, user, setProfilePicture, setSetupRan, setIsAccountDeleted, setIsSyncingInfoModalVisible)
                             
                         }else{
+                            alert("Unstable or no internet connection!")
                             Vibration.vibrate()
                         }
                         

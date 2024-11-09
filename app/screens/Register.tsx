@@ -10,10 +10,11 @@ import GlobalContext from '../../GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { checkUserDocument } from '../use/useCheckUserInfo';
 import EmailNotVerified from './EmailNotVerified';
+import checkUsernameNSFW from '../use/useCheckUsernameNSFW';
 
 const Register = ({navigation}: any) => {
 
-    const {internetConnected, setIsAccountDeleted} = useContext(GlobalContext);
+    const {internetConnected, setIsAccountDeleted, internetSpeed} = useContext(GlobalContext);
 
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
@@ -33,7 +34,11 @@ const Register = ({navigation}: any) => {
 
         if (!internetConnected) {
             alert('Няма интернет връзка!');
-            return
+            return;
+        }
+        if (internetSpeed < 16) {
+            alert('Нестабилна интернет връзка!');
+            return;
         }
         
         const trimmedUsername = username.trim();
@@ -42,6 +47,7 @@ const Register = ({navigation}: any) => {
         if (trimmedEmail.length == 0 || password.length == 0 || confirmPassword.length == 0 || trimmedUsername.length == 0) {    
             return;
         }
+
         const weirdCharPattern = /[^a-zA-Z0-9@#$£€%^&*()"'-/|.,?![]{}+=_~<>¥]/;
         if (weirdCharPattern.test(password)) {
             alert('Паролата не може да съдържа емоджитa!');
@@ -67,27 +73,17 @@ const Register = ({navigation}: any) => {
         if (await isAccountLimitReached()) {
             alert('You have reached the maximum number of accounts for this device.');
             return;
-        }     
-    
-        let isUsernameTaken = false;
-    
-        const usersSnapshot = await getDocs(collection(FIRESTORE_DB, 'users'));
-        for (const doc of usersSnapshot.docs) {
-            const userInfoCollectionRef = collection(doc.ref, 'user_info');
-            const usernameDoc = await getDocs(userInfoCollectionRef);
-            for (const doc of usernameDoc.docs) {
-                if (doc.id === 'username') {
-                    if (doc.data().username.trim() === trimmedUsername) {
-                        alert('Потребителското име е заето!');
-                        isUsernameTaken = true;
-                        break;
-                    }
-                }
-            }
-            if (isUsernameTaken) break;
+        }    
+        
+        if (await checkUsernameNSFW(trimmedUsername)) {
+            alert('This username is not allowed!');
+            return;
         }
     
-        if (isUsernameTaken) return;
+        if (await isUsernameTaken(trimmedUsername)) {
+            alert('Потребителското име е заето!');
+            return;
+        }
     
         try {
             const after = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
@@ -113,6 +109,23 @@ const Register = ({navigation}: any) => {
         } catch(err: any) {
             console.log('error', err)
         }
+    }
+
+    const isUsernameTaken = async (trimmedUsername: any) => {
+        const usersSnapshot = await getDocs(collection(FIRESTORE_DB, 'users'));
+
+        for (const doc of usersSnapshot.docs) {
+            const userInfoCollectionRef = collection(doc.ref, 'user_info');
+            const usernameDoc = await getDocs(userInfoCollectionRef);
+
+            for (const user of usernameDoc.docs) {
+                if (user.id === 'username' && user.data().username.trim() === trimmedUsername) {
+                    return true; // Username is taken
+                }
+            }
+        }
+
+        return false; 
     }
 
     const isAccountLimitReached = async () => {
@@ -155,23 +168,8 @@ const Register = ({navigation}: any) => {
 
     useEffect(() => {
 
-        //AsyncStorage.clear();
-
         setPasswordCharacters(65 - password.length);
         setConfirmPasswordCharacters(65 - confirmPassword.length);
-
-        // console log all asyncstorage items
-        /*AsyncStorage.getAllKeys().then(keys => {
-            console.log(keys)
-            return AsyncStorage.multiGet(keys)
-        }).then(keyValue => {
-                console.log(keyValue)
-        })*/
-
-        // clear all asyncstorage items
-        /*AsyncStorage.clear().then(() => {
-            console.log('cleared')
-        })*/
 
         const strength = checkPasswordStrength(password);
         setPasswordStrength(strength)

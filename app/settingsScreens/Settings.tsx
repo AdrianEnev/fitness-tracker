@@ -62,7 +62,7 @@ const Settings = ({navigation}: any) => {
                                 title === t('friends') && !internetConnected || 
                                 title === t('account') && !internetConnected
                             ) && (
-                                <Text style={tw`text-gray-500 mb-[8px]`}>Requires internet</Text>
+                                <Text style={tw`text-gray-500 mb-[8px]`}>Requires Stable Internet</Text>
                             )}
                         </View>
                     </View>

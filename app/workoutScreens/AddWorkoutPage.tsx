@@ -375,7 +375,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                                                                 </View>
 
 
-                                                                <Pressable style={tw`absolute right-7 w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${mapIndex != 0 ? 'hidden' : ''}`}
+                                                                <Pressable style={tw`absolute right-7 w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${pageIndex == 1 ? 'hidden' : ''}`}
                                                                     onPress={() => {
                                                                         deleteCurrentExercise();
                                                                     }} 

@@ -274,8 +274,8 @@ const ViewWorkout = ({route, navigation}: any) => {
     };
 
     const deleteExercise = (exerciseId: any) => {
-        console.log('before deletion');
-        console.log(newExercises);
+        //console.log('before deletion');
+        ///console.log(newExercises);
     
         const updatedExercises = newExercises.filter((ex: any) => ex.id !== exerciseId);
         const updatedUserInputs = userInputs.filter((input: any) => input.id !== exerciseId);
@@ -289,8 +289,8 @@ const ViewWorkout = ({route, navigation}: any) => {
             input.exerciseIndex = index + 1;
         });
     
-        console.log('after deletion');
-        console.log(updatedExercises);
+        //console.log('after deletion');
+        //console.log(updatedExercises);
     
         setNewExercises(updatedExercises);
         setUserInputs(updatedUserInputs);
@@ -301,8 +301,15 @@ const ViewWorkout = ({route, navigation}: any) => {
         // Adjust currentIndex based on the deleted exercise's position
         if (currentIndex > deletedIndex) {
             setCurrentIndex(currentIndex - 1);
-        } else if (currentIndex === deletedIndex && currentIndex === newExercises.length) {
-            setCurrentIndex(currentIndex - 1); 
+        } else if (currentIndex === deletedIndex) {
+            // If the deleted exercise is the current one
+            if (updatedExercises.length > 0) {
+                // Set currentIndex to the last exercise if any exercises remain
+                setCurrentIndex(updatedExercises.length - 1);
+            } else {
+                // If no exercises are left, set currentIndex to 0 (or keep it at 0 for an empty state)
+                setCurrentIndex(0);
+            }
         }
     
         console.log('deleted exercise');
@@ -493,7 +500,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                                                                             />
                                                                         </View>
 
-                                                                        <Pressable style={tw`absolute right-7 w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${mapIndex != 0 ? 'hidden' : ''} ${newExercises.length == 1 ? 'hidden' : ''}`}
+                                                                        <Pressable style={tw`absolute right-7 w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${newExercises.length == 1 ? 'hidden' : ''}`}
                                                                             onPress={() => {
                                                                                 setIsDeleteExerciseModalVisible(true)
                                                                                 setCurrentExerciseId(exercise.id)

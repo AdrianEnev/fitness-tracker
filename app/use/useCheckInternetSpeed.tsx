@@ -1,6 +1,10 @@
 const checkInternetSpeed = async () => {
+
     const startTime = new Date().getTime();
-    const response = await fetch('https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png');
+    
+    const response = await fetch('https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png', {
+        cache: 'no-store'
+    });
     const endTime = new Date().getTime();
 
     const fileSize = 14 * 1024; // Assume the image size is ~14 KB

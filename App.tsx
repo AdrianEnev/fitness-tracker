@@ -117,6 +117,10 @@ function App() {
         console.log('async storage cleared')
     }
 
+    const logAsyncStorage = async () => {
+        console.log(AsyncStorage.getAllKeys())
+    }
+
 
     const onAuthenticate = async () => {
         const auth = await LocalAuthentication.authenticateAsync({
@@ -295,6 +299,7 @@ function App() {
             if (netInfo.isConnected) {
                 const speed = await checkInternetSpeed()
                 setInternetSpeed(speed)
+                console.log(speed)
             }
             
             //const netInfo = { isConnected: false }
@@ -325,7 +330,6 @@ function App() {
         return () => netListener();
     }, []);
 
-    // check internet connection in the background
     useEffect(() => {
         const checkInternetConnection = async () => {
             const netInfo = await NetInfo.fetch();
@@ -333,13 +337,21 @@ function App() {
             if (netInfo.isConnected) {
                 const speed = await checkInternetSpeed()
                 setInternetSpeed(speed);
+
+                if (speed < 16) {
+                    setIsConnected(false)
+                }else{
+                    setIsConnected(true)
+                }
+
+                console.log(speed)
             }
         };
 
         // Run checkInternetConnection every 10 seconds
         const interval = setInterval(() => {
             checkInternetConnection();
-        }, 10000); // 10000 milliseconds = 10 seconds
+        }, 10000);
 
         // Clear interval on unmount
         return () => clearInterval(interval);
@@ -347,13 +359,16 @@ function App() {
 
     useEffect(() => {
         const interval = setInterval(async () => {
+
             if (user && !isEmailVerified) {
-                await user.reload();
-                if (user.emailVerified) {
-                    setIsEmailVerified(true);
-                    setEmailVerifiedChanged(true); // Update state when email is verified
-                }
-                console.log('interval ran')
+                await user.reload().then(() => {
+                    if (user.emailVerified) {
+                        setIsEmailVerified(true);
+                        setEmailVerifiedChanged(true); // Update state when email is verified
+                    }
+                    console.log('interval ran')
+                });
+                
             }
         }, 1000); 
 
@@ -369,7 +384,7 @@ function App() {
 
     useEffect(() => {
 
-        if (isConnected && isAuthenticated && !hasSynced) {
+        if (isConnected && isAuthenticated && !hasSynced && user) {
             setHasSynced(true);
 
             const query = async () => {
@@ -430,6 +445,11 @@ function App() {
             subscription.remove(); 
         };
     }, []);
+
+    useEffect(() => {
+        //clearAsyncStorage()
+        //logAsyncStorage()
+    }, [])
 
     const handleNavigation = () => {
         // Handles the logic for navigation based on language and authentication
