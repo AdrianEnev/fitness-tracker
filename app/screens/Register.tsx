@@ -11,10 +11,12 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { checkUserDocument } from '../use/useCheckUserInfo';
 import EmailNotVerified from './EmailNotVerified';
 import checkUsernameNSFW from '../use/useCheckUsernameNSFW';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 
 const Register = ({navigation}: any) => {
 
-    const {internetConnected, setIsAccountDeleted, internetSpeed} = useContext(GlobalContext);
+    const {internetConnected, setIsAccountDeleted, internetSpeed, setAccountJustRegistered} = useContext(GlobalContext);
 
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
@@ -27,6 +29,9 @@ const Register = ({navigation}: any) => {
     const [registerButtonDisabled, setRegisterButtonDisabled] = useState(false);
     const [passwordStrength, setPasswordStrength] = useState('')
     const [confirmPasswordStrength, setConfirmPasswordStrength] = useState('')
+
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false)
 
     const auth = FIREBASE_AUTH;
 
@@ -45,6 +50,7 @@ const Register = ({navigation}: any) => {
         const trimmedEmail = email.trim();
     
         if (trimmedEmail.length == 0 || password.length == 0 || confirmPassword.length == 0 || trimmedUsername.length == 0) {    
+            setRegisterButtonDisabled(false)
             return;
         }
 
@@ -104,6 +110,7 @@ const Register = ({navigation}: any) => {
             // send email verification
             sendEmailVerification(after.user);
             checkUserDocument(userDocRef, after.user, userInfoCollectionRef);
+            setAccountJustRegistered(true)
             navigation.navigate('Непотвърден-Имейл')
 
         } catch(err: any) {
@@ -182,9 +189,9 @@ const Register = ({navigation}: any) => {
     const { t } = useTranslation();
 
     return (
-        <SafeAreaView style={tw`flex-1 items-center justify-center bg-gray-100`}>
+        <SafeAreaView style={tw`bg-white flex-1`}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={tw`w-[92%] bg-white rounded-xl p-5 mb-3`}>
+                <View style={tw`p-5 `}>
 
                     <Text style={tw`text-4xl text-center text-[#fd1c47] font-bold my-2`}>{t('register')}</Text>
 
@@ -240,7 +247,20 @@ const Register = ({navigation}: any) => {
                                     value={password} 
                                     autoCapitalize='none'
                                     maxLength={65}
+                                    secureTextEntry={!isPasswordVisible}
                                 />
+
+                                <View style={tw`absolute right-2 bottom-[12px]`}>
+                                    {isPasswordVisible ? 
+                                        (
+                                            <Ionicons name='eye-outline' size={32} color="#fd3e6b" onPress={() => setIsPasswordVisible(false)}/>
+                                        ) : 
+                                        (
+                                            <Ionicons name='eye-off-outline' size={32} color="#fd3e6b" onPress={() => setIsPasswordVisible(true)}/>
+
+                                        )
+                                    }
+                                </View>
                             </View>
 
                             <View style={tw`mb-2`}>
@@ -266,7 +286,20 @@ const Register = ({navigation}: any) => {
                                     value={confirmPassword} 
                                     autoCapitalize='none'
                                     maxLength={65}
+                                    secureTextEntry={!isConfirmPasswordVisible}
                                 />
+
+                                <View style={tw`absolute right-2 bottom-[12px]`}>
+                                    {isConfirmPasswordVisible ? 
+                                        (
+                                            <Ionicons name='eye-outline' size={32} color="#fd3e6b" onPress={() => setIsConfirmPasswordVisible(false)}/>
+                                        ) : 
+                                        (
+                                            <Ionicons name='eye-off-outline' size={32} color="#fd3e6b" onPress={() => setIsConfirmPasswordVisible(true)}/>
+
+                                        )
+                                    }
+                                </View>
                             </View>
                             
                             <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-lg flex justify-center items-center shadow-md`}

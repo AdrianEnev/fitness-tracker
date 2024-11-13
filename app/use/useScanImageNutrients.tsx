@@ -1,11 +1,59 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
-import getEmail from './useGetEmail';
-import { Platform } from 'react-native';
-import * as FileSystem from 'expo-file-system';
+const scanImageNutrients = async (barcode: any, date: any) => {
+    console.log("Barcode:", barcode);
+    console.log("Date:", date);
+    
+    try {
+        // Step 1: Lookup the product info based on the barcode
+        const productInfo = await getProductInfo(barcode);
 
-const scanImageNutrients = async (image: any, date: any) => {
+        // Step 2: Get the product name or description
+        const productName = productInfo.product_name || productInfo.generic_name;
+
+        // Step 3: Fetch nutritional info from Edamam using the product name
+        const nutritionData = await getNutritionalInfoFromEdamam(productName);
+
+        if (nutritionData) {
+            console.log('Nutritional Information:', nutritionData);
+        } else {
+            console.log('No nutritional data available from Edamam');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
     
 }
+
+async function getProductInfo(barcode: string) {
+    const url = `https://world.openfoodfacts.org/api/v0/product/${123456789012}.json`;
+
+    const response = await fetch(url);
+    const data = await response.json();
+
+    if (data.status === 1) {
+        return data.product; // Contains product details like name, brand, etc.
+    } else {
+        throw new Error("Product not found in Open Food Facts.");
+    }
+}
+
+async function getNutritionalInfoFromEdamam(productName: string): Promise<any> {
+    const EDAMAM_APP_ID = '90e2036b';
+    const EDAMAM_APP_KEY = 'b1e82289782395cb48b50b4b11520754';
+    const url = `https://api.edamam.com/api/food-database/v2/parser?app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}&ingr=${encodeURIComponent(productName)}`;
+
+    try {
+        const response = await fetch(url);
+        const data = await response.json();
+        if (data.hints && data.hints.length > 0) {
+            return data.hints[0].food; // Nutritional info of the first match
+        } else {
+            throw new Error('No nutritional data found.');
+        }
+    } catch (error) {
+        console.error('Error fetching data from Edamam:', error);
+        return null;
+    }
+}
+
 
 export default scanImageNutrients;

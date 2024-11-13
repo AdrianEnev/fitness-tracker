@@ -22,8 +22,6 @@ const FoodDay = ({route, navigation}: any) => {
 
     const { date } = route.params;
 
-    let [foodColors, setFoodColors] = useState<{ [key: string]: string }>({});
-
     const getDate = () => {
         if (date.day < 10 && date.month < 10) {
             return `0${date.day}.0${date.month}.${date.year}`;
@@ -86,7 +84,7 @@ const FoodDay = ({route, navigation}: any) => {
     }
 
     useEffect(() => {
-        logAllFoodItems();
+        //logAllFoodItems();
         //clearAllFoodItems();
     }, []);
 
@@ -131,7 +129,6 @@ const FoodDay = ({route, navigation}: any) => {
             updateCurrentFoods();
         }, [])
     );
-
 
     const {t} = useTranslation();
 

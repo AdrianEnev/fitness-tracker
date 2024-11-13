@@ -46,7 +46,7 @@ const ViewSearchedUser = ({route, navigation}: any) => {
 
     const [usersCollectionRefState, setUsersCollectionRefState] = useState<any>(null)
 
-    const [isUserPremium, setIsUserPremium] = useState(true);
+    const [isUserPremium, setIsUserPremium] = useState(false);
     
     useEffect(() => {
         getProfilePicture();

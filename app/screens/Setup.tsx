@@ -17,10 +17,12 @@ import SetupPageFive from '../setupComponents/SetupPageFive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
 import { getLanguageLocally } from '../use/useGetLanguageLocally';
+import { collection, doc, setDoc } from 'firebase/firestore';
+import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 
 const Setup = () => {
 
-    const { setSetupRan, internetConnected } = useContext(GlobalContext);
+    const { setSetupRan, internetConnected, internetSpeed } = useContext(GlobalContext);
 
     const { t } = useTranslation();
 
@@ -139,11 +141,14 @@ const Setup = () => {
 
     const finishSetup = async () => {
 
-        if (activityLevel == 0) {
-            return
+        if (!internetConnected || internetSpeed < 32) {
+            alert("Unstable internet connection, please try again later!");
+            return;
         }
 
-        console.log('finishing setup')
+        if (activityLevel == 0) {
+            return;
+        }
 
         const calories = calculateCalories("metric")
 
@@ -165,7 +170,6 @@ const Setup = () => {
 
         const email = await getEmail();
 
-        // nutrientite se dobavqt lokalno v telefona nezavisimo dali ima internet, ako ima internet se dobavqt i v bazata danni
         try {
             const jsonNutrients = JSON.stringify(nutrients);
             await AsyncStorage.setItem(`goal_nutrients_${email}`, jsonNutrients);
@@ -173,7 +177,22 @@ const Setup = () => {
             console.log('Error saving nutrients to AsyncStorage:', error);
         }
 
-        console.log('setup ran')
+        await AsyncStorage.setItem(`gender_${email}`, gender)
+
+        if (includeInBio && internetConnected) {
+            // users -> user -> user_info -> gender -> date + gender
+            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+            const userInfoCollectionRef = collection(userDocRef, 'user_info');
+            const genderDocRef = doc(userInfoCollectionRef, 'gender');
+
+            setDoc(genderDocRef, {
+                gender: gender,
+                date: Date.now()
+            })
+        }
+        
+        console.log('setup ran successfuly')
         
         setSetupRan(true);
 
@@ -203,9 +222,7 @@ const Setup = () => {
     //const [additionalCalories, setAdditionalCalories] = useState(0);
 
     const setGenderButton = (input: string) => {
-
         setGender(input)
-
     }
 
     //weight, weightType, setWeight, setWeightType

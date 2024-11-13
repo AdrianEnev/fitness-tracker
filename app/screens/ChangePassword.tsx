@@ -27,9 +27,9 @@ const ChangePassword = () => {
     const {t} = useTranslation();
 
     return (
-        <SafeAreaView style={tw`flex-1 items-center justify-center bg-gray-100`}>
+        <SafeAreaView style={tw`flex-1 bg-white`}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={tw`w-[92%] bg-white rounded-xl p-5 mb-3`}>
+                <View style={tw`p-5`}>
                 
                     <Text style={tw`text-4xl text-center text-[#fd1c47] font-bold my-2`}>{t('new-password')}</Text>
 

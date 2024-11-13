@@ -68,7 +68,7 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
 
                                     const id = generateID();
 
-                                    await addWorkoutLocally(exercises, workoutTitle, id, folder);
+                                    //await addWorkoutLocally(exercises, workoutTitle, id, folder);
                                     
                                     if (internetConnected) {
                                         addWorkout(exercises, workoutTitle, id, folder);

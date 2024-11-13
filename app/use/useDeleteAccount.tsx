@@ -120,10 +120,7 @@ const deleteAccount = async (
             const credentials = EmailAuthProvider.credential(email, password);
             reauthenticateWithCredential(user, credentials).then(async () => {
                 if (user) {
-
-                    setIsDeletingAccountModalVisible(true)
                     await executeDeletion(setProfilePicture, setSetupRan, setIsAccountDeleted, user);
-                    setIsDeletingAccountModalVisible(false)
                 }
             }).catch((error) => {
                 console.log(error);

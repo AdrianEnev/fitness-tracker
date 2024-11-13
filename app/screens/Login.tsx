@@ -7,11 +7,14 @@ import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import GlobalContext from '../../GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import Ionicons from '@expo/vector-icons/Ionicons';
+
 
 const Login = ({navigation}: any) => {
 
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
     const {internetConnected} = useContext(GlobalContext);
 
@@ -51,9 +54,9 @@ const Login = ({navigation}: any) => {
     const { t } = useTranslation();
 
     return (
-        <SafeAreaView style={tw`flex-1 items-center justify-center bg-gray-100`}>
+        <SafeAreaView style={tw`flex-1 bg-white`}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={tw`w-[92%] bg-white rounded-xl p-5 mb-3`}>
+                <View style={tw`p-5`}>
 
                     <Text style={tw`text-4xl text-center text-[#fd1c47] font-bold my-2`}>{t('login')}</Text>
 
@@ -84,7 +87,20 @@ const Login = ({navigation}: any) => {
                                     value={password} 
                                     autoCapitalize='none'
                                     maxLength={65}
+                                    secureTextEntry={!isPasswordVisible}
                                 />
+
+                                <View style={tw`absolute right-2 top-8`}>
+                                    {isPasswordVisible ? 
+                                        (
+                                            <Ionicons name='eye-outline' size={32} color="#fd3e6b" onPress={() => setIsPasswordVisible(false)}/>
+                                        ) : 
+                                        (
+                                            <Ionicons name='eye-off-outline' size={32} color="#fd3e6b" onPress={() => setIsPasswordVisible(true)}/>
+
+                                        )
+                                    }
+                                </View>
 
                                 <Pressable style={tw`flex items-end w-full mt-1 mb-2`} onPress={() => navigation.navigate('Парола-Смяна')}>
                                     <Text style={tw`font-medium text-gray-500`}>{t('forgot-password')}</Text>

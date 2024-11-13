@@ -181,6 +181,8 @@ function App() {
 
     const [syncingInfoRunning, setSyncingInfoRunning] = useState(false);
 
+    const [accountJustRegistered, setAccountJustRegistered] = useState(false);
+
     const fetchData = async () => {
         try {
             const setupHasRanLocally = await checkUserInfoCollectionLocally();
@@ -299,7 +301,7 @@ function App() {
             if (netInfo.isConnected) {
                 const speed = await checkInternetSpeed()
                 setInternetSpeed(speed)
-                console.log(speed)
+                //console.log(speed)
             }
             
             //const netInfo = { isConnected: false }
@@ -365,6 +367,7 @@ function App() {
                     if (user.emailVerified) {
                         setIsEmailVerified(true);
                         setEmailVerifiedChanged(true); // Update state when email is verified
+                        setAccountJustRegistered(false); // Account has been successfuly registered, this variable is no longer needed
                     }
                     console.log('interval ran')
                 });
@@ -399,8 +402,11 @@ function App() {
     // listen for firebase.logOut and navigate to unauthenticated screen if called
     useEffect(() => {
         const unsubscribe = FIREBASE_AUTH.onAuthStateChanged((user) => {
-            if (!user && isConnected) {
-                setIsAuthenticated(false)
+            if (user && isConnected) {
+                setIsAuthenticated(true);
+                setIsAccountDeleted(false);
+            } else if (!user && isConnected) {
+                setIsAuthenticated(false);
             }
           });
       
@@ -430,7 +436,7 @@ function App() {
 
     useEffect(() => {
         const subscription = AppState.addEventListener('change', (nextState) => {
-
+            
             const usersCollectionRef = collection(FIRESTORE_DB, 'users');
             const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
 
@@ -451,6 +457,34 @@ function App() {
         //logAsyncStorage()
     }, [])
 
+    /**
+     * 
+     * const handleNavigation = () => {
+    // Handles the logic for navigation based on language and authentication
+    if (!localLanguageSet) {
+      return <LanguageScreen setLocalLanguageSet={setLocalLanguageSet} />;
+    }
+
+    // Prioritize authentication check
+    if (user && isAuthenticated) {
+      // User is authenticated, navigate to the appropriate screen
+      return setupRan ? (
+        <AuthenticatedTabNavigator setupRan={setupRan} />
+      ) : (
+        <SetupPage />
+      );
+    } else {
+      // User is not authenticated or account is deleted
+      return isAccountDeleted ? (
+        <UnauthenticatedTabNavigator />
+      ) : (
+        <UnauthenticatedTabNavigator />
+      );
+    }
+  };
+
+     */
+
     const handleNavigation = () => {
         // Handles the logic for navigation based on language and authentication
         if (!localLanguageSet) {
@@ -464,9 +498,9 @@ function App() {
             // Authenticated or setup flow
             return isAccountDeleted ? (
                 <UnauthenticatedTabNavigator />
-            ) : setupRan && isAuthenticated && user ? (
+            ) : setupRan && isAuthenticated && user && !accountJustRegistered ? (
                 <AuthenticatedTabNavigator setupRan={setupRan} />
-            ) : !isEmailVerified && user ? (
+            ) : !isEmailVerified && user && accountJustRegistered ? (
                 <EmailNotVerified />
             ) : setupRan && !isAuthenticated && user ? (
                 <BiometricsFailed />
@@ -488,6 +522,7 @@ function App() {
                     autoPlay
                     loop
                 />
+                
                 <View style={tw`flex flex-row`}>
                     <Text style={tw`text-2xl font-bold text-white mt-4`}>{t('loading')}</Text>
                     <LottieView
@@ -507,7 +542,7 @@ function App() {
             setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber,
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
             internetConnected: isConnected, isAccountDeleted, setIsAccountDeleted, generatingWorkout, setGeneratingWorkout,
-            generatingWorkoutInFolder, setGeneratingWorkoutInFolder, syncingInfoRunning, setSyncingInfoRunning, internetSpeed
+            generatingWorkoutInFolder, setGeneratingWorkoutInFolder, syncingInfoRunning, setSyncingInfoRunning, internetSpeed, setAccountJustRegistered
         }}>
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />

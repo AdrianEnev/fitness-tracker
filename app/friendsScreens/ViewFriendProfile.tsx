@@ -20,7 +20,7 @@ const ViewFriendProfile = ({route, navigation}: any) => {
     const [workoutsFinished, setWorkoutsFinished] = useState(0);
     const [removingFriend, setRemovingFriend] = useState(false)
 
-    const [isFriendPremium, setIsFriendPremium] = useState(true)
+    const [isFriendPremium, setIsFriendPremium] = useState(false)
     const [isFriendOnline, setIsFriendOnline] = useState(false)
 
     const getIsFriendOnline = async () => {

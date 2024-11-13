@@ -20,6 +20,7 @@ interface GlobalContextType {
     setGeneratingWorkout: (value: boolean) => void;
     setGeneratingWorkoutInFolder: (value: any) => void;
     setSyncingInfoRunning: (value: any) => void;
+    setAccountJustRegistered: (value: any) => void;
 }
 
 const defaultValues: GlobalContextType = {
@@ -42,6 +43,7 @@ const defaultValues: GlobalContextType = {
     setIsAccountDeleted: () => {},
     setGeneratingWorkout: () => {},
     setGeneratingWorkoutInFolder: () => {},
+    setAccountJustRegistered: () => {},
 
 };
 
