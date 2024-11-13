@@ -13,10 +13,12 @@ import BottomNavigationBar from '../components/BottomNavigationBar';
 import LanguageModal from '../modals/LanguageModal';
 import { BlurView } from 'expo-blur';
 import retreiveInfo from '../use/useRetreiveInfo';
+import RetreiveInfoModal from '../modals/RetreiveInfoModal';
+import RetreivingInfoAnimationModal from '../modals/RetreivingInfoAnimationModal';
 
 const Settings = ({navigation}: any) => {
 
-    const { friendRequestsNumber } = useContext(GlobalContext);
+    const { friendRequestsNumber, internetSpeed } = useContext(GlobalContext);
 
     const { t } = useTranslation();
 
@@ -78,11 +80,13 @@ const Settings = ({navigation}: any) => {
     }
 
     const [isLanguageModalVisible, setIsLanguageModalVisible] = useState(false);
+    const [isRetreiveInfoModalVisible, setIsRetreiveInfoModalVisible] = useState(false);
+    const [isRetreivingInfoAnimationModalVisible, setIsRetreivingInfoAnimationModalVisible] = useState(false);
 
     return (
         <View style={tw`h-full`}>
             
-            { isLanguageModalVisible && (
+            { (isLanguageModalVisible || isRetreiveInfoModalVisible || isRetreivingInfoAnimationModalVisible) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -94,6 +98,20 @@ const Settings = ({navigation}: any) => {
                 isLanguageModalVisible={isLanguageModalVisible} 
                 setIsLanguageModalVisible={setIsLanguageModalVisible}
             />
+
+            <RetreiveInfoModal 
+                isRetreiveInfoModalVisible={isRetreiveInfoModalVisible} 
+                setIsRetreiveInfoModalVisible={setIsRetreiveInfoModalVisible}
+                setIsRetreivingInfoAnimationModalVisible={setIsRetreivingInfoAnimationModalVisible}
+                navigation={navigation}
+                internetSpeed={internetSpeed}
+            />
+
+            <RetreivingInfoAnimationModal 
+                isRetreivingInfoAnimationModalVisible={isRetreivingInfoAnimationModalVisible} 
+                setIsRetreivingInfoAnimationModalVisible={setIsRetreivingInfoAnimationModalVisible}
+                text={t('retreiving-info')}
+            /> 
 
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('settings')}</Text>
@@ -121,7 +139,8 @@ const Settings = ({navigation}: any) => {
 
 
                 <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => (
-                    retreiveInfo()
+                    //retreiveInfo()
+                    setIsRetreiveInfoModalVisible(true)
                 )}>
                     <View style={tw`flex flex-row justify-between`}>
 

@@ -36,8 +36,9 @@ const SetupPageOne = ({setGenderButton, gender, setIncludeInBio, includeInBio}: 
 
                 </Pressable>
 
-                {/* Option */}
-                <Pressable style={tw`w-full h-[12%] rounded-2xl ${includeInBio === false ? 'bg-[#fd3e4b]' : 'bg-green-400'} flex flex-row gap-x-2 items-center pl-3`}
+                {/*
+                 Option 
+                 <Pressable style={tw`w-full h-[12%] rounded-2xl ${includeInBio === false ? 'bg-[#fd3e4b]' : 'bg-green-400'} flex flex-row gap-x-2 items-center pl-3`}
                     onPress={() => {
                         setIncludeInBio(!includeInBio)
                         setShowOnlyText(!showOnlyText)
@@ -48,6 +49,9 @@ const SetupPageOne = ({setGenderButton, gender, setIncludeInBio, includeInBio}: 
                     <Text style={tw`text-2xl font-medium text-white mt-1`}>Include in profile</Text>
 
                 </Pressable>
+                 
+                */}
+        
 
             </View>
         </View>

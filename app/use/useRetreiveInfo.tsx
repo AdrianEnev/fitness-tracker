@@ -3,8 +3,18 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "./useGetEmail";
 import addWorkoutLocally from "../useWorkout/useAddWorkoutLocally";
+import { useContext } from "react";
+import GlobalContext from "../../GlobalContext";
 
-const retreiveInfo = async () => {
+const retreiveInfo = async (type: string, navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
+
+    if (type == "workouts") {
+        retreiveWorkouts(navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed);
+    }
+
+};
+
+const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
 
     console.log('retreiveInfo');
     
@@ -27,6 +37,8 @@ const retreiveInfo = async () => {
 
     if (workoutsCountDB > workoutsCountAS) { 
 
+        setIsRetreivingInfoAnimationModalVisible(true);
+
         // compare workout ids and anything missing in asyncstorage should be console logged
         const workouts = workoutsSnapshot.docs.map(doc => ({ id: doc.id, title: doc.data().title, folderId: doc.data().folderId, ...doc.data() }));
         const workoutsAS = asyncStorageWorkouts ? JSON.parse(asyncStorageWorkouts) : [];
@@ -35,41 +47,62 @@ const retreiveInfo = async () => {
             return !workoutsAS.some((workoutAS: any) => workoutAS.id === workout.id);
         });
         
-        for (const workout of missingWorkouts) {
-            const workoutInfoCollectionRef = collection(workoutsCollectionRef, workout.id, 'info');
-            const workoutInfoSnapshot = await getDocs(workoutInfoCollectionRef);
-            let exercises = [];
-        
-            for (const exerciseDoc of workoutInfoSnapshot.docs) {
-                const exerciseData = exerciseDoc.data();
-                const setsCollectionRef = collection(workoutInfoCollectionRef, exerciseDoc.id, 'sets');
-                const setsSnapshot = await getDocs(setsCollectionRef);
-                let sets = setsSnapshot.docs.map(setDoc => setDoc.data());
-        
-                // Sort sets by setIndex
-                sets = sets.sort((a, b) => a.setIndex - b.setIndex);
-        
-                exercises.push({
-                    id: exerciseDoc.id,
-                    ...exerciseData,
-                    sets,
-                    exerciseIndex: (exerciseData.exerciseIndex || 1) - 1 // Decrement exerciseIndex by 1
+        try{
+
+            for (const workout of missingWorkouts) {
+
+                if (internetSpeed < 50) {
+                    alert('Unstable internet connection, please try again later!');
+                    setIsRetreivingInfoAnimationModalVisible(false);
+                    return;
+                }
+
+                const workoutInfoCollectionRef = collection(workoutsCollectionRef, workout.id, 'info');
+                const workoutInfoSnapshot = await getDocs(workoutInfoCollectionRef);
+                let exercises = [];
+            
+                for (const exerciseDoc of workoutInfoSnapshot.docs) {
+                    const exerciseData = exerciseDoc.data();
+                    const setsCollectionRef = collection(workoutInfoCollectionRef, exerciseDoc.id, 'sets');
+                    const setsSnapshot = await getDocs(setsCollectionRef);
+                    let sets = setsSnapshot.docs.map(setDoc => setDoc.data());
+            
+                    // Sort sets by setIndex
+                    sets = sets.sort((a, b) => a.setIndex - b.setIndex);
+            
+                    exercises.push({
+                        id: exerciseDoc.id,
+                        ...exerciseData,
+                        sets,
+                        exerciseIndex: (exerciseData.exerciseIndex || 1) - 1 // Decrement exerciseIndex by 1
+                    });
+                }
+            
+                // Sort exercises by exerciseIndex
+                exercises = exercises.sort((a, b) => a.exerciseIndex - b.exerciseIndex);
+            
+                console.log('Missing Workout:', {
+                    ...workout,
+                    exercises
                 });
+            
+                // Add missing workout to AsyncStorage
+                await addWorkoutLocally(exercises, workout.title, workout.id, workout.folderId);
+                setIsRetreivingInfoAnimationModalVisible(false);
+    
+                navigation.navigate('Тренировки');
             }
-        
-            // Sort exercises by exerciseIndex
-            exercises = exercises.sort((a, b) => a.exerciseIndex - b.exerciseIndex);
-        
-            console.log('Missing Workout:', {
-                ...workout,
-                exercises
-            });
-        
-            // Add missing workout to AsyncStorage
-            await addWorkoutLocally(exercises, workout.title, workout.id, workout.folderId);
-            console.log(exercises);
+
+        }catch(err){
+            console.error(err);
+            alert('Error retreiving workout/s!');
         }
+        
+    }else{
+        alert('No new workouts to retreive!');
     }
+
+
 
 }
 

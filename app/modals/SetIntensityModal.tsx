@@ -11,7 +11,7 @@ interface SetIntensityModalProps {
     setIntensityBoxSelected: (value: number) => void;
     setSetIntensity: (setNumber: number) => void;
     
-  }
+}
 
 const SetIntensityModal: React.FC<SetIntensityModalProps> = ({ isSetIntensityModalVisible, setIsSetIntensityModalVisible, setNumber, intensityBoxSelected, setIntensityBoxSelected, setSetIntensity}) => {
     return (

@@ -18,7 +18,7 @@ import getEmail from '../use/useGetEmail';
 
 const AddWorkoutPage = ({ navigation, route }: any) => {
 
-    const {internetConnected} = useContext(GlobalContext);
+    const { internetConnected, internetSpeed } = useContext(GlobalContext);
 
     const { folder } = route.params;
     
@@ -284,6 +284,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                         internetConnected={internetConnected}
                         folder={folder}
                         addRestDay={addRestDay}
+                        internetSpeed={internetSpeed}
                     />
 
                     <ExerciseOptionsModal 

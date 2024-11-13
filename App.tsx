@@ -547,11 +547,18 @@ function App() {
             <GestureHandlerRootView style={{ flex: 1 }}>
                 <StatusBar barStyle='dark-content' />
                 
-                {/*<NavigationContainer ref={navigationRef}>{handleNavigation()}</NavigationContainer> 
-                    <BiometricsFailed />
+                {/*<
+                 {handleNavigation()}
+                    <SetupPage />
+
                 */}
                 
-                <NavigationContainer ref={navigationRef}>{handleNavigation()}</NavigationContainer> 
+                <NavigationContainer ref={navigationRef}>
+                    {handleNavigation()}
+                </NavigationContainer>
+               
+                
+
             </GestureHandlerRootView>
         </GlobalContext.Provider>
     );
