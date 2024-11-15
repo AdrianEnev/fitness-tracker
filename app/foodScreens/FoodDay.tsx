@@ -1,22 +1,18 @@
-import { View, Text, FlatList, Pressable } from 'react-native';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import { View, Text, FlatList } from 'react-native';
+import React, { useCallback, useContext, useEffect, useState } from 'react';
 import tw from "twrnc";
-import { CurrentNutrients, GoalNutrients } from '../../interfaces';
-import Ionicons from '@expo/vector-icons/Ionicons';
+import { CurrentNutrients } from '../../interfaces';
 import RenderAddedFood from '../components/RenderAddedFood';
 import { useFocusEffect } from '@react-navigation/native';
-import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Nutrients from '../components/NutrientsFoodDay';
 import BottomNavigationBar from '../components/BottomNavigationBar';
-import getCurrentDate from '../use/useGetCurrentDate';
 import { Food } from '../../interfaces';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
 import generateID from '../use/useGenerateID';
 import GlobalContext from '../../GlobalContext';
-import generateRandomColour from '../use/useGenerateColour';
 
 const FoodDay = ({route, navigation}: any) => {
 
@@ -43,6 +39,8 @@ const FoodDay = ({route, navigation}: any) => {
             const email = await getEmail();
 
             const storedFoods = await AsyncStorage.getItem(`${email}-foodDay-${date.day}-${date.month}-${date.year}`);
+            console.log(`${email}-foodDay-${date.day}-${date.month}-${date.year}`)
+            
             let filteredData: Food[] = storedFoods ? JSON.parse(storedFoods) : [];
     
             if (filteredData.length > 1) {
@@ -56,37 +54,6 @@ const FoodDay = ({route, navigation}: any) => {
             console.error(err);
         }
     }
-
-    
-    // console log all items related to foodDay inside asyncstorage
-    const logAllFoodItems = async () => {
-        try {
-            const email = await getEmail();
-            const keys = await AsyncStorage.getAllKeys();
-            const foodDayKeys = keys.filter(key => key.includes(`${email}-foodDay-`));
-            const foodItems = await AsyncStorage.multiGet(foodDayKeys);
-            //console.log('All food items:', foodItems);
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    const clearAllFoodItems = async () => {
-        try {
-            const email = await getEmail();
-            const keys = await AsyncStorage.getAllKeys();
-            const foodDayKeys = keys.filter(key => key.includes(`${email}-foodDay-`));
-            await AsyncStorage.multiRemove(foodDayKeys);
-            console.log('All food items cleared');
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
-    useEffect(() => {
-        //logAllFoodItems();
-        //clearAllFoodItems();
-    }, []);
 
     const updateCurrentNutrients = () => {
         let totalCalories = 0;

@@ -166,7 +166,8 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         };
     
         data.push(documentInfo);
-        await AsyncStorage.setItem(foodDayKey, JSON.stringify(data));
+        console.log("Adding item to async storage:", documentInfo);
+        //await AsyncStorage.setItem(foodDayKey, JSON.stringify(data));
 
         navigation.goBack();
 
@@ -175,6 +176,9 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
             const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
             const foodDaysCollectionRef = collection(userDocRef, 'food_days');  
             const foodDayDocRef = doc(foodDaysCollectionRef, formattedDate);
+
+            await setDoc(foodDayDocRef, { date: formattedDate }, { merge: true });
+
             const foodDayFoodsCollectionRef = collection(foodDayDocRef, 'foods');
             const foodDocRef = doc(foodDayFoodsCollectionRef, documentInfo.id);
     

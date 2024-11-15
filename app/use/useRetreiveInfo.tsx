@@ -3,16 +3,80 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "./useGetEmail";
 import addWorkoutLocally from "../useWorkout/useAddWorkoutLocally";
-import { useContext } from "react";
-import GlobalContext from "../../GlobalContext";
+
 
 const retreiveInfo = async (type: string, navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
 
+    if (internetSpeed < 50) {
+        alert('Unstable internet connection, please try again later!');
+        setIsRetreivingInfoAnimationModalVisible(false);
+        return;
+    }
+
     if (type == "workouts") {
         retreiveWorkouts(navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed);
+    }else if(type == "foods") {
+        retreiveFoods(navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed);
     }
 
 };
+
+const retreiveFoods = async (navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
+    
+    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+    const foodDaysCollectionRef = collection(userDocRef, 'food_days');
+
+    const foodDaysSnapshot = await getDocs(foodDaysCollectionRef);
+    const foodDaysCountDB = foodDaysSnapshot.size;
+
+    const email = await getEmail();
+    
+    const keys = await AsyncStorage.getAllKeys();
+    const foodDayKeys = keys.filter((key: string) => key.includes(`${email}-foodDay`) && !key.includes('nutrients'));
+    const foodDaysCountAS = foodDayKeys.length;
+
+    console.log('foodDaysCountDB', foodDaysCountDB);
+    console.log('foodDaysCountAS', foodDaysCountAS);
+
+    if (foodDaysCountDB > foodDaysCountAS) {
+
+        setIsRetreivingInfoAnimationModalVisible(true);
+
+        const missingFoodDays = foodDaysSnapshot.docs.map(doc => doc.id).filter((foodDay: string) => {
+            return !foodDayKeys.some((foodDayKey: string) => foodDayKey.includes(foodDay));
+        });
+
+        try{
+            for (const foodDay of missingFoodDays) {
+
+                if (internetSpeed < 50) {
+                    alert('Unstable internet connection, please try again later!');
+                    setIsRetreivingInfoAnimationModalVisible(false);
+                    return;
+                }
+
+                const [year, month, day] = foodDay.split('-');
+                const invertedFoodDay = `${year}-${month}-${day}`;
+                
+                // invertedFoodDay actually shows 15-11-2024, use that to form "email-foodDay-the date"
+                const foodDayKey = `${email}-foodDay-${invertedFoodDay}`;
+                const foodDayNutrientsKey = `${email}-foodDay-${invertedFoodDay}-nutrients`;
+
+                
+
+                setIsRetreivingInfoAnimationModalVisible(false);
+            }
+
+        }catch(err){
+            console.error(err);
+            alert('Error retreiving food day/s!');
+        }
+    }else{
+        alert('No new food days to retreive!');
+    }
+    
+}
 
 const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
 
@@ -107,3 +171,7 @@ const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationMod
 }
 
 export default retreiveInfo;
+
+function addFoodLocally(food: { id: string; }) {
+        throw new Error("Function not implemented.");
+    }

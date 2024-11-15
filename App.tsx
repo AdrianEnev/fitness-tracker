@@ -33,6 +33,7 @@ import { useNavigationContainerRef } from '@react-navigation/native';
 import syncInformation from './app/use/useSyncInfo';
 import checkUsernameNSFW from './app/use/useCheckUsernameNSFW';
 import checkInternetSpeed from './app/use/useCheckInternetSpeed';
+import getEmail from './app/use/useGetEmail';
 
 const Stack = createStackNavigator();
 
@@ -452,9 +453,22 @@ function App() {
         };
     }, []);
 
+    const clearAllFoodItems = async () => {
+        try {
+            const email = await getEmail();
+            const keys = await AsyncStorage.getAllKeys();
+            const foodDayKeys = keys.filter(key => key.includes(`${email}-foodDay-`));
+            await AsyncStorage.multiRemove(foodDayKeys);
+            console.log('All food items cleared');
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
     useEffect(() => {
         //clearAsyncStorage()
         //logAsyncStorage()
+        //tempFunc()
     }, [])
 
     /**

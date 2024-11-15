@@ -57,12 +57,12 @@ const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({
                                 <Ionicons name='accessibility-outline' size={32} color='white'/>
                                 <Text style={tw`text-white font-medium text-lg`}>Workouts</Text>
                             </Pressable>
-                            <Pressable style={tw`w-[30%] h-[55%] rounded-[20px] bg-yellow-400 flex-col gap-y-2 items-center justify-center`}
-                            >
-                                <Ionicons name='document-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium text-lg`}>Everything</Text>
-                            </Pressable>
+                    
                             <Pressable style={tw`w-[30%] h-[55%] rounded-[20px] bg-blue-500 flex-col gap-y-2 items-center justify-center`}
+                                onPress={async () => {
+                                    setIsRetreiveInfoModalVisible(false);
+                                    await retreiveInfo("foods", navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed);
+                                }}
                             >
                                 <Ionicons name='egg-outline' size={32} color='white'/>
                                 <Text style={tw`text-white font-medium text-lg`}>Food Log</Text>
