@@ -48,6 +48,7 @@ const FoodInfo = ({route}: any) => {
         // delete from asyncstorage
         const email = await getEmail();
         const foodDayKey = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}`;
+        const foodDayKeyNutrients = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}-nutrients`;
         
         // Retrieve stored data from AsyncStorage
         const storedData = await AsyncStorage.getItem(foodDayKey);
@@ -56,8 +57,18 @@ const FoodInfo = ({route}: any) => {
         // Filter out the food item to delete
         const updatedData = data.filter((item: any) => item.id !== food.id);
 
-        // Save the updated data back to AsyncStorage
-        await AsyncStorage.setItem(foodDayKey, JSON.stringify(updatedData));
+        if (updatedData.length === 0) {
+            
+            // If no items left, remove the entire foodDay entry
+            await AsyncStorage.removeItem(foodDayKeyNutrients);
+            await AsyncStorage.removeItem(foodDayKey);
+            console.log(foodDayKeyNutrients);
+            console.log(foodDayKey);
+            
+        } else {
+            // Save the updated data back to AsyncStorage
+            await AsyncStorage.setItem(foodDayKey, JSON.stringify(updatedData));
+        }
     }
 
     const removeFromFirebase = async (foodDayDocRef: any) => {
@@ -147,7 +158,8 @@ const FoodInfo = ({route}: any) => {
 
             navigation.goBack();
 
-            if (internetConnected) {
+            //if (internetConnected) {
+            if (false) {
                 const date = formatDate(formalDate);
 
                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');

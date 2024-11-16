@@ -71,16 +71,6 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
                 totalFat += food.fat || 0;
             });
 
-            /*if (totalCalories >= 9999) {
-                totalCalories = 9999;
-            }else if (totalProtein >= 9999) {
-                totalProtein = 9999;
-            }else if (totalCarbs >= 9999) {
-                totalCarbs = 9999;
-            }else if (totalFat >= 9999) {
-                totalFat = 9999;
-            }*/
-
             const updatedNutrients = {
                 calories: totalCalories,
                 protein: totalProtein,
@@ -124,10 +114,11 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
     
         const email = await getEmail();
         const foodDayKey = `${email}-foodDay-${date.day}-${date.month}-${date.year}`;
+        console.log(foodDayKey)
         const storedData = await AsyncStorage.getItem(foodDayKey);
         const data = storedData ? JSON.parse(storedData) : [];
 
-        const formattedDate = formatDate(date);
+        const formattedDate = formatDate(date); // 2024-11-15
 
         let newCalories = Number(String(calories).replace(',', '.'));
         newCalories = Math.ceil(newCalories);
@@ -140,18 +131,6 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         
         let newFat = Number(String(fat).replace(',', '.'));
         newFat = Math.ceil(newFat);
-
-        /*if (newCalories >= 9999) {
-            newCalories = 9999;
-        }else if (newProtein >= 9999) {
-            newProtein = 9999;
-        }else if (newProtein >= 9999) {
-            newProtein = 9999;
-        }else if (newCarbs >= 9999) {
-            newCarbs = 9999;
-        }else if (newFat >= 9999) {
-            newFat = 9999;
-        }*/
         
         const documentInfo = {
             id: generateID(),
@@ -167,8 +146,8 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
     
         data.push(documentInfo);
         console.log("Adding item to async storage:", documentInfo);
-        //await AsyncStorage.setItem(foodDayKey, JSON.stringify(data));
-
+        await AsyncStorage.setItem(foodDayKey, JSON.stringify(data));
+        
         navigation.goBack();
 
         if (internetConnected) {
@@ -177,7 +156,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
             const foodDaysCollectionRef = collection(userDocRef, 'food_days');  
             const foodDayDocRef = doc(foodDaysCollectionRef, formattedDate);
 
-            await setDoc(foodDayDocRef, { date: formattedDate }, { merge: true });
+            //await setDoc(foodDayDocRef, { calories: newCalories, protein: newProtein, carbs: newCarbs, fat: newFat }, { merge: true });
 
             const foodDayFoodsCollectionRef = collection(foodDayDocRef, 'foods');
             const foodDocRef = doc(foodDayFoodsCollectionRef, documentInfo.id);
@@ -186,7 +165,6 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         }
         
         updateCurrentNutrients();
-        
     }
 
     return (

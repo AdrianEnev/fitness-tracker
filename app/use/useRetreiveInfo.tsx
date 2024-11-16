@@ -20,7 +20,31 @@ const retreiveInfo = async (type: string, navigation: any, setIsRetreivingInfoAn
     }
 
 };
+const updateFood = async (foodDayKey: any, foodDaysCollectionRef: any) => {
 
+    const storedData = await AsyncStorage.getItem(foodDayKey);
+    const data = storedData ? JSON.parse(storedData) : [];
+
+    const [email, foodDay, year, month, day] = foodDayKey.split('-');
+    //const formattedDate = `${year}-${month}-${day}`;
+    const formattedDate = `${year}-${month}-${day}`;
+    const invertedFoodDayKey = `${email}-${foodDay}-${day}-${month}-${year}`
+
+    const foodDayDocRef = doc(foodDaysCollectionRef, formattedDate);
+    const foodDayFoodsCollectionRef = collection(foodDayDocRef, 'foods');
+
+    const foodDaySnapshot = await getDocs(foodDayFoodsCollectionRef);
+
+    foodDaySnapshot.forEach(doc => {
+        const foodData = doc.data();
+        data.push(foodData);
+    });
+
+    await AsyncStorage.setItem(invertedFoodDayKey, JSON.stringify(data));
+
+};
+
+// A slight problem to this implementation is that the number of workouts on the phone can be the same as the ones in the database, but the data inside the workouts can be different.
 const retreiveFoods = async (navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
     
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -39,40 +63,33 @@ const retreiveFoods = async (navigation: any, setIsRetreivingInfoAnimationModalV
     console.log('foodDaysCountDB', foodDaysCountDB);
     console.log('foodDaysCountAS', foodDaysCountAS);
 
-    if (foodDaysCountDB > foodDaysCountAS) {
+    console.log(foodDayKeys)
 
+    if (foodDaysCountDB > foodDaysCountAS) {
         setIsRetreivingInfoAnimationModalVisible(true);
 
         const missingFoodDays = foodDaysSnapshot.docs.map(doc => doc.id).filter((foodDay: string) => {
             return !foodDayKeys.some((foodDayKey: string) => foodDayKey.includes(foodDay));
         });
 
-        try{
+        try {
             for (const foodDay of missingFoodDays) {
-
                 if (internetSpeed < 50) {
                     alert('Unstable internet connection, please try again later!');
                     setIsRetreivingInfoAnimationModalVisible(false);
                     return;
                 }
 
-                const [year, month, day] = foodDay.split('-');
-                const invertedFoodDay = `${year}-${month}-${day}`;
-                
-                // invertedFoodDay actually shows 15-11-2024, use that to form "email-foodDay-the date"
-                const foodDayKey = `${email}-foodDay-${invertedFoodDay}`;
-                const foodDayNutrientsKey = `${email}-foodDay-${invertedFoodDay}-nutrients`;
-
-                
+                const foodDayKey = `${email}-foodDay-${foodDay}`;
+                await updateFood(foodDayKey, foodDaysCollectionRef);
 
                 setIsRetreivingInfoAnimationModalVisible(false);
             }
-
-        }catch(err){
+        } catch (err) {
             console.error(err);
             alert('Error retreiving food day/s!');
         }
-    }else{
+    } else {
         alert('No new food days to retreive!');
     }
     

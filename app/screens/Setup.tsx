@@ -177,9 +177,9 @@ const Setup = () => {
             console.log('Error saving nutrients to AsyncStorage:', error);
         }
 
-        await AsyncStorage.setItem(`gender_${email}`, gender)
+        //await AsyncStorage.setItem(`gender_${email}`, gender)
 
-        if (includeInBio && internetConnected) {
+        /*if (includeInBio && internetConnected) {
             // users -> user -> user_info -> gender -> date + gender
             const usersCollectionRef = collection(FIRESTORE_DB, 'users');
             const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -190,7 +190,7 @@ const Setup = () => {
                 gender: gender,
                 date: Date.now()
             })
-        }
+        }*/
         
         console.log('setup ran successfuly')
         

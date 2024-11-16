@@ -119,9 +119,34 @@ function App() {
     }
 
     const logAsyncStorage = async () => {
-        console.log(AsyncStorage.getAllKeys())
+        const keys = await AsyncStorage.getAllKeys();
+        console.log(keys);
     }
 
+    const clearEmailFoodDayData = async (email: any) => {
+        try {
+            // Fetch all keys
+            const allKeys = await AsyncStorage.getAllKeys();
+      
+            // Define a pattern to match email-foodDay-date format
+            const pattern = new RegExp(`enevadrian@gmail.com-foodDay-\\d{4}-\\d{2}-\\d{2}.*`);
+            //const pattern = new RegExp(`enevadrian@gmail.com-foodDay-\\d{2}-\\d{2}-\\d{4}.*`);
+            //const pattern = new RegExp(`enevadrian@gmail.com-foodDay-30-11-2024-nutrients`);
+      
+            // Filter keys matching the pattern
+            const keysToRemove = allKeys.filter(key => pattern.test(key));
+        
+            // Remove matching keys
+            if (keysToRemove.length > 0) {
+                await AsyncStorage.multiRemove(keysToRemove);
+                console.log('Removed keys:', keysToRemove);
+            } else {
+                console.log('No matching keys found.');
+            }
+        } catch (error) {
+            console.error('Error clearing data:', error);
+        }
+      };
 
     const onAuthenticate = async () => {
         const auth = await LocalAuthentication.authenticateAsync({
@@ -368,7 +393,8 @@ function App() {
                     if (user.emailVerified) {
                         setIsEmailVerified(true);
                         setEmailVerifiedChanged(true); // Update state when email is verified
-                        setAccountJustRegistered(false); // Account has been successfuly registered, this variable is no longer needed
+                        setAccountJustRegistered(false);
+                        setSetupRan(false);
                     }
                     console.log('interval ran')
                 });
@@ -396,7 +422,7 @@ function App() {
                 await syncInformation();
                 setSyncingInfoRunning(false)
             }
-            query();
+            //query();
         }
     }, [isConnected, isAuthenticated, hasSynced]);
 
@@ -453,21 +479,10 @@ function App() {
         };
     }, []);
 
-    const clearAllFoodItems = async () => {
-        try {
-            const email = await getEmail();
-            const keys = await AsyncStorage.getAllKeys();
-            const foodDayKeys = keys.filter(key => key.includes(`${email}-foodDay-`));
-            await AsyncStorage.multiRemove(foodDayKeys);
-            console.log('All food items cleared');
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
     useEffect(() => {
         //clearAsyncStorage()
-        //logAsyncStorage()
+        logAsyncStorage()
+        //clearEmailFoodDayData('test')
         //tempFunc()
     }, [])
 
