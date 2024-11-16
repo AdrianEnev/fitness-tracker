@@ -256,7 +256,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
                 <Pressable style={tw`bg-white rounded-2xl w-[50%] h-[55%] flex flex-row pl-4 pr-2 items-center justify-between mb-2`} onPress={() => {
                     nextPage();
                 }}>
-                    <Text style={tw`font-medium text-xl`}>{currentPage === 5 ? t(`finish`) : t(`next`)}</Text>
+                    <Text style={tw`font-medium text-xl`}>{currentPage === 6 ? t(`done`) : t(`next`)}</Text>
                     <Ionicons name='arrow-forward-outline' size={32}/>
                 </Pressable>
 

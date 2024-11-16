@@ -2,6 +2,7 @@ import { Keyboard, Modal, Pressable, View, Text, TextInput } from "react-native"
 import tw from 'twrnc';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { normalizeValue } from "../use/useNormalizeValue";
+import { useTranslation } from "react-i18next";
 
 interface AddFoodChangeNutrientModalProps {
     nutrient: string;
@@ -47,6 +48,8 @@ const AddFoodChangeNutrientModal = ({ nutrient, oldValue, setName, setCalories, 
                 break;
         }
     };
+
+    const {t} = useTranslation();
     
     const SaveAndCancelButtons = () => {
         return (
@@ -57,7 +60,7 @@ const AddFoodChangeNutrientModal = ({ nutrient, oldValue, setName, setCalories, 
                 `}>
 
                 <Pressable style={tw`w-[49%] h-12 bg-[#fd3e54] rounded-xl shadow-lg`} onPress={() => setIsAddFoodChangeNutrientModalVisible(false)}>
-                    <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Cancel</Text>
+                    <Text style={tw`text-2xl text-white font-medium text-center mt-[6px]`}>{t('cancel')}</Text>
                 </Pressable>
 
                 <Pressable style={tw`w-[49%] h-12 bg-[#0fbf70] rounded-xl shadow-lg`}
@@ -65,7 +68,7 @@ const AddFoodChangeNutrientModal = ({ nutrient, oldValue, setName, setCalories, 
                         saveButtonPressed()
                     }}
                 >
-                    <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Save</Text>
+                    <Text style={tw`text-2xl text-white font-medium text-center mt-[6px]`}>{t('save')}</Text>
                 </Pressable>
 
             </View>

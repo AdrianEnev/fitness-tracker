@@ -82,8 +82,6 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
                             </Pressable>
                         </View>
 
-                        
-
                         <View style={tw`flex items-center mt-2`}>
                             <Pressable style={tw`bg-[#e83d50] w-full h-10 rounded-xl flex items-center justify-center`} onPress={() => setIsCreateWorkoutModalVisible(false)}>
                                 <Text style={tw`text-white text-lg font-medium`}>{t(`cancel`)}</Text>

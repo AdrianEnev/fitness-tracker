@@ -22,7 +22,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
 
     const {internetConnected} = useContext(GlobalContext);
 
-    const [name, setName] = useState("Example");
+    const [name, setName] = useState(t('example-food'));
     const [calories, setCalories] = useState(0);
     const [protein, setProtein] = useState(0);
     const [carbs, setCarbs] = useState(0);
@@ -171,16 +171,15 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         <View style={tw`h-full w-full bg-white`}>
             
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
-                <Text style={tw`text-4xl font-medium text-black m-3`}>Add Food-</Text>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>{t('add-food')}</Text>
             </View>
 
             <View style={tw`flex flex-row justify-between mx-4`}>
-                <Text style={tw`text-xl font-medium text-gray-500 mt-2`}>Add food manually</Text>
+                <Text style={tw`text-xl font-medium text-gray-500 mt-2`}>{t('add-food-manually')}</Text>
                 <Text style={tw`text-xl font-medium text-gray-500 mt-2`}>{formatDatePretty(date)}</Text>
             </View>
 
             <AddFoodNutrientsComponent
-                navigation={navigation} 
                 calories={calories} 
                 protein={protein} 
                 carbs={carbs} 
@@ -189,11 +188,11 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
                 setProtein={setProtein} 
                 setCarbs={setCarbs} 
                 setFat={setFat}    
-                saveFood={saveFood} 
                 name={name}
                 setName={setName}        
                 grams={grams}
-                setGrams={setGrams}   
+                setGrams={setGrams} 
+                translation={t}  
             />
 
             <BottomNavigationBar currentPage='AddCustomFoodPage' navigation={navigation} addCustomFoodPageAddFood={saveFood}/>

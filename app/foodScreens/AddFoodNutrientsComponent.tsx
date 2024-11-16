@@ -8,8 +8,36 @@ import Slider from '@react-native-community/slider';
 import { useSharedValue } from 'react-native-reanimated';
 
 const AddFoodNutrientsComponent = (
-    {navigation, name, setName, calories, grams, protein, carbs, fat, setCalories, setGrams, setProtein, setCarbs, setFat, saveFood}: 
-    {navigation: any, name: string, setName: any, calories: any, grams: any, protein: any, carbs: any, fat: any, setCalories: any, setGrams: any, setProtein: any, setCarbs: any, setFat: any, saveFood: () => void}
+    { 
+        name, 
+        setName, 
+        calories, 
+        grams, 
+        protein, 
+        carbs, 
+        fat, 
+        setCalories, 
+        setGrams, 
+        setProtein, 
+        setCarbs, 
+        setFat,
+        translation
+    }: 
+    { 
+        name: string, 
+        setName: any, 
+        calories: any, 
+        grams: any, 
+        protein: any, 
+        carbs: any, 
+        fat: any, 
+        setCalories: any, 
+        setGrams: any, 
+        setProtein: any, 
+        setCarbs: any, 
+        setFat: any,
+        translation: any
+    }
 ) => {
 
     const [isChangeValueModalVisible, setIsChangeValueModalVisible] = useState(false);
@@ -63,7 +91,7 @@ const AddFoodNutrientsComponent = (
                         handlePress('Food Name', nameRef)
                     }}>
 
-                        <Text style={tw`text-2xl text-white font-medium text-center my-1`}>Food Name</Text>
+                        <Text style={tw`text-2xl text-white font-medium text-center my-1 mt-1`}>{translation('food-name')}</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
                             <Text style={tw`text-4xl text-white font-medium text-center`}>{name}</Text>
@@ -76,7 +104,7 @@ const AddFoodNutrientsComponent = (
                         handlePress('Calories', calorieRef)
                     }}>
 
-                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Calories</Text>
+                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{translation('calories')}</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
                             <Text style={tw`text-4xl text-white font-medium text-center`}>{!calories ? '0' : calories}kcal</Text>
@@ -88,7 +116,7 @@ const AddFoodNutrientsComponent = (
                         handlePress('Protein', proteinRef)
                     }}>
 
-                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Protein</Text>
+                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{translation('protein')}</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
                             <Text style={tw`text-4xl text-white font-medium text-center`}>{!protein ? '0' : protein}g</Text>
@@ -100,7 +128,7 @@ const AddFoodNutrientsComponent = (
                         handlePress('Carbs', carbRef)
                     }}>
 
-                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Carbs</Text>
+                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{translation('carbs')}</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
                             <Text style={tw`text-4xl text-white font-medium text-center`}>{!carbs ? '0' : carbs}g</Text>
@@ -112,7 +140,7 @@ const AddFoodNutrientsComponent = (
                         handlePress('Fat', fatRef)
                     }}>
 
-                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Fat</Text>
+                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{translation('fat')}</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
                             <Text style={tw`text-4xl text-white font-medium text-center`}>{!fat ? '0' : fat}g</Text>
@@ -123,7 +151,7 @@ const AddFoodNutrientsComponent = (
                     <View style={tw`w-full h-12 flex flex-col`}>
 
                         <View style={tw`flex flex-row justify-between`}>
-                            <Text style={tw`text-xl font-medium text-gray-500`}>Grams</Text>
+                            <Text style={tw`text-xl font-medium text-gray-500`}>{translation('grams-2')}</Text>
                             <Text style={tw`text-xl font-medium text-gray-500 mr-1`}>{grams}</Text>
                         </View>
                         

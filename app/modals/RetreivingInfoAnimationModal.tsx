@@ -2,6 +2,7 @@ import { View, Text, Modal, Pressable, Keyboard, Dimensions } from 'react-native
 import React from 'react'
 import tw from 'twrnc'
 import { Swing } from 'react-native-animated-spinkit'
+import { useTranslation } from 'react-i18next';
 
 interface RetreivingInfoAnimationModalProps {
     isRetreivingInfoAnimationModalVisible: boolean;
@@ -15,9 +16,10 @@ const RetreivingInfoAnimationModal: React.FC<RetreivingInfoAnimationModalProps> 
     text
 }) => { 
     
-    //console.log('ScanFoodModal.tsx: ', duration);
     const screenWidth = Dimensions.get('screen').width;
     const thirtyPercentScreenWidth = screenWidth * 0.45;
+    
+    const {t} = useTranslation();
     
     return (
         <Modal
@@ -37,7 +39,7 @@ const RetreivingInfoAnimationModal: React.FC<RetreivingInfoAnimationModalProps> 
                             
                         <View style={tw`flex-1 justify-end items-center mb-5`}>
                             <Text style={tw`text-2xl font-bold text-[#3d5875]`}>{text}</Text>
-                            <Text style={tw`text-xl font-medium text-[#3d5875] mt-1`}>This may take a while!</Text>
+                            <Text style={tw`text-xl font-medium text-[#3d5875] mt-1`}>{t('few-seconds-alert')}</Text>
                         </View>
 
                     </Pressable>

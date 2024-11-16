@@ -3,20 +3,22 @@ import React from 'react'
 import tw from 'twrnc'
 import { Swing } from 'react-native-animated-spinkit'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 
-interface ScanFoodModalProps {
+interface DeletingAccountModalProps {
     isDeletingAccountModalVisible: boolean;
     setIsDeletingAccountModalVisible: (isVisible: boolean) => void;                 
 }
 
-const DeletingAccountModal: React.FC<ScanFoodModalProps> = ({ 
+const DeletingAccountModal: React.FC<DeletingAccountModalProps> = ({ 
     isDeletingAccountModalVisible, setIsDeletingAccountModalVisible
 }) => { 
     
-    //console.log('ScanFoodModal.tsx: ', duration);
     const screenWidth = Dimensions.get('screen').width;
     const thirtyPercentScreenWidth = screenWidth * 0.45;
     
+    const {t} = useTranslation();
+
     return (
         <Modal
             animationType="fade"
@@ -35,8 +37,8 @@ const DeletingAccountModal: React.FC<ScanFoodModalProps> = ({
                         </View>
                             
                         <View style={tw`flex-1 justify-end items-center mb-5`}>
-                            <Text style={tw`text-2xl font-bold text-[#3d5875]`}>Deleting account...</Text>
-                            <Text style={tw`text-xl font-medium text-[#3d5875] mt-[-4px]`}>This cannot be cannceled!</Text>
+                            <Text style={tw`text-2xl font-bold text-[#3d5875]`}>{t('deleting-account-alert')}</Text>
+                            <Text style={tw`text-xl font-medium text-[#3d5875] mt-[-4px]`}>{t('cannot-canceled')}</Text>
                         </View>
                     </View>
 

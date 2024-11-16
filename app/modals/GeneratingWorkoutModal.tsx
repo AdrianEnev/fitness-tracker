@@ -2,21 +2,23 @@ import { View, Text, Modal, Pressable, Keyboard, Dimensions } from 'react-native
 import React from 'react'
 import tw from 'twrnc'
 import { Swing } from 'react-native-animated-spinkit'
+import { useTranslation } from 'react-i18next';
 
-interface ScanFoodModalProps {
+interface GenerateWorkoutModalProps {
     isGenerateWorkoutModalVisible: boolean;
     setIsGenerateWorkoutModalVisible: (isVisible: boolean) => void;                 
 }
 
-const GenerateWorkoutModal: React.FC<ScanFoodModalProps> = ({ 
+const GenerateWorkoutModal: React.FC<GenerateWorkoutModalProps> = ({ 
     isGenerateWorkoutModalVisible, 
     setIsGenerateWorkoutModalVisible
 }) => { 
     
-    //console.log('ScanFoodModal.tsx: ', duration);
     const screenWidth = Dimensions.get('screen').width;
     const thirtyPercentScreenWidth = screenWidth * 0.45;
     
+    const {t} = useTranslation();
+
     return (
         <Modal
             animationType="fade"
@@ -34,12 +36,12 @@ const GenerateWorkoutModal: React.FC<ScanFoodModalProps> = ({
                         </View>
                             
                         <View style={tw`flex-1 justify-end items-center mb-3`}>
-                            <Text style={tw`text-2xl font-bold text-[#3d5875]`}>Generating Workout...</Text>
-                            <Text style={tw`text-xl font-medium text-[#3d5875] mt-[-4px]`}>This may take a minute!</Text>
+                            <Text style={tw`text-2xl font-bold text-[#3d5875]`}>{t('generating-workout')}</Text>
+                            <Text style={tw`text-xl font-medium text-[#3d5875] mt-[-4px]`}>{t('few-seconds-alert')}</Text>
                         </View>
 
                         <Pressable style={tw`w-full h-12 bg-gray-200 shadow-md rounded-xl flex items-center justify-center mb-5`}>
-                            <Text style={tw`text-2xl font-medium`}>Cancel</Text>
+                            <Text style={tw`text-2xl font-medium`}>{t('cancel')}</Text>
                         </Pressable>
                     </Pressable>
                 </View>

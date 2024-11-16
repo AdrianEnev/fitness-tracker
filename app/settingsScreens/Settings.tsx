@@ -1,18 +1,12 @@
-import { View, Text, Button, TouchableOpacity, Pressable, Image, Vibration } from 'react-native'
+import { View, Text, Pressable, Image, Vibration } from 'react-native'
 import React, { useContext, useState } from 'react'
 import tw from 'twrnc'
-import { Switch } from 'react-native';
-import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
-import { useFocusEffect } from '@react-navigation/native';
-import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalContext from '../../GlobalContext';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import LanguageModal from '../modals/LanguageModal';
 import { BlurView } from 'expo-blur';
-import retreiveInfo from '../use/useRetreiveInfo';
 import RetreiveInfoModal from '../modals/RetreiveInfoModal';
 import RetreivingInfoAnimationModal from '../modals/RetreivingInfoAnimationModal';
 
@@ -180,10 +174,6 @@ const Settings = ({navigation}: any) => {
 
                     </View>
                 </Pressable>
-
-               
-
-                {/* {button('Дарения', 'wallet-outline', '#ec4899', 'pink-300', t('donate'))} */}
 
             </View>
 

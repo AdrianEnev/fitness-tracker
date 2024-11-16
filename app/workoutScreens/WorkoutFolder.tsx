@@ -325,7 +325,7 @@ const WorkoutFolder = ({ route, navigation }: any) => {
                         keyExtractor={(item: any) => item.id}
                         ListEmptyComponent={() => (
                             <View style={tw``}>
-                                <Text style={tw`text-2xl font-medium text-gray-500 ml-3`}>No workouts available</Text>
+                                <Text style={tw`text-2xl font-medium text-gray-500 text-center`}>{t('no-workouts-added')}</Text>
                             </View>
                         )}
                         showsVerticalScrollIndicator={false}

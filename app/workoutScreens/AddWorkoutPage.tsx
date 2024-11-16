@@ -10,7 +10,6 @@ import { Dimensions } from 'react-native';
 import CreateWorkoutModal from '../modals/CreateWorkoutModal';
 import SetIntensityModal from '../modals/SetIntensityModal';
 import GlobalContext from '../../GlobalContext';
-import ExerciseOptionsModal from '../modals/ExerciseOptionsModal';
 import generateID from '../use/useGenerateID';
 import generateRandomColour from '../use/useGenerateColour';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -185,8 +184,6 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
         ));
     };
 
-    const [isExerciseOptionsModalVisible, setIsExerciseOptionsModalVisible] = useState(false);
-
     const addRestDay = async () => {
 
         const email = await getEmail();
@@ -252,7 +249,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
     return (
         <>
             
-            { (isCreateWorkoutModalVisible || isSetIntensityModalVisible || isExerciseOptionsModalVisible) && (
+            { (isCreateWorkoutModalVisible || isSetIntensityModalVisible) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -285,15 +282,6 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                         folder={folder}
                         addRestDay={addRestDay}
                         internetSpeed={internetSpeed}
-                    />
-
-                    <ExerciseOptionsModal 
-                        navigation={navigation}
-                        isExerciseOptionsModalVisible={isExerciseOptionsModalVisible}
-                        setIsExerciseOptionsModalVisible={setIsExerciseOptionsModalVisible}
-                        addRestDay={addRestDay}
-                        pageIndex={pageNumber}
-                        deleteCurrentExercise={deleteCurrentExercise}
                     />
 
                     <View style={tw`flex flex-col gap-y-1 max-h-[82%]`}>

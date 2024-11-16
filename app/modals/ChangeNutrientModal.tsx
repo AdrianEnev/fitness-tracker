@@ -1,6 +1,7 @@
 import { Keyboard, Modal, Pressable, View, Text, TextInput } from "react-native";
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useTranslation } from "react-i18next";
 
 interface ChangeNutrientModalProps {
     nutrient: string;
@@ -15,11 +16,17 @@ interface ChangeNutrientModalProps {
 }
 
 const ChangeNutrientModal = ({ nutrient, oldValue, setNewName, setNewCalories, setNewProtein, setNewCarbs, setNewFat, isChangeNutrientModalVisible, setIsChangeNutrientModalVisible, position }: ChangeNutrientModalProps & { position: { top: number, left: number } }) => {
+    
+    const {t} = useTranslation();
+    
     let tempValue = oldValue;
 
     const saveButtonPressed = () => {
+
         setIsChangeNutrientModalVisible(!isChangeNutrientModalVisible);
+
         Keyboard.dismiss();
+
         if (nutrient === 'Calories') {
             setNewCalories(tempValue);
         } else if (nutrient === 'Protein') {
@@ -42,7 +49,7 @@ const ChangeNutrientModal = ({ nutrient, oldValue, setNewName, setNewCalories, s
                 `}>
 
                 <Pressable style={tw`w-[49%] h-12 bg-[#fd3e54] rounded-xl shadow-lg`} onPress={() => setIsChangeNutrientModalVisible(false)}>
-                    <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Cancel</Text>
+                    <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{t('cancel')}</Text>
                 </Pressable>
 
                 <Pressable style={tw`w-[49%] h-12 bg-[#0fbf70] rounded-xl shadow-lg`}
@@ -50,7 +57,7 @@ const ChangeNutrientModal = ({ nutrient, oldValue, setNewName, setNewCalories, s
                         saveButtonPressed()
                     }}
                 >
-                    <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Save</Text>
+                    <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{t('save')}</Text>
                 </Pressable>
 
             </View>

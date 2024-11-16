@@ -3,6 +3,7 @@ import React, { useRef, useState } from 'react'
 import tw from 'twrnc'
 import { BlurView } from 'expo-blur';
 import SettingsMacrosChangeNutrientModal from '../modals/SettingsMacrosChangeNutrientModal';
+import { useTranslation } from 'react-i18next';
 
 const SettingsMacrosComponent = (
     {calories, protein, carbs, fat, setCalories, setProtein, setCarbs, setFat}: 
@@ -27,6 +28,8 @@ const SettingsMacrosComponent = (
         });
     };
 
+    const { t } = useTranslation();
+
     return (
 
         <>
@@ -38,7 +41,7 @@ const SettingsMacrosComponent = (
                 />
             )}
 
-            <View style={tw`flex-1`}>
+            <View style={tw`w-full h-full`}>
 
                 <SettingsMacrosChangeNutrientModal
                     nutrient={selectedNutrient}
@@ -58,7 +61,7 @@ const SettingsMacrosComponent = (
                         handlePress('Calories', calorieRef)
                     }}>
 
-                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Calories</Text>
+                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{t('calories')}</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
                             <Text style={tw`text-4xl text-white font-medium text-center`}>{!calories ? '0' : calories}kcal</Text>
@@ -70,10 +73,10 @@ const SettingsMacrosComponent = (
                         handlePress('Protein', proteinRef)
                     }}>
 
-                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Protein</Text>
+                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{t('protein')}</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
-                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!protein ? '0' : protein}g</Text>
+                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!protein ? '0' : protein}{t('grams-short')}</Text>
                         </View>
 
                     </Pressable>
@@ -82,10 +85,10 @@ const SettingsMacrosComponent = (
                         handlePress('Carbs', carbRef)
                     }}>
 
-                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Carbs</Text>
+                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{t('carbs')}</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
-                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!carbs ? '0' : carbs}g</Text>
+                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!carbs ? '0' : carbs}{t('grams-short')}</Text>
                         </View>
 
                     </Pressable>
@@ -94,10 +97,10 @@ const SettingsMacrosComponent = (
                         handlePress('Fat', fatRef)
                     }}>
 
-                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Fat</Text>
+                        <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{t('fat')}</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
-                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!fat ? '0' : fat}g</Text>
+                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!fat ? '0' : fat}{t('grams-short')}</Text>
                         </View>
 
                     </Pressable>

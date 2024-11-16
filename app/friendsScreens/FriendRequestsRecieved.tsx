@@ -68,7 +68,7 @@ const FriendRequestsRecieved = ({route, navigation}: any) => {
                         </Pressable>
                     )}
                     ListEmptyComponent={() => (
-                        <Text style={tw`text-xl font-medium text-blue-500`}>{t('no-received-requests')}</Text>
+                        <Text style={tw`text-2xl text-center font-medium text-red-500`}>{t('no-received-requests')}</Text>
                     )}
                 />
             </View>

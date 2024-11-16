@@ -3,6 +3,7 @@ import React from 'react'
 import tw from 'twrnc'
 import { Ionicons } from '@expo/vector-icons'
 import { useTranslation } from 'react-i18next'
+import i18next from 'i18next'
 
 const PageSix = ({ equipment, setEquipment, equipmentGroup, setEquipmentGroup, scrollToEquipment, equipmentRef }: any) => {
 
@@ -20,7 +21,7 @@ const PageSix = ({ equipment, setEquipment, equipmentGroup, setEquipmentGroup, s
     }
     const fullGymSelected = () => {
         setEquipmentGroup(2);
-        setEquipment(['barbells', 'dumbbells', 'machines', 'pull up bar', 'dip bar']);
+        setEquipment(['barbells', 'dumbbells', 'machines', 'pull up bar', 'dip bar', "bench"]);
         scrollToEquipment();
     }
     const calisthenicsParkSelected = () => {
@@ -36,13 +37,21 @@ const PageSix = ({ equipment, setEquipment, equipmentGroup, setEquipmentGroup, s
 
     const {t} = useTranslation();
 
-    //What equipment would you like to use?
+    const currentLanguage = i18next.language;
 
     return (
         <View style={tw`flex flex-col mt-[10%] h-full`}>
             <View style={tw`mx-5`}>
-                <Text style={tw`font-medium text-2xl text-center`}>{t(`what-equipment-would-you-like-to-use`)}</Text>
-                <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>{t(`this-will`)} <Text style={tw`font-bold`}>{t(`only`)}</Text> {t(`be-used-to-generate-a-custom-workout`)}!</Text>
+                <Text style={tw`font-medium text-2xl text-center`}>{t(`what-equipment-do-you-have-available`)}</Text>
+
+                {currentLanguage === 'en' ? 
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>This will<Text style={tw`font-bold`}>only</Text> be used to generate a custom workout</Text> : currentLanguage == "bg" ? (
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Това ще бъде използвано <Text style={tw`font-bold`}>само</Text> за създаване на тренировка</Text> ) : currentLanguage == "de" ? (
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Dies wird<Text style={tw`font-bold`}>nur</Text> verwendet, um ein individuelles Training zu erstellen</Text> ) : currentLanguage == "fr" ? (
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Cela sera<Text style={tw`font-bold`}>uniquement</Text> utilisé pour générer un entraînement personnalisé</Text> ) : currentLanguage == "ru" ? (
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Это будет<Text style={tw`font-bold`}>только</Text> использоваться для создания индивидуальной тренировки</Text>
+                ) : null}
+
             </View>
           
             <View style={tw`flex-1 flex-col gap-y-2 mx-5 mt-[5%] mb-26`} ref={equipmentRef}>
@@ -126,6 +135,13 @@ const PageSix = ({ equipment, setEquipment, equipmentGroup, setEquipmentGroup, s
                     <Ionicons name={equipment.includes('dip bar') ? 'ellipse' : 'ellipse-outline'} size={42} color={equipment.includes('dip bar') ? 'white' : '#6b7280'} style={tw`mt-[6px]`} />
                     <Text style={tw`text-2xl font-medium ${equipment.includes('dip bar') ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>{t(`dip-bars`)}</Text>
                 </Pressable>
+                
+                <Pressable style={tw`w-full h-20 rounded-2xl ${equipment.includes('bench') ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
+                    onPress={() => toggleEquipment('bench')}
+                >
+                    <Ionicons name={equipment.includes('bench') ? 'ellipse' : 'ellipse-outline'} size={42} color={equipment.includes('bench') ? 'white' : '#6b7280'} style={tw`mt-[6px]`} />
+                    <Text style={tw`text-2xl font-medium ${equipment.includes('bench') ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>{t(`bench`)}</Text>
+                </Pressable>
 
                 <Pressable style={tw`w-full h-20 rounded-2xl ${equipment.includes('kettlebells') ? "bg-green-400" : 'bg-gray-200'} flex flex-row gap-x-4 items-center pl-3 pb-1`}
                     onPress={() => toggleEquipment('kettlebells')}
@@ -138,8 +154,9 @@ const PageSix = ({ equipment, setEquipment, equipmentGroup, setEquipmentGroup, s
                     onPress={() => toggleEquipment('resistence bands')}
                 >
                     <Ionicons name={equipment.includes('resistence bands') ? 'ellipse' : 'ellipse-outline'} size={42} color={equipment.includes('resistence bands') ? 'white' : '#6b7280'} style={tw`mt-[6px]`} />
-                    <Text style={tw`text-2xl font-medium ${equipment.includes('resistence bands') ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>{t(`resistence-bands`)}</Text>
+                    <Text style={tw`text-2xl font-medium ${equipment.includes('resistence bands') ? 'text-white' : 'text-gray-500'} mt-1 max-w-[85%]`}>{t(`resistance-bands`)}</Text>
                 </Pressable>
+            
 
                 
             </View>

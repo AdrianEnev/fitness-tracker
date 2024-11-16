@@ -86,22 +86,24 @@ const Settings = ({navigation}: any) => {
     };
 
     return (
-        <SafeAreaView style={tw`w-full h-full bg-white`}>
-            <Text style={tw`text-2xl font-medium text-center mt-6 mb-4`}>{t('set-daily-goals')}</Text>
-  
-                <SettingsMacrosComponent
-                    calories={calories}
-                    protein={protein}
-                    carbs={carbs}
-                    fat={fat}
-                    setCalories={setCalories}
-                    setProtein={setProtein}
-                    setCarbs={setCarbs}
-                    setFat={setFat}
-                />    
+        <View style={tw`w-full h-full bg-white`}>
+            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>{t('daily-goals')}</Text>
+            </View>
+
+            <SettingsMacrosComponent
+                calories={calories}
+                protein={protein}
+                carbs={carbs}
+                fat={fat}
+                setCalories={setCalories}
+                setProtein={setProtein}
+                setCarbs={setCarbs}
+                setFat={setFat}
+            />    
 
             <BottomNavigationBar currentPage='Settings-Macronutrients' navigation={navigation} saveSettingsMacrosButton={saveNutrients}/>
-        </SafeAreaView>
+        </View>
     );
 };
 

@@ -405,7 +405,6 @@ const ViewWorkout = ({route, navigation}: any) => {
 
                     <DeleteExerciseModal 
                     
-                        navigation={navigation}
                         isDeleteExerciseModalVisible={isDeleteExerciseModalVisible}
                         setIsDeleteExerciseModalVisible={setIsDeleteExerciseModalVisible}
                         deleteExercise={deleteExercise}

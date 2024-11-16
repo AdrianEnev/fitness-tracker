@@ -2,22 +2,24 @@ import { View, Text, Modal, Pressable, Keyboard, Dimensions } from 'react-native
 import React from 'react'
 import tw from 'twrnc'
 import { Swing } from 'react-native-animated-spinkit'
+import { useTranslation } from 'react-i18next';
 
-interface ScanFoodModalProps {
+interface GeneratingWorkoutAnimationModalProps {
     isGeneratingWorkoutAnimationModalVisible: boolean;
     setIsGeneratingWorkoutAnimationModalVisible: (isVisible: boolean) => void;
     generatingWorkoutInFolder: any;
 }
 
-const GeneratingWorkoutAnimationModal: React.FC<ScanFoodModalProps> = ({ 
+const GeneratingWorkoutAnimationModal: React.FC<GeneratingWorkoutAnimationModalProps> = ({ 
     isGeneratingWorkoutAnimationModalVisible, 
     setIsGeneratingWorkoutAnimationModalVisible,
     generatingWorkoutInFolder
 }) => { 
     
-    //console.log('ScanFoodModal.tsx: ', duration);
     const screenWidth = Dimensions.get('screen').width;
     const thirtyPercentScreenWidth = screenWidth * 0.45;
+
+    const {t} = useTranslation();
     
     return (
         <Modal
@@ -36,9 +38,9 @@ const GeneratingWorkoutAnimationModal: React.FC<ScanFoodModalProps> = ({
                         </View>
                             
                         <View style={tw`flex-1 justify-end items-center mb-5`}>
-                            <Text style={tw`text-2xl font-bold text-[#3d5875]`}>Generating Workout </Text>
-                            <Text style={tw`text-2xl font-bold text-[#3d5875]`}>{generatingWorkoutInFolder ? "in '" + generatingWorkoutInFolder.title + "'" : "..."}</Text>
-                            <Text style={tw`text-xl font-medium text-[#3d5875] mt-1`}>This may take a while!</Text>
+                            <Text style={tw`text-2xl font-bold text-[#3d5875]`}>{t('generating-workout')}</Text>
+                            <Text style={tw`text-2xl font-bold text-[#3d5875]`}>{generatingWorkoutInFolder ? `${t('in')} '` + generatingWorkoutInFolder.title + "'" : "..."}</Text>
+                            <Text style={tw`text-xl font-medium text-[#3d5875] mt-1`}>{t('few-seconds-alert')}</Text>
                         </View>
 
                         <Pressable style={tw`w-[98%] h-12 bg-gray-200 shadow-md rounded-xl flex items-center justify-center mb-5 mt-[-5px] self-center`}
@@ -46,7 +48,7 @@ const GeneratingWorkoutAnimationModal: React.FC<ScanFoodModalProps> = ({
                                 setIsGeneratingWorkoutAnimationModalVisible(false)
                             }}
                         >
-                            <Text style={tw`text-2xl font-medium`}>Hide</Text>
+                            <Text style={tw`text-2xl font-medium`}>{t('hide')}</Text>
                         </Pressable>
                     </Pressable>
 

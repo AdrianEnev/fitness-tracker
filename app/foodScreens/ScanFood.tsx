@@ -3,10 +3,13 @@ import { useEffect, useRef, useState } from 'react';
 import { Button, Text, TouchableOpacity, View, Image, Modal } from 'react-native';
 import tw from 'twrnc';
 import scanImageNutrients from '../use/useScanImageNutrients';
+import { useTranslation } from 'react-i18next';
 
 export default function ScanFood({navigation, route}: any) {
 
     const { date } = route.params;
+
+    const {t} = useTranslation();
 
     const [permission, requestPermission] = useCameraPermissions();
     const cameraRef = useRef<any>(null);
@@ -29,8 +32,8 @@ export default function ScanFood({navigation, route}: any) {
         // Camera permissions are not granted yet.
         return (
             <View style={tw`flex-1 justify-center`}>
-                <Text style={tw`text-center pb-2.5`}>We need your permission to show the camera</Text>
-                <Button onPress={requestPermission} title="grant permission" />
+                <Text style={tw`text-center pb-2.5`}>{t('camera-permission')}</Text>
+                <Button onPress={requestPermission} title={t('grant-permission')} />
             </View>
         );
     } 

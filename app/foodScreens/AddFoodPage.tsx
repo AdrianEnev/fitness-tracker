@@ -66,9 +66,8 @@ const AddFoodPage = ({route, navigation}: any) => {
                 onPress={() => navigation.navigate('Храна-Добави-Подробности', {food: item, date: date})}>
 
                 <Text style={tw`text-black text-2xl font-medium max-w-[75%]`}>{item.title}</Text>
-                <Text style={tw`text-black text-2xl font-medium`}>{item.calories.toFixed(0)}cal</Text>
+                <Text style={tw`text-black text-2xl font-medium`}>{item.calories.toFixed(0)}{t('calories-short')}</Text>
                 
-
             </Pressable>
         )
     }
@@ -89,7 +88,7 @@ const AddFoodPage = ({route, navigation}: any) => {
             
 
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
-                <Text style={tw`text-4xl font-medium text-black m-3`}>Search Foods</Text> 
+                <Text style={tw`text-4xl font-medium text-black m-3`}>{t('search-foods')}</Text> 
             </View>
 
             <Pressable style={tw`w-full h-[76%] my-2 bg-white`} onPress={() => Keyboard.dismiss()}>
@@ -110,13 +109,20 @@ const AddFoodPage = ({route, navigation}: any) => {
                     <TextInput
                         style={tw`w-[22.5%] h-[13.5] bg-white shadow-md rounded-xl border border-gray-200 font-medium text-lg pb-2 text-center`}
                         keyboardType='number-pad'
-                        placeholder='Grams'
+                        placeholder={t('grams-2')}
                         maxLength={4}
                         value={grams}
                         onChangeText={setGrams}
                     />
 
                 </View>
+
+                {(searchQuery === '' && grams === '' && !noResults && !loading && foods?.length === 0) && (
+                     <View style={tw`mx-3`}>
+                        <Text style={tw`text-lg text-gray-600 font-medium text-center mt-3`}>{t('food-names-english')}</Text>
+                    </View>
+                )}
+               
                 
                 {loading ? (
 
@@ -126,7 +132,7 @@ const AddFoodPage = ({route, navigation}: any) => {
 
                 ) : noResults ? (
                     <View>
-                        <Text style={tw`text-lg font-medium text-center mt-3`}>Няма резултати...</Text>
+                        <Text style={tw`text-lg font-medium text-center mt-3`}>{t('no-results')}</Text>
                     </View>
                 ) : (
                     <View style={tw`w-[96%] h-[82%] mx-2 mt-2`}>

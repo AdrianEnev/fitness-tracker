@@ -26,14 +26,14 @@ const Statistics = () => {
         const savedWorkoutsAS = await AsyncStorage.getItem('savedWorkouts')
 
         if (!savedWorkoutsAS) {
-            setFormattedTotalWorkoutsDuration('No workouts')
+            setFormattedTotalWorkoutsDuration(t('no-workouts'))
             return
         }
 
         const workoutsData = JSON.parse(savedWorkoutsAS);
 
         if (!workoutsData || workoutsData.length === 0) {
-            setFormattedTotalWorkoutsDuration('No workouts')
+            setFormattedTotalWorkoutsDuration(t('no-workouts'))
             return
         }
         
@@ -153,13 +153,13 @@ const Statistics = () => {
         // get total seconds
         const savedWorkoutsAS = await AsyncStorage.getItem('savedWorkouts')
         if (!savedWorkoutsAS) {
-            setFormattedAverageWorkoutDuration('No workouts')
+            setFormattedAverageWorkoutDuration(t('no-workouts'))
             return
         }
 
         const workoutsData = JSON.parse(savedWorkoutsAS);
         if (!workoutsData || workoutsData.length === 0) {
-            setFormattedAverageWorkoutDuration('No workouts')
+            setFormattedAverageWorkoutDuration(t('no-workouts'))
             return
         }
         
@@ -282,13 +282,13 @@ const Statistics = () => {
     const getLastWorkoutDateAsyncStorage = async () => {
         const savedWorkoutsAS = await AsyncStorage.getItem('savedWorkouts')
         if (!savedWorkoutsAS) {
-            setFormattedLastWorkoutDate('No workouts')
+            setFormattedLastWorkoutDate(t('no-workouts'))
             return
         }
 
         const workoutsData = JSON.parse(savedWorkoutsAS);
         if (!workoutsData || workoutsData.length === 0) {
-            setFormattedLastWorkoutDate('No workouts')
+            setFormattedLastWorkoutDate(t('no-workouts'))
             return
         }
 
@@ -383,30 +383,32 @@ const Statistics = () => {
 
             <View style={tw`h-full w-full bg-white px-3 flex flex-col gap-y-2 pt-3`}>
 
+                {/* 
                 <View style={tw`w-full h-64 mb-1 shadow-lg`}>
                     <View style={tw`w-full h-full border border-gray-300`}>
                         
                     </View>
                 </View>
+                */}
                 
-                <View style={tw`w-full h-12 bg-[#fd1c47] rounded-md`}>
-                    <Text style={tw`m-3 text-lg font-medium text-white`}>Weight lifted: {weightLifted} KG</Text>
+                <View style={tw`w-full h-auto bg-[#fd1c47] rounded-md`}>
+                    <Text style={tw`m-3 text-lg font-medium text-white`}>{t('total-weight-lifted')}: {weightLifted} KG</Text>
                 </View>
 
-                <View style={tw`w-full h-12 bg-[#fd1c47] rounded-md`}>
-                    <Text style={tw`m-3 text-lg font-medium text-white`}>Number of workouts: {workoutsFinished}</Text>
+                <View style={tw`w-full h-auto bg-[#fd1c47] rounded-md`}>
+                    <Text style={tw`m-3 text-lg font-medium text-white`}>{t('number-of-workouts')}: {workoutsFinished}</Text>
                 </View>
 
-                <View style={tw`w-full h-12 bg-[#fd1c47] rounded-md`}>
-                    <Text style={tw`m-3 text-lg font-medium text-white`}>Total workouts duration: {formattedTotalWorkoutsDuration}</Text>
+                <View style={tw`w-full h-auto bg-[#fd1c47] rounded-md`}>
+                    <Text style={tw`m-3 text-lg font-medium text-white`}>{t('total-workouts-duration')}: {formattedTotalWorkoutsDuration}</Text>
                 </View>
 
-                <View style={tw`w-full h-12 bg-[#fd1c47] rounded-md`}>
-                    <Text style={tw`m-3 text-lg font-medium text-white`}>Average workout duration: {formattedAverageWorkoutDuration}</Text>
+                <View style={tw`w-full h-auto bg-[#fd1c47] rounded-md`}>
+                    <Text style={tw`m-3 text-lg font-medium text-white`}>{t('average-workout-duration')}: {formattedAverageWorkoutDuration}</Text>
                 </View>
 
-                <View style={tw`w-full h-12 bg-[#fd1c47] rounded-md`}>
-                    <Text style={tw`m-3 text-lg font-medium text-white`}>Last workout: {formattedLastWorkoutDate}</Text>
+                <View style={tw`w-full h-auto bg-[#fd1c47] rounded-md`}>
+                    <Text style={tw`m-3 text-lg font-medium text-white`}>{t('last-workout')}: {formattedLastWorkoutDate}</Text>
                 </View>
                 
             </View>

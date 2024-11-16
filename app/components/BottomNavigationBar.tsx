@@ -47,7 +47,7 @@ const BottomNavigationBar = (
         copySelectedWorkoutsInFolder, cutSelectedWorkoutsInFolder, deleteSelectedWorkoutsInFolder,
         viewSavedWorkoutDate, viewSavedWorkoutStartEnd, viewSavedWorkoutNumberOfExercises,
         addCustomFoodPageAddFood, addFoodPageAddButton,
-        activeWorkoutNumberOfExercises
+        activeWorkoutNumberOfExercises,
 
     }: 
     {
@@ -96,7 +96,7 @@ const BottomNavigationBar = (
                         <Text style={tw`text-white font-medium text-xl`}>+ {t(`set`)}</Text>
                     </Pressable>
                     <Pressable style={tw`w-[49%] bg-yellow-400 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addActiveWorkoutExercise}>
-                        <Text style={tw`text-white font-medium text-xl`}>+ Exercise</Text>
+                        <Text style={tw`text-white font-medium text-xl`}>+ {t('exercise')}</Text>
                     </Pressable>
                     
                 </View>
@@ -201,7 +201,7 @@ const BottomNavigationBar = (
             ) : currentPage === "AddCustomFoodPage" ? (
                 <View style={tw`flex items-center justify-center`}>
                     <Pressable onPress={addCustomFoodPageAddFood}>
-                        <Text style={tw`text-4xl font-semibold text-red-500`}>Add</Text>
+                        <Text style={tw`text-4xl font-semibold text-red-500`}>{t('add')}</Text>
                     </Pressable>
                 </View>
             ) : currentPage === "AddFoodPage" ? (
@@ -217,7 +217,7 @@ const BottomNavigationBar = (
             ) : currentPage === "AddFoodPageEditFood" ? (
                 <View style={tw`flex flex-row justify-around w-full`}>
                     <Pressable onPress={addFoodPageAddButton}>
-                        <Text style={tw`text-red-500 font-semibold text-4xl`}>Add Food</Text>
+                        <Text style={tw`text-red-500 font-semibold text-4xl`}>{t('add-food')}</Text>
                     </Pressable> 
                 </View>
             ) : currentPage === 'Workouts' ? (
@@ -324,7 +324,7 @@ const BottomNavigationBar = (
             ) : currentPage === "Settings-Macronutrients" ? (
                 <View>
                     <Pressable onPress={saveSettingsMacrosButton}>
-                        <Text style={tw`text-red-500 font-semibold text-4xl`}>Save</Text>
+                        <Text style={tw`text-red-500 font-semibold text-4xl`}>{t('save')}</Text>
                     </Pressable>
                 </View>
             ) : currentPage === "Folder" ? (

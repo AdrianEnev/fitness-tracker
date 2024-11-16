@@ -158,8 +158,7 @@ const FoodInfo = ({route}: any) => {
 
             navigation.goBack();
 
-            //if (internetConnected) {
-            if (false) {
+            if (internetConnected) {
                 const date = formatDate(formalDate);
 
                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');

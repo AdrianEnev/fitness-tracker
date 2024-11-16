@@ -51,35 +51,64 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isLanguageModalVisible, s
         {label: 'Bulgarian', value: 'bg'},
         {label: 'French', value: 'fr'},
         {label: 'German', value: 'de'},
-        {label: 'Russian', value: 'ru'}
+        {label: 'Russian', value: 'ru'},
+        {label: 'Italian', value: 'it'},
+        {label: 'Spanish', value: 'sp'}
     ]
     const dropDownDataBG = [
         {label: 'Английски', value: 'en'},
         {label: 'Български', value: 'bg'},
         {label: 'Френски', value: 'fr'},
         {label: 'Немски', value: 'de'},
-        {label: 'Руски', value: 'ru'}
+        {label: 'Руски', value: 'ru'},
+        {label: 'Италиански', value: 'it'},
+        {label: 'Испански', value: 'sp'}
     ]
     const dropDownDataFR = [
         {label: 'Anglais', value: 'en'},
         {label: 'Bulgare', value: 'bg'},
         {label: 'Français', value: 'fr'},
         {label: 'Allemand', value: 'de'},
-        {label: 'Russe', value: 'ru'}
+        {label: 'Russe', value: 'ru'},
+        {label: 'Italien', value: 'it'},
+        {label: 'Espagnol', value: 'sp'}
     ]
     const dropDownDataDE = [
         {label: 'Englisch', value: 'en'},
         {label: 'Bulgarisch', value: 'bg'},
         {label: 'Französisch', value: 'fr'},
         {label: 'Deutsch', value: 'de'},
-        {label: 'Russisch', value: 'ru'}
+        {label: 'Russisch', value: 'ru'},
+        {label: 'Italienisch', value: 'it'},
+        {label: 'Spanisch', value: 'sp'}
     ]
     const dropdownDataRU = [
         {label: 'Английский', value: 'en'},
         {label: 'Болгарский', value: 'bg'},
         {label: 'Французский', value: 'fr'},
         {label: 'Немецкий', value: 'de'},
-        {label: 'Русский', value: 'ru'}
+        {label: 'Русский', value: 'ru'},
+        {label: 'Итальянский', value: 'it'},
+    ]
+
+    const dropDownDataIT = [
+        {label: 'Inglese', value: 'en'},
+        {label: 'Bulgaro', value: 'bg'},
+        {label: 'Francese', value: 'fr'},
+        {label: 'Tedesco', value: 'de'},
+        {label: 'Russo', value: 'ru'},
+        {label: 'Italiano', value: 'it'},
+        {label: 'Spagnolo', value: 'sp'}
+    ]
+
+    const dropDownDataSP = [
+        {label: 'Inglés', value: 'en'},
+        {label: 'Búlgaro', value: 'bg'},
+        {label: 'Francés', value: 'fr'},
+        {label: 'Alemán', value: 'de'},
+        {label: 'Ruso', value: 'ru'},
+        {label: 'Italiano', value: 'it'},
+        {label: 'Español', value: 'sp'}
     ]
 
     let selectedLanguage = '';
@@ -97,8 +126,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isLanguageModalVisible, s
                     <Pressable style={tw`bg-white w-full h-[25%] rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
 
                         <Text style={tw`text-lg text-center font-medium mt-1`}>{t('set-language')}</Text>
-
-                        
+  
                         <Dropdown 
                             style={tw`h-12 border border-gray-200 px-2 my-2 rounded-lg`}
                             labelField="label"
@@ -108,14 +136,20 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isLanguageModalVisible, s
                                 currentLanguage === "bg" ? "Избери език" :
                                 currentLanguage === "fr" ? "Choisir la langue" :
                                 currentLanguage === "de" ? "Sprache auswählen" : 
-                                currentLanguage === "ru" ? "Выберите язык" : "Select a language"
+                                currentLanguage === "ru" ? "Выберите язык" : 
+                                currentLanguage === "it" ? "Seleziona una lingua" : 
+                                currentLanguage === "sp" ? "Selecciona un idioma" : 
+                                "Select a language"
                             }
                             data={
                                 currentLanguage === "en" ? dropDownDataEN : 
                                 currentLanguage === "bg" ? dropDownDataBG : 
                                 currentLanguage === "fr" ? dropDownDataFR :
                                 currentLanguage === "de" ? dropDownDataDE : 
-                                currentLanguage === "ru" ? dropdownDataRU : dropDownDataEN
+                                currentLanguage === "ru" ? dropdownDataRU : 
+                                currentLanguage === "it" ? dropDownDataIT :
+                                currentLanguage === "sp" ? dropDownDataSP :
+                                dropDownDataEN
                             }
                             onChange={(item) => selectedLanguage = item.value}
                         />

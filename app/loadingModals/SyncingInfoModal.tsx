@@ -3,19 +3,21 @@ import React from 'react'
 import tw from 'twrnc'
 import { Swing } from 'react-native-animated-spinkit'
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { useTranslation } from 'react-i18next';
 
-interface ScanFoodModalProps {
+interface SyncingInfoModalProps {
     isSyncingInfoModalVisible: boolean;
     setIsSyncingInfoModalVisible: (isVisible: boolean) => void;                 
 }
 
-const SyncingInfoModal: React.FC<ScanFoodModalProps> = ({ 
+const SyncingInfoModal: React.FC<SyncingInfoModalProps> = ({ 
     isSyncingInfoModalVisible, setIsSyncingInfoModalVisible
 }) => { 
     
-    //console.log('ScanFoodModal.tsx: ', duration);
     const screenWidth = Dimensions.get('screen').width;
     const thirtyPercentScreenWidth = screenWidth * 0.45;
+
+    const {t} = useTranslation();
     
     return (
         <Modal
@@ -46,8 +48,8 @@ const SyncingInfoModal: React.FC<ScanFoodModalProps> = ({
                         </View>
                             
                         <View style={tw`flex-1 justify-end items-center mb-5`}>
-                            <Text style={tw`text-2xl font-bold text-[#3d5875]`}>Syncing Info...</Text>
-                            <Text style={tw`text-xl font-medium text-[#3d5875] mt-[-4px]`}>This may take a while!</Text>
+                            <Text style={tw`text-2xl font-bold text-[#3d5875]`}>{t('syncing-info')}</Text>
+                            <Text style={tw`text-xl font-medium text-[#3d5875] mt-[-4px]`}>{t('few-seconds-alert')}</Text>
                         </View>
                     </View>
 
