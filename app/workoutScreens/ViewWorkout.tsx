@@ -492,7 +492,7 @@ const ViewWorkout = ({route, navigation}: any) => {
         
                                                                     <View style={tw`flex flex-row gap-x-2 mb-3`}>
         
-                                                                        <View style={tw`${iphoneModel.includes('pro') ? "w-[39.3%]" : "w-[37.8%]"}`}>
+                                                                        <View style={tw`${iphoneModel.includes('Pro') ? "w-[39.3%]" : "w-[37.8%]"}`}>
                                                                             <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{getDimensions() > 400 ? t('reps') : t('reps-short')}</Text>
         
                                                                             <TextInput

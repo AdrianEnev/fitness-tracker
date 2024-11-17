@@ -98,7 +98,7 @@ const AddFoodPage = ({route, navigation}: any) => {
                     <View style={tw`flex flex-row items-center bg-white rounded-xl shadow-md border border-gray-200`}>
                         <Ionicons name='search' size={28} style={tw`ml-2`} color='#9ca3af' onPress={displayFoods}/>
                         <TextInput
-                            style={tw`w-[67.5%] h-13 font-medium text-lg pb-2 pl-3`}
+                            style={tw`w-[67.5%] h-13 font-medium text-lg pb-[14px] pl-3`}
                             maxLength={20}
                             placeholder={t('food')}
                             value={searchQuery}
@@ -107,7 +107,7 @@ const AddFoodPage = ({route, navigation}: any) => {
                     </View>
 
                     <TextInput
-                        style={tw`w-[22.5%] h-[13.5] bg-white shadow-md rounded-xl border border-gray-200 font-medium text-lg pb-2 text-center`}
+                        style={tw`w-[22.5%] h-[13.5] bg-white shadow-md rounded-xl border border-gray-200 font-medium text-lg pb-3 text-center`}
                         keyboardType='number-pad'
                         placeholder={t('grams-2')}
                         maxLength={4}

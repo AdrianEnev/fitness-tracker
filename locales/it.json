@@ -164,5 +164,11 @@
     "select-intensity-of-set": "Imposta l'intensità del set numero",
     "warm-up": "Riscaldamento",
     "regular-set": "Set regolare",
-    "failure-set": "Set a cedimento"
+    "failure-set": "Set a cedimento",
+    "retreive-info-information": "Questa funzione può recuperare allenamenti o pasti che hai salvato su un altro telefono con lo stesso account!",
+    "kilograms": "Chilogrammi",
+    "back-up": "Fai un Backup",
+    "back-up-info-modal": "Fai un backup delle tue informazioni",
+    "face-id-prompt": "Accedi tramite riconoscimento facciale",
+    "back-up-extra-info": "Questo farà un backup delle tue informazioni, che potrai recuperare in qualsiasi momento da un altro dispositivo!"
 }

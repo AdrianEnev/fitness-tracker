@@ -32,7 +32,7 @@ const SetupPageFour = ({ heightType, setHeightType, height, setHeight, setWeight
     };*/
 
     return (
-        <View style={tw`flex flex-col ${iphoneModel.includes('pro') ? "mt-[10%]" : "mt-[15%]"} h-full`}>
+        <View style={tw`flex flex-col ${iphoneModel.includes('Pro') ? "mt-[10%]" : "mt-[15%]"} h-full`}>
             <View style={tw`mx-5`}>
                 <Text style={tw`font-medium text-2xl text-center`}>Please enter your height.</Text>
                 <Text style={tw`font-medium text-lg text-gray-500 mt-1 text-center`}>

@@ -164,5 +164,11 @@
     "select-intensity-of-set": "Intensität des Satzes festlegen Nummer",
     "warm-up": "Aufwärmen",
     "regular-set": "Normaler Satz",
-    "failure-set": "Satz bis zum Muskelversagen"
+    "failure-set": "Satz bis zum Muskelversagen",
+    "retreive-info-information": "Diese Funktion kann Workouts oder Mahlzeiten wiederherstellen, die Sie auf einem anderen Telefon mit demselben Konto gespeichert haben!",
+    "kilograms": "Kilogramm",
+    "back-up": "Backup erstellen",
+    "back-up-info-modal": "Erstellen Sie ein Backup Ihrer Informationen",
+    "face-id-prompt": "Mit Gesichtserkennung anmelden",
+    "back-up-extra-info": "Dies erstellt ein Backup Ihrer Informationen, das Sie jederzeit von einem anderen Gerät wiederherstellen können!"
 }

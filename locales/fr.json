@@ -137,5 +137,11 @@
     "select-intensity-of-set": "Définir l'intensité de la série numéro ",
     "warm-up": "Échauffement",
     "regular-set": "Série régulière",
-    "failure-set": "Série d'échec"
+    "failure-set": "Série d'échec",
+    "retreive-info-information": "Cette fonctionnalité peut restaurer des entraînements ou des repas que vous avez enregistrés sur un autre téléphone avec le même compte !",
+    "kilograms": "Kilogrammes",
+    "back-up": "Faire une sauvegarde",
+    "back-up-info-modal": "Faire une sauvegarde de vos informations",
+    "face-id-prompt": "Connectez-vous avec la reconnaissance faciale",
+    "back-up-extra-info": "Cela fera une sauvegarde de vos informations, que vous pourrez restaurer à tout moment depuis un autre appareil !"
 }

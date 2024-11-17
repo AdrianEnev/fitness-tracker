@@ -164,5 +164,11 @@
     "select-intensity-of-set": "Set intensity of set number",
     "warm-up": "Warm-up",
     "regular-set": "Regular Set",
-    "failure-set": "Failure Set"
+    "failure-set": "Failure Set",
+    "retrieve-info-information": "This feature can restore workouts or meals that you had saved on another phone with the same account!",
+    "kilograms": "Kilograms",
+    "back-up": "Back Up",
+    "back-up-info-modal": "Create a backup of your information",
+    "face-id-prompt": "Log in with Face ID",
+    "back-up-extra-info": "This will create a backup of your information, which you can restore at any time from another device!"
 }

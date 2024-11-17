@@ -148,8 +148,8 @@ function App() {
 
     const onAuthenticate = async () => {
         const auth = await LocalAuthentication.authenticateAsync({
-            promptMessage: 'Authenticate to unlock Lunge',
-            cancelLabel: 'Cancel'
+            promptMessage: t('face-id-prompt'),
+            cancelLabel: t('cancel')
         });
 
         if (auth.success) {
@@ -157,6 +157,7 @@ function App() {
             console.log(auth);
         } else {
             console.log('Authentication failed or cancelled');
+            onAuthenticate();
         }
     };
 
@@ -432,7 +433,7 @@ function App() {
                 await syncInformation();
                 setSyncingInfoRunning(false)
             }
-            //query();
+            query();
         }
     }, [isConnected, isAuthenticated, hasSynced]);
 
@@ -536,16 +537,18 @@ function App() {
                     loop
                 />
                 
-                <View style={tw`flex flex-row`}>
-                    <Text style={tw`text-2xl font-bold text-white mt-4`}>{t('loading')}</Text>
-                    <LottieView
-                        style={tw`w-24 h-24 mt-[-6px] ml-[-22px]`}
-                        source={require('./assets/loading_animation_white_dots.json')}
-                        speed={0.8}
-                        autoPlay
-                        loop
-                    />
-                </View>
+                {/*
+                    <View style={tw`flex flex-row`}>
+                        <Text style={tw`text-2xl font-bold text-white mt-4`}>{t('loading')}</Text>
+                        <LottieView
+                            style={tw`w-24 h-24 mt-[-6px] ml-[-22px]`}
+                            source={require('./assets/loading_animation_white_dots.json')}
+                            speed={0.8}
+                            autoPlay
+                            loop
+                        />
+                    </View>
+                */}
 
             </View>
         );

@@ -12,10 +12,13 @@ import { collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'fir
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import generateID from '../use/useGenerateID';
 import Slider from '@react-native-community/slider';
+import { useTranslation } from 'react-i18next';
 
 const AddFoodPageEditFood = ({route, navigation}: any) => {
 
     const {food, date} = route.params;
+
+    const {t} = useTranslation();
 
     const [newTitle, setNewTitle] = useState(food.title)
     const [newGrams, setNewGrams] = useState(food.grams)
@@ -249,7 +252,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
             
 
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
-                <Text style={tw`text-4xl font-medium text-black m-3`}>Macronutrients</Text>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>{t('macronutrients')}</Text>
             </View>
 
             {/* <Text style={tw`text-2xl font-medium text-center mt-3 mb-1`}>{food.grams}g</Text> */}
@@ -291,7 +294,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
                             handlePress('Food Name', titleRef)
                         }}>
 
-                            <Text style={tw`text-2xl text-white font-medium text-center my-1`}>Food Name</Text>
+                            <Text style={tw`text-2xl text-white font-medium text-center my-1`}>{t('food-name')}</Text>
 
                             <View style={tw`flex-1 items-center justify-center mb-4`}>
                                 <Text style={tw`text-4xl text-white font-medium text-center`}>{newTitle}</Text>
@@ -301,7 +304,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
 
                         <Pressable ref={calorieRef} style={tw`w-[49%] h-full bg-[#3f8aff] rounded-xl`} onPress={() => handlePress('Calories', calorieRef)}>
 
-                            <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Calories</Text>
+                            <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{t('calories')}</Text>
 
                             <View style={tw`flex-1 items-center justify-center mb-4`}>
                                 <Text style={tw`text-4xl text-white font-medium text-center`}>{!newCalories ? '0' : newCalories}kcal</Text>
@@ -311,7 +314,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
 
                         <Pressable ref={proteinRef} style={tw`w-[49%] h-full bg-[#fd3e54] rounded-xl`} onPress={() => handlePress('Protein', proteinRef)}>
 
-                            <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Protein</Text>
+                            <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{t('protein')}</Text>
 
                             <View style={tw`flex-1 items-center justify-center mb-4`}>
                                 <Text style={tw`text-4xl text-white font-medium text-center`}>{!newProtein ? '0' : newProtein}g</Text>
@@ -321,7 +324,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
 
                         <Pressable ref={carbRef} style={tw`w-[49%] h-full bg-[#0fbf8f] rounded-xl`} onPress={() => handlePress('Carbs', carbRef)}>
 
-                            <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Carbs</Text>
+                            <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{t('carbs')}</Text>
 
                             <View style={tw`flex-1 items-center justify-center mb-4`}>
                                 <Text style={tw`text-4xl text-white font-medium text-center`}>{!newCarbs ? '0' : newCarbs}g</Text>
@@ -331,7 +334,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
                         
                         <Pressable ref={fatRef} style={tw`w-[49%] h-full bg-[#ffca2c] rounded-xl`} onPress={() => handlePress('Fat', fatRef)}>
 
-                            <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>Fat</Text>
+                            <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{t('fat')}</Text>
 
                             <View style={tw`flex-1 items-center justify-center mb-4`}>
                                 <Text style={tw`text-4xl text-white font-medium text-center`}>{!newFat ? '0' : newFat}g</Text>
@@ -342,7 +345,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
                         <View style={tw`w-full h-12 flex flex-col`}>
 
                         <View style={tw`flex flex-row justify-between`}>
-                            <Text style={tw`text-xl font-medium text-gray-500`}>Grams</Text>
+                            <Text style={tw`text-xl font-medium text-gray-500`}>{t('grams-2')}</Text>
                             <Text style={tw`text-xl font-medium text-gray-500 mr-1`}>{newGrams}</Text>
                         </View>
                         

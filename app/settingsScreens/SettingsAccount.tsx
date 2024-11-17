@@ -21,6 +21,8 @@ import syncInformation from '../use/useSyncInfo'
 import DeletingAccountModal from '../loadingModals/DeletingAccountModal'
 import checkUsernameNSFW from '../use/useCheckUsernameNSFW'
 import ChangingUsernameModal from '../loadingModals/ChangingUsernameModal'
+import SyncingInfoInformationModal from '../modals/SyncInfoInformationModal'
+import SyncInfoModal from '../modals/SyncInfoModal'
 
 const SettingsAccount = ({navigation}: any) => {
  
@@ -362,13 +364,34 @@ const SettingsAccount = ({navigation}: any) => {
 
     }, [])
 
+    const syncInfo = async () => {
+        if (syncingInfoRunning) return;
+    
+        setSyncingInfoRunning(true);
+        setIsSyncingInfoModalVisible(true);
+    
+        try {
+            await syncInformation();
+        } catch (error) {
+            console.error("Sync information failed", error);
+        } finally {
+            setIsSyncingInfoModalVisible(false);
+            setTimeout(() => {
+                setIsSyncInfoModalVisible(false);
+                setSyncingInfoRunning(false);
+            }, 10); // 100 milliseconds delay
+        }
+    };
+
+    const [isSyncInfoModalVisible, setIsSyncInfoModalVisible] = useState(false)
     const [isSyncingInfoModalVisible, setIsSyncingInfoModalVisible] = useState(false)
+    const [isSyncingInfoInformationModalVisible, setIsSyncingInfoInformationModalVisible] = useState(false)
     const [isDeletingAccountModalVisible, setIsDeletingAccountModalVisible] = useState(false)
 
     return (
         <>
 
-            {(isSyncingInfoModalVisible || isDeletingAccountModalVisible || changingUsernameRunning) && (
+            {(isSyncingInfoModalVisible || isDeletingAccountModalVisible || changingUsernameRunning || isSyncingInfoInformationModalVisible || isSyncInfoModalVisible) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -378,9 +401,23 @@ const SettingsAccount = ({navigation}: any) => {
 
             <SafeAreaView style={tw`w-full h-full bg-white`}>
 
+                <SyncInfoModal
+                    isSyncInfoModalVisible={isSyncInfoModalVisible}
+                    setIsSyncInfoModalVisible={setIsSyncInfoModalVisible}
+                    setIsSyncingInfoInformationModalVisible={setIsSyncingInfoInformationModalVisible}
+                    syncInfo={syncInfo}
+                />
+
+                <SyncingInfoInformationModal
+                    isSyncingInfoInformationModalVisible={isSyncingInfoInformationModalVisible}
+                    setIsSyncingInfoInformationModalVisible={setIsSyncingInfoInformationModalVisible}
+                    setIsSyncInfoModalVisible={setIsSyncInfoModalVisible}
+                />
+
                 <SyncingInfoModal
                     isSyncingInfoModalVisible={isSyncingInfoModalVisible}
                     setIsSyncingInfoModalVisible={setIsSyncingInfoModalVisible}
+                    setIsSyncingInfoInformationModalVisible={setIsSyncingInfoInformationModalVisible}
                 />
 
                 <DeletingAccountModal
@@ -457,13 +494,7 @@ const SettingsAccount = ({navigation}: any) => {
                     })}
                     {button(t('sync-info'), 'sync-outline', 'indigo-300', '#4f46e5', 34, async () => {
 
-                        if (syncingInfoRunning) return
-
-                        setSyncingInfoRunning(true)
-                        setIsSyncingInfoModalVisible(true)
-                        await syncInformation();
-                        setIsSyncingInfoModalVisible(false)
-                        setSyncingInfoRunning(false)
+                       setIsSyncInfoModalVisible(true)
                         
                     })}
 

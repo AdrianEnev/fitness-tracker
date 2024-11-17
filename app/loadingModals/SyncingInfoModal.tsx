@@ -7,11 +7,12 @@ import { useTranslation } from 'react-i18next';
 
 interface SyncingInfoModalProps {
     isSyncingInfoModalVisible: boolean;
-    setIsSyncingInfoModalVisible: (isVisible: boolean) => void;                 
+    setIsSyncingInfoModalVisible: (isVisible: boolean) => void;
+    setIsSyncingInfoInformationModalVisible: (isVisible: boolean) => void;                 
 }
 
 const SyncingInfoModal: React.FC<SyncingInfoModalProps> = ({ 
-    isSyncingInfoModalVisible, setIsSyncingInfoModalVisible
+    isSyncingInfoModalVisible, setIsSyncingInfoModalVisible, setIsSyncingInfoInformationModalVisible
 }) => { 
     
     const screenWidth = Dimensions.get('screen').width;
@@ -30,26 +31,15 @@ const SyncingInfoModal: React.FC<SyncingInfoModalProps> = ({
             >
                 <View style={tw`flex-1 justify-center items-center mx-3`}>
 
-                    <View style={tw`bg-white w-[96%] h-[35%] rounded-[30px] pt-3 px-2`}>
+                    <View style={tw`bg-white w-[100%] h-[38%] rounded-[30px] pt-3 px-2`}>
 
-                        <View style={tw`absolute top-2 left-2`}>
-                            <Ionicons name='help-circle-outline' size={48} color='#3b82f6' />
-                        </View>
-                        <Pressable style={tw`absolute top-2 right-2`}
-                            onPress={() => {
-                                setIsSyncingInfoModalVisible(false)
-                            }}
-                        >
-                            <Ionicons name='close-circle-outline' size={48} color='#f87171' />
-                        </Pressable>
-
-                        <View style={tw`flex-1 justify-center items-center mt-14`}>
+                        <View style={tw`flex-1 justify-center items-center mt-6`}>
                             <Swing color={`#3d5875`} size={thirtyPercentScreenWidth} />
                         </View>
                             
-                        <View style={tw`flex-1 justify-end items-center mb-5`}>
+                        <View style={tw`flex-1 justify-end items-center mb-3`}>
                             <Text style={tw`text-2xl font-bold text-[#3d5875]`}>{t('syncing-info')}</Text>
-                            <Text style={tw`text-xl font-medium text-[#3d5875] mt-[-4px]`}>{t('few-seconds-alert')}</Text>
+                            <Text style={tw`text-xl font-medium text-[#3d5875] mt-2`}>{t('few-seconds-alert')}</Text>
                         </View>
                     </View>
 

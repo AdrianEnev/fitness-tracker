@@ -44,8 +44,8 @@ const PasteWorkoutsModal: React.FC<PasteWorkoutsModalProps> = ({
                                 }}
                             >
                                 <Ionicons name='cut-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} mt-2`}>{t('paste-cut-workouts')}</Text>
-                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} mt-[-5px]`}>{t('workouts')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') ? "text-lg" : "text-base"} mt-2`}>{t('paste-cut-workouts')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') ? "text-lg" : "text-base"} mt-[-5px]`}>{t('workouts')}</Text>
                             </Pressable>
                             
                             <Pressable style={tw`w-[48%] h-[100%] rounded-[20px] bg-yellow-400 flex-col items-center justify-center`}
@@ -55,8 +55,8 @@ const PasteWorkoutsModal: React.FC<PasteWorkoutsModalProps> = ({
                                 }}
                             >
                                 <Ionicons name='copy-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} mt-2`}>{t('paste-copied-workouts')}</Text>
-                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} mt-[-5px]`}>{t('workouts')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') ? "text-lg" : "text-base"} mt-2`}>{t('paste-copied-workouts')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') ? "text-lg" : "text-base"} mt-[-5px]`}>{t('workouts')}</Text>
                             </Pressable>
                         </View>
 

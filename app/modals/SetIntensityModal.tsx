@@ -57,19 +57,19 @@ const SetIntensityModal: React.FC<SetIntensityModalProps> = ({ isSetIntensityMod
                                 onPress={() => setIntensityBoxSelected(1)}
                             >
                                 <Ionicons name='accessibility-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} text-center`}>{t('warm-up')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') ? "text-lg" : "text-base"} text-center`}>{t('warm-up')}</Text>
                             </Pressable>
                             <Pressable style={tw`w-[30%] h-[45%] rounded-[20px] bg-yellow-400 flex-col gap-y-2 items-center justify-center ${intensityBoxSelected === 2 ? 'border-2 border-white shadow-lg' : ''}`}
                                 onPress={() => setIntensityBoxSelected(2)}
                             >
                                 <Ionicons name='bicycle-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} text-center`}>{t('regular-set')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') ? "text-lg" : "text-base"} text-center`}>{t('regular-set')}</Text>
                             </Pressable>
                             <Pressable style={tw`w-[30%] h-[45%] rounded-[20px] bg-red-500 flex-col gap-y-2 items-center justify-center ${intensityBoxSelected === 3 ? 'border-2 border-white shadow-lg' : ''}`}
                                 onPress={() => setIntensityBoxSelected(3)}
                             >
                                 <Ionicons name='flame-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} text-center`}>{t('failure-set')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') ? "text-lg" : "text-base"} text-center`}>{t('failure-set')}</Text>
                             </Pressable>
                         </View>
                         
