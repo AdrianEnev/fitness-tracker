@@ -1,6 +1,7 @@
 import { View, Text, Pressable, ScrollView } from 'react-native'
-import React, { useState } from 'react'
+import React, { useRef, useState } from 'react'
 import tw from 'twrnc'
+import HorizontalPicker from '@vseslav/react-native-horizontal-picker';
 
 const SetupPageThree = ({weight, weightType, setWeight, setWeightType, setHeightType, setHeight, height}: any) => {
 
@@ -14,6 +15,16 @@ const SetupPageThree = ({weight, weightType, setWeight, setWeightType, setHeight
     const feetInchesToCm = (feet: any, inches: any) => {
         return Math.round((feet * 12 + inches) * 2.54);
     };
+
+    const Items = Array.from({length: 121}, (_, i) => i + 30);
+
+    const rednerItem = (item: any, index: any) => (
+        <View style={tw`w-16 h-16 bg-gray-300 shadow-sm rounded-2xl flex items-center justify-center mx-2 mt-12`}>
+            <Text style={tw`text-xl text-gray-700 font-medium`}>
+                { item }
+            </Text>
+        </View>
+      );
 
     return (
         <View style={tw`flex flex-col mt-[15%] h-full`}>
@@ -63,8 +74,16 @@ const SetupPageThree = ({weight, weightType, setWeight, setWeightType, setHeight
             <View style={tw`mx-3 mt-5 w-[94.5%] h-full`}>
                 <View style={tw`w-full h-[18%] bg-gray-200 rounded-[47px]`}>
 
+                    <HorizontalPicker
+                        data={Items}
+                        renderItem={rednerItem}
+                        itemWidth={80}
+                        defaultIndex={weight - 30}
+                        onChange={(index: any) => {
+                            setWeight(index + 30);
+                        }}
+                    />
 
-                   
                 </View>
 
             </View>

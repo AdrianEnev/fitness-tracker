@@ -1,8 +1,9 @@
 import { View, Text, Modal, Pressable, Keyboard, TextInput } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
 import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
 
 interface PasteWorkoutsInFolderModalProps {
     navigation: any;
@@ -17,6 +18,8 @@ const PasteWorkoutsInFolderModal: React.FC<PasteWorkoutsInFolderModalProps> = ({
 }) => { 
     
     const {t} = useTranslation();
+
+    const {iphoneModel} = useContext(GlobalContext);
     
     return (
         <Modal
@@ -41,8 +44,8 @@ const PasteWorkoutsInFolderModal: React.FC<PasteWorkoutsInFolderModalProps> = ({
                                 }}
                             >
                                 <Ionicons name='cut-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium text-lg mt-2`}>{t('paste-cut-workout')}</Text>
-                                <Text style={tw`text-white font-medium text-lg mt-[-5px]`}>{t('workouts')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} mt-2`}>{t('paste-cut-workouts')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} mt-[-5px]`}>{t('workouts')}</Text>
                             </Pressable>
                             
                             <Pressable style={tw`w-[48%] h-[100%] rounded-[20px] bg-yellow-400 flex-col items-center justify-center`}
@@ -52,8 +55,8 @@ const PasteWorkoutsInFolderModal: React.FC<PasteWorkoutsInFolderModalProps> = ({
                                 }}
                             >
                                 <Ionicons name='copy-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium text-lg mt-2`}>{t('paste-copied-workouts')}</Text>
-                                <Text style={tw`text-white font-medium text-lg mt-[-5px]`}>{t('workouts')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} mt-2`}>{t('paste-copied-workouts')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} mt-[-5px]`}>{t('workouts')}</Text>
                             </Pressable>
                         </View>
 

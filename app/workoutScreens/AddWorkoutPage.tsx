@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text, SafeAreaView, TouchableOpacity, TextInput, TouchableWithoutFeedback, Keyboard, Pressable, ScrollView } from 'react-native';
 import tw from 'twrnc';
-import { Exercise, Set } from '../../interfaces';
+import { Exercise } from '../../interfaces';
 import addWorkout from '../useWorkout/useAddWorkout';
 import { Ionicons } from '@expo/vector-icons';
 import BottomNavigationBar from '../components/BottomNavigationBar';
@@ -14,12 +14,15 @@ import generateID from '../use/useGenerateID';
 import generateRandomColour from '../use/useGenerateColour';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
+import { useTranslation } from 'react-i18next';
 
 const AddWorkoutPage = ({ navigation, route }: any) => {
 
-    const { internetConnected, internetSpeed } = useContext(GlobalContext);
+    const { internetConnected, internetSpeed, iphoneModel } = useContext(GlobalContext);
 
     const { folder } = route.params;
+
+    const {t} = useTranslation();
     
     const getExerciseTitle = async () => {
 
@@ -326,7 +329,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                                                     <View key={set.id} style={tw`ml-3`}>
                                                         <View style={tw`flex flex-row gap-x-2`}>
                                                             <View style={tw`flex flex-col`}>
-                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{t('set')}</Text>
                                                                 <Pressable
                                                                     style={tw`w-10 h-10 ${backgroundColor} rounded-xl flex items-center justify-center`}
                                                                     onPress={() => {
@@ -340,24 +343,26 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                                                                 </Pressable>
                                                             </View>
                                                             <View style={tw`flex flex-row gap-x-2 mb-3`}>
-                                                                <View style={tw`w-[39.3%]`}>
-                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{getDimensions() > 400 ? 'Повторения' : 'Повт.'}</Text>
+                                                                <View style={tw`${iphoneModel.includes('pro') ? "w-[39.3%]" : "w-[37.5%]"}`}>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{getDimensions() > 400 ? t('reps') : t('reps-short')}</Text>
                                                                     <TextInput
-                                                                        style={tw`bg-neutral-100 rounded-2xl p-2 w-full h-10`}
+                                                                        style={tw`bg-neutral-100 rounded-2xl ${mapIndex == 0 ? "pb-[10px] pl-[8px]" : "pl-[8px]"} w-full h-10`}
                                                                         keyboardType='number-pad'
                                                                         maxLength={4}
-                                                                        placeholder='Повторения'
+                                                                        placeholder={t('reps')}
+                                                                        placeholderTextColor='#94a3b8'
                                                                         value={set.reps.toString()}
                                                                         onChangeText={(value) => updateSet(exercise.id, set.id, 'reps', value)}
                                                                     />
                                                                 </View>
                                                                 <View style={tw`w-[39.3%]`}>
-                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{t('weight')}</Text>
                                                                     <TextInput
                                                                         style={tw`bg-neutral-100 rounded-2xl p-2 w-full h-10`}
                                                                         keyboardType='number-pad'
                                                                         maxLength={4}
-                                                                        placeholder='Тежест'
+                                                                        placeholder={t('weight')}
+                                                                        placeholderTextColor='#94a3b8'
                                                                         value={set.weight.toString()}
                                                                         onChangeText={(value) => updateSet(exercise.id, set.id, 'weight', value)}
                                                                     />

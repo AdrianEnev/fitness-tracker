@@ -15,12 +15,11 @@ import getProfilePicture from './app/use/useGetProfilePicture';
 import GlobalContext from './GlobalContext';
 import getFriendRequests from './app/useFriends/useGetFriendRequestsRecieved';
 import ChangePassword from './app/screens/ChangePassword';
-import { checkUserDocument, checkLanguageDocument, checkUserInfoCollection, checkUserInfoCollectionLocally, checkLanguageDocumentLocally } from './app/use/useCheckUserInfo';
+import { checkUserInfoCollectionLocally, checkLanguageDocumentLocally } from './app/use/useCheckUserInfo';
 import LottieView from 'lottie-react-native';
 import tw from 'twrnc';
 import { useTranslation } from 'react-i18next';
 import * as LocalAuthentication from 'expo-local-authentication';
-import checkForBiometrics from './app/use/useCheckForBiometrics';
 import NetInfo from "@react-native-community/netinfo";
 import checkReceiveFriendRequestsLocally from './app/useFriends/useCheckReceiveFriendRequestsLocally';
 import checkFaceIdEnabledLocally from './app/use/useCheckFaceIdEnabledLocally';
@@ -31,9 +30,8 @@ import getLocalLanguageSet from './app/use/useGetLocalLanguageSet';
 import LanguageScreen from './app/screens/LanguageScreen';
 import { useNavigationContainerRef } from '@react-navigation/native';
 import syncInformation from './app/use/useSyncInfo';
-import checkUsernameNSFW from './app/use/useCheckUsernameNSFW';
 import checkInternetSpeed from './app/use/useCheckInternetSpeed';
-import getEmail from './app/use/useGetEmail';
+import * as Device from 'expo-device';
 
 const Stack = createStackNavigator();
 
@@ -167,7 +165,7 @@ function App() {
             <View style={tw`flex-1 justify-center items-center bg-white`}>
                 
                 <TouchableOpacity style={tw`w-[75%] h-[6.5%] bg-gray-700 rounded-[30px] shadow-lg flex items-center justify-center`}
-                   onPress={() => onAuthenticate()} 
+                   onPress={() => onAuthenticate()}
                 >
                     <Text style={tw`text-3xl font-semibold text-white`}>Try Face ID Again</Text>
                 </TouchableOpacity>
@@ -208,6 +206,18 @@ function App() {
     const [syncingInfoRunning, setSyncingInfoRunning] = useState(false);
 
     const [accountJustRegistered, setAccountJustRegistered] = useState(false);
+
+    const [iphoneModel, setIphoneModel] = useState('')
+
+    const getIphoneModel = async () => {
+        if (Device.brand === 'Apple') {
+            setIphoneModel(Device.modelName || 'Unknown iPhone');
+        } else {
+            setIphoneModel('Not an iPhone');
+        }
+
+        console.log(Device.modelName)
+    };
 
     const fetchData = async () => {
         try {
@@ -484,35 +494,8 @@ function App() {
         logAsyncStorage()
         //clearEmailFoodDayData('test')
         //tempFunc()
+        getIphoneModel();
     }, [])
-
-    /**
-     * 
-     * const handleNavigation = () => {
-    // Handles the logic for navigation based on language and authentication
-    if (!localLanguageSet) {
-      return <LanguageScreen setLocalLanguageSet={setLocalLanguageSet} />;
-    }
-
-    // Prioritize authentication check
-    if (user && isAuthenticated) {
-      // User is authenticated, navigate to the appropriate screen
-      return setupRan ? (
-        <AuthenticatedTabNavigator setupRan={setupRan} />
-      ) : (
-        <SetupPage />
-      );
-    } else {
-      // User is not authenticated or account is deleted
-      return isAccountDeleted ? (
-        <UnauthenticatedTabNavigator />
-      ) : (
-        <UnauthenticatedTabNavigator />
-      );
-    }
-  };
-
-     */
 
     const handleNavigation = () => {
         // Handles the logic for navigation based on language and authentication
@@ -525,7 +508,7 @@ function App() {
             return <UnauthenticatedTabNavigator />;
         } else {
             // Authenticated or setup flow
-            return isAccountDeleted ? (
+            return isAccountDeleted && setupRan ? (
                 <UnauthenticatedTabNavigator />
             ) : setupRan && isAuthenticated && user && !accountJustRegistered ? (
                 <AuthenticatedTabNavigator setupRan={setupRan} />
@@ -544,6 +527,7 @@ function App() {
     if (loading || checkingSetup) {
         return (
             <View style={tw`flex-1 justify-center items-center bg-red-500`}>
+
                 <LottieView
                     style={{ width: 350, height: 350 }}
                     source={require('./assets/loading_plane.json')}
@@ -562,6 +546,7 @@ function App() {
                         loop
                     />
                 </View>
+
             </View>
         );
     }
@@ -571,9 +556,10 @@ function App() {
             setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber,
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
             internetConnected: isConnected, isAccountDeleted, setIsAccountDeleted, generatingWorkout, setGeneratingWorkout,
-            generatingWorkoutInFolder, setGeneratingWorkoutInFolder, syncingInfoRunning, setSyncingInfoRunning, internetSpeed, setAccountJustRegistered
+            generatingWorkoutInFolder, setGeneratingWorkoutInFolder, syncingInfoRunning, setSyncingInfoRunning, internetSpeed, setAccountJustRegistered,
+            iphoneModel
         }}>
-            <GestureHandlerRootView style={{ flex: 1 }}>
+            <GestureHandlerRootView style={tw`w-full h-full`}>
                 <StatusBar barStyle='dark-content' />
                 
                 {/*<
@@ -586,8 +572,6 @@ function App() {
                     {handleNavigation()}
                 </NavigationContainer>
                
-                
-
             </GestureHandlerRootView>
         </GlobalContext.Provider>
     );

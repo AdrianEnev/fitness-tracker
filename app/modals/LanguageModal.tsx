@@ -123,7 +123,7 @@ const LanguageModal: React.FC<LanguageModalProps> = ({ isLanguageModalVisible, s
             }}
             >
                 <View style={tw`flex-1 justify-center items-center mx-3`}>
-                    <Pressable style={tw`bg-white w-full h-[25%] rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
+                    <Pressable style={tw`bg-white w-full h-[23%] rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
 
                         <Text style={tw`text-lg text-center font-medium mt-1`}>{t('set-language')}</Text>
   

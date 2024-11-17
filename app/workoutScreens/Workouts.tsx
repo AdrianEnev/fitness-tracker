@@ -1,14 +1,12 @@
-import { View, Text, Button, SafeAreaView, TouchableOpacity, FlatList, Pressable, Alert, TextInput, ActivityIndicator } from 'react-native'  
+import { View, Text, FlatList, Pressable, Alert, ActivityIndicator } from 'react-native'  
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import tw from 'twrnc'
-import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
-import { collection, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
-import { Exercise, Workout } from '../../interfaces';
+import { Workout } from '../../interfaces';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import BottomNavigationBar from '../components/BottomNavigationBar';
-import generateRandomColour from '../use/useGenerateColour';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getWorkoutInfoLocally from '../useWorkout/useGetWorkoutInfoLocally';
 import getEmail from '../use/useGetEmail';
@@ -17,7 +15,6 @@ import GlobalContext from '../../GlobalContext';
 import { copySelectedWorkouts, cutSelectedWorkouts, deleteSelectedWorkouts, pasteCopiedWorkouts, pasteCutWorkouts } from '../useWorkout/handleSelectionMode';
 import PasteWorkoutsModal from '../modals/PasteWorkoutsModal';
 import { BlurView } from 'expo-blur';
-import GenerateWorkoutModal from '../modals/GeneratingWorkoutModal';
 import GeneratingWorkoutAnimationModal from '../modals/GeneratingWorkoutAnimationModal';
 
 const Workouts = ({navigation}: any) => {
@@ -86,7 +83,6 @@ const Workouts = ({navigation}: any) => {
     }
 
     const getWorkoutsLocally = async () => {
-        //console.log('getWokoutsLocally called')
 
         try {
             const email = await getEmail();
@@ -98,7 +94,6 @@ const Workouts = ({navigation}: any) => {
             workouts = workouts.reverse();
     
             setWorkouts(workouts);
-            //console.log(workouts)
             
         } catch (err) {
             console.error(err);
@@ -142,34 +137,6 @@ const Workouts = ({navigation}: any) => {
         }, [workouts])
     );
 
-    /*const changeWorkoutName = async (workoutID: string, workoutTitle: string) => {
-        Alert.prompt(
-            t('new-name-alert'),
-            '',
-            (newName) => {
-                if (newName && newName.length <= 50) {
-                    const usersCollectionRef = collection(FIRESTORE_DB, "users");
-                    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-                    const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
-
-                    updateDoc(doc(userWorkoutsCollectionRef, workoutID), {
-                        title: newName,
-                    });
-                    
-                    } else {
-                    Alert.alert(t('workout-characters-alert'), '', [
-                        {
-                        text: 'OK',
-                        style: 'cancel',
-                        },
-                    ]);
-                }
-            },
-            'plain-text',
-            workoutTitle
-        );
-    }*/
-
     const viewWorkout = async (workout: Workout) => {
         setViewWorkoutButtonDisabled(true);
 
@@ -190,7 +157,7 @@ const Workouts = ({navigation}: any) => {
         if (dayMatch && dayMatch[1] >= '1' && dayMatch[1] <= '8') {
             return `D${dayMatch[1]}`;
         }
-        return name.split(' ').map(word => word[0]).join('').substring(0, 3).toUpperCase();
+        return name.split(' ').map(word => word[0]).join('').substring(0, 3).toUpperCase().replace(/[^a-zA-Z0-9]$/, '');
     }
 
     const [selectedWorkouts, setSelectedWorkouts] = useState<any>([])
@@ -300,7 +267,7 @@ const Workouts = ({navigation}: any) => {
                                     {workout.title}
                                 </Text>
     
-                                <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.numberOfExercises} {workout.numberOfExercises === 1 ? t('exercise-djhjd') : t('exercises-rhahsgdg')}</Text>
+                                <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.numberOfExercises} {workout.numberOfExercises === 1 ? t('exercise') : t('exercises')}</Text>
                             </View>
                         </View>
     
@@ -354,12 +321,12 @@ const Workouts = ({navigation}: any) => {
             <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} 
                 onPress={() => {
                     if (!selectionMode) {
-                        navigation.navigate('Папка', {folderId: folder.id})
+                        navigation.navigate('Папка', {folderId: folder.id});
                     }
                 }} 
                 onLongPress={() => {
                     if (generatingWorkout) return
-                    renameFolder(folder.id)
+                    renameFolder(folder.id);
                 }}
             >
                 <View style={tw`flex flex-row justify-between`}>
@@ -387,19 +354,19 @@ const Workouts = ({navigation}: any) => {
     const combinedData = [...folders, ...workouts];
 
     const deleteWorkouts = () => {
-        deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef)
-        setSelectedWorkouts([])
+        deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef);
+        setSelectedWorkouts([]);
     }
 
     const cutWorkouts = () => {
-        cutSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef)
-        setSelectedWorkouts([])
+        cutSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef);
+        setSelectedWorkouts([]);
     }
 
     const copyWorkouts = () => {
-        copySelectedWorkouts(selectedWorkouts)
-        setSelectionMode(false)
-        setSelectedWorkouts([])
+        copySelectedWorkouts(selectedWorkouts);
+        setSelectionMode(false);
+        setSelectedWorkouts([]);
     }
 
     const pasteCutWorkoutsFunc = () => {
@@ -407,7 +374,7 @@ const Workouts = ({navigation}: any) => {
     }
 
     const pasteCopiedWorkoutsFunc = () => {
-        pasteCopiedWorkouts()
+        pasteCopiedWorkouts();
     }
 
     const [isPasteWorkoutsModalVisible, setIsPasteWorkoutsModalVisible] = useState(false)
@@ -488,3 +455,31 @@ const Workouts = ({navigation}: any) => {
 }
 
 export default Workouts
+
+ /*const changeWorkoutName = async (workoutID: string, workoutTitle: string) => {
+        Alert.prompt(
+            t('new-name-alert'),
+            '',
+            (newName) => {
+                if (newName && newName.length <= 50) {
+                    const usersCollectionRef = collection(FIRESTORE_DB, "users");
+                    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+                    const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
+
+                    updateDoc(doc(userWorkoutsCollectionRef, workoutID), {
+                        title: newName,
+                    });
+                    
+                    } else {
+                    Alert.alert(t('workout-characters-alert'), '', [
+                        {
+                        text: 'OK',
+                        style: 'cancel',
+                        },
+                    ]);
+                }
+            },
+            'plain-text',
+            workoutTitle
+        );
+    }*/

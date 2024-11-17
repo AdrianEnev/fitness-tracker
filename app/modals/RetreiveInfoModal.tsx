@@ -11,6 +11,7 @@ interface RetreiveInfoModalProps {
     setIsRetreivingInfoAnimationModalVisible: (isVisible: boolean) => void;
     navigation: any;
     internetSpeed: number;
+    setIsRetreiveInfoInformationModalVisible: (isVisible: boolean) => void;
 }
 
 const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({ 
@@ -18,7 +19,8 @@ const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({
     setIsRetreiveInfoModalVisible, 
     setIsRetreivingInfoAnimationModalVisible,
     navigation,
-    internetSpeed
+    internetSpeed,
+    setIsRetreiveInfoInformationModalVisible
 }) => {
 
     const {t} = useTranslation();
@@ -38,7 +40,8 @@ const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({
                         <View style={tw`w-full flex flex-row justify-between`}>
                             
                             <Pressable onPress={() => {
-                                setIsRetreiveInfoModalVisible(false)
+                                //setIsRetreiveInfoModalVisible(false)
+                                setIsRetreiveInfoInformationModalVisible(true)
                             }}>
                                 <Ionicons name='help-outline' size={35} color='#3b82f6'/>
                                 
@@ -59,7 +62,7 @@ const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({
                                 }}
                             >
                                 <Ionicons name='accessibility-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium text-xl`}>{t('workouts')}</Text>
+                                <Text style={tw`text-white font-medium text-xl text-center mx-2`}>{t('workouts')}</Text>
                             </Pressable>
                     
                             <Pressable style={tw`w-[44%] h-[60%] rounded-[20px] bg-blue-500 flex-col gap-y-2 items-center justify-center`}
@@ -69,7 +72,7 @@ const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({
                                 }}
                             >
                                 <Ionicons name='egg-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium text-xl`}>{t('food-log')}</Text>
+                                <Text style={tw`text-white font-medium text-xl text-center mx-2`}>{t('food-log')}</Text>
                             </Pressable>
                         </View>
                         

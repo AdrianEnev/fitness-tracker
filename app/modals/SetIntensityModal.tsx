@@ -1,8 +1,9 @@
 import { View, Text, Modal, Pressable, Keyboard, TextInput } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
 
 interface SetIntensityModalProps {
     isSetIntensityModalVisible: boolean;
@@ -17,6 +18,8 @@ interface SetIntensityModalProps {
 const SetIntensityModal: React.FC<SetIntensityModalProps> = ({ isSetIntensityModalVisible, setIsSetIntensityModalVisible, setNumber, intensityBoxSelected, setIntensityBoxSelected, setSetIntensity}) => {
     
     const {t} = useTranslation();
+
+    const {iphoneModel} = useContext(GlobalContext);
 
     return (
         <Modal
@@ -47,26 +50,26 @@ const SetIntensityModal: React.FC<SetIntensityModalProps> = ({ isSetIntensityMod
                             </Pressable>
                         </View>
 
-                        <Text style={tw`text-xl font-medium text-center mt-4`}>{t('select-intensity-of-set')} {setNumber}</Text>
+                        <Text style={tw`text-xl font-medium text-center mt-2`}>{t('select-intensity-of-set')} {setNumber}</Text>
 
                         <View style={tw`w-full h-full flex justify-center flex-row gap-x-3 mt-4`}>
                             <Pressable style={tw`w-[30%] h-[45%] rounded-[20px] bg-green-500 flex flex-col gap-y-2 items-center justify-center ${intensityBoxSelected === 1 ? 'border-2 border-white shadow-lg' : ''}`}
                                 onPress={() => setIntensityBoxSelected(1)}
                             >
                                 <Ionicons name='accessibility-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium text-lg`}>{t('warm-up')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} text-center`}>{t('warm-up')}</Text>
                             </Pressable>
                             <Pressable style={tw`w-[30%] h-[45%] rounded-[20px] bg-yellow-400 flex-col gap-y-2 items-center justify-center ${intensityBoxSelected === 2 ? 'border-2 border-white shadow-lg' : ''}`}
                                 onPress={() => setIntensityBoxSelected(2)}
                             >
                                 <Ionicons name='bicycle-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium text-lg`}>{t('regular-set')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} text-center`}>{t('regular-set')}</Text>
                             </Pressable>
                             <Pressable style={tw`w-[30%] h-[45%] rounded-[20px] bg-red-500 flex-col gap-y-2 items-center justify-center ${intensityBoxSelected === 3 ? 'border-2 border-white shadow-lg' : ''}`}
                                 onPress={() => setIntensityBoxSelected(3)}
                             >
                                 <Ionicons name='flame-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium text-lg`}>{t('failure-set')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('pro') ? "text-lg" : "text-base"} text-center`}>{t('failure-set')}</Text>
                             </Pressable>
                         </View>
                         

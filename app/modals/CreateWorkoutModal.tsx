@@ -1,11 +1,12 @@
 import { View, Text, Modal, Pressable, Keyboard, TextInput } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import tw from 'twrnc'
 import addWorkout from '../useWorkout/useAddWorkout';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import addWorkoutLocally from '../useWorkout/useAddWorkoutLocally';
 import generateID from '../use/useGenerateID';
 import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
 
 interface CreateWorkoutModalProps {
     exercises: any;
@@ -29,6 +30,8 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
     
     const {t} = useTranslation();
 
+    const {iphoneModel} = useContext(GlobalContext);
+
     return (
         <Modal
             animationType="fade"
@@ -39,7 +42,7 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
             }}
             >
                 <View style={tw`flex-1 justify-center items-center mx-3`}>
-                    <Pressable style={tw`bg-gray-50 w-full h-[33%] rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
+                    <Pressable style={tw`bg-gray-50 w-full ${iphoneModel.includes('pro') ? "h-[33%]" : "h-[35%]"} rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
 
                         <Text style={tw`text-xl text-center font-medium mt-1`}>{t(`add-workout`)}</Text>
                         <Text style={tw`text-lg text-center text-gray-500 font-medium mb-2`}>{t(`enter-workout-name`)}!</Text>
@@ -75,7 +78,7 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
                                         addWorkout(exercises, workoutTitle, id, folder);
                                     }
                                     
-                                    navigation.navigate('Тренировки');
+                                    navigation.goBack();
                                 }}
                             >
                                 <Text style={tw`text-white text-lg font-medium`}>{t(`save`)}</Text>

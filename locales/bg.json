@@ -13,6 +13,7 @@
     "sets": "Серии",
     "reps": "Повторения",
     "exercise": "Упражнение",
+    "exercises": "Упражнения",
     "reps-short": "Повт.",
     "grams": "Грама",
     "grams-2": "Грамаж",
@@ -157,12 +158,14 @@
     "in": "в",
     "hide": "Скрий",
     "paste-copied-workouts": "Постави Копирани",
-    "paste-cut-workout": "Постави Изрязани",
+    "paste-cut-workouts": "Постави Изрязани",
     "paste-workouts": "Постави Тренировки",
     "choose-option": "Моля Избери Опция",
     "select-intensity-of-set": "Задай интензитет на серия номер ",
     "warm-up": "Загрявка",
     "regular-set": "Обикновен",
-    "failure-set": "Откат"
+    "failure-set": "Откат",
+    "retreive-info-information": "Тази функция може да възстанови тренировки или хранения, които сте имали запазени на друг телефон от същия акаунт!",
+    "kilograms": "Килограми"
     
 }

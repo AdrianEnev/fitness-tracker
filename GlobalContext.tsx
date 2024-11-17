@@ -12,6 +12,7 @@ interface GlobalContextType {
     generatingWorkoutInFolder: any;
     syncingInfoRunning: any;
     internetSpeed: any;
+    iphoneModel: string;
     setFaceIdEnabled: (value: boolean) => void;
     setReceiveFriendRequests: (value: boolean) => void;
     setProfilePicture: (profilePicture: string) => void;
@@ -35,6 +36,7 @@ const defaultValues: GlobalContextType = {
     generatingWorkoutInFolder: '',
     syncingInfoRunning: false,
     internetSpeed: 0,
+    iphoneModel: "",
     setSyncingInfoRunning: () => {},
     setFaceIdEnabled: () => {},
     setReceiveFriendRequests: () => {},

@@ -1,13 +1,16 @@
 import { View, Text, Pressable } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import tw from 'twrnc';
 import { Picker } from 'react-native-wheel-pick';
+import GlobalContext from '../../GlobalContext';
 
 const SetupPageFour = ({ heightType, setHeightType, height, setHeight, setWeightType, setWeight, weight }: any) => {
 
     const [pickerData, setPickerData] = useState<number[]>([]);
 
     const [tempHeight, setTempHeight] = useState(170);
+
+    const {iphoneModel} = useContext(GlobalContext);
 
     useEffect(() => {
         const data: number[] = [];
@@ -29,7 +32,7 @@ const SetupPageFour = ({ heightType, setHeightType, height, setHeight, setWeight
     };*/
 
     return (
-        <View style={tw`flex flex-col mt-[15%] h-full`}>
+        <View style={tw`flex flex-col ${iphoneModel.includes('pro') ? "mt-[10%]" : "mt-[15%]"} h-full`}>
             <View style={tw`mx-5`}>
                 <Text style={tw`font-medium text-2xl text-center`}>Please enter your height.</Text>
                 <Text style={tw`font-medium text-lg text-gray-500 mt-1 text-center`}>

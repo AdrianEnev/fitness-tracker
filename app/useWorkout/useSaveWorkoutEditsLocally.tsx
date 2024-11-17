@@ -25,6 +25,12 @@ const saveWorkoutEditsLocally = async (workout: any, userInputs: any, newExercis
             const exerciseIndex = updatedWorkout.info.findIndex((ex: any) => ex.id === input.id);
             if (exerciseIndex !== -1) {
                 const updatedExercise = { ...updatedWorkout.info[exerciseIndex] };
+
+                // Update exercise title if a new title is provided
+                if (input.title) {
+                    updatedExercise.title = input.title.trim();
+                }
+
                 updatedExercise.sets = input.sets.map((set: any, index: number) => ({
                     id: set.id || generateID(),
                     reps: set.reps,
@@ -78,7 +84,8 @@ const saveWorkoutEditsLocally = async (workout: any, userInputs: any, newExercis
         // Save updated workouts list to local storage
         await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(workouts));
 
-        console.log('Workout edits saved locally:', updatedWorkout);
+        //console.log('Workout edits saved locally:', updatedWorkout);
+        console.log('Workout edits saved locally');
     } catch (err) {
         console.error('Error saving workout edits locally:', err);
     }

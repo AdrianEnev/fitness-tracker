@@ -83,8 +83,11 @@ const retreiveFoods = async (navigation: any, setIsRetreivingInfoAnimationModalV
                 const foodDayKey = `${email}-foodDay-${foodDay}`;
                 await updateFood(foodDayKey, foodDaysCollectionRef);
 
-                setIsRetreivingInfoAnimationModalVisible(false);
             }
+
+            setIsRetreivingInfoAnimationModalVisible(false);
+            navigation.navigate('Храна');
+
         } catch (err) {
             console.error(err);
             alert('Error retreiving food day/s!');
@@ -96,8 +99,6 @@ const retreiveFoods = async (navigation: any, setIsRetreivingInfoAnimationModalV
 }
 
 const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
-
-    console.log('retreiveInfo');
     
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -169,26 +170,18 @@ const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationMod
             
                 // Add missing workout to AsyncStorage
                 await addWorkoutLocally(exercises, workout.title, workout.id, workout.folderId);
-                setIsRetreivingInfoAnimationModalVisible(false);
-    
-                navigation.navigate('Тренировки');
             }
+
+            setIsRetreivingInfoAnimationModalVisible(false);
+            navigation.navigate('Тренировки');
 
         }catch(err){
             console.error(err);
             alert('Error retreiving workout/s!');
         }
-        
-    }else{
+    } else {
         alert('No new workouts to retreive!');
     }
-
-
-
 }
 
 export default retreiveInfo;
-
-function addFoodLocally(food: { id: string; }) {
-        throw new Error("Function not implemented.");
-    }

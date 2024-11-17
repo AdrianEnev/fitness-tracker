@@ -35,6 +35,7 @@
     },
     "plugins": [
       "expo-build-properties"
-    ]
+    ],
+    "newArchEnabled": true
   }
 }

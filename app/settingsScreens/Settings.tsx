@@ -9,6 +9,7 @@ import LanguageModal from '../modals/LanguageModal';
 import { BlurView } from 'expo-blur';
 import RetreiveInfoModal from '../modals/RetreiveInfoModal';
 import RetreivingInfoAnimationModal from '../modals/RetreivingInfoAnimationModal';
+import RetreiveInfoInformationModal from '../modals/RetreiveInfoInformationModal';
 
 const Settings = ({navigation}: any) => {
 
@@ -76,11 +77,12 @@ const Settings = ({navigation}: any) => {
     const [isLanguageModalVisible, setIsLanguageModalVisible] = useState(false);
     const [isRetreiveInfoModalVisible, setIsRetreiveInfoModalVisible] = useState(false);
     const [isRetreivingInfoAnimationModalVisible, setIsRetreivingInfoAnimationModalVisible] = useState(false);
+    const [isRetreiveInfoInformationModalVisible, setIsRetreiveInfoInformationModalVisible] = useState(false);
 
     return (
         <View style={tw`h-full`}>
             
-            { (isLanguageModalVisible || isRetreiveInfoModalVisible || isRetreivingInfoAnimationModalVisible) && (
+            { (isLanguageModalVisible || isRetreiveInfoModalVisible || isRetreivingInfoAnimationModalVisible|| isRetreiveInfoInformationModalVisible) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -99,6 +101,7 @@ const Settings = ({navigation}: any) => {
                 setIsRetreivingInfoAnimationModalVisible={setIsRetreivingInfoAnimationModalVisible}
                 navigation={navigation}
                 internetSpeed={internetSpeed}
+                setIsRetreiveInfoInformationModalVisible={setIsRetreiveInfoInformationModalVisible}
             />
 
             <RetreivingInfoAnimationModal 
@@ -106,6 +109,12 @@ const Settings = ({navigation}: any) => {
                 setIsRetreivingInfoAnimationModalVisible={setIsRetreivingInfoAnimationModalVisible}
                 text={t('retreiving-info')}
             /> 
+
+            <RetreiveInfoInformationModal
+                isRetreiveInfoInformationModalVisible={isRetreiveInfoInformationModalVisible}
+                setIsRetreiveInfoInformationModalVisible={setIsRetreiveInfoInformationModalVisible}
+                setIsRetreiveInfoModalVisible={setIsRetreiveInfoModalVisible}
+            />
 
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('settings')}</Text>

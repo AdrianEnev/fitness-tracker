@@ -17,12 +17,13 @@ import getEmail from '../use/useGetEmail';
 import saveWorkoutEditsFromFolderLocally from '../useWorkout/useSaveWorkoutEditsFromFolderLocally';
 import DeleteExerciseModal from '../modals/DeleteExerciseModal';
 import startWorkoutInFolder from '../useWorkout/useStartWorkoutInFolder';
+import { useTranslation } from 'react-i18next';
 
 const ViewWorkout = ({route, navigation}: any) => {
 
     const { exercises, workout, workoutTitle, folder } = route.params;
 
-    const {internetConnected} = useContext(GlobalContext)
+    const {internetConnected, iphoneModel} = useContext(GlobalContext)
 
     const [newWorkoutTitle, setNewWorkoutTitle] = useState('');
 
@@ -151,7 +152,7 @@ const ViewWorkout = ({route, navigation}: any) => {
             // Update pageNumber to the newly added exercise
             setPageNumber(newExercises.length);
     
-            console.log(newExercises);
+            //console.log(newExercises);
         }
     };
     
@@ -257,6 +258,9 @@ const ViewWorkout = ({route, navigation}: any) => {
             : input
         );
         setUserInputs(updatedUserInputs);
+
+        //console.log(newExercises)
+        //console.log(userInputs)
     };
 
     const [textInputStyle, setTextInputStyle] = useState({});
@@ -378,6 +382,8 @@ const ViewWorkout = ({route, navigation}: any) => {
         }
     }, [pageNumber, newExercises]);
 
+    const {t} = useTranslation();
+
     return (
         <>
 
@@ -436,9 +442,11 @@ const ViewWorkout = ({route, navigation}: any) => {
                                             numberOfLines={2}
                                             maxLength={50}
                                             placeholder={exercise.title}
-                                            placeholderTextColor='#93c5fd' 
+                                            placeholderTextColor='#94a3b8'
                                             defaultValue={exercise.title}
-                                            onChangeText={(text) => updateExerciseTitle(exercise.id, text)}
+                                            onChangeText={(text) => {
+                                                updateExerciseTitle(exercise.id, text)
+                                            }}
                                             onContentSizeChange={handleContentSizeChange}
                                         />
 
@@ -469,7 +477,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                                                                 <View style={tw`flex flex-row gap-x-2`}>
                                                                     
                                                                     <View style={tw`flex flex-col`}>
-                                                                        <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+                                                                        <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{t('set')}</Text>
         
                                                                         <Pressable style={tw`w-10 h-10 ${backgroundColor} rounded-xl flex items-center justify-center`}
                                                                             onPress={() => {
@@ -484,14 +492,15 @@ const ViewWorkout = ({route, navigation}: any) => {
         
                                                                     <View style={tw`flex flex-row gap-x-2 mb-3`}>
         
-                                                                        <View style={tw`w-[39%]`}>
-                                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{getDimensions() > 400 ? 'Повторения' : 'Повт.'}</Text>
+                                                                        <View style={tw`${iphoneModel.includes('pro') ? "w-[39.3%]" : "w-[37.8%]"}`}>
+                                                                            <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{getDimensions() > 400 ? t('reps') : t('reps-short')}</Text>
         
                                                                             <TextInput
                                                                                 style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
                                                                                 keyboardType='number-pad'
                                                                                 maxLength={4}
-                                                                                placeholder={set.reps === "" ? 'Повторения' : set.reps.toString()}
+                                                                                placeholder={set.reps === "" ? t('reps') : set.reps.toString()}
+                                                                                placeholderTextColor='#94a3b8'
                                                                                 value={userInputs[index].sets[mapIndex].reps}
                                                                                 onChangeText={(text) => {
                                                                                     let updatedInputs = [...userInputs];
@@ -503,14 +512,15 @@ const ViewWorkout = ({route, navigation}: any) => {
         
                                                                         <View style={tw`w-[39%]`}>
                                                                             <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>
-                                                                                Тежест
+                                                                                {t('weight')}
                                                                             </Text>
         
                                                                             <TextInput
                                                                                 style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
                                                                                 keyboardType='number-pad'
                                                                                 maxLength={4}
-                                                                                placeholder={set.weight === "" ? 'Тежест' : set.weight.toString() + ' kg'}
+                                                                                placeholder={set.weight === "" ? t('weight') : set.weight.toString() + ' kg'}
+                                                                                placeholderTextColor='#94a3b8'
                                                                                 value={userInputs[index].sets[mapIndex].weight}
                                                                                 onChangeText={(text) => {
                                                                                     let updatedInputs = [...userInputs];

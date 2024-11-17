@@ -9,6 +9,7 @@ import EndWorkoutModal from '../modals/EndWorkoutModal';
 import GlobalContext from '../../GlobalContext';
 import { diffTime, formatTime, getCurrentTimeWithMoment } from '../useWorkout/handleActiveWorkoutTimer';
 import { addExercise, addSet, handleEndWorkoutVisibility, removeSet } from '../useWorkout/handleActiveWorkoutExercises';
+import { useTranslation } from 'react-i18next';
 
 const ActiveWorkout = ({route, navigation}: any) => {
 
@@ -159,6 +160,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
         }
     }, [currentIndex, newExercises]);
 
+    const {t} = useTranslation();
 
     return (
         <>
@@ -246,13 +248,14 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                                 <View style={tw`flex flex-row gap-x-2 mb-3`}>
 
                                                                     <View style={tw`w-[30.3%]`}>
-                                                                        <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повт.</Text>
+                                                                        <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{t('reps-short')}</Text>
 
                                                                         <TextInput
                                                                             style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
                                                                             keyboardType='number-pad'
                                                                             maxLength={4}
-                                                                            placeholder={set.reps === "" ? 'Повторения' : set.reps.toString()}
+                                                                            placeholder={set.reps === "" ? t('reps') : set.reps.toString()}
+                                                                            placeholderTextColor='#94a3b8'
                                                                             value={userInputs[index].sets[mapIndex].reps}
                                                                             onChangeText={(text) => {
                                                                                 let updatedInputs = [...userInputs];
@@ -263,13 +266,14 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                                     </View>
                                                                     
                                                                     <View style={tw`w-[30.3%]`}>
-                                                                        <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
+                                                                        <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{t('weight')}</Text>
 
                                                                         <TextInput
                                                                             style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
                                                                             keyboardType='number-pad'
                                                                             maxLength={4}
-                                                                            placeholder={set.weight === "" ? 'Килограми' : set.weight.toString()}
+                                                                            placeholder={set.weight === "" ? t('kilograms') : set.weight.toString()}
+                                                                            placeholderTextColor='#94a3b8'
                                                                             value={userInputs[index].sets[mapIndex].weight}
                                                                             onChangeText={(text) => {
                                                                                 let updatedInputs = [...userInputs];
@@ -287,6 +291,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                                             keyboardType='number-pad'
                                                                             maxLength={2}
                                                                             placeholder='RPE'
+                                                                            placeholderTextColor='#94a3b8'
                                                                             value={userInputs[index].sets[mapIndex].rpe}
                                                                             onChangeText={(text) => {
                                                                                 let updatedInputs = [...userInputs];

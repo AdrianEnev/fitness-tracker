@@ -156,7 +156,7 @@ const BottomNavigationBar = (
                             <Text style={tw`text-white font-medium text-xl`}>+ {t(`set`)}</Text>
                         </Pressable>
                         <Pressable style={tw`w-[49%] bg-green-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addWorkoutButton}>
-                            <Text style={tw`text-white font-medium text-xl`}>{t(`add`)}</Text>
+                            <Text style={tw`text-white font-medium text-xl`}>{t(`done`)}</Text>
                         </Pressable>
                         
                     </View>

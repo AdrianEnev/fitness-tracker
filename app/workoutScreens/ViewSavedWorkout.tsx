@@ -9,6 +9,7 @@ import GlobalContext from '../../GlobalContext';
 import { BlurView } from 'expo-blur';
 import DeleteSavedWorkoutModal from '../modals/DeleteSavedWorkoutModal';
 import { duration } from 'moment';
+import { useTranslation } from 'react-i18next';
 
 const ViewSavedWorkout = ({navigation, route}: any) => {
 
@@ -81,6 +82,8 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
 
     const [isDeleteSavedWorkoutModalVisible, setIsDeleteSavedWorkoutModalVisible] = useState(false);
 
+    const {t} = useTranslation();
+
     return (
         <>
 
@@ -141,7 +144,7 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
                                                         <View style={tw`flex flex-row gap-x-2`}>
 
                                                             <View style={tw`flex flex-col`}>
-                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+                                                                <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{t('set')}</Text>
                                                                 <View style={tw`w-10 h-10 ${backgroundColor} rounded-xl flex items-center justify-center`}>
                                                                     <Text style={tw`text-base ml-5 absolute font-medium ${textColor}`}>{mapIndex + 1}</Text>
                                                                 </View>
@@ -150,14 +153,14 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
                                                             <View style={tw`flex flex-row gap-x-2 mb-3 w-full`}>
 
                                                                 <View style={tw`w-[30%]`}>
-                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Повторения</Text>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{t('reps')}</Text>
                                                                     <View style={tw`w-full h-10 bg-neutral-100 rounded-2xl flex items-start justify-center`}>
                                                                         <Text style={tw`ml-3`}>{set.reps === "" ? '0' : set.reps.toString()}</Text>
                                                                     </View>
                                                                 </View>
 
                                                                 <View style={tw`w-[26%]`}>
-                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Тежест</Text>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{t('weight')}</Text>
                                                                     <View style={tw`w-full h-10 bg-neutral-100 rounded-2xl flex items-start justify-center`}>
                                                                         <Text style={tw`ml-3`}>{set.weight === "" ? '0' : set.weight.toString()}</Text>
                                                                     </View>
