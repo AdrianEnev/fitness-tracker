@@ -63,6 +63,13 @@ export const checkUserInfoCollectionLocally = async () => {
     const email = await getEmail()
     const nutrients = await AsyncStorage.getItem(`goal_nutrients_${email}`);
 
+
+    if (nutrients) {
+        //return true
+    }else if (!nutrients && true) {
+        //
+    }
+
     // return true if nutrients has been ran
     return nutrients !== null;
 }

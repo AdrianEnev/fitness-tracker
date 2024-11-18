@@ -7,19 +7,19 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const LanguageScreen = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: boolean) => void }) => {
 
-    const [language, setLanguage] = useState('English')
+    const [language, setLanguage] = useState('Bulgarian')
     const languagesEN = [ 
-        'English', "Bulgarian", "French", "German", "Russian"
+        'English', "Bulgarian", "French", "German", "Russian", "Italian", "Spanish"
     ] 
 
     const finishButtonClicked = async () => {
-        const languageShort = language === 'English' ? 'en' : language === 'Bulgarian' ? 'bg' : language === 'French' ? 'fr' : language === 'German' ? 'de' : 'ru';
+        const languageShort = language === 'English' ? 'en' : language === 'Bulgarian' ? 'bg' : language === 'French' ? 'fr' : language === 'German' ? 'de' : language === 'Russian' ? 'ru' : language === 'Italian' ? 'it' : language === 'Spanish' ? 'es' : 'en';
         await AsyncStorage.setItem(`language`, languageShort);
         setLocalLanguageSet(true);
     }
     
     return (
-        <View style={tw`flex-1 flex-col`}>
+        <View style={tw`flex-1 flex-col bg-white`}>
 
             <View style={tw`w-full h-24 bg-[#fd1c47] absolute top-0 justify-center items-center pt-8`}>
                 <Text style={tw`text-4xl text-white font-bold`}>Lunge</Text>
@@ -28,8 +28,8 @@ const LanguageScreen = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: 
             <View style={tw`flex-1 items-center justify-center mt-[10%]`}>
 
                 <View style={tw`mx-5 mb-5`}>
-                    <Text style={tw`font-medium text-2xl text-center`}>What is your preferred language?</Text>
-                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>This can be changed later</Text>
+                    <Text style={tw`font-medium text-2xl text-center`}>Какъв език предпочиташ?</Text>
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Това може да бъде променено по-късно!</Text>
                 </View>
 
                 <View style={tw`w-[40%] h-[60%] bg-gray-200 rounded-[47px] flex items-center pt-3`}>
@@ -51,7 +51,7 @@ const LanguageScreen = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: 
                 <TouchableOpacity style={tw`w-full h-20 bg-[#fd1c47] rounded-2xl flex justify-center items-center shadow-md border border-gray-200 mb-4`}
                     onPress={() => finishButtonClicked()}>
 
-                    <Text style={tw`text-4xl text-white font-medium`}>Done</Text>
+                    <Text style={tw`text-4xl text-white font-medium`}>Готово</Text>
 
                 </TouchableOpacity>
             </View>

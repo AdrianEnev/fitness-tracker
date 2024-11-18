@@ -127,7 +127,9 @@ function App() {
             const allKeys = await AsyncStorage.getAllKeys();
       
             // Define a pattern to match email-foodDay-date format
-            const pattern = new RegExp(`enevadrian@gmail.com-foodDay-\\d{4}-\\d{2}-\\d{2}.*`);
+            const pattern = new RegExp(`goal_nutrients_enevadrian@gmail.com`);
+            //const pattern = new RegExp(`username_enevadrian@gmail.com`);
+            //const pattern = new RegExp(`enevadrian@gmail.com-foodDay-\\d{4}-\\d{2}-\\d{2}.*`);
             //const pattern = new RegExp(`enevadrian@gmail.com-foodDay-\\d{2}-\\d{2}-\\d{4}.*`);
             //const pattern = new RegExp(`enevadrian@gmail.com-foodDay-30-11-2024-nutrients`);
       
@@ -217,7 +219,7 @@ function App() {
             setIphoneModel('Not an iPhone');
         }
 
-        console.log(Device.modelName)
+        //console.log(Device.modelName)
     };
 
     const fetchData = async () => {

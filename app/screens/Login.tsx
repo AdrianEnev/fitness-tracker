@@ -1,13 +1,14 @@
 import { View, TextInput, Button, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity, Pressable } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { FIREBASE_AUTH } from '../../firebaseConfig';
+import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from "twrnc";
 import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import GlobalContext from '../../GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import { collection, doc, getDoc } from 'firebase/firestore';
 
 
 const Login = ({navigation}: any) => {
@@ -40,15 +41,111 @@ const Login = ({navigation}: any) => {
         const trimmedEmail = email.trim();
 
         try{
+            console.log("Loading")
             const user = await signInWithEmailAndPassword(auth, trimmedEmail, password);
 
             // save username locally using AsyncStorage
             await AsyncStorage.setItem(`email`, trimmedEmail);
 
+            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+            const userDocRef = doc(usersCollectionRef, user.user.uid);
+            const userInfoCollectionRef = collection(userDocRef, 'user_info');
+
+            await checkForNutrients(trimmedEmail, userInfoCollectionRef);
+            await checkForUsername(trimmedEmail, userInfoCollectionRef)
+            console.log("stopped loading")
+
         }catch(err: any){
             alert(err);
         }
         
+    }
+
+    const checkForUsername = async (email: any, userInfoCollectionRef: any) => {
+        const username = await AsyncStorage.getItem(`username_${email}`)
+
+        if (username) {
+            console.log('username already exists')
+            return true;
+        } else if (!username) {
+
+            console.log('username doesnt exist, checking documents')
+            const firebaseUsername = await checkFireBaseForUsername(userInfoCollectionRef);
+
+            if (firebaseUsername) {
+                console.log('found firebase username: ', firebaseUsername)
+
+                const usernameToStore = firebaseUsername.username
+
+                await AsyncStorage.setItem(`username_${email}`, usernameToStore);
+                console.log('set username to: ', usernameToStore)
+                return true;
+            }
+
+            console.log('no firebase username found')
+        }
+
+        return false;
+    }
+
+    const checkFireBaseForUsername = async (userInfoCollectionRef: any) => {
+        const usernameDocRef = doc(userInfoCollectionRef, 'username');
+        const docSnapshot = await getDoc(usernameDocRef);
+    
+        console.log('Document Snapshot:', docSnapshot);
+        console.log('Document Snapshot Data:', docSnapshot.data());
+        console.log('Document Exists:', docSnapshot.exists());
+    
+        if (docSnapshot.exists()) {
+            console.log('Firebase username document found:', docSnapshot.data());
+            return docSnapshot.data();
+        } else {
+            console.log('Firebase username document does not exist');
+        }
+    
+        return null;
+    }
+
+    const checkForNutrients = async (email: any, userInfoCollectionRef: any) => {
+        const nutrients = await AsyncStorage.getItem(`goal_nutrients_${email}`);
+
+        console.log('Checking for nutrients -> Step 1')
+
+        if (nutrients) {
+
+            console.log('Nutrients already found, proceeding...')
+
+            return true;
+        } else if (!nutrients) {
+
+            console.log('Nutrients not found locally, checking database...')
+
+            const firebaseNutrients = await checkFirebaseForNutrients(userInfoCollectionRef);
+
+            if (firebaseNutrients) {
+                console.log('nutrients found in database')
+
+                await AsyncStorage.setItem(`goal_nutrients_${email}`, JSON.stringify(firebaseNutrients));
+                console.log("set goal nutrients to: ",  JSON.stringify(firebaseNutrients))
+                return true;
+            }
+
+            console.log('nutrients not found in database')
+        }
+
+        return false;
+    }
+
+    const checkFirebaseForNutrients = async (userInfoCollectionRef: any) => {
+        const nutrientsDocRef = doc(userInfoCollectionRef, 'nutrients');
+
+        const docSnapshot = await getDoc(nutrientsDocRef);
+
+        if (docSnapshot.exists()) {
+            return docSnapshot.data();
+        }
+
+        return null;
     }
 
     const { t } = useTranslation();

@@ -1,5 +1,5 @@
 import { View, Text, Pressable, ScrollView, Image } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import tw from "twrnc";
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -52,34 +52,23 @@ const Main = ({navigation}: any) => {
        
     }
 
-    useEffect(() => {
-        getUsernameLocally();
-        getLanguageLocally();
-        
-        const currentDate = getCurrentDate(false);
-        const formattedDate = {
-            dateString: currentDate,
-            day: parseInt(currentDate.split('-')[0]),
-            month: parseInt(currentDate.split('-')[1]),
-            year: parseInt(currentDate.split('-')[2]),
-            timestamp: Date.now()
-        }
+    useFocusEffect(
+        useCallback(() => {
+            getUsernameLocally();
+            getLanguageLocally();
+            
+            const currentDate = getCurrentDate(false);
+            const formattedDate = {
+                dateString: currentDate,
+                day: parseInt(currentDate.split('-')[0]),
+                month: parseInt(currentDate.split('-')[1]),
+                year: parseInt(currentDate.split('-')[2]),
+                timestamp: Date.now()
+            }
 
-        setCurrentFormattedDate(formattedDate)
-        
-         // console log all asyncstorage items
-        /*AsyncStorage.getAllKeys().then(keys => {
-            console.log(keys)
-            return AsyncStorage.multiGet(keys)
-        }).then(keyValue => {
-                console.log(keyValue)
-        })*/
-
-        // clear all asyncstorage items
-        /*AsyncStorage.clear().then(() => {
-            console.log('cleared')
-        })*/
-    }, [internetConnected])
+            setCurrentFormattedDate(formattedDate);
+        }, [internetConnected])
+    );
 
     // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk
     let [currentNutrients, setCurrentNutrients] = useState<any>(null);
@@ -190,7 +179,7 @@ const Main = ({navigation}: any) => {
                         {/* Zdravei User */}
                         <View style={tw`flex flex-col ml-3 w-full`}>
                             <Text style={tw`text-lg text-gray-500`}>{getHelloText()} 👋</Text>
-                            <Text style={tw`text-xl font-medium max-w-[85%]`}>{username}</Text>
+                            <Text style={tw`text-xl font-medium max-w-[85%]`}>{username ? username : 'Loading'}</Text>
                         </View>
                             
                     </View>

@@ -86,6 +86,7 @@ const FoodInfoNutrients = (
         }
     };
 
+
     const updateGrams = async () => {
         const email = await getEmail();
         const foodDayKey = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}`;
@@ -123,6 +124,7 @@ const FoodInfoNutrients = (
     }, [newGrams]);
 
     useEffect(() => {
+
         if (initialLoad) {
             setInitialLoad(false);
             return;

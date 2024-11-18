@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "todo",
-    "slug": "todo",
+    "name": "Lunge: Fitness Tracker",
+    "slug": "LungeFitnessTracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -17,12 +17,13 @@
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
-        "NSFaceIDUsageDescription": "This app uses FaceID to secure your data. (app.json - ios)",
-        "NSPhotoLibraryUsageDescription": "This app uses the photo library to upload profile pictures. (app.json - ios)",
+        "NSFaceIDUsageDescription": "This app uses FaceID to secure your data.",
+        "NSPhotoLibraryUsageDescription": "This app uses the photo library to upload profile pictures.",
         "UIBackgroundModes": [
           "fetch"
         ]
-      }
+      },
+      "bundleIdentifier": "com.nafle.LungeFitnessTracker"
     },
     "android": {
       "adaptiveIcon": {
@@ -36,6 +37,11 @@
     "plugins": [
       "expo-build-properties"
     ],
-    "newArchEnabled": true
+    "newArchEnabled": true,
+    "extra": {
+      "eas": {
+        "projectId": "69bd8bbb-60b9-4f28-b292-bba385196fa3"
+      }
+    }
   }
 }
