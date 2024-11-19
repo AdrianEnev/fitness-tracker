@@ -22,6 +22,7 @@ interface GlobalContextType {
     setGeneratingWorkoutInFolder: (value: any) => void;
     setSyncingInfoRunning: (value: any) => void;
     setAccountJustRegistered: (value: any) => void;
+    setLoggingIn: (value: boolean) => void;
 }
 
 const defaultValues: GlobalContextType = {
@@ -46,6 +47,7 @@ const defaultValues: GlobalContextType = {
     setGeneratingWorkout: () => {},
     setGeneratingWorkoutInFolder: () => {},
     setAccountJustRegistered: () => {},
+    setLoggingIn: () => {},
 
 };
 

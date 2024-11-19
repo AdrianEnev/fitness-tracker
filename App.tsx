@@ -15,7 +15,7 @@ import getProfilePicture from './app/use/useGetProfilePicture';
 import GlobalContext from './GlobalContext';
 import getFriendRequests from './app/useFriends/useGetFriendRequestsRecieved';
 import ChangePassword from './app/screens/ChangePassword';
-import { checkUserInfoCollectionLocally, checkLanguageDocumentLocally } from './app/use/useCheckUserInfo';
+import { checkUserGoalNutrientsLocally, checkLanguageDocumentLocally } from './app/use/useCheckUserInfo';
 import LottieView from 'lottie-react-native';
 import tw from 'twrnc';
 import { useTranslation } from 'react-i18next';
@@ -212,19 +212,20 @@ function App() {
 
     const [iphoneModel, setIphoneModel] = useState('')
 
+    const [loggingIn, setLoggingIn] = useState(false);
+
     const getIphoneModel = async () => {
         if (Device.brand === 'Apple') {
             setIphoneModel(Device.modelName || 'Unknown iPhone');
         } else {
             setIphoneModel('Not an iPhone');
         }
-
         //console.log(Device.modelName)
     };
 
     const fetchData = async () => {
         try {
-            const setupHasRanLocally = await checkUserInfoCollectionLocally();
+            const setupHasRanLocally = await checkUserGoalNutrientsLocally();
             setSetupRan(setupHasRanLocally);
 
             checkLanguageDocumentLocally();
@@ -441,9 +442,14 @@ function App() {
 
     // listen for firebase.logOut and navigate to unauthenticated screen if called
     useEffect(() => {
-        const unsubscribe = FIREBASE_AUTH.onAuthStateChanged((user) => {
+        const unsubscribe = FIREBASE_AUTH.onAuthStateChanged(async (user) => {
             if (user && isConnected) {
                 setIsAuthenticated(true);
+
+                // check goal nutrients again -> prevents setup from running unnecessarily on login
+                //const setupHasRanLocally = await checkUserGoalNutrientsLocally();
+                //setSetupRan(setupHasRanLocally);
+                
                 setIsAccountDeleted(false);
             } else if (!user && isConnected) {
                 setIsAuthenticated(false);
@@ -500,18 +506,22 @@ function App() {
         getIphoneModel();
     }, [])
 
+    //enevadrian@gmail.com
+    //passwordpassword
+
     const handleNavigation = () => {
+
         // Handles the logic for navigation based on language and authentication
         if (!localLanguageSet) {
             return <LanguageScreen setLocalLanguageSet={setLocalLanguageSet} />;
         }
 
-        if (!localEmail) {
+        if (!localEmail && !user) {
             // Unauthenticated flow
             return <UnauthenticatedTabNavigator />;
         } else {
             // Authenticated or setup flow
-            return isAccountDeleted && setupRan ? (
+            return isAccountDeleted && setupRan && !user ? (
                 <UnauthenticatedTabNavigator />
             ) : setupRan && isAuthenticated && user && !accountJustRegistered ? (
                 <AuthenticatedTabNavigator setupRan={setupRan} />
@@ -527,7 +537,7 @@ function App() {
         }
     };
 
-    if (loading || checkingSetup) {
+    if (loading || checkingSetup || loggingIn) {
         return (
             <View style={tw`flex-1 justify-center items-center bg-red-500`}>
 
@@ -562,7 +572,7 @@ function App() {
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
             internetConnected: isConnected, isAccountDeleted, setIsAccountDeleted, generatingWorkout, setGeneratingWorkout,
             generatingWorkoutInFolder, setGeneratingWorkoutInFolder, syncingInfoRunning, setSyncingInfoRunning, internetSpeed, setAccountJustRegistered,
-            iphoneModel
+            iphoneModel, setLoggingIn
         }}>
             <GestureHandlerRootView style={tw`w-full h-full`}>
                 <StatusBar barStyle='dark-content' />

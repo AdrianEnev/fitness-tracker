@@ -17,14 +17,14 @@ const Login = ({navigation}: any) => {
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
-    const {internetConnected} = useContext(GlobalContext);
+    const {internetConnected, setLoggingIn, setSetupRan, internetSpeed} = useContext(GlobalContext);
 
     const auth = FIREBASE_AUTH;
 
     const signIn = async() => {
 
-        if (!internetConnected) {
-            alert('Няма интернет връзка!');
+        if (!internetConnected || internetSpeed < 56) {
+            alert('Нестабилна интернет връзка!');
             return
         }
 
@@ -41,19 +41,21 @@ const Login = ({navigation}: any) => {
         const trimmedEmail = email.trim();
 
         try{
-            console.log("Loading")
-            const user = await signInWithEmailAndPassword(auth, trimmedEmail, password);
 
-            // save username locally using AsyncStorage
-            await AsyncStorage.setItem(`email`, trimmedEmail);
+            const user = await signInWithEmailAndPassword(auth, trimmedEmail, password);
+            setLoggingIn(true)
 
             const usersCollectionRef = collection(FIRESTORE_DB, 'users');
             const userDocRef = doc(usersCollectionRef, user.user.uid);
             const userInfoCollectionRef = collection(userDocRef, 'user_info');
 
             await checkForNutrients(trimmedEmail, userInfoCollectionRef);
-            await checkForUsername(trimmedEmail, userInfoCollectionRef)
-            console.log("stopped loading")
+            await checkForUsername(trimmedEmail, userInfoCollectionRef);
+
+            // save username locally using AsyncStorage
+            await AsyncStorage.setItem(`email`, trimmedEmail);
+
+            setLoggingIn(false)
 
         }catch(err: any){
             alert(err);
@@ -98,6 +100,8 @@ const Login = ({navigation}: any) => {
     
         if (docSnapshot.exists()) {
             console.log('Firebase username document found:', docSnapshot.data());
+
+            setSetupRan(true);
             return docSnapshot.data();
         } else {
             console.log('Firebase username document does not exist');

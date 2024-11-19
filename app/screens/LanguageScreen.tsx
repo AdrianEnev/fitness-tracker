@@ -7,13 +7,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const LanguageScreen = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: boolean) => void }) => {
 
-    const [language, setLanguage] = useState('Bulgarian')
+    const [language, setLanguage] = useState('Български')
     const languagesEN = [ 
-        'English', "Bulgarian", "French", "German", "Russian", "Italian", "Spanish"
+        "Български", 'English', "Français", "Deutsch", "Русский", "Italiano", "Español"
     ] 
 
     const finishButtonClicked = async () => {
-        const languageShort = language === 'English' ? 'en' : language === 'Bulgarian' ? 'bg' : language === 'French' ? 'fr' : language === 'German' ? 'de' : language === 'Russian' ? 'ru' : language === 'Italian' ? 'it' : language === 'Spanish' ? 'es' : 'en';
+        const languageShort = language === 'English' ? 'en' : language === 'Български' ? 'bg' : language === 'Français' ? 'fr' : language === 'Deutsch' ? 'de' : language === 'Русский' ? 'ru' : language === 'Italiano' ? 'it' : language === 'Español' ? 'es' : 'en';
         await AsyncStorage.setItem(`language`, languageShort);
         setLocalLanguageSet(true);
     }
@@ -32,7 +32,7 @@ const LanguageScreen = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: 
                     <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Това може да бъде променено по-късно!</Text>
                 </View>
 
-                <View style={tw`w-[40%] h-[60%] bg-gray-200 rounded-[47px] flex items-center pt-3`}>
+                <View style={tw`w-48 h-[60%] bg-gray-200 rounded-[47px] flex items-center pt-3`}>
 
                     <Text style={tw`font-medium text-3xl mt-3`}>{language}</Text>
                     <View style={tw`w-full h-[2px] rounded-full bg-gray-300 mt-3`}></View>
