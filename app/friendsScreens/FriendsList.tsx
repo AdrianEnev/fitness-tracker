@@ -76,7 +76,7 @@ const FriendsList = ({navigation, route}: any) => {
 
                             <View style={tw`flex flex-row gap-x-3`}>
                                 <Pressable style={tw`w-24 h-12 bg-blue-500 rounded-2xl flex items-center justify-center shadow-md`} onPress={() => navigation.navigate('Приятел-Акаунт', {friend_info: item})}>
-                                    <Text style={tw`text-xl text-white font-semibold`}>View</Text>
+                                    <Text style={tw`text-xl text-white font-semibold`}>{t('view-friend')}</Text>
                                 </Pressable>
                             </View>
 

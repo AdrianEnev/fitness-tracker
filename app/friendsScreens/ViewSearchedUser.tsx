@@ -1,5 +1,5 @@
 import { View, Text, SafeAreaView, Image } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import sendFriendRequest from '../useFriends/useSendFriendRequest'
 import tw from 'twrnc'
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
@@ -11,6 +11,8 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import deleteFriendRequest from '../useFriends/useDeleteFriendRequest'
 import acceptFriendRequest from '../useFriends/useAcceptFriendRequest';
 import declineFriendRequest from '../useFriends/useDeclineFriendRequest';
+import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
 
 
 const ViewSearchedUser = ({route, navigation}: any) => {
@@ -21,6 +23,8 @@ const ViewSearchedUser = ({route, navigation}: any) => {
     // contains id and username properties
 
     // if page = "sentRequests"
+
+    const {iphoneModel} = useContext(GlobalContext)
 
     const [profilePicture, setProfilePicture] = useState('')
     const [friendRequestButtonDisabled, setFriendRequestButtonDisabled] = useState(false);
@@ -130,6 +134,8 @@ const ViewSearchedUser = ({route, navigation}: any) => {
         )
     }
 
+    const {t} = useTranslation();
+
     return (
         <>
             <SafeAreaView style={tw`w-full h-full flex items-center justify-center`}>
@@ -155,15 +161,15 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                         <View style={tw`flex flex-col justify-center ml-2`}>
 
                             <Text style={tw`text-xl font-medium`}>{friend.username}</Text>
-                            <Text style={tw`text-base ${isUserPremium ? 'text-blue-500' : 'text-gray-400'}`}>{isUserPremium ? "Premium" : "Free"} User</Text>
+                            <Text style={tw`text-base ${isUserPremium ? 'text-blue-500' : 'text-gray-400'}`}>{isUserPremium ? t('premium-user') : t('free-user')} {t('user')}</Text>
 
                         </View>
 
                     </View>
                     
                     <View style={tw`ml-3`}>
-                        <Text style={tw`text-base font-medium text-gray-700`}>{workoutsCompleted} {workoutsCompleted > 1 ? "workouts" : "workout"} completed.</Text>
-                        <Text style={tw`text-base font-medium text-gray-700`}>First joined on {dateJoined ? dateJoined : "loading..."}</Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>{workoutsCompleted} {workoutsCompleted > 1 ? t('workouts') : t('workout')} {t('completed-workouts')}.</Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>{t('first-joined')} {dateJoined ? dateJoined : t('loading-friends')}</Text>
                     </View>
                     
                     <View style={tw`flex-1 justify-end items-center mb-3`}>
@@ -179,7 +185,7 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                                 }}
                                 disabled={cancellingFriendRequestButtonDisabled}
                             >
-                                <Text style={tw`text-xl font-medium text-red-500`}>{cancellingFriendRequestButtonDisabled ? "Cancelling..." : "Cancel Request"}</Text>
+                                <Text style={tw`text-xl font-medium text-red-500`}>{cancellingFriendRequestButtonDisabled ? t('canceling-friend-request') : t('cancel-friend-request')}</Text>
                             </TouchableOpacity>
                         ) : page == "searchedUsers" ?
                         (
@@ -194,14 +200,14 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                                 }}
                                 disabled={friendRequestButtonDisabled}
                             >
-                                <Text style={tw`text-xl font-medium text-green-500`}>{friendRequestButtonDisabled ? "Sending..." : "Add Friend"}</Text>
+                                <Text style={tw`text-xl font-medium text-green-500`}>{friendRequestButtonDisabled ? t('adding-friend') : t('add-friend')}</Text>
                             </TouchableOpacity>
                         ) : 
                         (   
 
                             <View style={tw`flex flex-row gap-x-2`}>
                                 {/* ACCEPT */}
-                                <TouchableOpacity style={tw`w-36 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md`}
+                                <TouchableOpacity style={tw`w-36 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md ${iphoneModel.includes('Pro') ? 'pt-2' : ''}`}
                                     onPress={async () => {
                                         setAcceptingFriendRequestButtonDisabled(true);
                                         console.log('accepting friend request...');
@@ -212,11 +218,11 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                                     }}
                                     disabled={acceptingFriendRequestButtonDisabled}
                                 >
-                                    <Text style={tw`text-xl font-medium text-green-500`}>{acceptingFriendRequestButtonDisabled ? "Accepting..." : "Accept"}</Text>
+                                    <Text style={tw`text-xl font-medium text-green-500`}>{acceptingFriendRequestButtonDisabled ? t('accepting-friend-request') : t('accept-friend-request')}</Text>
                                 </TouchableOpacity>
                                 
                                 {/* DECLINE */}
-                                <TouchableOpacity style={tw`w-36 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md`}
+                                <TouchableOpacity style={tw`w-36 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md ${iphoneModel.includes('Pro') ? 'pt-2' : ''}`}
                                     onPress={async () => {
                                         setDecliningFriendRequestButtonDisabled(true);
                                         console.log('accepting friend request...');
@@ -227,14 +233,10 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                                     }}
                                     disabled={decliningFriendRequestButtonDisabled}
                                 >
-                                    <Text style={tw`text-xl font-medium text-red-500`}>{decliningFriendRequestButtonDisabled ? "Declining..." : "Decline"}</Text>
+                                    <Text style={tw`text-xl font-medium text-red-500`}>{decliningFriendRequestButtonDisabled ? t('declining-friend-request') : t('decline-friend-request')}</Text>
                                 </TouchableOpacity>
                             </View>
                         )}
-
-
-
-                        
                     </View>
 
                 </View>

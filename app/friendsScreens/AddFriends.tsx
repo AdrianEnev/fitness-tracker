@@ -10,8 +10,11 @@ import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import BottomNavigationBar from '../components/BottomNavigationBar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import getEmail from '../use/useGetEmail'
+import { useTranslation } from 'react-i18next'
 
 const AddFriends = ({route, navigation}: any) => {
+
+    const {t} = useTranslation();
 
     // imeto na potrebitelq koito e lognat
     const [username, setUsername] = useState<any>('');
@@ -129,7 +132,7 @@ const AddFriends = ({route, navigation}: any) => {
                 await addToSuggestions(results);
             } else {
                 setSuggestedFriends([]); // Clear suggestions if no results
-                setNoUserFoundMessage("No user found"); // Set no user found message
+                setNoUserFoundMessage(t('no-user-found')); // Set no user found message
                 setSearchingAnimation(false); // Stop the searching animation
             }
         } catch (error) {
@@ -224,7 +227,7 @@ const AddFriends = ({route, navigation}: any) => {
                         </View>
                     ) : suggestedFriends.length === 0 ? (
                         <View>
-                            {!noUserFoundMessage && <Text style={tw`text-lg font-medium text-center mt-3`}>Потърси някого...</Text>}
+                            {!noUserFoundMessage && <Text style={tw`text-lg font-medium text-center mt-3`}>{t('friend-search-example')}...</Text>}
                             {noUserFoundMessage && <Text style={tw`text-lg font-medium text-center mt-3`}>{noUserFoundMessage}</Text>}
                         </View>
                     ) : (

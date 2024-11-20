@@ -8,6 +8,7 @@ import { useFocusEffect } from '@react-navigation/native';
 import { collection, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import removeFriend from '../useFriends/useRemoveFriend';
+import { useTranslation } from 'react-i18next';
 
 const ViewFriendProfile = ({route, navigation}: any) => {
 
@@ -153,6 +154,8 @@ const ViewFriendProfile = ({route, navigation}: any) => {
      * 
      */
 
+    const {t} = useTranslation();
+
     return (
         <>
             <SafeAreaView style={tw`w-full h-full flex items-center justify-center`}>
@@ -184,16 +187,16 @@ const ViewFriendProfile = ({route, navigation}: any) => {
                         <View style={tw`flex flex-col justify-center ml-2`}>
 
                             <Text style={tw`text-xl font-medium`}>{friend_info.username}</Text>
-                            <Text style={tw`text-base ${isFriendOnline ? "text-green-500" : "text-red-500"}`}>{isFriendOnline ? "Online" : "Offline"}</Text>
+                            <Text style={tw`text-base ${isFriendOnline ? "text-green-500" : "text-red-500"}`}>{isFriendOnline ? t('online') : t('offline')}</Text>
 
                         </View>
 
                     </View>
                     
                     <View style={tw`ml-3`}>
-                        <Text style={tw`text-base font-medium text-gray-700`}>First joined on {friendRegistrationDate ? friendRegistrationDate : "loading..."}</Text>
-                        <Text style={tw`text-base font-medium text-gray-700`}>{workoutsFinished} {workoutsFinished > 1 || workoutsFinished == 0 ? "workouts" : "workout"} completed.</Text>
-                        <Text style={tw`text-base font-medium text-gray-700`}>{weightLifted}kg lifted in total</Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>{t('first-joined')}{friendRegistrationDate ? friendRegistrationDate : t('loading-friends')}</Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>{workoutsFinished} {workoutsFinished > 1 || workoutsFinished == 0 ? t('workouts'): t('workout')} {t('completed-workouts')}.</Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>{weightLifted ? weightLifted : '0'} {t('kilograms-short')} {t('lifted-in-total')}</Text>
                     </View>
 
                     <View style={tw`flex-1 justify-end items-center mb-3`}>
@@ -208,7 +211,7 @@ const ViewFriendProfile = ({route, navigation}: any) => {
                                 }}
                                 disabled={removingFriend}
                             >
-                                <Text style={tw`text-xl font-medium text-red-500`}>{removingFriend ? "Removing..." : "Remove Friend"}</Text>
+                                <Text style={tw`text-xl font-medium text-red-500`}>{removingFriend ? t('removing-friend') : t('remove-friend')}</Text>
                             </TouchableOpacity>
                     </View>
                 </View>

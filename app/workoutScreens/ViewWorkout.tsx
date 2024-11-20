@@ -496,7 +496,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                                                                             <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{getDimensions() > 400 ? t('reps') : t('reps-short')}</Text>
         
                                                                             <TextInput
-                                                                                style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10`}
+                                                                                style={tw`bg-neutral-100 rounded-xl p-2 w-full h-10 `}
                                                                                 keyboardType='number-pad'
                                                                                 maxLength={4}
                                                                                 placeholder={set.reps === "" ? t('reps') : set.reps.toString()}

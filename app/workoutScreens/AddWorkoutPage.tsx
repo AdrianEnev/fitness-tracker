@@ -346,7 +346,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                                                                 <View style={tw`${iphoneModel.includes('Pro') ? "w-[39.3%]" : "w-[37.5%]"}`}>
                                                                     <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{getDimensions() > 400 ? t('reps') : t('reps-short')}</Text>
                                                                     <TextInput
-                                                                        style={tw`bg-neutral-100 rounded-2xl ${mapIndex == 0 ? "pb-[10px] pl-[8px]" : "pl-[8px]"} w-full h-10`}
+                                                                        style={tw`bg-neutral-100 rounded-2xl ${mapIndex == 0 ? "pl-[8px]" : "pl-[8px]"} w-full h-10`}
                                                                         keyboardType='number-pad'
                                                                         maxLength={4}
                                                                         placeholder={t('reps')}
