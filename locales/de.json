@@ -194,5 +194,10 @@
     "decline-friend-request": "Freundschaftsanfrage ablehnen",
     "declining-friend-request": "Ablehnen...",
     "offline": "Offline",
-    "online": "Online"
+    "online": "Online",
+    "email-sent": "E-Mail gesendet!",
+    "click-on-email-link": "Klicken Sie auf den Link in der E-Mail, die gesendet wurde an ",
+    "didnt-receive-email": "Keine E-Mail erhalten?",
+    "send-again": "Erneut senden",
+    "or": "oder"
 }

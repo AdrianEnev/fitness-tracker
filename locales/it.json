@@ -194,5 +194,10 @@
     "decline-friend-request": "Rifiuta richiesta di amicizia",
     "declining-friend-request": "Rifiuto...",
     "offline": "Offline",
-    "online": "Online"
+    "online": "Online",
+    "email-sent": "Email inviata!",
+    "click-on-email-link": "Clicca sul link nell'email inviata a ",
+    "didnt-receive-email": "Non hai ricevuto l'email?",
+    "send-again": "Invia di nuovo",
+    "or": "oppure"
 }

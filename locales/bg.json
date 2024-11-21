@@ -194,5 +194,10 @@
     "decline-friend-request": "Откажи Покана",
     "declining-friend-request": "Отказване...",
     "online": "Онлайн",
-    "offline": "Офлайн"
+    "offline": "Офлайн",
+    "email-sent": "Имейл Изпратен!",
+    "click-on-email-link": "Натисни върху линка в имейла, пратен до ",
+    "didnt-receive-email": "Нямаш получен имейл?",
+    "send-again": "Изпрати Отново",
+    "or": "или"
 }

@@ -6,8 +6,10 @@ import tw from 'twrnc';
 import { deleteObject, getStorage, ref } from 'firebase/storage';
 import { deleteDoc, doc } from 'firebase/firestore';
 import GlobalContext from '../../GlobalContext';
+import { useTranslation } from 'react-i18next';
 
 const EmailNotVerified = () => {
+    
     const [countDown, setCountDown] = useState(60);
 
     const {setIsAccountDeleted} = useContext(GlobalContext);
@@ -70,18 +72,20 @@ const EmailNotVerified = () => {
             
     }
 
+    const {t} = useTranslation();
+
     return (
         <View style={tw`flex-1 bg-white`}>
             <View style={tw`h-full justify-center`}>
-                <Text style={tw`font-bold text-2xl text-center`}>We have sent you an email!</Text>
+                <Text style={tw`font-bold text-2xl text-center`}>{t('email-sent')}!</Text>
                 <Text style={tw`font-medium text-lg text-center mt-2`}>
-                    Click on the email verification link sent to you on <Text style={tw`font-bold`}>{FIREBASE_AUTH.currentUser?.email}</Text>
+                    {t('click-on-email-link')} <Text style={tw`font-bold`}>{FIREBASE_AUTH.currentUser?.email}</Text>
                 </Text>
                 <Text style={tw`font-medium text-base text-center mt-2`}>
-                    Didn't receive the email yet? <Text onPress={resendEmail} style={tw`font-bold underline`}>Send Again</Text> ({countDown})
+                    {t('didnt-receive-email')} <Text onPress={resendEmail} style={tw`font-bold underline`}>{t('send-again')}</Text> ({countDown})
                 </Text>
                 <Text style={tw`font-medium text-base text-center mt-2`}>
-                    Or <Text onPress={deleteAccount} style={tw`font-bold underline`}>delete account</Text>
+                    {t('or')} <Text onPress={deleteAccount} style={tw`font-bold underline`}>{t('delete-account')}</Text>
                 </Text>
             </View>
         </View>

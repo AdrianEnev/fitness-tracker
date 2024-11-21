@@ -180,5 +180,10 @@
     "decline-friend-request": "Отклонить запрос",
     "declining-friend-request": "Отклонение...",
     "offline": "Оффлайн",
-    "online": "Онлайн"
+    "online": "Онлайн",
+    "email-sent": "Письмо отправлено!",
+    "click-on-email-link": "Нажмите на ссылку в письме, отправленном на ",
+    "didnt-receive-email": "Не получили письмо?",
+    "send-again": "Отправить снова",
+    "or": "или"
 }

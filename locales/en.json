@@ -194,5 +194,10 @@
     "decline-friend-request": "Decline Request",
     "declining-friend-request": "Declining...",
     "offline": "Offline",
-    "online": "Online"
+    "online": "Online",
+    "email-sent": "Email Sent!",
+    "click-on-email-link": "Click on the link in the email sent to ",
+    "didnt-receive-email": "Didn't receive an email?",
+    "send-again": "Send Again",
+    "or": "or"
 }

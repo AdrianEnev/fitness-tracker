@@ -167,5 +167,10 @@
     "decline-friend-request": "Refuser la demande",
     "declining-friend-request": "Refus...",
     "offline": "Hors ligne",
-    "online": "En ligne"
+    "online": "En ligne",
+    "email-sent": "E-mail envoyé !",
+    "click-on-email-link": "Cliquez sur le lien dans l'e-mail envoyé à ",
+    "didnt-receive-email": "Vous n'avez pas reçu d'e-mail ?",
+    "send-again": "Envoyer à nouveau",
+    "or": "ou"
 }
