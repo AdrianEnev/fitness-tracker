@@ -156,7 +156,7 @@ function App() {
 
         if (auth.success) {
             setIsAuthenticated(true);
-            console.log(auth);
+            //console.log(auth);
         } else {
             console.log('Authentication failed or cancelled');
             onAuthenticate();
@@ -500,7 +500,7 @@ function App() {
 
     useEffect(() => {
         //clearAsyncStorage()
-        logAsyncStorage()
+        //logAsyncStorage()
         //clearEmailFoodDayData('test')
         //tempFunc()
         getIphoneModel();

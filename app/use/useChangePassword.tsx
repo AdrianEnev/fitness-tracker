@@ -1,4 +1,5 @@
 import { EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail, updatePassword } from "firebase/auth";
+import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 
 const changePassword = (email: any, user: any, auth: any) => {
@@ -7,16 +8,18 @@ const changePassword = (email: any, user: any, auth: any) => {
     // if the old password is correct, prompt the user to enter their new password
     // update the password with the new password
 
+    const {t} = useTranslation();
+
     Alert.prompt(
-        'Смяна на парола',
-        'Стара парола:',
+        t('change-password'),
+        t('old-password'),
         [
             {
-                text: 'Отказ',
+                text: t('cancel'),
                 style: 'cancel',
             },
             {
-                text: 'Напред',
+                text: t('next'),
                 style: 'default',
                 onPress: async (oldPassword: string | undefined) => {
 
@@ -27,15 +30,15 @@ const changePassword = (email: any, user: any, auth: any) => {
                         reauthenticateWithCredential(user, credentials).then(() => {
                             
                             Alert.prompt(
-                                'Смяна на парола',
-                                'Нова парола:',
+                                t('change-password'),
+                                t('new-password'),
                                 [
                                     {
-                                        text: 'Отказ',
+                                        text: t('cancel'),
                                         style: 'cancel',
                                     },
                                     {
-                                        text: 'Готово',
+                                        text: t('done'),
                                         style: 'default',
                                         onPress: (newPassword: string | undefined) => {
                                             
@@ -43,14 +46,14 @@ const changePassword = (email: any, user: any, auth: any) => {
         
                                                 updatePassword(user, newPassword).then(() => {
                             
-                                                    Alert.alert('Успешна смяна на парола');
+                                                    alert(t('password-changed-successfuly'));
                             
                                                 }).catch((error) => {
                                                     console.log(error);
                                                 });
         
                                             }else if (oldPassword == newPassword) {
-                                                alert('Новата парола не може да бъде същата като старата!');
+                                                alert(t('new-password-same-as-old'));
                                             }
                                             
         
@@ -63,16 +66,16 @@ const changePassword = (email: any, user: any, auth: any) => {
                         }).catch(async (error) => {
                            
                             Alert.alert(
-                                'Грешна парола!',
+                                t('wrong-password'),
                                 '' + oldPassword,
                                 [
                                     {
-                                        text: 'Изпрати имейл',
+                                        text: t('send-passwrod-reset-email'),
                                         style: 'default',
                                         onPress: () => {
                                             // send a password reset email
                                             sendPasswordResetEmail(auth, email).then(() => {
-                                                Alert.alert('Пратен е имейл за смяна на парола');
+                                                alert(t('password-reset-email-sent'));
                                             }).catch((error) => {
                                                 console.log(error);
                                             });

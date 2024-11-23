@@ -1,4 +1,4 @@
-import { View, Text, Button, Pressable, Image, Alert, Switch, Vibration, ActivityIndicator } from 'react-native'
+import { View, Text, Pressable, Alert, Switch, Vibration, ActivityIndicator } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 import tw from 'twrnc'
@@ -12,7 +12,6 @@ import ProfilePicture from '../components/ProfilePicture'
 import { collection, doc, getDoc, getDocs, setDoc, writeBatch } from 'firebase/firestore'
 import BottomNavigationBar from '../components/BottomNavigationBar'
 import { useTranslation } from 'react-i18next'
-import { deleteObject, getStorage, ref } from 'firebase/storage'
 import getEmail from '../use/useGetEmail'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from 'expo-blur'
@@ -46,15 +45,15 @@ const SettingsAccount = ({navigation}: any) => {
 
         // add confirmation alert before logging out
         Alert.alert(
-            'Излизане от Акаунт',
-            'Сигурен ли си, че искаш да излезеш от този акаунт?',
+            t('account-logout'),
+            t('accont-logout-prompt'),
             [
                 {
-                    text: 'Отказ',
+                    text: t(('cancel')),
                     style: 'cancel',
                 },
                 {
-                    text: 'Напред',
+                    text: t('next'),
                     style: 'destructive',
                     onPress: () => {
                         FIREBASE_AUTH.signOut();
@@ -115,11 +114,11 @@ const SettingsAccount = ({navigation}: any) => {
         // if 7 days haven't passed since the last username change, alert the user that there is still a cooldown
         if (daysDifference < 7) {
             Alert.alert(
-                'Грешка!',
-                'Можете да смените потребителското си име отново след ' + (7 - Math.floor(daysDifference)) + ' дни!',
+                t('error-short'),
+                t('change-name-delay') + (7 - Math.floor(daysDifference)) + t('change-name-days'),
                 [
                     {
-                        text: 'Разбрах',
+                        text: t('understood'),
                         style: 'cancel',
                     },
                 ],
@@ -130,15 +129,15 @@ const SettingsAccount = ({navigation}: any) => {
         }
 
         Alert.prompt(
-            'Смяна на име',
-            'Моля въведи ново потребителско име',
+            t('change-username'),
+            t('change-username-prompt'),
             [
                 {
-                    text: 'Отказ',
+                    text: t('cancel'),
                     style: 'destructive',
                 },
                 {
-                    text: 'Смяна',
+                    text: t('change-short'),
                     style: 'default',
                     onPress: async (newUsername: string | undefined) => {
 
@@ -146,13 +145,13 @@ const SettingsAccount = ({navigation}: any) => {
 
                             try {
                                 if (await checkUsernameNSFW(newUsername)) {
-                                    alert('This username is not allowed!');
+                                    alert(t('nsfw-username'));
                                     return;
                                 }
                             } catch (error: any) {
                                 // Check if the error message contains the specific model loading error
                                 if (error && error.error && error.error.includes('Model facebook/bart-large-mnli is currently loading')) {
-                                    alert("Please try again later!");
+                                    alert(t('error'));
                                     return;
                                 }
                             }
@@ -163,18 +162,18 @@ const SettingsAccount = ({navigation}: any) => {
                             console.log(trimmedUsername);
 
                             if (newUsername.length <= 2) {
-                                alert('Потребителското име трябва да съдържа поне 3 символа!');
+                                alert(t('username-at-least-three-symbols'));
                                 return;
                             } 
 
                             if (newUsername == username) {
-                                alert('Потребителското име не може да бъде същото като предишното!');
+                                alert(t('password-at-least-eight-symbols'));
                                 return;
                             }
 
                             const weirdCharPattern = /[^a-zA-Z0-9@#$£€%^&*()"'-/|.,?![]{}+=_~<>¥]/;
                             if (weirdCharPattern.test(newUsername)) {
-                                alert('Името не може да съдържа емоджитa!');
+                                alert(t('password-no-emojis'));
                                 return;
                             }
                         
@@ -187,7 +186,7 @@ const SettingsAccount = ({navigation}: any) => {
                                 for (const doc of usernameDoc.docs) {
                                     if (doc.id === 'username') {
                                         if (doc.data().username.trim() === trimmedUsername) {
-                                            alert('Потребителското име е заето!');
+                                            alert(t('username-taken'));
                                             isUsernameTaken = true;
                                             break;
                                         }
@@ -217,7 +216,7 @@ const SettingsAccount = ({navigation}: any) => {
 
                                 //alert('Името ви успешно беше сменено на ' + trimmedUsername);
                             } catch(err: any) {
-                                alert(err);
+                                alert(t('error'));
                             }
 
                         }
@@ -486,7 +485,7 @@ const SettingsAccount = ({navigation}: any) => {
                             deleteAccount(email, user, setProfilePicture, setSetupRan, setIsAccountDeleted, setIsSyncingInfoModalVisible)
                             
                         }else{
-                            alert("Unstable or no internet connection!")
+                            alert(t('unstable-connection'))
                             Vibration.vibrate()
                         }
                         

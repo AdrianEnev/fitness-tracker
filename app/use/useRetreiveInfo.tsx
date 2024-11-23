@@ -3,11 +3,14 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "./useGetEmail";
 import addWorkoutLocally from "../useWorkout/useAddWorkoutLocally";
+import { useTranslation } from "react-i18next";
 
 const retreiveInfo = async (type: string, navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
 
+    const {t} = useTranslation();
+
     if (internetSpeed < 50) {
-        alert('Unstable internet connection, please try again later!');
+        alert(t('unstable-connection'));
         setIsRetreivingInfoAnimationModalVisible(false);
         return;
     }
@@ -45,6 +48,8 @@ const updateFood = async (foodDayKey: any, foodDaysCollectionRef: any) => {
 
 // A slight problem to this implementation is that the number of workouts on the phone can be the same as the ones in the database, but the data inside the workouts can be different.
 const retreiveFoods = async (navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
+
+    const {t} = useTranslation();
     
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -74,7 +79,7 @@ const retreiveFoods = async (navigation: any, setIsRetreivingInfoAnimationModalV
         try {
             for (const foodDay of missingFoodDays) {
                 if (internetSpeed < 50) {
-                    alert('Unstable internet connection, please try again later!');
+                    alert(t('unstable-connection'));
                     setIsRetreivingInfoAnimationModalVisible(false);
                     return;
                 }
@@ -89,15 +94,17 @@ const retreiveFoods = async (navigation: any, setIsRetreivingInfoAnimationModalV
 
         } catch (err) {
             console.error(err);
-            alert('Error retreiving food day/s!');
+            alert(t('error'));
         }
     } else {
-        alert('No new food days to retreive!');
+        alert(t('all-foods-retreived'));
     }
     
 }
 
 const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
+
+    const {t} = useTranslation();
     
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -133,7 +140,7 @@ const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationMod
             for (const workout of missingWorkouts) {
 
                 if (internetSpeed < 50) {
-                    alert('Unstable internet connection, please try again later!');
+                    alert(t('unstable-connection'));
                     setIsRetreivingInfoAnimationModalVisible(false);
                     return;
                 }
@@ -176,10 +183,10 @@ const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationMod
 
         }catch(err){
             console.error(err);
-            alert('Error retreiving workout/s!');
+            alert(t('error'));
         }
     } else {
-        alert('No new workouts to retreive!');
+        alert(t('all-workouts-retreived'));
     }
 }
 

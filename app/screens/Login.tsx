@@ -23,7 +23,7 @@ const Login = ({navigation}: any) => {
     const signIn = async() => {
 
         if (!internetConnected || internetSpeed < 56) {
-            alert('Нестабилна интернет връзка!');
+            alert(t('unstable-connection'));
             return
         }
 
@@ -33,7 +33,7 @@ const Login = ({navigation}: any) => {
 
         const weirdCharPattern = /[^a-zA-Z0-9@#$£€%^&*()"'-/|.,?![]{}+=_~<>¥]/;
         if (weirdCharPattern.test(password)) {
-            alert('Паролата не може да съдържа емоджитa!');
+            alert(t('password-no-emojis'));
             return;
         }
 
@@ -57,7 +57,7 @@ const Login = ({navigation}: any) => {
             setLoggingIn(false)
 
         }catch(err: any){
-            alert(err);
+            alert(t('error'));
         }
         
     }

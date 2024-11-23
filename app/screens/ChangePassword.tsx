@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 const ChangePassword = () => {
 
     const [email, setEmail] = useState('');
+    const {t} = useTranslation();
 
     const changePassword = () => {
 
@@ -16,14 +17,12 @@ const ChangePassword = () => {
 
         sendPasswordResetEmail(getAuth(), email)
         .then(() => {
-            alert('Email sent successfuly!');
+            alert(t('email-sent-sucessfuly'));
         })
         .catch((error) => {
             alert(error.message);
         });
     }
-
-    const {t} = useTranslation();
 
     return (
         <SafeAreaView style={tw`flex-1 bg-white`}>

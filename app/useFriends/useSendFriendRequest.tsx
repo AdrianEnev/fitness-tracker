@@ -4,6 +4,7 @@ import { Friend } from "../../interfaces";
 import { User } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
+import { useTranslation } from "react-i18next";
 
 // Function to send a friend request to a user
 const sendFriendRequestToUser = async (user: Friend, loggedInUser: User) => {
@@ -83,10 +84,12 @@ const isFriendLimitReached = async (loggedInUser: any) => {
 // Function to send a friend request
 const sendFriendRequest = async (user: Friend, navigation: any) => {
 
+    const {t} = useTranslation();
+
     const loggedInUser = FIREBASE_AUTH.currentUser;
 
     if (await isFriendLimitReached(loggedInUser)) {
-        alert('Friend limit reached! - Purchase premium for morex')
+        alert(t('friend-limit-reached'))
         return;
     }
 
@@ -103,7 +106,7 @@ const sendFriendRequest = async (user: Friend, navigation: any) => {
         } catch (error) {
             // If an error occurs, display it in an alert
             console.log(error);
-            alert('Вече е изпратена покана за приятелство към този потребител!')
+            alert(t('friend-request-already-sent'))
         }
     }
 }
