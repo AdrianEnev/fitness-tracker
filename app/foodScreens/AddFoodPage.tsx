@@ -1,13 +1,11 @@
-import { View, Text, TextInput, Pressable, ActivityIndicator, Button, Keyboard } from 'react-native'
-import React, { useState, useContext } from 'react'
+import { View, Text, TextInput, Pressable, ActivityIndicator, Keyboard } from 'react-native'
+import React, { useState } from 'react'
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { FlatList } from 'react-native-gesture-handler';
 import getNutrients from '../use/useGetNutrients';
 import { useTranslation } from 'react-i18next';
 import BottomNavigationBar from '../components/BottomNavigationBar';
-import GlobalContext from '../../GlobalContext';
-
 
 const AddFoodPage = ({route, navigation}: any) => {
     
@@ -50,8 +48,6 @@ const AddFoodPage = ({route, navigation}: any) => {
 
         if (results.length === 0) {
             setNoResults(true);
-        }else {
-            setSearchText('');
         }
 
         setLoading(false);
@@ -76,12 +72,9 @@ const AddFoodPage = ({route, navigation}: any) => {
         setFoods([]);
         setSearchQuery('');
         setGrams('');
-        setSearchText('Search-food-in-english...');
         setLoading(false);
         setNoResults(false);
     }
-
-    const [searchText, setSearchText] = useState('Search-food-in-english...');
 
     return (
         <View style={tw`h-full w-full bg-white`}>

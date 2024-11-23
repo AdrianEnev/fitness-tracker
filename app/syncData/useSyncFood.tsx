@@ -1,8 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
-import { collection, doc, setDoc, deleteDoc, getDocs, writeBatch } from "firebase/firestore";
+import { collection, doc, getDocs, writeBatch } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
-import generateID from "../use/useGenerateID";
 
 const syncFood = async () => {
 

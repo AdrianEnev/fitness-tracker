@@ -1,20 +1,16 @@
 import { View, Text, SafeAreaView, TouchableOpacity, Pressable } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { Friend } from '../../interfaces';
-import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, runTransaction } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { FlatList } from 'react-native-gesture-handler';
-import GlobalContext from '../../GlobalContext';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { useTranslation } from 'react-i18next';
-import { Ionicons } from '@expo/vector-icons';
 import getEmail from '../use/useGetEmail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FriendsList = ({navigation, route}: any) => {
-
-    //const { friendRequestsNumber } = useContext(GlobalContext);
 
     const [username, setUsername] = useState<any>('');
 
@@ -51,8 +47,6 @@ const FriendsList = ({navigation, route}: any) => {
             getFriends();
         });
     })
-
-    //onPress={() => navigation.navigate('Приятел-Профил', {username: username, friend: item})}
 
     const {t} = useTranslation();
 

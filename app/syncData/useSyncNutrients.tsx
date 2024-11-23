@@ -3,6 +3,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const syncNutrients = async () => {
+    
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userInfoCollectionRef = collection(userDocRef, 'user_info');

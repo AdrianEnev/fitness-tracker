@@ -1,12 +1,11 @@
-import { View, Text, SafeAreaView, Image, Pressable, TouchableOpacity } from 'react-native'
+import { View, Text, SafeAreaView, Image, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
-import { FIREBASE_AUTH, FIREBASE_STORAGE, FIRESTORE_DB } from '../../firebaseConfig';
+import { ref, getDownloadURL } from "firebase/storage";
+import { FIREBASE_STORAGE, FIRESTORE_DB } from '../../firebaseConfig';
 import { useFocusEffect } from '@react-navigation/native';
-import { collection, doc, getDoc, onSnapshot, setDoc } from 'firebase/firestore';
-import BottomNavigationBar from '../components/BottomNavigationBar';
+import { collection, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import removeFriend from '../useFriends/useRemoveFriend';
 import { useTranslation } from 'react-i18next';
 
@@ -108,52 +107,6 @@ const ViewFriendProfile = ({route, navigation}: any) => {
         navigation.navigate('Приятели')
     }
 
-    /**
-     * 
-     * <>
-            <SafeAreaView style={tw`w-full h-full flex items-center justify-center`}>
-                <View style={tw`w-[80%] h-[30%] mb-8 bg-white shadow-md rounded-xl flex pt-2`}>
-
-                    <View style={tw`w-full flex flex-row mb-3`}>
-
-                        {profilePicture === '' ? 
-                        (<View 
-                            style={tw`bg-white w-22 h-22 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
-                            <Ionicons name='person-outline' 
-                                size={40}
-                                color='#000000'  
-                            />
-                        </View>
-                        ) : (
-                            <Image
-                            source={{ uri: profilePicture }}
-                            style={tw`w-22 h-22 border border-gray-300 rounded-full ml-2`}
-                            />
-                        )}
-                        
-                        <View style={tw`flex flex-col justify-center ml-2`}>
-
-                            <Text style={tw`text-xl font-medium`}>{friend.username}</Text>
-                            <Text style={tw`text-base ${isUserPremium ? 'text-blue-500' : 'text-gray-400'}`}>{isUserPremium ? "Premium" : "Free"} User</Text>
-
-                        </View>
-
-                    </View>
-                    
-                    <View style={tw`ml-3`}>
-                        <Text style={tw`text-base font-medium text-gray-700`}>{workoutsCompleted} {workoutsCompleted > 1 ? "workouts" : "workout"} completed.</Text>
-                        <Text style={tw`text-base font-medium text-gray-700`}>First joined on {dateJoined ? dateJoined : "loading..."}</Text>
-                    </View>
-</View>
-
-                </View>
-
-            </SafeAreaView>
-        </>
-    )
-     * 
-     */
-
     const {t} = useTranslation();
 
     return (
@@ -204,7 +157,7 @@ const ViewFriendProfile = ({route, navigation}: any) => {
                     <TouchableOpacity style={tw`w-64 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md`}
                                 onPress={async () => {
                                     setRemovingFriend(true);
-                                    console.log('removing friend');
+                                    //console.log('removing friend');
                                     await deleteFriend()
                                     navigation.goBack();
                                     setRemovingFriend(false);

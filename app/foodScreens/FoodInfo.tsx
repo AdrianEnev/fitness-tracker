@@ -1,24 +1,21 @@
-import { View, Text, Button } from 'react-native'
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import { View, Text } from 'react-native'
+import React, { useContext } from 'react'
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { useNavigation } from '@react-navigation/native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import tw from 'twrnc';
 import GlobalContext from '../../GlobalContext';
 import getEmail from '../use/useGetEmail';
-import { collection, deleteDoc, doc, getDoc, getDocs, updateDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import FoodInfoNutrients from '../components/FoodInfoNutrients';
-import Slider from '@react-native-community/slider';
 
 const FoodInfo = ({route}: any) => {
 
     const {t} = useTranslation();
 
-    const {food, date, unformattedDate} = route.params;
-    // date = 14:48 (po nqkva prichina e vreme ama nqmam sega vreme da go opravq)
+    const {food, unformattedDate} = route.params;
 
     const {internetConnected} = useContext(GlobalContext);
 
@@ -182,10 +179,8 @@ const FoodInfo = ({route}: any) => {
             
 
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
-                <Text style={tw`text-4xl font-medium text-black m-3`}>Macronutrients</Text>
+                <Text style={tw`text-4xl font-medium text-black m-3`}>{t('macronutrients')}</Text>
             </View>
-
-            {/* <Text style={tw`text-2xl font-medium text-center mt-3 mb-1`}>{food.grams}g</Text> */}
 
             <FoodInfoNutrients
                 calories={calories}
@@ -196,8 +191,6 @@ const FoodInfo = ({route}: any) => {
                 food={food}
                 grams={grams}
             />
-
-            
             
             <BottomNavigationBar currentPage='FoodInfo' navigation={navigation} deleteFood={removeFood}/>
         </View>

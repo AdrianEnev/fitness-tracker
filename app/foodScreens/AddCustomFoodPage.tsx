@@ -1,18 +1,15 @@
-import { View, Text, TouchableWithoutFeedback, Button, Keyboard, TextInput, ScrollView } from 'react-native'
+import { View, Text} from 'react-native'
 import React, { useContext, useState } from 'react'
 import tw from "twrnc"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTranslation } from 'react-i18next';
 import BottomNavigationBar from '../components/BottomNavigationBar';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import getEmail from '../use/useGetEmail';
 import GlobalContext from '../../GlobalContext';
-import { addDoc, collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import generateID from '../use/useGenerateID';
 import AddFoodNutrientsComponent from './AddFoodNutrientsComponent';
-import { Slider } from 'react-native-awesome-slider';
-import { useSharedValue } from 'react-native-reanimated';
 
 const AddCustomFoodPage = ({navigation, route}: any) => {
 
@@ -20,7 +17,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
 
     const { date } = route.params;
 
-    const {internetConnected} = useContext(GlobalContext);
+    const {internetConnected, internetSpeed} = useContext(GlobalContext);
 
     const [name, setName] = useState(t('example-food'));
     const [calories, setCalories] = useState(0);
@@ -29,6 +26,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
     const [fat, setFat] = useState(0);
     const [grams, setGrams] = useState(0);
 
+    // Format date to work with the database
     const formatDate = (date: any) => {
         const year = date.year;
         const month = String(date.month).padStart(2, '0');
@@ -36,6 +34,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         return `${year}-${month}-${day}`;
     };
 
+    // Format date to be displayed to the user
     const formatDatePretty = (date: any) => {
         const year = date.year;
         const month = String(date.month).padStart(2, '0');
@@ -80,7 +79,8 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
 
             await AsyncStorage.setItem(`${email}-foodDay-${date.day}-${date.month}-${date.year}-nutrients`, JSON.stringify(updatedNutrients));
 
-            if (internetConnected) {
+            // add to database in the background
+            if (internetConnected && internetSpeed > 32) {
 
                 // Update Firestore
                 const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -106,7 +106,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
 
     const saveFood = async () => {
         if (!name && saveFoodRan) {
-            console.log('save food already ran')
+            //console.log('save food already ran')
             return;
         }
 

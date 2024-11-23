@@ -1,28 +1,15 @@
-import { View, Text, SafeAreaView, Pressable } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
-import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, onSnapshot, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { FlatList } from 'react-native-gesture-handler';
-import Ionicons from '@expo/vector-icons/Ionicons'
 import { useTranslation } from 'react-i18next';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import getEmail from '../use/useGetEmail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const FriendRequestsSent = ({route, navigation}: any) => {
-
-    const [username, setUsername] = useState<any>('');
-
-    useEffect(() => {
-        const fetch = async () => {
-            const email = await getEmail();
-            const asyncStorageUsername = await AsyncStorage.getItem(`username_${email}`);
-            setUsername(asyncStorageUsername)
-        }
-        fetch();
-        
-    }, [])
 
     const [sentFriendRequests, setSentFriendRequests] = useState<any[]>([]);
 
@@ -36,8 +23,8 @@ const FriendRequestsSent = ({route, navigation}: any) => {
         const friendRequestsDoc = await getDoc(friendRequestsDocRef);
         if (!friendRequestsDoc.exists()) {
 
-            // ako ne sushtestvuva friendRequests document, se suzdava prazen takuv
-            console.log('no friend requests sent or recieved')
+            // if the friendRequests document does not exist, create a new empty one
+            //console.log('no friend requests sent or recieved')
             await setDoc(friendRequestsDocRef, {});
         }
 

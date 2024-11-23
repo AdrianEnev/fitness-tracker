@@ -3,18 +3,18 @@ import React, { useContext, useEffect, useState } from 'react'
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from "twrnc";
-import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
 import GlobalContext from '../../GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { checkUserDocument } from '../use/useCheckUserInfo';
-import EmailNotVerified from './EmailNotVerified';
 import checkUsernameNSFW from '../use/useCheckUsernameNSFW';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
 
 const Register = ({navigation}: any) => {
+
+    const { t } = useTranslation();
 
     const {internetConnected, setIsAccountDeleted, internetSpeed, setAccountJustRegistered} = useContext(GlobalContext);
 
@@ -35,14 +35,11 @@ const Register = ({navigation}: any) => {
 
     const auth = FIREBASE_AUTH;
 
+
     const signUp = async() => {
 
-        if (!internetConnected) {
-            alert('Няма интернет връзка!');
-            return;
-        }
-        if (internetSpeed < 16) {
-            alert('Нестабилна интернет връзка!');
+        if (!internetConnected || internetSpeed < 16) {
+            alert(t('unstable-connection'));
             return;
         }
         
@@ -56,38 +53,38 @@ const Register = ({navigation}: any) => {
 
         const weirdCharPattern = /[^a-zA-Z0-9@#$£€%^&*()"'-/|.,?![]{}+=_~<>¥]/;
         if (weirdCharPattern.test(password)) {
-            alert('Паролата не може да съдържа емоджитa!');
+            alert(t('password-no-emojis'));
             return;
         }
         if (password !== confirmPassword) {
-            alert("Паролите не са еднакви!");
+            alert(t('passwords-not-match'));
             return;
         }
         if (trimmedUsername.length <= 2) {
-            alert('Потребителското име трябва да съдържа поне 3 символа!');
+            alert(t('username-at-least-three-symbols'));
             return;
         } 
         if (password.length <= 8) {
-            alert('Паролата трябва да съдържа поне 8 символа!');
+            alert(t('password-at-least-eight-symbols'));
             return;
         }
         if (password === trimmedUsername) {
-            alert('Паролата не може да бъде същата като потребителското име!');
+            alert(t('password-not-same-as-username'));
             return;
         }
 
         if (await isAccountLimitReached()) {
-            alert('You have reached the maximum number of accounts for this device.');
+            alert(t('max-number-accounts-device'));
             return;
         }    
         
         if (await checkUsernameNSFW(trimmedUsername)) {
-            alert('This username is not allowed!');
+            alert(t('nsfw-username'));
             return;
         }
     
         if (await isUsernameTaken(trimmedUsername)) {
-            alert('Потребителското име е заето!');
+            alert(t('username-taken'));
             return;
         }
     
@@ -186,8 +183,6 @@ const Register = ({navigation}: any) => {
 
     }, [password, confirmPassword])
     
-    const { t } = useTranslation();
-
     return (
         <SafeAreaView style={tw`bg-white flex-1`}>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

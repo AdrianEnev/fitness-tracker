@@ -6,6 +6,7 @@ import { deleteObject, getStorage, ref } from 'firebase/storage';
 import { Alert } from 'react-native';
 import getEmail from './useGetEmail';
 
+// Function to change the username of the user to "Deleted User" in friends' lists
 const changeUsername = async (user: any) => {
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     getDocs(usersCollectionRef).then((snapshot) => {
@@ -26,6 +27,7 @@ const changeUsername = async (user: any) => {
     });
 }
 
+// Function to remove received friend requests for the user
 const removeReceivedRequests = async (user: any) => {
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const snapshot = await getDocs(usersCollectionRef);
@@ -44,8 +46,8 @@ const removeReceivedRequests = async (user: any) => {
     }));
 }
 
+// Function to execute the deletion of the user account and related data
 const executeDeletion = async (setProfilePicture: any, setSetupRan: any, setIsAccountDeleted: any, user: any) => {
-    
     deleteUser(user).then(() => {
         FIREBASE_AUTH.signOut();
         setIsAccountDeleted(true)
@@ -84,9 +86,9 @@ const executeDeletion = async (setProfilePicture: any, setSetupRan: any, setIsAc
     // Reset GlobalContext to default values
     setProfilePicture('');
     setSetupRan(false);
-
 }
 
+// Function to handle the account deletion process
 const deleteAccount = async (
     email: any, 
     user: any, 
@@ -95,7 +97,7 @@ const deleteAccount = async (
     setIsAccountDeleted: any,
     setIsDeletingAccountModalVisible: any
 ) => {
-    
+    // Prompt the user to enter their password for account deletion
     Alert.prompt(
         'Изтриване на акаунт',
         'Въведи паролата за този акаунт, за да го изтриеш',
@@ -115,6 +117,7 @@ const deleteAccount = async (
         'secure-text'
     );
 
+    // Function to reauthenticate the user and delete the account
     const reauthenticateAndDelete = (password: string | undefined, setProfilePicture: any, setSetupRan: any, setIsAccountDeleted: any) => {
         if (email && password && user) {
             const credentials = EmailAuthProvider.credential(email, password);

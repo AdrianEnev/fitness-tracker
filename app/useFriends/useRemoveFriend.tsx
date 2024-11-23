@@ -3,7 +3,7 @@ import { Friend } from "../../interfaces";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 
 const removeFriend = async (friend: Friend) => {
-    console.log('running remove friend');
+    //console.log('running remove friend');
 
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -19,7 +19,7 @@ const removeFriend = async (friend: Friend) => {
     const friendFriendsCollectionRef = collection(friendFriendsDocRef, 'list');
     const friendFriendDocRef = doc(friendFriendsCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     
-    console.log('About to delete documents');
+    //console.log('About to delete documents');
 
     try {
         await runTransaction(FIRESTORE_DB, async (transaction) => {

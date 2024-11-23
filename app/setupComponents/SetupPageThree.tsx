@@ -2,8 +2,14 @@ import { View, Text, Pressable, ScrollView } from 'react-native'
 import React, { useRef, useState } from 'react'
 import tw from 'twrnc'
 import HorizontalPicker from '@vseslav/react-native-horizontal-picker';
+import i18next from 'i18next';
+import { useTranslation } from 'react-i18next';
 
 const SetupPageThree = ({weight, weightType, setWeight, setWeightType, setHeightType, setHeight, height}: any) => {
+
+    const currentLanguage = i18next.language;
+
+    const {t} = useTranslation();
 
     const cmToFeetInches = (cm: any) => {
         const totalInches = cm * 0.393701;
@@ -30,7 +36,15 @@ const SetupPageThree = ({weight, weightType, setWeight, setWeightType, setHeight
         <View style={tw`flex flex-col mt-[15%] h-full`}>
             <View style={tw`mx-5`}>
                 <Text style={tw`font-medium text-2xl text-center`}>Please enter your weight.</Text>
-                <Text style={tw`font-medium text-lg text-gray-500 mt-1 text-center`}>This will <Text style={tw`font-bold`}>only</Text> be used to calculate your daily BMR!</Text>
+                {currentLanguage === 'en' ? 
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>This will<Text style={tw`font-bold`}> only</Text> be used to calculate your daily BMR!</Text> : currentLanguage == "bg" ? (
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Това ще бъде използвано <Text style={tw`font-bold`}>само</Text> за изчисляване на твоят дневен BMR!</Text> ) : currentLanguage == "de" ? (
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Dies wird<Text style={tw`font-bold`}> nur</Text> verwendet, um Ihren täglichen BMR zu berechnen!</Text> ) : currentLanguage == "fr" ? (
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Cela sera<Text style={tw`font-bold`}> uniquement</Text> utilisé pour calculer votre BMR quotidien!</Text> ) : currentLanguage == "ru" ? (
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Это будет<Text style={tw`font-bold`}> только</Text> использоваться для расчета вашего ежедневного BMR!</Text> ) : currentLanguage == "it" ? (
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Questo sarà<Text style={tw`font-bold`}> solo</Text> utilizzato per calcolare il tuo BMR giornaliero!</Text> ) : currentLanguage == "es" ? (
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Esto se<Text style={tw`font-bold`}> solo</Text> utilizará para calcular tu BMR diario!</Text>
+                ) : null}
             </View>
             
             <View style={tw`flex flex-row w-full mx-3 mt-[7%]`}>

@@ -16,7 +16,7 @@ const AddFriends = ({route, navigation}: any) => {
 
     const {t} = useTranslation();
 
-    // imeto na potrebitelq koito e lognat
+    // Logged in user username
     const [username, setUsername] = useState<any>('');
 
     useEffect(() => {
@@ -136,7 +136,7 @@ const AddFriends = ({route, navigation}: any) => {
                 setSearchingAnimation(false); // Stop the searching animation
             }
         } catch (error) {
-            console.error('Error searching for friend:', error);
+            //console.error('Error searching for friend:', error);
             setSearchingAnimation(false); // Stop the searching animation in case of error
         }
     };

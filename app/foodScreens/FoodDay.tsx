@@ -19,6 +19,7 @@ const FoodDay = ({route, navigation}: any) => {
     const { date } = route.params;
 
     const getDate = () => {
+
         if (date.day < 10 && date.month < 10) {
             return `0${date.day}.0${date.month}.${date.year}`;
         } else if (date.day < 10) {
@@ -56,6 +57,7 @@ const FoodDay = ({route, navigation}: any) => {
     }
 
     const updateCurrentNutrients = () => {
+        
         let totalCalories = 0;
         let totalProtein = 0;
         let totalCarbs = 0;

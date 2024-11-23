@@ -290,7 +290,6 @@ const WorkoutFolder = ({ route, navigation }: any) => {
                 <PasteWorkoutsInFolderModal
                     isPasteWorkoutsInFolderModalVisible={isPasteWorkoutsInFolderModalVisible}
                     setIsPasteWorkoutsInFolderModalVisible={setIsPasteWorkoutsInFolderModalVisible}
-                    navigation={navigation}
                     pasteCopiedWorkouts={pasteCopiedWorkoutsFunc}
                     pasteCutWorkouts={pasteCutWorkoutsFunc}
                 />

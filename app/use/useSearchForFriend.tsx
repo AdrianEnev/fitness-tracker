@@ -2,6 +2,7 @@ import { collection, doc, getDocs, getDoc } from "firebase/firestore";
 import { FIRESTORE_DB } from "../../firebaseConfig";
 
 const searchForFriend = async (search: string): Promise<{id: string, username: string}[]> => {
+    
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocs = await getDocs(usersCollectionRef);
     const users: {id: string, username: string}[] = [];

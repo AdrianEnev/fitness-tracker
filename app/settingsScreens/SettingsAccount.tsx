@@ -417,7 +417,6 @@ const SettingsAccount = ({navigation}: any) => {
                 <SyncingInfoModal
                     isSyncingInfoModalVisible={isSyncingInfoModalVisible}
                     setIsSyncingInfoModalVisible={setIsSyncingInfoModalVisible}
-                    setIsSyncingInfoInformationModalVisible={setIsSyncingInfoInformationModalVisible}
                 />
 
                 <DeletingAccountModal

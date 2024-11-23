@@ -79,8 +79,7 @@ const BottomNavigationBar = (
         activeWorkoutNumberOfExercises?: any
     }
 ) => {
-    //AddCustomFood
-
+    
     const {t} = useTranslation();
     
     return (

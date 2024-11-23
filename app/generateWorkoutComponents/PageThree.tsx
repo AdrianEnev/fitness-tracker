@@ -1,7 +1,6 @@
-import { View, Text, Pressable } from 'react-native'
+import { View, Text } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
-import Ionicons from '@expo/vector-icons/Ionicons'
 import { Picker } from 'react-native-wheel-pick'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
@@ -28,7 +27,9 @@ const PageThree = ({numberOfDays, setNumberOfDays}: any) => {
                     <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Това ще бъде използвано <Text style={tw`font-bold`}>само</Text> за създаване на тренировка</Text> ) : currentLanguage == "de" ? (
                     <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Dies wird<Text style={tw`font-bold`}>nur</Text> verwendet, um ein individuelles Training zu erstellen</Text> ) : currentLanguage == "fr" ? (
                     <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Cela sera<Text style={tw`font-bold`}>uniquement</Text> utilisé pour générer un entraînement personnalisé</Text> ) : currentLanguage == "ru" ? (
-                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Это будет<Text style={tw`font-bold`}>только</Text> использоваться для создания индивидуальной тренировки</Text>
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Это будет<Text style={tw`font-bold`}>только</Text> использоваться для создания индивидуальной тренировки</Text> ) : currentLanguage == "it" ? (
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Questo sarà<Text style={tw`font-bold`}>solo</Text> utilizzato per generare un allenamento personalizzato</Text> ) : currentLanguage == "es" ? (
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Esto se<Text style={tw`font-bold`}>solo</Text> utilizará para generar un entrenamiento personalizado</Text>
                 ) : null}
                 
             </View>

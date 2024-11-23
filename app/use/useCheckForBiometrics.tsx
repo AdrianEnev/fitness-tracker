@@ -14,7 +14,7 @@ const checkForBiometrics = async () => {
         
         if (data.faceIdEnabled) {
             return true
-        }else{
+        } else{
             return false
         }
     }

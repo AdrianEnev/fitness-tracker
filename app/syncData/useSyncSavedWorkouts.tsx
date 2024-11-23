@@ -1,20 +1,24 @@
 import { addDoc, collection, doc, getDocs, serverTimestamp, setDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import generateRandomColour from "../use/useGenerateColour";
 import getEmail from "../use/useGetEmail";
 
 const syncSavedWorkouts = async () => {
+
+    // Reference to the user's collection in Firestore
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userSavedWorkoutsCollectionRef = collection(userDocRef, 'saved_workouts');
 
+    // Get the user's saved workouts from Firestore
     const userSavedWorkoutsSnapshot = await getDocs(userSavedWorkoutsCollectionRef);
     const numDatabaseSavedWorkouts = userSavedWorkoutsSnapshot.size;
 
+    // Get the user's email
     const email = await getEmail();
     if (!email) return;
 
+    // Get the user's saved workouts from local storage
     const localSavedWorkouts = await AsyncStorage.getItem(`savedWorkouts_${email}`);
 
     let parsedLocalSavedWorkouts = [];
@@ -25,11 +29,13 @@ const syncSavedWorkouts = async () => {
     }
     const numLocalSavedWorkouts = parsedLocalSavedWorkouts.length;
 
+    // If there are more saved workouts locally than in the database, sync them
     if (numLocalSavedWorkouts > numDatabaseSavedWorkouts) {
         const missingSavedWorkouts = parsedLocalSavedWorkouts.filter((localSavedWorkout: any) => {
             return !userSavedWorkoutsSnapshot.docs.some((doc) => doc.id === localSavedWorkout.id);
         });
 
+        // Add missing workouts to Firestore
         missingSavedWorkouts.forEach(async (savedWorkout: any) => {
             const savedWorkoutDocRef = doc(userSavedWorkoutsCollectionRef, savedWorkout.id);
 
@@ -41,6 +47,7 @@ const syncSavedWorkouts = async () => {
             const savedWorkoutInfoCollectionRef = collection(savedWorkoutDocRef, "info");
 
             try {
+                // Add exercises and sets to Firestore
                 savedWorkout.exercises?.forEach((exercise: any) => {
                     exercise.sets?.forEach(async (set: any, index: any) => {
                         if (exercise.title === '') {
@@ -72,7 +79,7 @@ const syncSavedWorkouts = async () => {
 
         console.log('Saved workouts synced');
     } else {
-        //console.log('No saved workouts to sync');
+        // No saved workouts to sync
     }
 };
 

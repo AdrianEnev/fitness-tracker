@@ -1,9 +1,8 @@
-import { View, TextInput, Button, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity, Pressable } from 'react-native'
+import { View, TextInput, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity, Pressable } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from "twrnc";
-import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
 import GlobalContext from '../../GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -63,6 +62,7 @@ const Login = ({navigation}: any) => {
         
     }
 
+    // Check asyncstorage for username. This function is used for checkFireBaseForUsername
     const checkForUsername = async (email: any, userInfoCollectionRef: any) => {
         const username = await AsyncStorage.getItem(`username_${email}`)
 
@@ -90,6 +90,7 @@ const Login = ({navigation}: any) => {
         return false;
     }
 
+    // Check if firebase contains a username, only if asyncstorage doesn't. This is used to retreive the username from firebase if the user is logging in from another device
     const checkFireBaseForUsername = async (userInfoCollectionRef: any) => {
         const usernameDocRef = doc(userInfoCollectionRef, 'username');
         const docSnapshot = await getDoc(usernameDocRef);
@@ -108,8 +109,9 @@ const Login = ({navigation}: any) => {
         }
     
         return null;
-    }
+    }   
 
+    // Check asyncstorage for nutrients. This function is used for checkFirebaseForNutrients
     const checkForNutrients = async (email: any, userInfoCollectionRef: any) => {
         const nutrients = await AsyncStorage.getItem(`goal_nutrients_${email}`);
 
@@ -140,6 +142,7 @@ const Login = ({navigation}: any) => {
         return false;
     }
 
+    // Check if firebase contains nutrients, only if asyncstorage doesn't. This is used to retreive the nutrients from firebase if the user is logging in from another device
     const checkFirebaseForNutrients = async (userInfoCollectionRef: any) => {
         const nutrientsDocRef = doc(userInfoCollectionRef, 'nutrients');
 

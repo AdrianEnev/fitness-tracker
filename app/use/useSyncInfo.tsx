@@ -5,11 +5,13 @@ import syncWorkouts from "../syncData/useSyncWorkouts"
 import syncWorkoutsInFolders from "../syncData/useSyncWorkoutsInFolders"
 
 const syncInformation = async () => {
-    await syncFood()
-    await syncNutrients()
-    await syncSavedWorkouts()
-    await syncWorkouts()
-    syncWorkoutsInFolders()
+
+    await syncFood();
+    await syncNutrients();
+    await syncSavedWorkouts();
+    await syncWorkouts();
+    await syncWorkoutsInFolders();
+    
 }
 
 export default syncInformation;

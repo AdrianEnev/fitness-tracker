@@ -1,11 +1,10 @@
-import { View, Text, SafeAreaView, FlatList, Pressable } from 'react-native'
+import { View, Text, FlatList, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { addDoc, collection, deleteDoc, doc, getDoc, getDocs, onSnapshot, runTransaction, setDoc } from 'firebase/firestore';
+import {  collection, doc, getDoc, getDocs, onSnapshot, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
 import BottomNavigationBar from '../components/BottomNavigationBar';
-
 
 const FriendRequestsRecieved = ({route, navigation}: any) => {
     
@@ -21,8 +20,8 @@ const FriendRequestsRecieved = ({route, navigation}: any) => {
         const friendRequestsDoc = await getDoc(friendRequestsDocRef);
         if (!friendRequestsDoc.exists()) {
 
-            // ako ne sushtestvuva friendRequests document, se suzdava prazen takuv
-            console.log('no friend requests sent or recieved')
+            // if the friendRequests document does not exist, create a new empty one
+            //console.log('no friend requests sent or recieved')
             await setDoc(friendRequestsDocRef, {});
         }
 
@@ -34,7 +33,7 @@ const FriendRequestsRecieved = ({route, navigation}: any) => {
             setReceivedFriendRequests(sentRequests);
 
         } catch (err) {
-            console.log('no friend requests sent');
+            //console.log('no friend requests sent');
         }
 
     }

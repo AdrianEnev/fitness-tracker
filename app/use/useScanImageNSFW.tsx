@@ -1,4 +1,4 @@
-import {HfInference} from "@huggingface/inference";
+import { HfInference } from "@huggingface/inference";
 
 const apiToken = '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';
 const model = 'Falconsai/nsfw_image_detection';

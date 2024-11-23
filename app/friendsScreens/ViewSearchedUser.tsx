@@ -4,10 +4,9 @@ import sendFriendRequest from '../useFriends/useSendFriendRequest'
 import tw from 'twrnc'
 import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import BottomNavigationBar from '../components/BottomNavigationBar';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { collection, doc, getDoc, getDocs, Timestamp } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { FIRESTORE_DB } from '../../firebaseConfig';
 import deleteFriendRequest from '../useFriends/useDeleteFriendRequest'
 import acceptFriendRequest from '../useFriends/useAcceptFriendRequest';
 import declineFriendRequest from '../useFriends/useDeclineFriendRequest';
@@ -18,11 +17,6 @@ import GlobalContext from '../../GlobalContext';
 const ViewSearchedUser = ({route, navigation}: any) => {
 
     const {friend, page} = route.params;
-
-    //console.log(friend)
-    // contains id and username properties
-
-    // if page = "sentRequests"
 
     const {iphoneModel} = useContext(GlobalContext)
 
@@ -50,6 +44,7 @@ const ViewSearchedUser = ({route, navigation}: any) => {
 
     const [usersCollectionRefState, setUsersCollectionRefState] = useState<any>(null)
 
+    // Not yet implemented
     const [isUserPremium, setIsUserPremium] = useState(false);
     
     useEffect(() => {

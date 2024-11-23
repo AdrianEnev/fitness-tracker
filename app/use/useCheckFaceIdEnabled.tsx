@@ -3,6 +3,7 @@ import { collection, doc, getDoc, setDoc } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 
 const checkFaceIdEnabled = async () => {
+    
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userInfoCollectionRef = collection(userDocRef, 'user_info');

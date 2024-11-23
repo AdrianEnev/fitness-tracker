@@ -1,8 +1,7 @@
-import { View, Text, Modal, Pressable, Keyboard, Dimensions } from 'react-native'
+import { View, Text, Modal, Dimensions } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
 import { Swing } from 'react-native-animated-spinkit'
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 
 interface ChangingUsernameModalProps {

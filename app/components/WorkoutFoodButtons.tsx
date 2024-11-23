@@ -1,9 +1,7 @@
-import { View, Text, Pressable } from 'react-native'
+import { View, Pressable } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
-
-//heart-outline; fitness-outline
 
 const WorkoutFoodButtons = ({navigation}: any) => {
     return (

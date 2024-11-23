@@ -2,7 +2,6 @@ import { View, Text, Modal, Pressable, Keyboard, TextInput } from 'react-native'
 import React, { useContext } from 'react'
 import tw from 'twrnc'
 import addWorkout from '../useWorkout/useAddWorkout';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import addWorkoutLocally from '../useWorkout/useAddWorkoutLocally';
 import generateID from '../use/useGenerateID';
 import { useTranslation } from 'react-i18next';

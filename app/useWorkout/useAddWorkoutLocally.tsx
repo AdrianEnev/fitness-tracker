@@ -79,7 +79,7 @@ const addWorkoutLocally = async (exercises: any, workoutTitle: string, id: any, 
         if (!folder) {
             await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(workouts));
         }else{
-            // this is an example of what the folder object looks like:  {"id": "folder_1726759925197", "title": "New Folder", "type": "folder", "workouts": []}
+            // folder object:  {"id": "folder_1726759925197", "title": "New Folder", "type": "folder", "workouts": []}
             const data = await AsyncStorage.getItem(`folders_${email}`);
             let folders = data ? JSON.parse(data) : [];
             const index = folders.findIndex((f: any) => f.id === folder.id);

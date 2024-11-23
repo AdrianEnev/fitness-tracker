@@ -1,18 +1,16 @@
-import { View, Text, Modal, Pressable, Keyboard, Dimensions } from 'react-native'
+import { View, Text, Modal, Dimensions } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
 import { Swing } from 'react-native-animated-spinkit'
-import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 
 interface SyncingInfoModalProps {
     isSyncingInfoModalVisible: boolean;
     setIsSyncingInfoModalVisible: (isVisible: boolean) => void;
-    setIsSyncingInfoInformationModalVisible: (isVisible: boolean) => void;                 
 }
 
 const SyncingInfoModal: React.FC<SyncingInfoModalProps> = ({ 
-    isSyncingInfoModalVisible, setIsSyncingInfoModalVisible, setIsSyncingInfoInformationModalVisible
+    isSyncingInfoModalVisible, setIsSyncingInfoModalVisible
 }) => { 
     
     const screenWidth = Dimensions.get('screen').width;

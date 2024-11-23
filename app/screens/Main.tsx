@@ -1,10 +1,7 @@
-import { View, Text, Pressable, ScrollView, Image } from 'react-native'
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import { View, Text, ScrollView } from 'react-native'
+import React, { useCallback, useContext, useState } from 'react'
 import tw from "twrnc";
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { GoalNutrients } from '../../interfaces';
-import { collection, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
 import { useFocusEffect } from '@react-navigation/native';
 
 import { useTranslation } from 'react-i18next';
@@ -29,8 +26,6 @@ import { getLanguageLocally } from '../use/useGetLanguageLocally';
 
 const Main = ({navigation}: any) => {
 
-    //const [steps, setSteps] = useState(0);
-
     const { t } = useTranslation();
 
     const { internetConnected } = useContext(GlobalContext);
@@ -47,7 +42,6 @@ const Main = ({navigation}: any) => {
         
         if (AsyncStorageUsername) {
             setUsername(AsyncStorageUsername);
-            //setUsername("тесттесттесттесттесттесттест");
         }
        
     }
@@ -70,7 +64,6 @@ const Main = ({navigation}: any) => {
         }, [internetConnected])
     );
 
-    // izpolzvam GoalNutrients dori i da e za currentNutrients state-a zashtoto si pasva perfektno tuk
     let [currentNutrients, setCurrentNutrients] = useState<any>(null);
     const [goalNutrients, setGoalNutrients] = useState<any>(null);
 
@@ -128,28 +121,6 @@ const Main = ({navigation}: any) => {
         }, [internetConnected, currentFormattedDate])
     );
 
-
-    /*const updateCurrentNutrients = async () => {
-         
-        try {
-            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-            const foodDaysCollectionRef = collection(userDocRef, 'food_days');
-            const data = await getDocs(foodDaysCollectionRef);
-            //const ids = data.docs.map((doc) => doc.id);
-            
-            const matchingDoc = data.docs.find((doc) => doc.id === getCurrentDate(false));
-            if (matchingDoc) {
-                setCurrentNutrients(matchingDoc.data() as GoalNutrients[]);
-                console.log(matchingDoc.data() as GoalNutrients[])
-            }
-
-        } catch (err) {
-            console.error(err);
-        }
-
-    }**/
-
     const getHelloText = (): string => {
         const date = new Date();
         const hours = date.getHours();
@@ -179,7 +150,7 @@ const Main = ({navigation}: any) => {
                         {/* Zdravei User */}
                         <View style={tw`flex flex-col ml-3 w-full`}>
                             <Text style={tw`text-lg text-gray-500`}>{getHelloText()} 👋</Text>
-                            <Text style={tw`text-xl font-medium max-w-[85%]`}>{username ? username : 'Loading'}</Text>
+                            <Text style={tw`text-xl font-medium max-w-[85%]`}>{username ? username : t('loading')}</Text>
                         </View>
                             
                     </View>

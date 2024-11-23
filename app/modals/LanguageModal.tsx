@@ -1,14 +1,13 @@
 import { View, Text, Modal, Pressable, Keyboard, TextInput } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext} from 'react'
 import tw from 'twrnc'
-import i18next, { t } from 'i18next';
+import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
 import { collection, doc, setDoc } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Dropdown } from 'react-native-element-dropdown';
 import GlobalContext from '../../GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import getEmail from '../use/useGetEmail';
 
 interface LanguageModalProps {
     isLanguageModalVisible: boolean;

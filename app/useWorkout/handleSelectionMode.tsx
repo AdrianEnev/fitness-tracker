@@ -2,8 +2,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
 import { Workout } from "../../interfaces";
 import generateID from "../use/useGenerateID";
-import { deleteDoc, doc, getDocs } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 
+// Function to delete selected workouts
 export const deleteSelectedWorkouts = async (
     selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, firebaseWorkouts: any, internetConnected: any,
     userWorkoutsCollectionRef: any
@@ -46,6 +47,7 @@ export const deleteSelectedWorkouts = async (
     }
 };
 
+// Function to copy selected workouts
 export const copySelectedWorkouts = async (selectedWorkouts: any) => {
     try {
         const email = await getEmail();
@@ -61,7 +63,6 @@ export const copySelectedWorkouts = async (selectedWorkouts: any) => {
 
         // Store the selected workouts in a separate AsyncStorage item
         await AsyncStorage.setItem(`copied_workouts_${email}`, JSON.stringify(selectedWorkoutsData));
-        //logCopiedWorkouts();
 
         console.log('Selected workouts copied');
     } catch (err) {
@@ -69,6 +70,7 @@ export const copySelectedWorkouts = async (selectedWorkouts: any) => {
     }
 }
 
+// Function to cut selected workouts
 export const cutSelectedWorkouts = async (
     selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, firebaseWorkouts: any, internetConnected: any,
     userWorkoutsCollectionRef: any
@@ -87,7 +89,6 @@ export const cutSelectedWorkouts = async (
 
         // Store the selected workouts in a separate AsyncStorage item
         await AsyncStorage.setItem(`cut_workouts_${email}`, JSON.stringify(selectedWorkoutsData));
-        //logCutWorkouts();
 
         // Delete the selected workouts from the main workouts list
         await deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef);
@@ -111,33 +112,7 @@ export const cutSelectedWorkouts = async (
     }
 };
 
-const logCutWorkouts = async () => {
-    try {
-        const email = await getEmail();
-        if (!email) return;
-
-        const data = await AsyncStorage.getItem(`cut_workouts_${email}`);
-        const cutWorkouts = data ? JSON.parse(data) : [];
-
-        console.log('Cut workouts:', cutWorkouts);
-    } catch (err) {
-        console.error(err);
-    }
-};
-const logCopiedWorkouts = async () => {
-    try {
-        const email = await getEmail();
-        if (!email) return;
-
-        const data = await AsyncStorage.getItem(`copied_workouts_${email}`);
-        const copiedWorkouts = data ? JSON.parse(data) : [];
-
-        console.log('Copied workouts:', copiedWorkouts);
-    } catch (err) {
-        console.error(err);
-    }
-};
-
+// Function to paste cut workouts
 export const pasteCutWorkouts = async (setWorkouts: any) => {
     try {
         const email = await getEmail();
@@ -174,8 +149,7 @@ export const pasteCutWorkouts = async (setWorkouts: any) => {
     }
 };
 
-/* --------------------------------------------------------------------------- */
-
+// Helper function to extract base title and copy number from a title
 const extractBaseTitleAndCopyNumber = (title: string) => {
     const regex = /^(.*?)( copy(?: \((\d+)\))?)?$/;
     const match = title.match(regex);
@@ -184,6 +158,7 @@ const extractBaseTitleAndCopyNumber = (title: string) => {
     return { baseTitle, copyNumber };
 };
 
+// Helper function to generate a new title for a copied workout
 const generateNewTitle = (baseTitle: string, existingTitles: string[]) => {
     let maxCopyNumber = 0;
     existingTitles.forEach(title => {
@@ -195,6 +170,7 @@ const generateNewTitle = (baseTitle: string, existingTitles: string[]) => {
     return `${baseTitle} copy${maxCopyNumber > 0 ? ` (${maxCopyNumber + 1})` : ''}`;
 };
 
+// Function to paste copied workouts
 export const pasteCopiedWorkouts = async () => {
     try {
         const email = await getEmail();
@@ -239,5 +215,3 @@ export const pasteCopiedWorkouts = async () => {
         console.error(err);
     }
 };
-
-/* --------------------------------------------------------------------------- */

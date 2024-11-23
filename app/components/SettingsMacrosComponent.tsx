@@ -20,6 +20,7 @@ const SettingsMacrosComponent = (
     const carbRef = useRef(null);
     const fatRef = useRef(null);
 
+    // Calculate the position of the modal to show up by getting the clicked nutrient box position
     const handlePress = (nutrient: string, ref: any) => {
         ref.current.measure((fx: number, fy: number, width: number, height: number, px: number, py: number) => {
             setSelectedNutrient(nutrient);

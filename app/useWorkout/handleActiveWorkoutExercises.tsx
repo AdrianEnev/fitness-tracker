@@ -40,14 +40,6 @@ export const addExercise = (
 
     if (updatedExercises.length >= 9) return;
 
-    /**
-     * reps: set.reps,
-                weight: set.weight,
-                rpe: set.rpe !== undefined ? set.rpe : "0",
-                setIndex: index + 1,
-                intensity: set.intensity,
-     */
-
     const newExercise = {
         id: Math.random().toString(),
         title: "New Exercise " + "(" + Number(updatedExercises.length + 1) + ")",

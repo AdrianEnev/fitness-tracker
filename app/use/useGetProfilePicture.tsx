@@ -1,4 +1,4 @@
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { ref, getDownloadURL } from "firebase/storage";
 import { FIREBASE_AUTH, FIREBASE_STORAGE } from "../../firebaseConfig";
 
 const getProfilePicture = async () => {

@@ -1,4 +1,4 @@
-import { View, Text, Modal, Pressable, Keyboard, TextInput } from 'react-native'
+import { View, Text, Modal, Pressable, Keyboard } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
 import endWorkout from '../useWorkout/useEndWorkout';

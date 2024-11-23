@@ -1,4 +1,4 @@
-import { View, Text, Modal, Pressable, Keyboard, TextInput } from 'react-native'
+import { View, Text, Modal, Pressable, Keyboard } from 'react-native'
 import React, { useContext } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
@@ -6,7 +6,6 @@ import { useTranslation } from 'react-i18next';
 import GlobalContext from '../../GlobalContext';
 
 interface PasteWorkoutsModalProps {
-    navigation: any;
     isPasteWorkoutsModalVisible: boolean;
     setIsPasteWorkoutsModalVisible: (isVisible: boolean) => void;
     pasteCutWorkouts: () => void;
@@ -14,7 +13,7 @@ interface PasteWorkoutsModalProps {
 }
 
 const PasteWorkoutsModal: React.FC<PasteWorkoutsModalProps> = ({ 
-    isPasteWorkoutsModalVisible, setIsPasteWorkoutsModalVisible, navigation, pasteCutWorkouts, pasteCopiedWorkouts
+    isPasteWorkoutsModalVisible, setIsPasteWorkoutsModalVisible, pasteCutWorkouts, pasteCopiedWorkouts
 }) => { 
     
     const {t} = useTranslation();

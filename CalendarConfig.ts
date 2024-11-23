@@ -105,10 +105,54 @@ export const deLocaleConfig = {
     today: "Heute"
 };
 
+export const itLocaleConfig = {
+    monthNames: [
+        'Gennaio',
+        'Febbraio',
+        'Marzo',
+        'Aprile',
+        'Maggio',
+        'Giugno',
+        'Luglio',
+        'Agosto',
+        'Settembre',
+        'Ottobre',
+        'Novembre',
+        'Dicembre'
+    ],
+    monthNamesShort: ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'],
+    dayNames: ['Lunedì', 'Martedì', 'Mercoledì', 'Giovedì', 'Venerdì', 'Sabato', 'Domenica'],
+    dayNamesShort: ['Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab', 'Dom'],
+    today: "Oggi"
+};
+
+export const esLocaleConfig = {
+    monthNames: [
+        'Enero',
+        'Febrero',
+        'Marzo',
+        'Abril',
+        'Mayo',
+        'Junio',
+        'Julio',
+        'Agosto',
+        'Septiembre',
+        'Octubre',
+        'Noviembre',
+        'Diciembre'
+    ],
+    monthNamesShort: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+    dayNames: ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'],
+    dayNamesShort: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'],
+    today: "Hoy"
+};
+
 LocaleConfig.locales['bg'] = bgLocaleConfig;
 LocaleConfig.locales['en'] = enLocaleConfig;
 LocaleConfig.locales['fr'] = frLocaleConfig;
 LocaleConfig.locales['ru'] = ruLocaleConfig;
 LocaleConfig.locales['de'] = deLocaleConfig;
+LocaleConfig.locales['it'] = itLocaleConfig;
+LocaleConfig.locales['es'] = esLocaleConfig;
 
-export default { bgLocaleConfig, enLocaleConfig, frLocaleConfig, ruLocaleConfig, deLocaleConfig };
+export default { bgLocaleConfig, enLocaleConfig, frLocaleConfig, ruLocaleConfig, deLocaleConfig, itLocaleConfig, esLocaleConfig };

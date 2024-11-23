@@ -4,7 +4,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "./useGetEmail";
 import addWorkoutLocally from "../useWorkout/useAddWorkoutLocally";
 
-
 const retreiveInfo = async (type: string, navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
 
     if (internetSpeed < 50) {

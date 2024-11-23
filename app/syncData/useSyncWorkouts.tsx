@@ -5,16 +5,20 @@ import generateRandomColour from "../use/useGenerateColour";
 import getEmail from "../use/useGetEmail";
 
 const syncWorkouts = async () => {
+    // Reference to the user's workouts collection in Firestore
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userWorkoutsCollectionRef = collection(userDocRef, 'workouts');
 
+    // Get the current workouts from Firestore
     const userWorkoutsSnapshot = await getDocs(userWorkoutsCollectionRef);
     const numDatabaseWorkouts = userWorkoutsSnapshot.size;
 
+    // Get the user's email
     const email = await getEmail();
     if (!email) return;
 
+    // Get the local workouts from AsyncStorage
     const localWorkouts = await AsyncStorage.getItem(`workouts_${email}`);
 
     let parsedLocalWorkouts = [];
@@ -25,11 +29,13 @@ const syncWorkouts = async () => {
     }
     const numLocalWorkouts = parsedLocalWorkouts.length;
 
+    // If there are more local workouts than in the database, sync them
     if (numLocalWorkouts > numDatabaseWorkouts) {
         const missingWorkouts = parsedLocalWorkouts.filter((localWorkout: any) => {
             return !userWorkoutsSnapshot.docs.some((doc) => doc.id === localWorkout.id);
         });
 
+        // Add missing workouts to Firestore
         missingWorkouts.forEach(async (workout: any) => {
             const workoutDocRef = doc(userWorkoutsCollectionRef, workout.id);
 
@@ -39,6 +45,8 @@ const syncWorkouts = async () => {
                 colour: workout.colour || generateRandomColour(),
                 numberOfExercises: workout.numberOfExercises || 0
             });
+
+            // Add workout info to Firestore
             const workoutInfoCollectionRef = collection(workoutDocRef, "info");
 
             try {

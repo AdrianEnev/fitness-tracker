@@ -5,21 +5,6 @@ import { User } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
 
-const getUserInfoCollectionT = async (user: any) => {
-    try {
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, user.id);
-        const userInfoCollectionRef = collection(userDocRef, 'user_info');
-
-        return userInfoCollectionRef
-    }catch (error: any) {
-        console.log(error)
-    }
-    
-
-
-}
-
 // Function to send a friend request to a user
 const sendFriendRequestToUser = async (user: Friend, loggedInUser: User) => {
     

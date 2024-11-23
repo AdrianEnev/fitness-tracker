@@ -46,9 +46,10 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
     const [selectedNutrient, setSelectedNutrient] = useState('')
     const [isChangeValueModalVisible, setIsChangeValueModalVisible] = useState(false)
 
-    // izpolzva se za da predodvrati spamene pri dobavqne na hrana
+    // Used to prevent multiple foods from being added at the same time
     const [itemAdded, setItemAdded] = useState(false);
 
+    // Calculate the position of the modal to show up by getting the clicked nutrient box position
     const handlePress = (nutrient: string, ref: any) => {
         ref.current.measure((fx: number, fy: number, width: number, height: number, px: number, py: number) => {
             setSelectedNutrient(nutrient);
@@ -255,8 +256,6 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('macronutrients')}</Text>
             </View>
 
-            {/* <Text style={tw`text-2xl font-medium text-center mt-3 mb-1`}>{food.grams}g</Text> */}
-
             <>
                 {isChangeValueModalVisible && (
                     <BlurView
@@ -317,7 +316,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
                             <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{t('protein')}</Text>
 
                             <View style={tw`flex-1 items-center justify-center mb-4`}>
-                                <Text style={tw`text-4xl text-white font-medium text-center`}>{!newProtein ? '0' : newProtein}g</Text>
+                                <Text style={tw`text-4xl text-white font-medium text-center`}>{!newProtein ? '0' : newProtein}{t('grams-short')}</Text>
                             </View>
 
                         </Pressable>
@@ -327,7 +326,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
                             <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{t('carbs')}</Text>
 
                             <View style={tw`flex-1 items-center justify-center mb-4`}>
-                                <Text style={tw`text-4xl text-white font-medium text-center`}>{!newCarbs ? '0' : newCarbs}g</Text>
+                                <Text style={tw`text-4xl text-white font-medium text-center`}>{!newCarbs ? '0' : newCarbs}{t('grams-short')}</Text>
                             </View>
 
                         </Pressable>
@@ -337,7 +336,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
                             <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{t('fat')}</Text>
 
                             <View style={tw`flex-1 items-center justify-center mb-4`}>
-                                <Text style={tw`text-4xl text-white font-medium text-center`}>{!newFat ? '0' : newFat}g</Text>
+                                <Text style={tw`text-4xl text-white font-medium text-center`}>{!newFat ? '0' : newFat}{t('grams-short')}</Text>
                             </View>
 
                         </Pressable>

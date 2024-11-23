@@ -1,7 +1,6 @@
 import { View, Text, TouchableWithoutFeedback, SafeAreaView, KeyboardAvoidingView, Keyboard, TextInput, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import tw from "twrnc";
-import { FIREBASE_AUTH } from '../../firebaseConfig';
 import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
 import { useTranslation } from 'react-i18next';
 

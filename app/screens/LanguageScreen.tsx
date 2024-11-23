@@ -1,8 +1,7 @@
-import { View, Text, Pressable, TouchableOpacity } from 'react-native'
+import { View, Text, TouchableOpacity } from 'react-native'
 import React, { useState } from 'react'
 import tw from 'twrnc'
 import { Picker } from 'react-native-wheel-pick'
-import Ionicons from '@expo/vector-icons/Ionicons'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const LanguageScreen = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: boolean) => void }) => {

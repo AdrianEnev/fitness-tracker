@@ -6,7 +6,7 @@ import { useTranslation } from 'react-i18next';
 
 const HorizontalCalendar = ({navigation}: any) => {
 
-    const [startDate, setStartDate] = useState(new Date());
+    const [startDate, _setStartDate] = useState(new Date());
     const [dates, setDates] = useState<Date[]>([]);
 
     const getDatesRange = () => {
@@ -30,21 +30,21 @@ const HorizontalCalendar = ({navigation}: any) => {
         } else if (i18next.language === 'en') { // Default to English if not Bulgarian
             weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
             monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-        }else if (i18next.language === 'de') {
-
+        } else if (i18next.language === 'de') {
             weekDays = ['Son', 'Mon', 'Die', 'Mit', 'Don', 'Fre', 'Sam'];
             monthNames = ['Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun', 'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'];
-
-        }else if (i18next.language === 'fr') {
-
+        } else if (i18next.language === 'fr') {
             weekDays = ['Dim', 'Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam'];
-            monthNames = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août ', 'Sep', 'Oct', 'Nov', 'Déc'];
-
-        }else if (i18next.language === 'ru') {
-            
+            monthNames = ['Jan', 'Fév', 'Mar', 'Avr', 'Mai', 'Juin', 'Juil', 'Août', 'Sep', 'Oct', 'Nov', 'Déc'];
+        } else if (i18next.language === 'ru') {
             weekDays = ['Вос', 'Пон', 'Вт', 'Ср', 'Чет', 'Пят', 'Суб'];
             monthNames = ['Янв', 'Фев', 'Март', 'Апр', 'Май', 'Июнь', 'Июль', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
-
+        } else if (i18next.language === 'it') {
+            weekDays = ['Dom', 'Lun', 'Mar', 'Mer', 'Gio', 'Ven', 'Sab'];
+            monthNames = ['Gen', 'Feb', 'Mar', 'Apr', 'Mag', 'Giu', 'Lug', 'Ago', 'Set', 'Ott', 'Nov', 'Dic'];
+        } else if (i18next.language === 'es') {
+            weekDays = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+            monthNames = ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'];
         }
     
         switch (format) {

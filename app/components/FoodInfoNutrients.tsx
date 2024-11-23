@@ -1,6 +1,5 @@
-import { View, Text, Pressable, Alert } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import React, { useEffect, useRef, useState } from 'react';
-import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import tw from 'twrnc';
 import { useTranslation } from 'react-i18next';
 import { BlurView } from 'expo-blur';
@@ -36,10 +35,11 @@ const FoodInfoNutrients = (
 
     const [nutrientPosition, setNutrientPosition] = useState({ top: 0, left: 0 });
 
-    // Ref to manage the timeout
+    // Ref to manage the timeout (prevents the grams from updating too often)
     const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
     const handleSaveChanges = async (nutrient: string) => {
+
         const email = await getEmail();
         const foodDayKey = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}`;
         const storedData = await AsyncStorage.getItem(foodDayKey);
@@ -47,6 +47,8 @@ const FoodInfoNutrients = (
         if (storedData) {
             const foodItems = JSON.parse(storedData);
             const foodItem = foodItems.find((item: any) => item.id === food.id);
+
+            // normalizeValue -> removes any non-numeric characters from the string or prevents numbers from starting with 0
     
             if (foodItem) {
                 switch (nutrient) {
@@ -86,7 +88,6 @@ const FoodInfoNutrients = (
         }
     };
 
-
     const updateGrams = async () => {
         const email = await getEmail();
         const foodDayKey = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}`;
@@ -105,6 +106,7 @@ const FoodInfoNutrients = (
     };
 
     useEffect(() => {
+
         // Clear the previous timeout if it exists
         if (timeoutRef.current) {
             clearTimeout(timeoutRef.current);

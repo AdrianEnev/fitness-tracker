@@ -8,6 +8,7 @@ import GlobalContext from '../../GlobalContext';
 import { FIREBASE_AUTH } from '../../firebaseConfig';
 import { NavigationProp } from "@react-navigation/native";
 import scanImage from "../use/useScanImageNSFW";
+import { useTranslation } from "react-i18next";
 
 interface ProfilePictureProps {
     page: any;
@@ -15,6 +16,8 @@ interface ProfilePictureProps {
 }
 
 const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
+
+    const {t} = useTranslation();
 
     const { profilePicture, setProfilePicture, internetConnected } = useContext(GlobalContext);
 
@@ -26,9 +29,9 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
         return blob;
       };
     
-    // okazva se che ima po lesen nachin za updatevane na profilna direktno ot firebase akaunta na usera ama veche napravih toq nachin tui che taka shte sedi  
     const uploadProfilePicture = async () => {
-    
+        
+        // get image from gallery
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
             allowsEditing: true,
@@ -37,22 +40,26 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
         });
       
         if (!result.canceled) {
-
+            
             const blob = await uriToBlob(result.assets[0].uri);
 
-            // scan image
             const scannedImage = await scanImage(blob);
             
-            console.log(scannedImage[0].label, scannedImage[0].score)
+            //console.log(scannedImage[0].label, scannedImage[0].score)
 
             if (scannedImage[0].label === 'nsfw'){
-                console.log('nsfw')
+                alert(t('nsfw-image'))
                 return
             }
+            
+            try {
+                await uploadFile(blob, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
+                alert(t('profile-picture-uploaded-successfuly'))
+                setProfilePicture(result.assets[0].uri);
+            }catch (error: any){
+                alert(t('unsupported-image'))
+            }
            
-            await uploadFile(blob, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
-            alert('Snimkata be kachena uspeshno!')
-            setProfilePicture(result.assets[0].uri);
     
         }
     };
@@ -109,7 +116,6 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
                         </View>
                     )}
                     
-
                     <Pressable onPress={() => {
                         if (page === 'Main') {
                             navigation?.navigate('Настройки-Акаунт')

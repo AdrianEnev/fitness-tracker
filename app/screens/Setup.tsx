@@ -1,9 +1,7 @@
-import { View, Text, TextInput, TouchableWithoutFeedback, Keyboard, Button, Pressable, TouchableOpacity, FlatList, ScrollView } from 'react-native'
+import { View, Text, TouchableWithoutFeedback, Keyboard, Pressable } from 'react-native'
 import React, { useState, useEffect } from 'react'
 import tw from "twrnc";
-import i18next from '../../services/i18next';
 import { useTranslation } from 'react-i18next';
-import { useRoute } from '@react-navigation/native';
 import { useContext } from 'react';
 import GlobalContext from '../../GlobalContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -13,12 +11,9 @@ import SetupPageTwo from '../setupComponents/SetupPageTwo';
 import SetupPageThree from '../setupComponents/SetupPageThree';
 import SetupPageFour from '../setupComponents/SetupPageFour';
 import SetupPageFive from '../setupComponents/SetupPageFive';
-//import ScrollPicker from "react-native-wheel-scrollview-picker";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
 import { getLanguageLocally } from '../use/useGetLanguageLocally';
-import { collection, doc, setDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 
 const Setup = () => {
 
@@ -142,7 +137,7 @@ const Setup = () => {
     const finishSetup = async () => {
 
         if (!internetConnected || internetSpeed < 32) {
-            alert("Unstable internet connection, please try again later!");
+            alert(t('unstable-connection'));
             return;
         }
 
@@ -219,13 +214,10 @@ const Setup = () => {
     const [height, setHeight] = useState(170);
 
     const [activityLevel, setActivityLevel] = useState(0)
-    //const [additionalCalories, setAdditionalCalories] = useState(0);
 
     const setGenderButton = (input: string) => {
         setGender(input)
     }
-
-    //weight, weightType, setWeight, setWeightType
          
     return (
         <>
@@ -246,7 +238,7 @@ const Setup = () => {
                         <View style={tw``}>
 
                             {currentPage === 1 ? (
-                                <SetupPageOne setGenderButton={setGenderButton} gender={gender} setIncludeInBio={setIncludeInBio} includeInBio={includeInBio}/>
+                                <SetupPageOne setGenderButton={setGenderButton} gender={gender}/>
                             ) : currentPage === 2 ? (
                                 <SetupPageTwo age={age} setAge={setAge}/>
                             ) : currentPage === 3 ? (
@@ -268,13 +260,13 @@ const Setup = () => {
 
                 <Pressable style={tw`w-[30%] h-[60%] flex flex-row items-center gap-x-1 mb-2`} onPress={previousPage}>
                     <Ionicons name='arrow-back-outline' size={32} color='white'/>
-                    <Text style={tw`text-white font-medium text-2xl`}>Back</Text>
+                    <Text style={tw`text-white font-medium text-2xl`}>{t('back')}</Text>
                 </Pressable>
 
                 <Pressable style={tw`bg-white rounded-2xl w-[50%] h-[55%] flex flex-row pl-4 pr-2 items-center justify-between mb-2`} onPress={() => {
                     nextPage();
                 }}>
-                    <Text style={tw`font-medium text-xl`}>{currentPage === 5 ? 'Finish' : 'Next'}</Text>
+                    <Text style={tw`font-medium text-xl`}>{currentPage === 5 ? t('finish') : t('next')}</Text>
                     <Ionicons name='arrow-forward-outline' size={32}/>
                 </Pressable>
 

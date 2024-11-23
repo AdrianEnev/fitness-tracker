@@ -3,9 +3,7 @@ import React, { useRef, useState } from 'react'
 import tw from 'twrnc'
 import { BlurView } from 'expo-blur';
 import AddFoodChangeNutrientModal from '../modals/AddFoodChangeNutrientModal';
-import BottomNavigationBar from '../components/BottomNavigationBar';
 import Slider from '@react-native-community/slider';
-import { useSharedValue } from 'react-native-reanimated';
 
 const AddFoodNutrientsComponent = (
     { 
@@ -51,6 +49,7 @@ const AddFoodNutrientsComponent = (
     const carbRef = useRef(null);
     const fatRef = useRef(null);
 
+    // Calculate the position of the modal to show up by getting the clicked nutrient box position
     const handlePress = (nutrient: string, ref: any) => {
         ref.current.measure((fx: number, fy: number, width: number, height: number, px: number, py: number) => {
             setSelectedNutrient(nutrient);
@@ -119,7 +118,7 @@ const AddFoodNutrientsComponent = (
                         <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{translation('protein')}</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
-                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!protein ? '0' : protein}g</Text>
+                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!protein ? '0' : protein}{translation('grams-short')}</Text>
                         </View>
 
                     </Pressable>
@@ -131,7 +130,7 @@ const AddFoodNutrientsComponent = (
                         <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{translation('carbs')}</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
-                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!carbs ? '0' : carbs}g</Text>
+                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!carbs ? '0' : carbs}{translation('grams-short')}</Text>
                         </View>
 
                     </Pressable>
@@ -143,7 +142,7 @@ const AddFoodNutrientsComponent = (
                         <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{translation('fat')}</Text>
 
                         <View style={tw`flex-1 items-center justify-center mb-4`}>
-                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!fat ? '0' : fat}g</Text>
+                            <Text style={tw`text-4xl text-white font-medium text-center`}>{!fat ? '0' : fat}{translation('grams-short')}</Text>
                         </View>
 
                     </Pressable>

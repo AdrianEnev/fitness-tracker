@@ -39,7 +39,7 @@ export const checkLanguageDocument = async (userInfoCollectionRef: any) => {
 };
 
 export const checkLanguageDocumentLocally = async () => {
-    const email = await getEmail();
+
     const language = await AsyncStorage.getItem(`language`);
 
     if (language === null) {
@@ -63,6 +63,6 @@ export const checkUserGoalNutrientsLocally = async () => {
     const email = await getEmail()
     const nutrients = await AsyncStorage.getItem(`goal_nutrients_${email}`);
 
-    // return true if nutrients has been ran
+    // return true if nutrients exists
     return nutrients !== null;
 }

@@ -404,7 +404,6 @@ const Workouts = ({navigation}: any) => {
                 <PasteWorkoutsModal
                     isPasteWorkoutsModalVisible={isPasteWorkoutsModalVisible}
                     setIsPasteWorkoutsModalVisible={setIsPasteWorkoutsModalVisible}
-                    navigation={navigation}
                     pasteCopiedWorkouts={pasteCopiedWorkoutsFunc}
                     pasteCutWorkouts={pasteCutWorkoutsFunc}
                 />

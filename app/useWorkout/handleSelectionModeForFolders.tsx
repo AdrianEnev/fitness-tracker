@@ -4,6 +4,7 @@ import { Workout } from "../../interfaces";
 import generateID from "../use/useGenerateID";
 import { deleteDoc, doc } from "firebase/firestore";
 
+// Function to delete selected workouts from a folder
 export const deleteSelectedWorkoutsInFolder = async (
     selectedWorkouts: any, folderId: string, setSelectedWorkouts: any, setSelectionMode: any,
     firebaseWorkouts: any, internetConnected: any, userWorkoutsCollectionRef: any
@@ -12,6 +13,7 @@ export const deleteSelectedWorkoutsInFolder = async (
         const email = await getEmail();
         if (!email) return;
 
+        // Retrieve folders from AsyncStorage
         const data = await AsyncStorage.getItem(`folders_${email}`);
         let folders = data ? JSON.parse(data) : [];
 
@@ -29,7 +31,6 @@ export const deleteSelectedWorkoutsInFolder = async (
         await AsyncStorage.setItem(`folders_${email}`, JSON.stringify(updatedFolders));
 
         // Update state
-        //setFolders(updatedFolders);
         setSelectedWorkouts([]);
         setSelectionMode(false);
         console.log('Selected workouts deleted from folder');
@@ -39,6 +40,7 @@ export const deleteSelectedWorkoutsInFolder = async (
 
     if (internetConnected) {
         try {
+            // Delete selected workouts from Firebase
             for (const selectedWorkout of selectedWorkouts) {
                 const selectedWorkoutID = selectedWorkout.id;
                 const selectedWorkoutDoc = doc(userWorkoutsCollectionRef, selectedWorkoutID);
@@ -51,6 +53,7 @@ export const deleteSelectedWorkoutsInFolder = async (
     }
 };
 
+// Function to copy selected workouts to AsyncStorage
 export const copySelectedWorkoutsInFolder = async (selectedWorkouts: any) => {
     try {
         const email = await getEmail();
@@ -64,6 +67,7 @@ export const copySelectedWorkoutsInFolder = async (selectedWorkouts: any) => {
     }
 }
 
+// Function to cut selected workouts and delete them from the folder
 export const cutSelectedWorkoutsInFolder = async (
     selectedWorkouts: any, folderId: string, setSelectedWorkouts: any, setSelectionMode: any,
     firebaseWorkouts: any, internetConnected: any, userWorkoutsCollectionRef: any
@@ -83,6 +87,7 @@ export const cutSelectedWorkoutsInFolder = async (
     }
 };
 
+// Function to paste cut workouts into a folder
 export const pasteCutWorkoutsInFolder = async (folderId: string) => {
     try {
         const email = await getEmail();
@@ -97,6 +102,7 @@ export const pasteCutWorkoutsInFolder = async (folderId: string) => {
             return;
         }
 
+        // Retrieve folders from AsyncStorage
         const data = await AsyncStorage.getItem(`folders_${email}`);
         let folders = data ? JSON.parse(data) : [];
 
@@ -114,15 +120,13 @@ export const pasteCutWorkoutsInFolder = async (folderId: string) => {
         // Clear the cut workouts from AsyncStorage
         await AsyncStorage.removeItem(`cut_workouts_${email}`);
 
-        // Update state
-        //setFolders(updatedFolders);
-
         console.log('Cut workouts pasted into folder');
     } catch (err) {
         console.error(err);
     }
 };
 
+// Function to paste copied workouts into a folder
 export const pasteCopiedWorkoutsInFolder = async (folderId: string) => {
     try {
         const email = await getEmail();
@@ -137,6 +141,7 @@ export const pasteCopiedWorkoutsInFolder = async (folderId: string) => {
             return;
         }
 
+        // Retrieve folders from AsyncStorage
         const data = await AsyncStorage.getItem(`folders_${email}`);
         let folders = data ? JSON.parse(data) : [];
 
@@ -168,15 +173,13 @@ export const pasteCopiedWorkoutsInFolder = async (folderId: string) => {
         // Clear the copied workouts from AsyncStorage
         await AsyncStorage.removeItem(`copied_workouts_${email}`);
 
-        // Update state
-        //setFolders(updatedFolders);
-
         console.log('Copied workouts pasted into folder');
     } catch (err) {
         console.error(err);
     }
 };
 
+// Helper function to extract base title and copy number from a title
 const extractBaseTitleAndCopyNumber = (title: string) => {
     const regex = /^(.*?)( copy(?: \((\d+)\))?)?$/;
     const match = title.match(regex);
@@ -185,6 +188,7 @@ const extractBaseTitleAndCopyNumber = (title: string) => {
     return { baseTitle, copyNumber };
 };
 
+// Helper function to generate a new title for a copied workout
 const generateNewTitle = (baseTitle: string, existingTitles: string[]) => {
     let maxCopyNumber = 0;
     existingTitles.forEach(title => {

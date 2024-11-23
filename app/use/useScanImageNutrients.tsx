@@ -1,4 +1,6 @@
+// Function to scan image nutrients based on a barcode and date
 const scanImageNutrients = async (barcode: any, date: any) => {
+    
     console.log("Barcode:", barcode);
     console.log("Date:", date);
     
@@ -23,6 +25,7 @@ const scanImageNutrients = async (barcode: any, date: any) => {
     
 }
 
+// Function to get product information from Open Food Facts based on the barcode
 async function getProductInfo(barcode: string) {
     const url = `https://world.openfoodfacts.org/api/v0/product/${123456789012}.json`;
 
@@ -36,6 +39,7 @@ async function getProductInfo(barcode: string) {
     }
 }
 
+// Function to get nutritional information from Edamam based on the product name
 async function getNutritionalInfoFromEdamam(productName: string): Promise<any> {
     const EDAMAM_APP_ID = '90e2036b';
     const EDAMAM_APP_KEY = 'b1e82289782395cb48b50b4b11520754';
@@ -54,6 +58,5 @@ async function getNutritionalInfoFromEdamam(productName: string): Promise<any> {
         return null;
     }
 }
-
 
 export default scanImageNutrients;

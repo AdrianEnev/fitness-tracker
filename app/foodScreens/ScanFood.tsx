@@ -1,6 +1,6 @@
-import { CameraView, CameraType, useCameraPermissions, Camera } from 'expo-camera';
+import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useEffect, useRef, useState } from 'react';
-import { Button, Text, TouchableOpacity, View, Image, Modal } from 'react-native';
+import { Button, Text, View } from 'react-native';
 import tw from 'twrnc';
 import scanImageNutrients from '../use/useScanImageNutrients';
 import { useTranslation } from 'react-i18next';
@@ -29,6 +29,7 @@ export default function ScanFood({navigation, route}: any) {
     }
 
     if (!permission.granted) {
+        
         // Camera permissions are not granted yet.
         return (
             <View style={tw`flex-1 justify-center`}>

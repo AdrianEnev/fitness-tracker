@@ -20,8 +20,6 @@ import ViewSavedWorkout from "../workoutScreens/ViewSavedWorkout";
 import Statistics from "../settingsScreens/Statistics";
 import ViewFriendProfile from "../friendsScreens/ViewFriendProfile";
 import FoodInfo from "../foodScreens/FoodInfo";
-import Donate from "../settingsScreens/Donate";
-import DonateScreen from "../settingsScreens/DonateScreen";
 import GenerateWorkoutPage from "../workoutScreens/GenerateWorkoutPage";
 import ScanFood from "../foodScreens/ScanFood";
 import WorkoutFolder from "../workoutScreens/WorkoutFolder";
@@ -29,20 +27,6 @@ import AddFoodPageEditFood from "../foodScreens/AddFoodPageEditFood";
 import ViewSearchedUser from "../friendsScreens/ViewSearchedUser";
 
 const Stack = createNativeStackNavigator();
-/* 
-
- <Stack.Navigator
-            screenOptions={({ route }) => {
-                const { params = {} } = route;
-                return {
-                    cardStyleInterpolator: (params as { animationType?: string }).animationType === 'horizontal'
-                        ? CardStyleInterpolators.forHorizontalIOS
-                        : CardStyleInterpolators.forVerticalIOS,
-                } as NativeStackNavigationOptions; 
-            }}
-        >
-
-*/
 
 const MainPageComponent = () => {
 
@@ -216,25 +200,6 @@ const MainPageComponent = () => {
                   headerShown: false,
               }}
           />
-
-          {/* 
-            <Stack.Screen
-              name="Дарения"
-              component={Donate}
-              options={{
-                  headerShown: false,
-              }}
-            />
-
-
-            <Stack.Screen
-                name="Дарение"
-                component={DonateScreen}
-                options={{
-                    headerShown: false,
-                }}
-            />
-          */}
           
           <Stack.Screen
               name="Приятели"

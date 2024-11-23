@@ -1,7 +1,7 @@
-import { View, Text, Vibration } from 'react-native'
-import React, { useState, useEffect, useContext } from 'react'
+import { View } from 'react-native'
+import React, { useState, useEffect } from 'react'
 import tw from 'twrnc'
-import { bgLocaleConfig, deLocaleConfig, enLocaleConfig, frLocaleConfig, ruLocaleConfig } from "../../CalendarConfig";
+import { bgLocaleConfig, deLocaleConfig, enLocaleConfig, frLocaleConfig, ruLocaleConfig, itLocaleConfig, esLocaleConfig } from "../../CalendarConfig";
 import { CalendarList, LocaleConfig } from 'react-native-calendars';
 import i18next from '../../services/i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -12,7 +12,8 @@ LocaleConfig.locales['en'] = enLocaleConfig;
 LocaleConfig.locales['fr'] = frLocaleConfig;
 LocaleConfig.locales['ru'] = ruLocaleConfig;
 LocaleConfig.locales['de'] = deLocaleConfig;
-
+LocaleConfig.locales['it'] = itLocaleConfig;
+LocaleConfig.locales['es'] = esLocaleConfig;
 
 const Food = ({navigation}: any) => {
 
@@ -21,7 +22,7 @@ const Food = ({navigation}: any) => {
 
     useEffect(() => {
         const setLocale = (lng: any) => {
-            // Assuming lng is one of 'bg', 'en', 'ge', 'fr', 'ru'
+            // Assuming lng is one of 'bg', 'en', 'ge', 'fr', 'ru', 'it', 'es'
             LocaleConfig.defaultLocale = lng;
             // Update LocaleConfig with the new language's configuration
             switch (lng) {
@@ -39,6 +40,12 @@ const Food = ({navigation}: any) => {
                     break;
                 case 'ru':
                     LocaleConfig.locales[lng] = ruLocaleConfig;
+                    break;
+                case 'it':
+                    LocaleConfig.locales[lng] = itLocaleConfig;
+                    break;
+                case 'es':
+                    LocaleConfig.locales[lng] = esLocaleConfig;
                     break;
                 default:
                     // Handle unknown language
@@ -59,8 +66,9 @@ const Food = ({navigation}: any) => {
 
     const currentDate = new Date().toISOString().split('T')[0].split('-').join('-');
 
+    // Get all dates from asyncstorage and mark them to show dates that have been logged
     const checkAsyncStorageDates = async () => {
-        // get all foodDays from async storage (example: 'email-foodDay-30-9-2024)
+
         const email = await getEmail();
         const keys = await AsyncStorage.getAllKeys();
         const foodDayKeys = keys.filter((key: string) => key.includes(`${email}-foodDay`) && !key.includes('nutrients'));

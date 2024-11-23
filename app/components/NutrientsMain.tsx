@@ -1,9 +1,7 @@
 import { View, Text, Pressable } from 'react-native'
-import React, { useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { t } from 'i18next';
-
 
 type RenderNutrientsProps = {
     currentNutrients: any;
@@ -31,16 +29,16 @@ const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate, g
 
         if (goalProgress === 0) {
             // Handle the case where goalProgress is 0
-            // Assuming you want to show no progress in this case
+            // No progress shown
             redWidthPercentage = 0;
-            blueWidthPercentage = 100; // Entire bar is blue
+            blueWidthPercentage = 100;
         } else {
             // calculate width based on progress
             const progressRatio = currentProgress / goalProgress;
             redWidthPercentage = Math.min(100, progressRatio * 100); // Ensure it does not exceed 100%
             
             if (redWidthPercentage <= 10 && redWidthPercentage > 0) {
-                redWidthPercentage = 3; // Set to a minimum visible width, e.g., 20%
+                redWidthPercentage = 3; // min value for redWidthPercentage
             }
             blueWidthPercentage = 100 - redWidthPercentage;
 
@@ -78,7 +76,7 @@ const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate, g
         
     }
 
-    // key v animatedcircularprogress sluji da updateva stoinostta na fill zashtoto purvonachalno e 0 dokato ne se predade ot main kum nutrients
+    // The key in AnimatedCircularProgress ensures that the fill value updates correctly, as it is initially 0 until passed from main to nutrients
     return (
         <Pressable style={tw`mt-3 mx-2 w-full h-66`} onPress={() => {
             
