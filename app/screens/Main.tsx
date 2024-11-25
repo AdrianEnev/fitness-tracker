@@ -28,7 +28,7 @@ const Main = ({navigation}: any) => {
 
     const { t } = useTranslation();
 
-    const { internetConnected } = useContext(GlobalContext);
+    const { internetConnected, iphoneModel } = useContext(GlobalContext);
 
     const [currentFormattedDate, setCurrentFormattedDate] = useState<any>();
     const {friendRequestsNumber} = useContext(GlobalContext);
@@ -137,7 +137,7 @@ const Main = ({navigation}: any) => {
     return (
         <SafeAreaView style={tw`h-full`}>
 
-            <ScrollView style={tw`h-full w-full`} contentContainerStyle={tw`pb-24`} showsVerticalScrollIndicator={false}>
+            <ScrollView style={tw`h-full w-full`} contentContainerStyle={tw`pb-24`} showsVerticalScrollIndicator={false} scrollEnabled={iphoneModel.includes('SE') ? false : true}>
 
                 <View style={tw`flex flex-row justify-between mt-2 mx-1`}>
 
@@ -192,7 +192,9 @@ const Main = ({navigation}: any) => {
 
             </ScrollView>
 
-            <BottomNavigationBar currentPage='Main' navigation={navigation}/>
+            {!iphoneModel.includes('SE') && (
+                <BottomNavigationBar currentPage='Main' navigation={navigation}/>
+            )}
 
         </SafeAreaView>
         

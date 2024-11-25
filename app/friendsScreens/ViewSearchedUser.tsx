@@ -202,7 +202,7 @@ const ViewSearchedUser = ({route, navigation}: any) => {
 
                             <View style={tw`flex flex-row gap-x-2`}>
                                 {/* ACCEPT */}
-                                <TouchableOpacity style={tw`w-36 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md ${iphoneModel.includes('Pro') ? 'pt-2' : ''}`}
+                                <TouchableOpacity style={tw`w-36 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md ${iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? 'pt-2' : ''}`}
                                     onPress={async () => {
                                         setAcceptingFriendRequestButtonDisabled(true);
                                         console.log('accepting friend request...');
@@ -217,7 +217,7 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                                 </TouchableOpacity>
                                 
                                 {/* DECLINE */}
-                                <TouchableOpacity style={tw`w-36 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md ${iphoneModel.includes('Pro') ? 'pt-2' : ''}`}
+                                <TouchableOpacity style={tw`w-36 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md ${iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? 'pt-2' : ''}`}
                                     onPress={async () => {
                                         setDecliningFriendRequestButtonDisabled(true);
                                         console.log('accepting friend request...');

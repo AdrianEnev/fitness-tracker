@@ -16,24 +16,31 @@ const Login = ({navigation}: any) => {
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
+    const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(true)
+
     const {internetConnected, setLoggingIn, setSetupRan, internetSpeed} = useContext(GlobalContext);
 
     const auth = FIREBASE_AUTH;
 
     const signIn = async() => {
 
+        setIsLoginButtonDisabled(true)
+
         if (!internetConnected || internetSpeed < 56) {
             alert(t('unstable-connection'));
+            setIsLoginButtonDisabled(false)
             return
         }
 
-        if (email.length <= 0 || password.length <= 0) {    
+        if (email.length <= 0 || password.length <= 0) {
+            setIsLoginButtonDisabled(false)
             return;
         }
 
         const weirdCharPattern = /[^a-zA-Z0-9@#$£€%^&*()"'-/|.,?![]{}+=_~<>¥]/;
         if (weirdCharPattern.test(password)) {
             alert(t('password-no-emojis'));
+            setIsLoginButtonDisabled(false)
             return;
         }
 
@@ -55,6 +62,7 @@ const Login = ({navigation}: any) => {
             await AsyncStorage.setItem(`email`, trimmedEmail);
 
             setLoggingIn(false)
+            setIsLoginButtonDisabled(false)
 
         }catch(err: any){
             alert(t('error'));

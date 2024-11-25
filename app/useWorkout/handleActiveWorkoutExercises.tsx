@@ -32,7 +32,8 @@ export const addExercise = (
     exercises: any, 
     exercisesAdded: any, 
     setCurrentIndex: any, 
-    setExercisesAdded: any
+    setExercisesAdded: any,
+    language: string
 ) => {
     // Use newExercises for updates to ensure UI consistency
     const updatedExercises = [...newExercises];
@@ -40,9 +41,26 @@ export const addExercise = (
 
     if (updatedExercises.length >= 9) return;
 
+    let exerciseTitle = "Exercise "
+    if (language == "bg") {
+        exerciseTitle = "Упражнение "
+    }
+    else if (language == "de") {
+        exerciseTitle = "Übung "
+    }
+    else if (language == "ru") {
+        exerciseTitle = "Упражнение "
+    }
+    else if (language == "es") {
+        exerciseTitle = "Ejercicio "
+    }
+    else if (language == "it") {
+        exerciseTitle = "Esercizio "
+    }
+
     const newExercise = {
         id: Math.random().toString(),
-        title: "New Exercise " + "(" + Number(updatedExercises.length + 1) + ")",
+        title: exerciseTitle + Number(updatedExercises.length + 1),
         sets: [{id: Math.random().toString(), reps: "", weight: "", rpe: "", intensity: 0}],
         exerciseIndex: updatedExercises.length + 1
     };

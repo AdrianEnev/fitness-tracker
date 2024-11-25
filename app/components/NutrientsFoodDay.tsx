@@ -1,10 +1,11 @@
 import { View, Text, Pressable } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
 import { t } from 'i18next';
 import getEmail from '../use/useGetEmail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import GlobalContext from '../../GlobalContext';
 
 type RenderNutrientsProps = {
     currentNutrients: any;
@@ -16,6 +17,8 @@ type RenderNutrientsProps = {
 const Nutrients = ({ currentNutrients, regularDate}: RenderNutrientsProps) => {
 
     const [goalNutrients, setGoalNutrients] = useState<any>(null);
+
+    const {iphoneModel} = useContext(GlobalContext);
    
     useEffect(() => {
         const fetch = async () => {
@@ -95,7 +98,7 @@ const Nutrients = ({ currentNutrients, regularDate}: RenderNutrientsProps) => {
     return (
         <View style={tw`mt-3 w-full`}>
 
-            <View style={tw`h-[31%] w-full px-1 mt-[-10px] bg-white rounded-lg mx-2`}>
+            <View style={tw`${iphoneModel.includes('SE') ? 'h-[41%]' : 'h-[31%]'} w-full px-1 mt-[-10px] bg-white rounded-lg mx-2`}>
 
                 <View style={tw`flex flex-row justify-between w-full mt-3`}>
 

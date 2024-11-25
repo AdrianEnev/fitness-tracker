@@ -1,9 +1,10 @@
 import { View, Text, Pressable, ScrollView } from 'react-native'
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import tw from 'twrnc'
 import HorizontalPicker from '@vseslav/react-native-horizontal-picker';
 import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
 
 const SetupPageThree = ({weight, weightType, setWeight, setWeightType, setHeightType, setHeight, height}: any) => {
 
@@ -30,7 +31,9 @@ const SetupPageThree = ({weight, weightType, setWeight, setWeightType, setHeight
                 { item }
             </Text>
         </View>
-      );
+    );
+
+    const {iphoneModel} = useContext(GlobalContext);
 
     return (
         <View style={tw`flex flex-col mt-[15%] h-full`}>
@@ -89,6 +92,7 @@ const SetupPageThree = ({weight, weightType, setWeight, setWeightType, setHeight
                 <View style={tw`w-full h-[18%] bg-gray-200 rounded-[47px]`}>
 
                     <HorizontalPicker
+                        style={tw`${iphoneModel.includes('SE') ? "mt-[-10px] mx-2" : "mx-1"}`}
                         data={Items}
                         renderItem={rednerItem}
                         itemWidth={80}

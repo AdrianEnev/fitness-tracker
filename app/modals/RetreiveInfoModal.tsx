@@ -1,9 +1,10 @@
 import { View, Text, Modal, Pressable } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import retreiveInfo from '../use/useRetreiveInfo';
 import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
 
 interface RetreiveInfoModalProps {
     isRetreiveInfoModalVisible: boolean;
@@ -24,6 +25,8 @@ const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({
 }) => {
 
     const {t} = useTranslation();
+
+    const {iphoneModel} = useContext(GlobalContext)
             
     return (
         <Modal
@@ -35,7 +38,7 @@ const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({
             }}
             >
                 <View style={tw`w-[85%] h-full justify-center items-center self-center`}>
-                    <Pressable style={tw`bg-gray-50 w-full h-[25%] rounded-2xl pt-3 px-2`}>
+                    <Pressable style={tw`bg-gray-50 w-full ${iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? 'h-[25%]' : iphoneModel.includes('SE') ? 'h-[35%]' : 'h-[27%]'} rounded-2xl pt-3 px-2`}>
                         
                         <View style={tw`w-full flex flex-row justify-between`}>
                             
@@ -55,20 +58,20 @@ const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({
                         <Text style={tw`text-xl font-medium text-center`}>{t('retreive-info')}</Text>
 
                         <View style={tw`w-full h-full flex justify-center flex-row gap-x-3 mt-4`}>
-                            <Pressable style={tw`w-[44%] h-[60%] rounded-[20px] bg-green-500 flex flex-col gap-y-2 items-center justify-center`}
+                            <Pressable style={tw`w-[44%] h-[56%] rounded-[20px] bg-green-500 flex flex-col gap-y-2 items-center justify-center`}
                                 onPress={async () => {
                                     setIsRetreiveInfoModalVisible(false);
-                                    await retreiveInfo("workouts", navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed);
+                                    await retreiveInfo("workouts", navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed, t);
                                 }}
                             >
                                 <Ionicons name='accessibility-outline' size={32} color='white'/>
                                 <Text style={tw`text-white font-medium text-xl text-center mx-2`}>{t('workouts')}</Text>
                             </Pressable>
                     
-                            <Pressable style={tw`w-[44%] h-[60%] rounded-[20px] bg-blue-500 flex-col gap-y-2 items-center justify-center`}
+                            <Pressable style={tw`w-[44%] h-[56%] rounded-[20px] bg-blue-500 flex-col gap-y-2 items-center justify-center`}
                                 onPress={async () => {
                                     setIsRetreiveInfoModalVisible(false);
-                                    await retreiveInfo("foods", navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed);
+                                    await retreiveInfo("foods", navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed, t);
                                 }}
                             >
                                 <Ionicons name='egg-outline' size={32} color='white'/>

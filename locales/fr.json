@@ -35,7 +35,7 @@
     "rest-day": "Jour de repos",
     "end-workout-alert": "Êtes-vous sûr de vouloir terminer cet entraînement ? Toutes les modifications seront enregistrées !",
     "add-workout": "Ajouter un entraînement",
-    "enter-workout-name": "Veuillez entrer un nom pour cet entraînement !",
+    "enter-workout-name": "Veuillez entrer un nom pour cet entraînement",
     "workout-name": "Nom de l'entraînement",
     "no-workouts-added": "Vous n'avez pas créé d'entraînements !",
     "finish-workout-alert": "Êtes-vous sûr de vouloir terminer cet entraînement ?",
@@ -192,7 +192,7 @@
     "exercise-activity-one": "Mode de vie sédentaire",
     "exercise-activity-two": "Exercices 1-3 fois/semaine",
     "exercise-activity-three": "Exercices 4-5 fois/semaine",
-    "exercise-activity-four": "Exercices quotidiens ou exercices intenses 3-4 fois/semaine",
+    "exercise-activity-four": "Exercices quotidiens ou travail physique",
     "exercise-activity-five": "Exercices intenses 6-7 fois/semaine",
     "exercise-activity-six": "Exercices très intenses quotidiens ou travail physique",
     "email-sent-sucessfuly": "L'e-mail a été envoyé avec succès !",
@@ -214,5 +214,11 @@
     "all-foods-retreived": "Tous les aliments ont été récupérés !",
     "all-workouts-retreived": "Tous les entraînements ont été récupérés !",
     "friend-limit-reached": "Vous avez atteint la limite d'amis !",
-    "friend-request-already-sent": "Une demande d'ami a déjà été envoyée à cet utilisateur !"
+    "friend-request-already-sent": "Une demande d'ami a déjà été envoyée à cet utilisateur !",
+    "stable-internet-required": "Une connexion Internet stable est requise",
+    "male": "Homme",
+    "female": "Femme",
+    "how-active-are-you": "À quel point êtes-vous actif ?"
+
+
 }

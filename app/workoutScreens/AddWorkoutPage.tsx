@@ -26,20 +26,21 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
     
     const getExerciseTitle = async () => {
 
-        let exerciseTitle= "Exercise"
+        let exerciseTitle = "Exercise";
 
-        const currentLanguage = await AsyncStorage.getItem('language')
+        const currentLanguage = await AsyncStorage.getItem('language');
         if (currentLanguage == "bg") {
-            return "Упражнение"
-        }
-        else if (currentLanguage == "de") {
-            return "Übung"
-
-        }else if (currentLanguage == "ru") {
-            return "Упражнение"
-
-        }else{
-            return exerciseTitle
+            return "Упражнение";
+        } else if (currentLanguage == "de") {
+            return "Übung";
+        } else if (currentLanguage == "ru") {
+            return "Упражнение";
+        } else if (currentLanguage == "es") {
+            return "Ejercicio";
+        } else if (currentLanguage == "it") {
+            return "Esercizio";
+        } else {
+            return exerciseTitle;
         }
     }
 
@@ -343,7 +344,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                                                                 </Pressable>
                                                             </View>
                                                             <View style={tw`flex flex-row gap-x-2 mb-3`}>
-                                                                <View style={tw`${iphoneModel.includes('Pro') ? "w-[39.3%]" : "w-[37.5%]"}`}>
+                                                                <View style={tw`${iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? "w-[39.3%]" : iphoneModel.includes('SE') ? "w-[37.2%]" : "w-[37.8%]"}`}>
                                                                     <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{getDimensions() > 400 ? t('reps') : t('reps-short')}</Text>
                                                                     <TextInput
                                                                         style={tw`bg-neutral-100 rounded-2xl ${mapIndex == 0 ? "pl-[8px]" : "pl-[8px]"} w-full h-10`}
@@ -369,7 +370,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
                                                                 </View>
 
 
-                                                                <Pressable style={tw`absolute right-7 w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${pageNumber == 1 ? 'hidden' : ''}`}
+                                                                <Pressable style={tw`absolute ${iphoneModel.includes('SE') ? "right-6" : "right-7"} w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${pageNumber == 1 ? 'hidden' : ''}`}
                                                                     onPress={() => {
                                                                         deleteCurrentExercise();
                                                                     }} 

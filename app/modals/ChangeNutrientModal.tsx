@@ -2,6 +2,8 @@ import { Keyboard, Modal, Pressable, View, Text, TextInput } from "react-native"
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from "react-i18next";
+import { useContext } from "react";
+import GlobalContext from "../../GlobalContext";
 
 interface ChangeNutrientModalProps {
     nutrient: string;
@@ -88,6 +90,8 @@ const ChangeNutrientModal = ({ nutrient, oldValue, setNewName, setNewCalories, s
         );
     };
 
+    const {iphoneModel} = useContext(GlobalContext);
+
     return (
         <Modal
             animationType="fade"
@@ -97,7 +101,7 @@ const ChangeNutrientModal = ({ nutrient, oldValue, setNewName, setNewCalories, s
                 setIsChangeNutrientModalVisible(!isChangeNutrientModalVisible);
             }}
         >
-            <View style={[tw`w-full h-[15%] mx-1 mt-1 absolute`, { top: position.top, left: position.left }]}>
+            <View style={[tw`w-full h-${iphoneModel.includes('SE') ? 'h-[20%]' : 'h-[15%]'} mx-1 mt-1 absolute`, { top: position.top, left: position.left }]}>
 
                 {((nutrient === 'Carbs' || nutrient === 'Fat')) && (
                     <SaveAndCancelIcons />

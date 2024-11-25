@@ -75,7 +75,7 @@ const Workouts = ({navigation}: any) => {
     }
 
     const renderSavedWorkout = (savedWorkout: any) => {
-        console.log(savedWorkout.created);
+        //console.log(savedWorkout.created);
     
         // Convert the created property to a Firestore Timestamp object
         const timestamp = new Timestamp(savedWorkout.created.seconds, savedWorkout.created.nanoseconds);
@@ -121,7 +121,7 @@ const Workouts = ({navigation}: any) => {
                     showsVerticalScrollIndicator={false}
                     ListEmptyComponent=
                     {
-                        <Text style={tw`text-xl font-medium text-blue-500 ml-3`} numberOfLines={2}>
+                        <Text style={tw`text-xl font-medium text-red-500 text-center`} numberOfLines={2}>
                             {t('no-saved-workouts')}
                         </Text>
                     }

@@ -5,7 +5,7 @@ import { Picker } from 'react-native-wheel-pick'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import GlobalContext from '../../GlobalContext'
 
-const LanguageScreen = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: boolean) => void }) => {
+const LanguageScreenSmall = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: boolean) => void }) => {
 
     const [language, setLanguage] = useState('Български')
     const languagesEN = [ 
@@ -22,8 +22,11 @@ const LanguageScreen = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: 
     console.log(iphoneModel)
 
     const iphonesWithDynamicIsland = [
-        '15', '15 Plus', '16', '16 Plus', '16 Pro', '16 Pro Max', 'SE'
+        '15', '15 Plus', '16', '16 Plus', '16 Pro', '16 Pro Max'
     ]
+
+    //enevadrian@gmail.com
+    //passwordpassword
     
     return (
         <View style={tw`flex-1 flex-col bg-white`}>
@@ -39,13 +42,13 @@ const LanguageScreen = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: 
                     <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Това може да бъде променено по-късно!</Text>
                 </View>
 
-                <View style={tw`w-48 h-[60%] bg-gray-200 rounded-[47px] flex items-center pt-3`}>
+                <View style={tw`w-48 h-64 bg-gray-200 rounded-[47px] flex items-center pt-3`}>
 
-                    <Text style={tw`font-medium text-3xl mt-3`}>{language}</Text>
-                    <View style={tw`w-full h-[2px] rounded-full bg-gray-300 mt-3`}></View>
+                    <Text style={tw`font-medium text-3xl mt-2 mb-3`}>{language}</Text>
+                    <View style={tw`w-full h-[2px] rounded-full bg-gray-300`}></View>
 
                     <Picker
-                        style={tw`h-1/2 w-full bg-gray-200 rounded-[47px] mt-[50%]`}
+                        style={tw`h-full w-full bg-gray-200 rounded-[47px]`}
                         selectedValue={language}
                         pickerData={languagesEN}
                         onValueChange={(value: any) => { setLanguage(value) }}
@@ -67,4 +70,4 @@ const LanguageScreen = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: 
     )
 }
 
-export default LanguageScreen
+export default LanguageScreenSmall

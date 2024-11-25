@@ -17,9 +17,15 @@ const addWorkout = async (exercises: any, workoutTitle: string, id: any, folder?
     }
     else if (currentLanguage == "de") {
         exerciseTitle = "Übung "
-
-    }else if (currentLanguage == "ru") {
+    }
+    else if (currentLanguage == "ru") {
         exerciseTitle = "Упражнение "
+    }
+    else if (currentLanguage == "es") {
+        exerciseTitle = "Ejercicio "
+    }
+    else if (currentLanguage == "it") {
+        exerciseTitle = "Esercizio "
     }
 
     if (exercises.length === 0) {

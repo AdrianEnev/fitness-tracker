@@ -5,20 +5,24 @@ import getEmail from "./useGetEmail";
 import addWorkoutLocally from "../useWorkout/useAddWorkoutLocally";
 import { useTranslation } from "react-i18next";
 
-const retreiveInfo = async (type: string, navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
+const retreiveInfo = async (type: string, navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number, t: any) => {
 
-    const {t} = useTranslation();
+    console.log('running retreiveInfo');
 
     if (internetSpeed < 50) {
+        console.log('bad internet connection')
         alert(t('unstable-connection'));
         setIsRetreivingInfoAnimationModalVisible(false);
         return;
     }
 
+    console.log('internet connection - good')
+
     if (type == "workouts") {
-        retreiveWorkouts(navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed);
+        console.log('checking workouts')
+        retreiveWorkouts(navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed, t);
     }else if(type == "foods") {
-        retreiveFoods(navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed);
+        retreiveFoods(navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed, t);
     }
 
 };
@@ -47,9 +51,7 @@ const updateFood = async (foodDayKey: any, foodDaysCollectionRef: any) => {
 };
 
 // A slight problem to this implementation is that the number of workouts on the phone can be the same as the ones in the database, but the data inside the workouts can be different.
-const retreiveFoods = async (navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
-
-    const {t} = useTranslation();
+const retreiveFoods = async (navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number, t: any) => {
     
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
@@ -102,9 +104,7 @@ const retreiveFoods = async (navigation: any, setIsRetreivingInfoAnimationModalV
     
 }
 
-const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number) => {
-
-    const {t} = useTranslation();
+const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number, t: any) => {
     
     const usersCollectionRef = collection(FIRESTORE_DB, 'users');
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);

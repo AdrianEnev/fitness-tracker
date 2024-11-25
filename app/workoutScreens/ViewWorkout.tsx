@@ -492,7 +492,7 @@ const ViewWorkout = ({route, navigation}: any) => {
         
                                                                     <View style={tw`flex flex-row gap-x-2 mb-3`}>
         
-                                                                        <View style={tw`${iphoneModel.includes('Pro') ? "w-[39.3%]" : "w-[37.8%]"}`}>
+                                                                        <View style={tw`${iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? "w-[39.3%]" : iphoneModel.includes('SE') ? "w-[37.2%]" : "w-[37.8%]"}`}>
                                                                             <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{getDimensions() > 400 ? t('reps') : t('reps-short')}</Text>
         
                                                                             <TextInput
@@ -530,7 +530,7 @@ const ViewWorkout = ({route, navigation}: any) => {
                                                                             />
                                                                         </View>
 
-                                                                        <Pressable style={tw`absolute right-7 w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${newExercises.length == 1 ? 'hidden' : ''}`}
+                                                                        <Pressable style={tw`absolute ${iphoneModel.includes('SE') ? "right-6" : "right-7"} w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center ${newExercises.length == 1 ? 'hidden' : ''}`}
                                                                             onPress={() => {
                                                                                 setIsDeleteExerciseModalVisible(true)
                                                                                 setCurrentExerciseId(exercise.id)

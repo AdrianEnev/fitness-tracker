@@ -247,7 +247,7 @@ const SettingsAccount = ({navigation}: any) => {
                                 title === t('delete-account') && !internetConnected || 
                                 title === t(`log-out`) && !internetConnected
                             ) && (
-                                <Text style={tw`text-gray-500 mb-[8px]`}>Requires Stable Internet</Text>
+                                <Text style={tw`text-gray-500 mb-[8px]`}>{t('stable-internet-required')}</Text>
                             )}
                         </View>
                     </View>

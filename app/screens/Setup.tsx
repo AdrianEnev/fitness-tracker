@@ -17,7 +17,7 @@ import { getLanguageLocally } from '../use/useGetLanguageLocally';
 
 const Setup = () => {
 
-    const { setSetupRan, internetConnected, internetSpeed } = useContext(GlobalContext);
+    const { setSetupRan, internetConnected, internetSpeed, iphoneModel } = useContext(GlobalContext);
 
     const { t } = useTranslation();
 
@@ -256,17 +256,17 @@ const Setup = () => {
                 </TouchableWithoutFeedback>
             </SafeAreaView>
 
-            <View style={tw`w-full h-28 bg-[#fd3e4b] absolute bottom-0 flex flex-row justify-between items-center pr-5 pl-2`}>
+            <View style={tw`w-full ${iphoneModel.includes('SE') && currentPage == 5 ? "h-15" : "h-28"} bg-[#fd3e4b] absolute bottom-0 flex flex-row justify-between items-center pr-5 pl-2`}>
 
-                <Pressable style={tw`w-[30%] h-[60%] flex flex-row items-center gap-x-1 mb-2`} onPress={previousPage}>
+                <Pressable style={tw`w-[30%] h-[60%] flex flex-row items-center gap-x-1 ${iphoneModel.includes('SE') && currentPage == 5 ? "" : "mb-2"}`} onPress={previousPage}>
                     <Ionicons name='arrow-back-outline' size={32} color='white'/>
                     <Text style={tw`text-white font-medium text-2xl`}>{t('back')}</Text>
                 </Pressable>
 
-                <Pressable style={tw`bg-white rounded-2xl w-[50%] h-[55%] flex flex-row pl-4 pr-2 items-center justify-between mb-2`} onPress={() => {
+                <Pressable style={tw`bg-white rounded-2xl ${iphoneModel.includes('SE') && currentPage == 5 ? "w-12 items-center justify-center pr-[4px]" : "w-[50%] items-center justify-between pl-4 pr-2 mb-2"} h-[55%] flex flex-row`} onPress={() => {
                     nextPage();
                 }}>
-                    <Text style={tw`font-medium text-xl`}>{currentPage === 5 ? t('finish') : t('next')}</Text>
+                    <Text style={tw`font-medium text-xl`}>{currentPage === 5 ? iphoneModel.includes('SE') ? "" : t('done') : t('next')}</Text>
                     <Ionicons name='arrow-forward-outline' size={32}/>
                 </Pressable>
 

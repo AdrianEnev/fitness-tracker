@@ -1,10 +1,11 @@
 import { View, Text, Modal, Pressable, Keyboard } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import tw from 'twrnc'
 import endWorkout from '../useWorkout/useEndWorkout';
 import endWorkoutLocally from '../useWorkout/useEndWorkoutLocally';
 import generateID from '../use/useGenerateID';
 import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
 
 interface EndWorkoutModalProps {
     navigation: any;
@@ -21,6 +22,8 @@ const EndWorkoutModal: React.FC<EndWorkoutModalProps> = ({
 }) => { 
     
     const {t} = useTranslation();
+
+    const {iphoneModel} = useContext(GlobalContext);
     
     return (
         <Modal
@@ -32,7 +35,7 @@ const EndWorkoutModal: React.FC<EndWorkoutModalProps> = ({
             }}
             >
                 <View style={tw`flex-1 justify-center items-center mx-3`}>
-                    <Pressable style={tw`bg-white w-full h-[24%] rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
+                    <Pressable style={tw`bg-white w-full ${iphoneModel.includes('SE') ? "h-[35%]" : "h-[24%]"} rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
 
                         <Text style={tw`text-lg text-center font-medium mt-1`}>{t('end-workout')}</Text>
                         <Text style={tw`text-lg text-center text-gray-500 font-medium `}>{t('end-workout-alert')}</Text>
@@ -42,13 +45,13 @@ const EndWorkoutModal: React.FC<EndWorkoutModalProps> = ({
 
                                 const id = generateID();
 
-                                if (internetConnected) {
-                                    endWorkout(exercises, workoutTitle, duration, id);
-                                }
-
                                 endWorkoutLocally(exercises, workoutTitle, duration, id);
 
                                 navigation.navigate('Главна Страница');
+
+                                if (internetConnected) {
+                                    endWorkout(exercises, workoutTitle, duration, id);
+                                }
                             }}>
                                 <Text style={tw`text-white text-lg font-medium`}>{t('save-and-end')}</Text>
                             </Pressable>

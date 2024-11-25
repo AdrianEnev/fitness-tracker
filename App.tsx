@@ -32,6 +32,7 @@ import { useNavigationContainerRef } from '@react-navigation/native';
 import syncInformation from './app/use/useSyncInfo';
 import checkInternetSpeed from './app/use/useCheckInternetSpeed';
 import * as Device from 'expo-device';
+import LanguageScreenSmall from './app/screens/LanguageScreenSmall';
 
 const Stack = createStackNavigator();
 
@@ -512,8 +513,10 @@ function App() {
     const handleNavigation = () => {
 
         // Handles the logic for navigation based on language and authentication
-        if (!localLanguageSet) {
+        if (!localLanguageSet && !iphoneModel.includes('SE')) {
             return <LanguageScreen setLocalLanguageSet={setLocalLanguageSet} />;
+        }else if (!localLanguageSet && iphoneModel.includes('SE')) {
+            return <LanguageScreenSmall setLocalLanguageSet={setLocalLanguageSet} />;
         }
 
         if (!localEmail && !user) {
@@ -580,6 +583,7 @@ function App() {
                 {/*<
                  {handleNavigation()}
                     <SetupPage />
+                    {handleNavigation()}
 
                 */}
                 

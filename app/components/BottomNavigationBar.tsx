@@ -1,8 +1,9 @@
 import { View, Text, Pressable } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
 
 const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) => {
     return (
@@ -81,10 +82,13 @@ const BottomNavigationBar = (
 ) => {
     
     const {t} = useTranslation();
+
+    const {iphoneModel} = useContext(GlobalContext);
     
     return (
         <View style={tw`
-            absolute w-[96.5%] h-20 shadow-lg bottom-8 mx-2 rounded-2xl flex flex-row justify-around items-center bg-white
+            absolute w-[96.5%] h-20 shadow-lg mx-2 rounded-2xl flex flex-row justify-around items-center bg-white
+            ${iphoneModel.includes('SE') ? 'bottom-4' : 'bottom-8'}
         `}>
         
             {currentPage === 'ActiveWorkout' ? (
@@ -116,35 +120,40 @@ const BottomNavigationBar = (
                 </View>
             </View>
             ) : currentPage === 'SavedWorkout' ? (
-                <View style={tw`flex flex-row justify-between w-full`}>
-
+                <View style={tw`flex-1`}>
                     <View style={tw`w-full h-16 flex gap-y-2 flex-row justify-between absolute bottom-18`}>
                         <View style={tw`w-[49%] bg-green-500 h-13 rounded-lg shadow-md flex items-center justify-center`}>
                             <Text style={tw`text-white font-medium text-xl`}>{viewSavedWorkoutDate}</Text>
                         </View>
-                       
+                    
                         <View style={tw`w-[49%] bg-yellow-400 h-13 rounded-lg shadow-md flex items-center justify-center`}>
                             <Text style={tw`text-white font-medium text-xl`}>
                                 {viewSavedWorkoutStartEnd}
                             </Text>
                         </View>
+                    </View>
+
+                    <View style={tw`w-full ${viewSavedWorkoutNumberOfExercises === 1 ? 'flex items-center' : 'flex flex-row justify-between'}`}>
+                        
+                            <Pressable onPress={() => {
+                                backButton();
+                                console.log(viewSavedWorkoutNumberOfExercises)
+                            }} style={tw`${viewSavedWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
+                                <Ionicons name='chevron-back-circle-outline' color='#3b82f6' size={72}/>
+                            </Pressable>
+
+                            <View style={tw``}>
+                                <Pressable onPress={deleteSavedWorkout} >
+                                    <Ionicons name='close-circle-outline' color='#fd1c47' size={72}/>
+                                </Pressable>
+                            </View>
+
+                            <Pressable onPress={forwardButton} style={tw`${viewSavedWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
+                                <Ionicons name='chevron-forward-circle-outline' color='#3b82f6' size={72}/>
+                            </Pressable>
+                        
                         
                     </View>
-                    
-                    <Pressable onPress={() => {
-                        backButton();
-                        console.log(viewSavedWorkoutNumberOfExercises)
-                    }} style={tw`${viewSavedWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
-                        <Ionicons name='chevron-back-circle-outline' color='#3b82f6' size={72}/>
-                    </Pressable>
-
-                    <Pressable onPress={deleteSavedWorkout}>
-                        <Ionicons name='close-circle-outline' color='#fd1c47' size={72}/>
-                    </Pressable>
-
-                    <Pressable onPress={forwardButton} style={tw`${viewSavedWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
-                        <Ionicons name='chevron-forward-circle-outline' color='#3b82f6' size={72}/>
-                    </Pressable>
                 </View>
             ) : currentPage === 'AddWorkout' ? (
 

@@ -3,6 +3,8 @@ import tw from 'twrnc';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { normalizeValue } from "../use/useNormalizeValue";
 import { useTranslation } from "react-i18next";
+import { useContext } from "react";
+import GlobalContext from "../../GlobalContext";
 
 interface AddFoodChangeNutrientModalProps {
     nutrient: string;
@@ -99,6 +101,8 @@ const AddFoodChangeNutrientModal = ({ nutrient, oldValue, setName, setCalories, 
         );
     };
 
+    const {iphoneModel} = useContext(GlobalContext)
+
     return (
         <Modal
             animationType="fade"
@@ -108,7 +112,7 @@ const AddFoodChangeNutrientModal = ({ nutrient, oldValue, setName, setCalories, 
                 setIsAddFoodChangeNutrientModalVisible(!isAddFoodChangeNutrientModalVisible);
             }}
         >
-            <View style={[tw`w-full h-[15%] mx-1 mt-1 absolute`, { top: position.top, left: position.left }]}>
+            <View style={[tw`w-full ${iphoneModel.includes('SE') ? 'h-[20%]' : 'h-[15%]'} mx-1 mt-1 absolute`, { top: position.top, left: position.left }]}>
                 
                 {((nutrient === 'Carbs' || nutrient === 'Fat')) && (
                     <SaveAndCancelIcons />

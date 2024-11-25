@@ -49,31 +49,32 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
     const [startEnd, setStartEnd] = useState<any>();
     
     const getStartEnd = () => {
-        // Assume 'time' is your formatted end time, like '18:46'
-        const cleanedTime = time.replace(/[^\d:]/g, '');
+        // Example -> 18:34ч.
+        const timeClock = time;
     
-        // Extract hours and minutes from the cleaned 'time' prop
-        const [hour, minute] = cleanedTime.split(':').map(Number);
+        // Example -> 6 (type: number, indicates: seconds)
+        const duration = workout.duration;
     
-        // Calculate the total minutes from the end time
-        const totalMinutes = hour * 60 + minute;
+        // Calculate start time by subtracting formatted seconds from timeClock
+        // First parse timeClock so you only get 18:34 without "ч.", then separate by the ":" symbol and calculate hours/minutes
+        const [hours, minutes] = timeClock.replace('ч.', '').split(':').map(Number);
+        const totalMinutes = hours * 60 + minutes;
+        const startMinutes = totalMinutes - Math.floor(duration / 60);
+        const startHours = Math.floor(startMinutes / 60);
+        const startFormattedMinutes = startMinutes % 60;
     
-        // Duration to subtract in minutes (16 minutes in this case)
-        const duration = 16;
+        const formattedStartTime = `${startHours.toString().padStart(2, '0')}:${startFormattedMinutes.toString().padStart(2, '0')}`;
+        const formattedEndTime = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}`;
     
-        // Subtract the duration from the total minutes
-        const startTotalMinutes = totalMinutes - duration;
-    
-        // Calculate start hour and minute
-        const startHour = Math.floor(startTotalMinutes / 60) % 24;
-        const startMinute = startTotalMinutes % 60;
-    
-        // Format start and end times
-        const formattedStartTime = `${String(startHour).padStart(2, '0')}:${String(startMinute).padStart(2, '0')}`;
-        const formattedEndTime = `${String(hour).padStart(2, '0')}:${String(minute).padStart(2, '0')}`;
+        // Calculate the difference in seconds
+        const differenceInSeconds = duration % 60;
     
         // Set start and end time
-        setStartEnd(`${formattedStartTime} -> ${formattedEndTime}`);
+        if (differenceInSeconds < 60) {
+            setStartEnd(`${differenceInSeconds}s`);
+        } else {
+            setStartEnd(`${formattedStartTime} -> ${formattedEndTime}`);
+        }
     };
 
     useEffect(() => {
@@ -114,7 +115,7 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
                         {exercises.map((exercise: any, index: any) => {
                             if (exercise.exerciseIndex === currentIndex + 1) {
                                 return (
-                                    <View key={index} style={tw`w-full`}>
+                                    <View key={exercise.exerciseIndex} style={tw`w-full`}>
                                         <Text style={tw`text-xl text-blue-500 font-medium max-w-[85%] min-h-16 max-h-32 ml-3 mt-1 mb-[-10px]`}>
                                             {exercise.title}
                                         </Text>
@@ -140,7 +141,7 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
                                                 }
 
                                                 return (
-                                                    <View key={set.id} style={tw`ml-3`}>
+                                                    <View key={set.setIndex} style={tw`ml-3`}>
                                                         <View style={tw`flex flex-row gap-x-2`}>
 
                                                             <View style={tw`flex flex-col`}>

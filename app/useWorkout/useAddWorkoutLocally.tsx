@@ -33,9 +33,15 @@ const addWorkoutLocally = async (exercises: any, workoutTitle: string, id: any, 
         }
         else if (currentLanguage == "de") {
             exerciseTitleLang = "Übung"
-
-        }else if (currentLanguage == "ru") {
+        }
+        else if (currentLanguage == "ru") {
             exerciseTitleLang = "Упражнение"
+        }
+        else if (currentLanguage == "es") {
+            exerciseTitleLang = "Ejercicio"
+        }
+        else if (currentLanguage == "it") {
+            exerciseTitleLang = "Esercizio"
         }
 
         // Create new workout object

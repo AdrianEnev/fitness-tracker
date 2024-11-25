@@ -1,15 +1,18 @@
 import { View, Text, Pressable } from 'react-native'
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
 import i18next from 'i18next';
+import GlobalContext from '../../GlobalContext';
 
 const SetupPageOne = ({setGenderButton, gender}: any) => {
 
     const {t} = useTranslation();
     
     const currentLanguage = i18next.language;
+
+    const {iphoneModel} = useContext(GlobalContext)
 
     return (
         <View style={tw`flex flex-col mt-[15%] h-full`}>
@@ -31,7 +34,7 @@ const SetupPageOne = ({setGenderButton, gender}: any) => {
             <View style={tw`flex-1 flex-col gap-y-5 mx-5 mt-[10%]`}>
 
                 {/* Male */}
-                <Pressable style={tw`w-full h-[12%] rounded-2xl ${gender === 'male' ? 'bg-cyan-400' : 'bg-gray-200'} flex flex-row gap-x-2 items-center pl-3`}
+                <Pressable style={tw`w-full ${iphoneModel.includes('SE') ? "h-[14%]" : "h-[12%]"} rounded-2xl ${gender === 'male' ? 'bg-cyan-400' : 'bg-gray-200'} flex flex-row gap-x-2 items-center pl-3`}
                     onPress={() => setGenderButton('male')}
                 >
 
@@ -41,7 +44,7 @@ const SetupPageOne = ({setGenderButton, gender}: any) => {
                 </Pressable>
 
                 {/* Female */}
-                <Pressable style={tw`w-full h-[12%] rounded-2xl ${gender === 'female' ? 'bg-pink-400' : 'bg-gray-200'} flex flex-row gap-x-2 items-center pl-3`}
+                <Pressable style={tw`w-full ${iphoneModel.includes('SE') ? "h-[14%]" : "h-[12%]"} rounded-2xl ${gender === 'female' ? 'bg-pink-400' : 'bg-gray-200'} flex flex-row gap-x-2 items-center pl-3`}
                     onPress={() => setGenderButton('female')}
                 >
 

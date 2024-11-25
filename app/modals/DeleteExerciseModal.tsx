@@ -1,7 +1,8 @@
 import { View, Text, Modal, Pressable, Keyboard } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
 
 interface DeleteExerciseModalProps {
     isDeleteExerciseModalVisible: boolean;
@@ -19,6 +20,8 @@ const DeleteExerciseModal: React.FC<DeleteExerciseModalProps> = ({
     
     const {t} = useTranslation();
 
+    const {iphoneModel} = useContext(GlobalContext);
+
     return (
         <Modal
             animationType="fade"
@@ -29,7 +32,7 @@ const DeleteExerciseModal: React.FC<DeleteExerciseModalProps> = ({
             }}
             >
                 <View style={tw`flex-1 justify-center items-center mx-3`}>
-                    <Pressable style={tw`bg-white w-full h-[26%] rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
+                    <Pressable style={tw`bg-white w-full ${iphoneModel.includes('SE') ? "h-[37%]" : "h-[26%]"} rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
 
                         <Text style={tw`text-lg text-center font-medium mt-1`}>{t('delete-exercise-alert')}</Text>
                         <Text style={tw`text-lg text-center text-gray-500 font-medium my-2`}>{t('perm-delete-on-save')}</Text>

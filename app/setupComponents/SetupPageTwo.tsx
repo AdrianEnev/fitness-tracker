@@ -1,9 +1,10 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import tw from 'twrnc'
 import { Picker } from 'react-native-wheel-pick';
 import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
 
 const SetupPageTwo = ({age, setAge}: any) => {
     
@@ -23,6 +24,8 @@ const SetupPageTwo = ({age, setAge}: any) => {
         91, 92, 93, 94, 95, 96, 97, 98, 99, 100
     ];
 
+    const {iphoneModel} = useContext(GlobalContext)
+
     return (
         <View style={tw`flex flex-col mt-[15%] h-full`}>
             <View style={tw`mx-5`}>
@@ -39,13 +42,13 @@ const SetupPageTwo = ({age, setAge}: any) => {
             </View>
             
             <View style={tw`flex-1 items-center mt-[5%]`}>
-                <View style={tw`w-[37%] h-[60%] bg-gray-200 rounded-[47px] flex items-center pt-3`}>
+                <View style={tw`w-[37%] ${!iphoneModel.includes('SE') ? "h-[60%]" : "h-[55%]"} bg-gray-200 rounded-[47px] flex items-center pt-3`}>
 
                     <Text style={tw`font-medium text-3xl mt-3`}>{age}</Text>
                     <View style={tw`w-full h-[2px] rounded-full bg-gray-300 mt-3`}></View>
 
                     <Picker
-                        style={tw`h-1/2 w-full bg-gray-200 rounded-[47px] mt-[50%]`}
+                        style={tw`h-1/2 w-full bg-gray-200 rounded-[47px] ${!iphoneModel.includes('SE') ? "mt-[50%]" : ""}`}
                         selectedValue={age}
                         pickerData={ages}
                         onValueChange={(value: any) => { setAge(value) }}

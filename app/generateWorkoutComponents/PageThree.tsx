@@ -1,9 +1,10 @@
 import { View, Text } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import tw from 'twrnc'
 import { Picker } from 'react-native-wheel-pick'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import GlobalContext from '../../GlobalContext'
 
 const PageThree = ({numberOfDays, setNumberOfDays}: any) => {
 
@@ -14,6 +15,8 @@ const PageThree = ({numberOfDays, setNumberOfDays}: any) => {
     const {t} = useTranslation()
 
     const currentLanguage = i18next.language;
+
+    const {iphoneModel} = useContext(GlobalContext);
 
     return (
         <View style={tw`flex flex-col mt-[10%] h-full`}>
@@ -41,7 +44,7 @@ const PageThree = ({numberOfDays, setNumberOfDays}: any) => {
                     <View style={tw`w-full h-[2px] rounded-full bg-gray-300 mt-3`}></View>
 
                     <Picker
-                        style={tw`h-1/2 w-full bg-gray-200 rounded-[47px] mt-[50%]`}
+                        style={tw`h-1/2 w-full bg-gray-200 rounded-[47px] ${!iphoneModel.includes('SE') ? "mt-[50%]" : ""}`}
                         selectedValue={days}
                         pickerData={days}
                         onValueChange={(value: any) => { setNumberOfDays(value) }}

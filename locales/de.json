@@ -31,7 +31,7 @@
     "end-workout": "Beenden",
     "end-workout-alert": "Sind Sie sicher, dass Sie dieses Workout beenden möchten? Alle Änderungen werden gespeichert!",
     "add-workout": "Workout hinzufügen",
-    "enter-workout-name": "Bitte geben Sie einen Namen für dieses Workout ein!",
+    "enter-workout-name": "Bitte geben Sie einen Namen für dieses Workout ein",
     "workout-name": "Workout-Name",
     "add-set": "Satz hinzufügen",
     "skip-exercise": "Übung überspringen",
@@ -219,7 +219,7 @@
     "exercise-activity-one": "Sitzender Lebensstil",
     "exercise-activity-two": "Übungen 1-3 Mal/Woche",
     "exercise-activity-three": "Übungen 4-5 Mal/Woche",
-    "exercise-activity-four": "Tägliche Übungen oder intensive Übungen 3-4 Mal/Woche",
+    "exercise-activity-four": "Tägliche Übungen oder körperliche Arbeit",
     "exercise-activity-five": "Intensive Übungen 6-7 Mal/Woche",
     "exercise-activity-six": "Sehr intensive Übungen täglich oder körperliche Arbeit",
     "email-sent-sucessfuly": "E-Mail erfolgreich gesendet!",
@@ -241,5 +241,11 @@
     "all-foods-retreived": "Alle Lebensmittel wurden abgerufen!",
     "all-workouts-retreived": "Alle Workouts wurden abgerufen!",
     "friend-limit-reached": "Sie haben das Freundeslimit erreicht!",
-    "friend-request-already-sent": "Freundschaftsanfrage an diesen Benutzer bereits gesendet!"
+    "friend-request-already-sent": "Freundschaftsanfrage an diesen Benutzer bereits gesendet!",
+    "stable-internet-required": "Stabile Internetverbindung erforderlich",
+    "male": "Männlich",
+    "female": "Weiblich",
+    "how-active-are-you": "Wie aktiv sind Sie?"
+
+
 }

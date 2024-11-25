@@ -35,7 +35,6 @@ const PageFive = ({ specificBodyparts, setSpecificBodyparts }: any) => {
                     <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Esto se<Text style={tw`font-bold`}>solo</Text> utilizará para generar un entrenamiento personalizado</Text>
                 ) : null}
 
-                <Text style={tw`font-medium text-lg text-gray-500 text-center`}>({t(`multiple-options-can-be-selected`)})</Text>
                 
             </View>
 

@@ -37,7 +37,7 @@ const SetupPageFour = ({ heightType, setHeightType, height, setHeight, setWeight
     const {t} = useTranslation();
 
     return (
-        <View style={tw`flex flex-col ${iphoneModel.includes('Pro') ? "mt-[10%]" : "mt-[15%]"} h-full`}>
+        <View style={tw`flex flex-col ${iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? "mt-[10%]" : iphoneModel.includes('SE') ? "mt-4" : "mt-[15%]"} h-full`}>
             <View style={tw`mx-5`}>
                 <Text style={tw`font-medium text-2xl text-center`}>{t('setup-height')}</Text>
                 {currentLanguage === 'en' ? 
@@ -100,9 +100,9 @@ const SetupPageFour = ({ heightType, setHeightType, height, setHeight, setWeight
             </View>
 
             <View style={tw`flex-1 items-center mt-[5%]`}>
-                <View style={tw`w-[37%] h-[60%] bg-gray-200 rounded-[47px] flex items-center pt-3`}>
+                <View style={tw`w-[37%] ${iphoneModel.includes('SE') ? "h-[55%]" : "h-[60%]"} bg-gray-200 rounded-[47px] flex items-center pt-3`}>
                     <Picker
-                        style={tw`h-1/2 w-full bg-gray-200 rounded-[47px] mt-[50%]`}
+                        style={tw`h-1/2 w-full bg-gray-200 rounded-[47px] ${!iphoneModel.includes('SE') ? "mt-[50%]" : ""}`}
                         selectedValue={height}
                         pickerData={pickerData}
                         onValueChange={(value: any) => { 

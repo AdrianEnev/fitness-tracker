@@ -1,8 +1,9 @@
 import { View, Text, Modal, Pressable } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
 
 interface SyncingInfoInformationModalProps {
     isSyncingInfoInformationModalVisible: boolean;
@@ -17,6 +18,8 @@ const SyncingInfoInformationModal: React.FC<SyncingInfoInformationModalProps> = 
 }) => {
 
     const {t} = useTranslation();
+
+    const {iphoneModel} = useContext(GlobalContext)
             
     return (
         <Modal
@@ -28,7 +31,7 @@ const SyncingInfoInformationModal: React.FC<SyncingInfoInformationModalProps> = 
             }}
             >
                 <View style={tw`w-[85%] h-full justify-center items-center self-center`}>
-                    <Pressable style={tw`bg-gray-50 w-full h-[25%] rounded-2xl pt-3 px-2`}>
+                    <Pressable style={tw`bg-gray-50 w-full ${iphoneModel.includes('SE') ? "h-[32%]" : "h-[25%]"} rounded-2xl pt-3 px-2`}>
                         
                         <View style={tw`w-full flex flex-row justify-between`}>
                             

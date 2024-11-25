@@ -30,7 +30,7 @@ const PasteWorkoutsInFolderModal: React.FC<PasteWorkoutsInFolderModalProps> = ({
             }}
             >
                 <View style={tw`flex-1 justify-center items-center mx-3`}>
-                    <Pressable style={tw`bg-white w-full h-[31%] rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
+                    <Pressable style={tw`bg-white w-full ${iphoneModel.includes("SE") ? "h-[41.5%]" : iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? "h-[33%]" : "h-[31%]"} rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
 
                         <Text style={tw`text-lg text-center font-medium mt-1`}>{t('paste-workouts')}</Text>
                         <Text style={tw`text-lg text-center text-gray-500 font-medium mb-1`}>{t('choose-option')}</Text>
@@ -43,8 +43,8 @@ const PasteWorkoutsInFolderModal: React.FC<PasteWorkoutsInFolderModalProps> = ({
                                 }}
                             >
                                 <Ionicons name='cut-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') ? "text-lg" : "text-base"} mt-2`}>{t('paste-cut-workouts')}</Text>
-                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') ? "text-lg" : "text-base"} mt-[-5px]`}>{t('workouts')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? "text-lg" : "text-base"} mt-2`}>{t('paste-cut-workouts')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? "text-lg" : "text-base"} mt-[-5px]`}>{t('workouts')}</Text>
                             </Pressable>
                             
                             <Pressable style={tw`w-[48%] h-[100%] rounded-[20px] bg-yellow-400 flex-col items-center justify-center`}
@@ -54,8 +54,8 @@ const PasteWorkoutsInFolderModal: React.FC<PasteWorkoutsInFolderModalProps> = ({
                                 }}
                             >
                                 <Ionicons name='copy-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') ? "text-lg" : "text-base"} mt-2`}>{t('paste-copied-workouts')}</Text>
-                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') ? "text-lg" : "text-base"} mt-[-5px]`}>{t('workouts')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? "text-lg" : "text-base"} mt-2`}>{t('paste-copied-workouts')}</Text>
+                                <Text style={tw`text-white font-medium ${iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? "text-lg" : "text-base"} mt-[-5px]`}>{t('workouts')}</Text>
                             </Pressable>
                         </View>
 

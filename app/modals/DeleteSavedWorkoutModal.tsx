@@ -1,7 +1,8 @@
 import { View, Text, Modal, Pressable, Keyboard } from 'react-native'
-import React from 'react'
+import React, { useContext } from 'react'
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
+import GlobalContext from '../../GlobalContext';
 
 interface DeleteSavedWorkoutModalProps {
     isDeleteSavedWorkoutModalVisible: boolean;
@@ -14,6 +15,8 @@ const DeleteSavedWorkoutModal: React.FC<DeleteSavedWorkoutModalProps> = ({
 }) => { 
 
     const {t} = useTranslation();
+
+    const {iphoneModel} = useContext(GlobalContext);
     
     return (
         <Modal
@@ -25,7 +28,7 @@ const DeleteSavedWorkoutModal: React.FC<DeleteSavedWorkoutModalProps> = ({
             }}
             >
                 <View style={tw`flex-1 justify-center items-center mx-3`}>
-                    <Pressable style={tw`bg-white w-full h-[24%] rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
+                    <Pressable style={tw`bg-white w-full ${iphoneModel.includes('SE') ? "h-[31%]" : "h-[24%]"} rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
 
                         <Text style={tw`text-lg text-center font-medium mt-1`}>{t('workout-deletion')}</Text>
                         <Text style={tw`text-lg text-center text-gray-500 font-medium `}>{t('delete-workout-alert')}</Text>
