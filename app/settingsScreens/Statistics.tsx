@@ -16,11 +16,6 @@ const Statistics = () => {
     const [formattedAverageWorkoutDuration, setFormattedAverageWorkoutDuration] = useState("");
     const [formattedLastWorkoutDate, setFormattedLastWorkoutDate] = useState("");
 
-    const usersCollectionRef = collection(FIRESTORE_DB, "users");
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const userInfoCollectionRef = collection(userDocRef, "user_info");
-    const statisticsDocRef = doc(userInfoCollectionRef, "statistics");
-
     const getTotalWorkoutsDurationAsyncStorage = async () => {
         
         const savedWorkoutsAS = await AsyncStorage.getItem('savedWorkouts')

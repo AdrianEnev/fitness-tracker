@@ -69,7 +69,7 @@ const Main = ({navigation}: any) => {
 
     useFocusEffect(
         React.useCallback(() => {
-            if (!internetConnected || !currentFormattedDate) return;
+            if (!currentFormattedDate) return;
     
             const getGoalNutrientslocally = async () => {
                 try {

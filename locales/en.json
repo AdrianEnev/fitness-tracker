@@ -245,7 +245,9 @@
     "stable-internet-required": "Stable internet connection required",
     "male": "Male",
     "female": "Female",
-    "how-active-are-you": "How active are you?"
+    "how-active-are-you": "How active are you?",
+    "retrieving-info": "Retrieving Info..."
+
 
 
 }

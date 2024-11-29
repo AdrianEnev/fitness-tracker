@@ -381,7 +381,7 @@ function App() {
                 const speed = await checkInternetSpeed()
                 setInternetSpeed(speed);
 
-                if (speed < 16) {
+                if (speed < 32) {
                     setIsConnected(false)
                 }else{
                     setIsConnected(true)
@@ -394,6 +394,7 @@ function App() {
         // Run checkInternetConnection every 10 seconds
         const interval = setInterval(() => {
             checkInternetConnection();
+            console.log('checked internet connection')
         }, 10000);
 
         // Clear interval on unmount
@@ -524,9 +525,9 @@ function App() {
             return <UnauthenticatedTabNavigator />;
         } else {
             // Authenticated or setup flow
-            return isAccountDeleted && setupRan && !user ? (
+            return isAccountDeleted && setupRan && !user && false ? (
                 <UnauthenticatedTabNavigator />
-            ) : setupRan && isAuthenticated && user && !accountJustRegistered ? (
+            ) : setupRan && isAuthenticated && user && !accountJustRegistered  ? (
                 <AuthenticatedTabNavigator setupRan={setupRan} />
             ) : !isEmailVerified && user && accountJustRegistered ? (
                 <EmailNotVerified />
@@ -535,7 +536,7 @@ function App() {
             )  : user && !setupRan ?  (
                 <SetupPage />
             ): (
-                <UnauthenticatedTabNavigator />
+                <AuthenticatedTabNavigator />
             );
         }
     };

@@ -19,7 +19,6 @@ interface ExerciseInfo {
 
 const addWorkoutLocally = async (exercises: any, workoutTitle: string, id: any, folder: any) => {
     try {
-
         const email = await getEmail();
         if (!email) return;
 

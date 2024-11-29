@@ -121,7 +121,7 @@ const Workouts = ({navigation}: any) => {
                     showsVerticalScrollIndicator={false}
                     ListEmptyComponent=
                     {
-                        <Text style={tw`text-xl font-medium text-red-500 text-center`} numberOfLines={2}>
+                        <Text style={tw`text-2xl font-medium text-gray-500 text-center`} numberOfLines={2}>
                             {t('no-saved-workouts')}
                         </Text>
                     }

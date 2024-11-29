@@ -35,7 +35,7 @@ const EndWorkoutModal: React.FC<EndWorkoutModalProps> = ({
             }}
             >
                 <View style={tw`flex-1 justify-center items-center mx-3`}>
-                    <Pressable style={tw`bg-white w-full ${iphoneModel.includes('SE') ? "h-[35%]" : "h-[24%]"} rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
+                    <Pressable style={tw`bg-white w-full ${iphoneModel.includes('SE') ? "h-[35%]" : iphoneModel.includes('Pro') ? "h-[25%]" : "h-[27%]"} rounded-2xl pt-3 px-2`} onPress={Keyboard.dismiss}>
 
                         <Text style={tw`text-lg text-center font-medium mt-1`}>{t('end-workout')}</Text>
                         <Text style={tw`text-lg text-center text-gray-500 font-medium `}>{t('end-workout-alert')}</Text>

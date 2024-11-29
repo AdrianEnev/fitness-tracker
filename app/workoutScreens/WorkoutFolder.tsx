@@ -113,6 +113,7 @@ const WorkoutFolder = ({ route, navigation }: any) => {
         setViewWorkoutButtonDisabled(true);
 
         const workoutInfo = await getWorkoutInfoLocally(workout.id, folder);
+        console.log(workoutInfo)
         if (workoutInfo) {
             const { exercisesData, workoutTitle } = workoutInfo;
             navigation.navigate('Тренировка-Детайли', { exercises: exercisesData, workoutTitle: workoutTitle, workout: workout, folder: folder });
@@ -139,7 +140,6 @@ const WorkoutFolder = ({ route, navigation }: any) => {
                 `}
                     onLongPress={() => {
                         if (selectedWorkouts.length === 0) {
-                            console.log('selection mode on');
                             setSelectedWorkouts([...selectedWorkouts, workout]);
                             setSelectionMode(true);
                         }
@@ -215,7 +215,7 @@ const WorkoutFolder = ({ route, navigation }: any) => {
                                     {workout.title}
                                 </Text>
 
-                                <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.numberOfExercises} {workout.numberOfExercises === 1 ? t('exercise-djhjd') : t('exercises-rhahsgdg')}</Text>
+                                <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{workout.numberOfExercises} {workout.numberOfExercises === 1 ? t('exercise') : t('exercises')}</Text>
                             </View>
                         </View>
 

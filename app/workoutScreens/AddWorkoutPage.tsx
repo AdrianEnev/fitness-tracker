@@ -121,20 +121,27 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
     };
     
     const previousExercise = () => {
-
+        
         if (pageNumber === 1) return;
-
-        // before moving to the next exercise, check if the current one does not have any of its inputs filled and if so delete it
-        const currentExercise = exercises[pageNumber - 1];
-        let isCurrentExerciseEmpty = currentExercise.sets.every((set) => set.reps === '' && set.weight === '' && currentExercise.title === '') && currentExercise.sets.length === 1;
     
-        if (isCurrentExerciseEmpty) {
+        const currentExercise = exercises[pageNumber - 1];
+        const lastExercise = exercises[exercises.length - 1];
+    
+        // Check if the last exercise has been edited or has more than one set
+        const isLastExerciseEdited = lastExercise.sets.some((set) => set.reps !== '' || set.weight !== '') || lastExercise.title !== '';
+        const hasLastExerciseMultipleSets = lastExercise.sets.length > 1;
+    
+        // Check if the current exercise is empty
+        const isCurrentExerciseEmpty = currentExercise.sets.every((set) => set.reps === '' && set.weight === '') && currentExercise.title === '' && currentExercise.sets.length === 1;
+    
+        if (isCurrentExerciseEmpty && !isLastExerciseEdited && !hasLastExerciseMultipleSets) {
             setExercises(exercises.filter((exercise) => exercise.id !== currentExercise.id));
             setExerciseIndex(exerciseIndex - 1); // decrement exerciseIndex
+            console.log(`Exercise with id ${currentExercise.id} has been deleted`);
         }
         setPageNumber(pageNumber - 1);
     };
-
+    
     const updateExerciseTitle = (exerciseId: string, title: string) => {
         setExercises(exercises.map(exercise => 
             exercise.id === exerciseId 

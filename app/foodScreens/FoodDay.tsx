@@ -122,7 +122,7 @@ const FoodDay = ({route, navigation}: any) => {
                         renderItem={({ item }) => <RenderAddedFood item={item} navigation={navigation} date={date}/>}
                         showsVerticalScrollIndicator={false} 
                         ListEmptyComponent={
-                            <Text style={tw`text-xl font-medium text-center mt-2`}>{t('no-saved-foods')}</Text>
+                            <Text style={tw`text-2xl font-medium text-gray-500 text-center mt-4`}>{t('no-saved-foods')}</Text>
                         }
                     />
 

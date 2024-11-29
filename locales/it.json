@@ -245,7 +245,9 @@
     "stable-internet-required": "Richiede una connessione internet stabile",
     "male": "Maschio",
     "female": "Femmina",
-    "how-active-are-you": "Quanto sei attivo?"
+    "how-active-are-you": "Quanto sei attivo?",
+    "retreiving-info": "Recupero delle informazioni..."
+
 
 
 }
