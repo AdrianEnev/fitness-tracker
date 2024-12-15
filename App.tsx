@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, View, Text, Image, Button, AppState, TouchableOpacity } from 'react-native';
+import { StatusBar, View, Text, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { onAuthStateChanged, User } from 'firebase/auth';
-import { FIREBASE_AUTH, FIRESTORE_DB } from './firebaseConfig';
+import { FIREBASE_AUTH } from './firebaseConfig';
 import Login from './app/screens/Login';
 import Register from './app/screens/Register';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import MainPageComponent from './app/components/MainPageComponent';
 import Setup from './app/screens/Setup';
-import { collection, doc, getDoc, setDoc } from 'firebase/firestore';
 import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from './app/screens/Welcome';
 import getProfilePicture from './app/use/useGetProfilePicture';
@@ -33,10 +32,14 @@ import syncInformation from './app/use/useSyncInfo';
 import checkInternetSpeed from './app/use/useCheckInternetSpeed';
 import * as Device from 'expo-device';
 import LanguageScreenSmall from './app/screens/LanguageScreenSmall';
+import { StripeProvider } from '@stripe/stripe-react-native';
+//import { useStripe } from '@stripe/stripe-react-native';
+//import fetchKey from './app/handleStripe/fetchKey';
 
 const Stack = createStackNavigator();
 
 const SetupPage = () => {
+
     return (
         <Stack.Navigator>
             <Stack.Screen
@@ -67,6 +70,7 @@ const AuthenticatedTabNavigator = ({ setupRan }: any) => {
 };
 
 const UnauthenticatedTabNavigator = () => (
+
     <Stack.Navigator>
 
         <Stack.Screen
@@ -112,44 +116,8 @@ const UnauthenticatedTabNavigator = () => (
 
 function App() {
 
-    const clearAsyncStorage = async () => {
-        await AsyncStorage.clear();
-        console.log('async storage cleared')
-    }
-
-    const logAsyncStorage = async () => {
-        const keys = await AsyncStorage.getAllKeys();
-        console.log(keys);
-    }
-
-    const clearEmailFoodDayData = async (email: any) => {
-        try {
-            // Fetch all keys
-            const allKeys = await AsyncStorage.getAllKeys();
-      
-            // Define a pattern to match email-foodDay-date format
-            const pattern = new RegExp(`goal_nutrients_enevadrian@gmail.com`);
-            //const pattern = new RegExp(`username_enevadrian@gmail.com`);
-            //const pattern = new RegExp(`enevadrian@gmail.com-foodDay-\\d{4}-\\d{2}-\\d{2}.*`);
-            //const pattern = new RegExp(`enevadrian@gmail.com-foodDay-\\d{2}-\\d{2}-\\d{4}.*`);
-            //const pattern = new RegExp(`enevadrian@gmail.com-foodDay-30-11-2024-nutrients`);
-      
-            // Filter keys matching the pattern
-            const keysToRemove = allKeys.filter(key => pattern.test(key));
-        
-            // Remove matching keys
-            if (keysToRemove.length > 0) {
-                await AsyncStorage.multiRemove(keysToRemove);
-                console.log('Removed keys:', keysToRemove);
-            } else {
-                console.log('No matching keys found.');
-            }
-        } catch (error) {
-            console.error('Error clearing data:', error);
-        }
-      };
-
     const onAuthenticate = async () => {
+
         const auth = await LocalAuthentication.authenticateAsync({
             promptMessage: t('face-id-prompt'),
             cancelLabel: t('cancel')
@@ -165,13 +133,14 @@ function App() {
     };
 
     const BiometricsFailed = () => {
+
         return (
             <View style={tw`flex-1 justify-center items-center bg-white`}>
                 
                 <TouchableOpacity style={tw`w-[75%] h-[6.5%] bg-gray-700 rounded-[30px] shadow-lg flex items-center justify-center`}
                    onPress={() => onAuthenticate()}
                 >
-                    <Text style={tw`text-3xl font-semibold text-white`}>Try Face ID Again</Text>
+                    <Text style={tw`text-3xl font-semibold text-white`}>{t('try-face-id-again')}</Text>
                 </TouchableOpacity>
                 
             </View>
@@ -214,6 +183,8 @@ function App() {
     const [iphoneModel, setIphoneModel] = useState('')
 
     const [loggingIn, setLoggingIn] = useState(false);
+
+    const [internetSpeed, setInternetSpeed] = useState(0);
 
     const getIphoneModel = async () => {
         if (Device.brand === 'Apple') {
@@ -325,8 +296,6 @@ function App() {
         await fetchData();
     }
 
-    const [internetSpeed, setInternetSpeed] = useState(0);
-
     useEffect(() => {
         const initializeApp = async () => {
 
@@ -339,15 +308,18 @@ function App() {
     
             const netInfo = await NetInfo.fetch();
             setIsConnected(netInfo.isConnected ?? false);
-            if (netInfo.isConnected) {
-                const speed = await checkInternetSpeed()
-                setInternetSpeed(speed)
-                //console.log(speed)
+
+            try {
+                if (netInfo.isConnected) {
+                    const speed = await checkInternetSpeed()
+                    setInternetSpeed(speed)
+                    //console.log(speed)
+                }
+            }catch (error: any) {
+                console.log('Failed to check internet speed')
+                console.log(error)
             }
             
-            //const netInfo = { isConnected: false }
-            //setIsConnected(false)
-        
             if (netInfo.isConnected) {
                 const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
                     setUser(user);
@@ -362,39 +334,52 @@ function App() {
     
         initializeApp();
     
+    }, []);
+
+    useEffect(() => {
         const netListener = NetInfo.addEventListener(async state => {
-            if (state.isConnected) {
-                const speed = await checkInternetSpeed()
-                setInternetSpeed(speed)
+            try {
+                if (state.isConnected) {
+                    const speed = await checkInternetSpeed();
+                    setInternetSpeed(speed);
+                }
+                setIsConnected(state.isConnected ?? false);
+            } catch (error) {
+                console.error("Error checking internet speed or setting connection state:", error);
             }
-            setIsConnected(state.isConnected ?? false);
         });
     
         return () => netListener();
     }, []);
 
     useEffect(() => {
+        
         const checkInternetConnection = async () => {
             const netInfo = await NetInfo.fetch();
 
-            if (netInfo.isConnected) {
-                const speed = await checkInternetSpeed()
-                setInternetSpeed(speed);
+            try {
+                if (netInfo.isConnected) {
+                    const speed = await checkInternetSpeed()
+                    setInternetSpeed(speed);
 
-                if (speed < 32) {
-                    setIsConnected(false)
-                }else{
-                    setIsConnected(true)
+                    if (speed < 32) {
+                        setIsConnected(false)
+                    }else{
+                        setIsConnected(true)
+                    }
+                    //console.log(speed)
                 }
-
-                //console.log(speed)
+            } catch (error: any) {
+                console.log('failed to check internet speed');
+                console.log(error);
             }
+            
         };
 
         // Run checkInternetConnection every 10 seconds
         const interval = setInterval(() => {
             checkInternetConnection();
-            console.log('checked internet connection')
+            //console.log('checked internet connection')
         }, 10000);
 
         // Clear interval on unmount
@@ -408,13 +393,12 @@ function App() {
                 await user.reload().then(() => {
                     if (user.emailVerified) {
                         setIsEmailVerified(true);
-                        setEmailVerifiedChanged(true); // Update state when email is verified
+                        setEmailVerifiedChanged(true);
                         setAccountJustRegistered(false);
                         setSetupRan(false);
                     }
                     console.log('interval ran')
                 });
-                
             }
         }, 1000); 
 
@@ -430,7 +414,7 @@ function App() {
 
     useEffect(() => {
 
-        if (isConnected && isAuthenticated && !hasSynced && user) {
+        if (isConnected && isAuthenticated && !hasSynced && user && internetSpeed > 32) {
             setHasSynced(true);
 
             const query = async () => {
@@ -444,6 +428,7 @@ function App() {
 
     // listen for firebase.logOut and navigate to unauthenticated screen if called
     useEffect(() => {
+
         const unsubscribe = FIREBASE_AUTH.onAuthStateChanged(async (user) => {
             if (user && isConnected) {
                 setIsAuthenticated(true);
@@ -460,56 +445,18 @@ function App() {
       
           // Clean up the subscription
           return () => unsubscribe();
+
     }, [navigationRef])
 
-    const handleAppForeground = async (userDocRef: any) => {
-        try {
-          await setDoc(userDocRef, {
-            'activity': "online"
-          }, { merge: true }); // Use merge to avoid overwriting other data
-        } catch (error) {
-          console.error('Error updating online status:', error);
-        }
-    };
-
-    const handleAppBackground = async (userDocRef: any) => {
-        try {
-          await setDoc(userDocRef, {
-            'activity': "offline"
-          }, { merge: true });
-        } catch (error) {
-          console.error('Error updating offline status:', error);
-        }
-    };
-
     useEffect(() => {
-        const subscription = AppState.addEventListener('change', (nextState) => {
-            
-            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
 
-            if (nextState === 'active') {
-                handleAppForeground(userDocRef)
-            } else if (nextState === 'background') {
-                handleAppBackground(userDocRef)
-            }
-        });
-      
-        return () => {
-            subscription.remove(); 
-        };
-    }, []);
-
-    useEffect(() => {
         //clearAsyncStorage()
         //logAsyncStorage()
         //clearEmailFoodDayData('test')
         //tempFunc()
         getIphoneModel();
-    }, [])
 
-    //enevadrian@gmail.com
-    //passwordpassword
+    }, [])
 
     const handleNavigation = () => {
 
@@ -525,7 +472,7 @@ function App() {
             return <UnauthenticatedTabNavigator />;
         } else {
             // Authenticated or setup flow
-            return isAccountDeleted && setupRan && !user && false ? (
+            return isAccountDeleted && setupRan && !user ? (
                 <UnauthenticatedTabNavigator />
             ) : setupRan && isAuthenticated && user && !accountJustRegistered  ? (
                 <AuthenticatedTabNavigator setupRan={setupRan} />
@@ -536,7 +483,7 @@ function App() {
             )  : user && !setupRan ?  (
                 <SetupPage />
             ): (
-                <AuthenticatedTabNavigator />
+                <UnauthenticatedTabNavigator />
             );
         }
     };
@@ -570,6 +517,9 @@ function App() {
         );
     }
 
+    //enevadrian@gmail.com
+    //passwordpassword
+
     return (
         <GlobalContext.Provider value={{
             setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber,
@@ -578,21 +528,28 @@ function App() {
             generatingWorkoutInFolder, setGeneratingWorkoutInFolder, syncingInfoRunning, setSyncingInfoRunning, internetSpeed, setAccountJustRegistered,
             iphoneModel, setLoggingIn
         }}>
-            <GestureHandlerRootView style={tw`w-full h-full`}>
-                <StatusBar barStyle='dark-content' />
-                
-                {/*<
-                 {handleNavigation()}
-                    <SetupPage />
-                    {handleNavigation()}
 
-                */}
+            <StripeProvider 
+                publishableKey='pk_live_51QVygSBQgjh8yS4RaETuRan0FbyEXul8jW5nZ3hBgifdl569WcuEFVf13gtO4CJljkzTictxrijHJvAplHuqvOow00QoyahQqQ'
+                merchantIdentifier="com.nafle.LungeFitnessTracker"
+                urlScheme='lunge-fitness-tracker'
+            >
+                <GestureHandlerRootView style={tw`w-full h-full`}>
+                    <StatusBar barStyle='dark-content' />
+                    
+                    {/*<
+                        {handleNavigation()}
+                        <SetupPage />
+                        {handleNavigation()}
+                        <LanguageScreen />
+                    */}
+                    
+                    <NavigationContainer ref={navigationRef}>
+                        {handleNavigation()}
+                    </NavigationContainer>
                 
-                <NavigationContainer ref={navigationRef}>
-                    {handleNavigation()}
-                </NavigationContainer>
-               
-            </GestureHandlerRootView>
+                </GestureHandlerRootView>
+            </StripeProvider>
         </GlobalContext.Provider>
     );
 };

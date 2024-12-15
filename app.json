@@ -1,11 +1,12 @@
 {
   "expo": {
-    "name": "Lunge: Fitness Tracker",
+    "name": "Lunge: AI Fitness Tracker",
     "slug": "LungeFitnessTracker",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "scheme": "lunge-fitness-tracker",
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -40,7 +41,7 @@
     "newArchEnabled": true,
     "extra": {
       "eas": {
-        "projectId": "69bd8bbb-60b9-4f28-b292-bba385196fa3"
+        "projectId": "7f46a2f5-8963-44d4-bba2-2ee173bca3e1"
       }
     }
   }

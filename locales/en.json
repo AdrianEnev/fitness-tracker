@@ -246,8 +246,8 @@
     "male": "Male",
     "female": "Female",
     "how-active-are-you": "How active are you?",
-    "retrieving-info": "Retrieving Info..."
-
-
-
+    "retrieving-info": "Retrieving Info...",
+    "retreive-info-information": "This feature can restore workouts or meals that you had saved on another phone from the same account!",
+    "try-face-id-again": "Try Face ID Again",
+    "no-lunge-coins": "You've got no Lunge Coins!"
 }

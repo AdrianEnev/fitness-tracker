@@ -3,7 +3,7 @@ import generateRandomColour from "../use/useGenerateColour";
 import getEmail from "../use/useGetEmail";
 import generateID from "../use/useGenerateID";
 
-const addGeneratedWorkoutLocally = async (generatedWorkout: any, internetConnected: boolean, setGeneratingWorkout: any, folder?: any) => {
+const addGeneratedWorkoutLocally = async (generatedWorkout: any, setGeneratingWorkout: any, folder?: any) => {
     
     const usedColours: string[] = [];
 

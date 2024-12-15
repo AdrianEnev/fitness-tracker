@@ -246,7 +246,6 @@
     "male": "Hombre",
     "female": "Mujer",
     "how-active-are-you": "¿Qué tan activo eres?",
-    "retreiving-info": "Recuperando información..."
-
-
+    "retreiving-info": "Recuperando información...",
+    "try-face-id-again": "Intentar otra vez"
 }

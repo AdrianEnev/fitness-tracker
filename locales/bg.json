@@ -246,5 +246,6 @@
     "male": "Мъж",
     "female": "Жена",
     "how-active-are-you": "Колко си активен?",
-    "retreiving-info": "Възвръщане на информация..."
+    "retreiving-info": "Възвръщане на информация...",
+    "try-face-id-again": "Опитай оптново"
 }

@@ -4,7 +4,7 @@ import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from "twrnc";
 import { useTranslation } from 'react-i18next';
-import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import GlobalContext from '../../GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { checkUserDocument } from '../use/useCheckUserInfo';
@@ -94,6 +94,9 @@ const Register = ({navigation}: any) => {
 
             const usersCollectionRef = collection(FIRESTORE_DB, 'users');
             const userDocRef = doc(usersCollectionRef, after.user.uid);
+
+            await setDoc(userDocRef, { lungeCoins: 1, lastGeneratedWorkout: null }, { merge: false });
+
             const userInfoCollectionRef = collection(userDocRef, 'user_info');
     
             // add a document inside userInfoCollectionRef and call that document "username"

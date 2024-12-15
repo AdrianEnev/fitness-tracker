@@ -48,7 +48,7 @@ const BottomNavigationBar = (
         copySelectedWorkoutsInFolder, cutSelectedWorkoutsInFolder, deleteSelectedWorkoutsInFolder,
         viewSavedWorkoutDate, viewSavedWorkoutStartEnd, viewSavedWorkoutNumberOfExercises,
         addCustomFoodPageAddFood, addFoodPageAddButton,
-        activeWorkoutNumberOfExercises,
+        activeWorkoutNumberOfExercises, currentlyGeneratingWorkout
 
     }: 
     {
@@ -77,7 +77,7 @@ const BottomNavigationBar = (
         copySelectedWorkoutsInFolder?: () => void, cutSelectedWorkoutsInFolder?: () => void, deleteSelectedWorkoutsInFolder?: () => void,
         viewSavedWorkoutDate?: any, viewSavedWorkoutStartEnd?: any, viewSavedWorkoutNumberOfExercises?: any,
         addCustomFoodPageAddFood?: () => void, addFoodPageAddButton?: () => void,
-        activeWorkoutNumberOfExercises?: any
+        activeWorkoutNumberOfExercises?: any, currentlyGeneratingWorkout?: boolean
     }
 ) => {
     
@@ -233,7 +233,6 @@ const BottomNavigationBar = (
                     {selectionMode === false ? (
                         <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
 
-
                             <Pressable onPress={() => {
                                 navigation.navigate('Тренировка-Добави', {folder: undefined});
                             }}>
@@ -246,6 +245,11 @@ const BottomNavigationBar = (
                             
                             <Pressable style={tw`w-15 h-15 border-4 border-[#fd1c47] rounded-full flex items-center justify-center`}
                                 onPress={() => {
+
+                                    if (currentlyGeneratingWorkout) {
+                                        return;
+                                    }
+
                                     if (internetConnected) {
                                         navigation.navigate('Генериране-Тренировка');
                                     }

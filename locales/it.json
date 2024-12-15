@@ -246,8 +246,6 @@
     "male": "Maschio",
     "female": "Femmina",
     "how-active-are-you": "Quanto sei attivo?",
-    "retreiving-info": "Recupero delle informazioni..."
-
-
-
+    "retreiving-info": "Recupero delle informazioni...",
+    "try-face-id-again": "Prova di nuovo Face ID"
 }
