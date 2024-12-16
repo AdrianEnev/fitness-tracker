@@ -8,13 +8,13 @@ import GlobalContext from '../../GlobalContext';
 interface StripeModalProps {
     isStripeModalVisible: boolean;
     setIsStripeModalVisible: (isVisible: boolean) => void;
-    purchaseFirstTier: () => void;
-    purchaseSecondTier: () => void;
     isPaymentSheetLoading: boolean;
+    setIsStripeFirstTierChoosePaymentMethodModalVisible: (isVisible: boolean) => void;
+    setIsStripeSecondTierChoosePaymentMethodModalVisible: (isVisible: boolean) => void;
 }
 
 const StripeModal: React.FC<StripeModalProps> = ({ 
-    isStripeModalVisible, setIsStripeModalVisible, purchaseFirstTier, purchaseSecondTier, isPaymentSheetLoading
+    isStripeModalVisible, setIsStripeModalVisible, isPaymentSheetLoading, setIsStripeFirstTierChoosePaymentMethodModalVisible, setIsStripeSecondTierChoosePaymentMethodModalVisible
 }) => { 
     
     const {t} = useTranslation();
@@ -39,8 +39,8 @@ const StripeModal: React.FC<StripeModalProps> = ({
                         <View style={tw`w-full h-[50%] flex justify-center flex-row gap-x-3 mt-1`}>
                             <Pressable style={tw`w-[48%] h-[100%] rounded-[20px] bg-cyan-500 flex flex-col items-center justify-center`}
                                 onPress={() => {
-                                    //setIsStripeModalVisible(false);
-                                    purchaseFirstTier();
+                                    setIsStripeModalVisible(false);
+                                    setIsStripeFirstTierChoosePaymentMethodModalVisible(true);
                                 }}
                             >
 
@@ -57,8 +57,8 @@ const StripeModal: React.FC<StripeModalProps> = ({
                             
                             <Pressable style={tw`w-[48%] h-[100%] rounded-[20px] bg-rose-500 flex-col items-center justify-center`}
                                 onPress={() => {
-                                    //setIsStripeModalVisible(false);
-                                    purchaseSecondTier();
+                                    setIsStripeModalVisible(false);
+                                    setIsStripeSecondTierChoosePaymentMethodModalVisible(true);
                                 }}
                             >
                                  {!isPaymentSheetLoading ? 

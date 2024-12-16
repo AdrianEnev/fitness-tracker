@@ -2,13 +2,12 @@ import { EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail
 import { useTranslation } from "react-i18next";
 import { Alert } from "react-native";
 
-const changePassword = (email: any, user: any, auth: any) => {
+const changePassword = (email: any, user: any, auth: any, t: any) => {
 
     // prompt the user to enter their old password
     // if the old password is correct, prompt the user to enter their new password
     // update the password with the new password
 
-    const {t} = useTranslation();
 
     Alert.prompt(
         t('change-password'),

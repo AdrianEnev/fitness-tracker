@@ -24,6 +24,8 @@ import SyncingInfoInformationModal from '../modals/SyncInfoInformationModal'
 import SyncInfoModal from '../modals/SyncInfoModal'
 
 const SettingsAccount = ({navigation}: any) => {
+
+    
  
     const { 
         receiveFriendRequests, 
@@ -463,7 +465,7 @@ const SettingsAccount = ({navigation}: any) => {
                         if (internetConnected) {
                             const auth = getAuth();
                             const user = auth.currentUser;
-                            changePassword(email, user, auth)
+                            changePassword(email, user, auth, t)
                         }else{
                             Vibration.vibrate()
                         }

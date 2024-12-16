@@ -488,7 +488,7 @@ function App() {
         }
     };
 
-    if (loading || checkingSetup || loggingIn) {
+   if (loading || checkingSetup || loggingIn) {
         return (
             <View style={tw`flex-1 justify-center items-center bg-red-500`}>
 
@@ -516,9 +516,6 @@ function App() {
             </View>
         );
     }
-
-    //enevadrian@gmail.com
-    //passwordpassword
 
     return (
         <GlobalContext.Provider value={{

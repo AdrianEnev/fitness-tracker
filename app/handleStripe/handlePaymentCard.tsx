@@ -4,6 +4,9 @@ import { Alert } from "react-native";
 
 export const initializePaymentSheet = async (initPaymentSheet: any, setReady: any, price: number) => {
 
+    const userDeviceEmail = await AsyncStorage.getItem('email');
+    const trimmedEmail = userDeviceEmail ? userDeviceEmail.split('@')[0] : '';
+
     try {
         const {
             paymentIntent,
@@ -18,7 +21,7 @@ export const initializePaymentSheet = async (initPaymentSheet: any, setReady: an
             customerEphemeralKeySecret: ephemeralKey,
             paymentIntentClientSecret: paymentIntent,
             defaultBillingDetails: {
-                name: 'Adrian Enev',
+                name: trimmedEmail,
             },
             returnURL: 'lunge-fitness-tracker://payment-return',
         });
@@ -99,22 +102,23 @@ const fetchPaymentSheetParams = async (price: number) => {
     };
 };
 
-export const buy = async (setIsPaymentSheetShown: any, setIsPaymentSheetLoading: any) => {
-
+export const buy = async (setIsPaymentSheetShown: any, setIsPaymentSheetLoading: any, price: number, addLungeCoins: any) => {
     const {error} = await presentPaymentSheet();
 
     if (error) {
-
         if (error.code == "Canceled") {
             setIsPaymentSheetShown(false);
             setIsPaymentSheetLoading(false)
-        }else{
+        } else {
             Alert.alert(`Error code: ${error.code}`, error.message);
         }
-
-      } else {
-        Alert.alert('Success', 'Your order is confirmed!');
-      }
+    } else {
+        if (price == 199) {
+            alert('Success! You have received 10 Lunge Coins!')
+            addLungeCoins(10);
+        } else if (price == 699) {
+            alert('Success! You have received 50 Lunge Coins!')
+            addLungeCoins(50);
+        }
+    }
 }
-
-
