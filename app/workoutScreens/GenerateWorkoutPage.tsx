@@ -23,6 +23,7 @@ import { buy, initializePaymentSheet } from '../handleStripe/handlePaymentCard'
 import StripeModal from '../handleStripe/StripeModal'
 import StripeFirstTierChoosePaymentMethodModal from '../handleStripe/StripeFirstTierChoosePaymentMethodModal'
 import StripeSecondTierChoosePaymentMethodModal from '../handleStripe/StripeSecondTierChoosePaymentMethodModal'
+import { payWithApplePay } from '../handleStripe/handlePaymentApplePay'
 
 const GenerateWorkoutPage = ({navigation, route}: any) => {
 
@@ -107,21 +108,10 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
                 return false;
             }
         })
+
+
     }
         
-
-    useEffect(() => {
-        const query = async () => {
-            const lungeCoins = await getLungeCoins();
-            
-            if (lungeCoins){
-                setlungeCoins(lungeCoins);
-            }
-        }
-
-        query();
-
-    }, [])
 
     const setupFinished = async () => {
 
@@ -186,15 +176,37 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
 
     const purchaseFirstTierApplePay = async () => {
 
-        console.log('purchase first tier with apple pay');
-        
-    }
-
+        if (isPaymentSheetLoading) return;
+        setPaymentSheetLoading(true);
+    
+        await payWithApplePay(199, addLungeCoins);
+        setIsStripeFirstTierChoosePaymentMethodModalVisible(false);
+        setIsStripeModalVisible(false);
+        setPaymentSheetLoading(false);
+    };
+    
     const purchaseSecondTierApplePay = async () => {
+        if (isPaymentSheetLoading) return;
+        setPaymentSheetLoading(true);
+    
+        await payWithApplePay(699, addLungeCoins);
+        setIsStripeSecondTierChoosePaymentMethodModalVisible(false);
+        setIsStripeModalVisible(false);
+        setPaymentSheetLoading(false);
+    };
 
-        console.log('purchase second tier with apple pay');
+    useEffect(() => {
+        const query = async () => {
+            const lungeCoins = await getLungeCoins();
+            
+            if (lungeCoins){
+                setlungeCoins(lungeCoins);
+            }
+        }
 
-    }
+        query();
+
+    }, [purchaseFirstTierApplePay, purchaseSecondTierApplePay])
 
     const nextPage = async () => {
         
@@ -324,7 +336,6 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
                 purchaseSecondTierApplePay={purchaseSecondTierApplePay}
                 isPaymentSheetLoading={isPaymentSheetLoading}
                 setIsStripeModalVisible={setIsStripeModalVisible}
-
             />
 
             <SafeAreaView style={tw`flex-1 bg-white`}>
