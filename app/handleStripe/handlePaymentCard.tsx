@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { presentPaymentSheet } from "@stripe/stripe-react-native";
 import { Alert } from "react-native";
 
-export const initializePaymentSheet = async (initPaymentSheet: any, setReady: any, price: number) => {
+export const initializePaymentSheet = async (initPaymentSheet: any, price: number) => {
 
     const userDeviceEmail = await AsyncStorage.getItem('email');
     const trimmedEmail = userDeviceEmail ? userDeviceEmail.split('@')[0] : '';
@@ -28,7 +28,7 @@ export const initializePaymentSheet = async (initPaymentSheet: any, setReady: an
 
         if (!error) {
             console.log('initialized successfully');
-            setReady(true);
+            //setReady(true);
         } else {
             console.log('Error initializing payment sheet:', error);
         }
@@ -102,7 +102,7 @@ const fetchPaymentSheetParams = async (price: number) => {
     };
 };
 
-export const buy = async (setIsPaymentSheetShown: any, setIsPaymentSheetLoading: any, price: number, addLungeCoins: any) => {
+export const buy = async (setIsPaymentSheetShown: any, setIsPaymentSheetLoading: any, price: number, addLungeCoins: any, getLungeCoins: any) => {
     const {error} = await presentPaymentSheet();
 
     if (error) {
@@ -115,10 +115,13 @@ export const buy = async (setIsPaymentSheetShown: any, setIsPaymentSheetLoading:
     } else {
         if (price == 199) {
             alert('Success! You have received 10 Lunge Coins!')
-            addLungeCoins(10);
+            await addLungeCoins(10);
+            getLungeCoins();
+            
         } else if (price == 699) {
             alert('Success! You have received 50 Lunge Coins!')
-            addLungeCoins(50);
+            await addLungeCoins(50);
+            getLungeCoins();
         }
     }
 }

@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Lunge: AI Fitness Tracker",
+    "name": "Lunge",
     "slug": "LungeFitnessTracker",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "orientation": "portrait",
     "icon": "./assets/icon.jpeg",
     "userInterfaceStyle": "light",

@@ -2,9 +2,20 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
 import { Workout } from "../../interfaces";
 import generateID from "../use/useGenerateID";
-import { deleteDoc, doc } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import i18next from "i18next";
 
-// Function to delete selected workouts
+const deleteSubcollections = async (docRef: any) => {
+    const subcollections = await getDocs(collection(docRef, 'info'));
+    for (const subcollectionDoc of subcollections.docs) {
+        const setsCollection = await getDocs(collection(subcollectionDoc.ref, 'sets'));
+        for (const setDoc of setsCollection.docs) {
+            await deleteDoc(setDoc.ref);
+        }
+        await deleteDoc(subcollectionDoc.ref);
+    }
+};
+
 export const deleteSelectedWorkouts = async (
     selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, firebaseWorkouts: any, internetConnected: any,
     userWorkoutsCollectionRef: any
@@ -38,6 +49,11 @@ export const deleteSelectedWorkouts = async (
             for (const selectedWorkout of selectedWorkouts) {
                 const selectedWorkoutID = selectedWorkout.id;
                 const selectedWorkoutDoc = doc(userWorkoutsCollectionRef, selectedWorkoutID);
+
+                // Delete all subcollections and their documents
+                await deleteSubcollections(selectedWorkoutDoc);
+
+                // Delete the workout document
                 await deleteDoc(selectedWorkoutDoc);
                 console.log(`Workout with ID ${selectedWorkoutID} deleted from Firebase`);
             }
@@ -158,8 +174,27 @@ const extractBaseTitleAndCopyNumber = (title: string) => {
     return { baseTitle, copyNumber };
 };
 
-// Helper function to generate a new title for a copied workout
+const MAX_TITLE_LENGTH = 50; // Set your desired maximum character limit
+
 const generateNewTitle = (baseTitle: string, existingTitles: string[]) => {
+    const currentLanguage = i18next.language;
+
+    let copyText = 'copy';
+
+    if (currentLanguage === 'bg') {
+        copyText = 'копие';
+    } else if (currentLanguage === 'ru') {
+        copyText = 'копия';
+    } else if (currentLanguage === 'de') {
+        copyText = 'Kopie';
+    } else if (currentLanguage === 'fr') {
+        copyText = 'copie';
+    } else if (currentLanguage === 'es') {
+        copyText = 'copia';
+    } else if (currentLanguage === 'it') {
+        copyText = 'copia';
+    }
+
     let maxCopyNumber = 0;
     existingTitles.forEach(title => {
         const { baseTitle: existingBaseTitle, copyNumber } = extractBaseTitleAndCopyNumber(title);
@@ -167,7 +202,15 @@ const generateNewTitle = (baseTitle: string, existingTitles: string[]) => {
             maxCopyNumber = copyNumber;
         }
     });
-    return `${baseTitle} copy${maxCopyNumber > 0 ? ` (${maxCopyNumber + 1})` : ''}`;
+
+    let newTitle = `${baseTitle} ${copyText}${maxCopyNumber > 0 ? ` (${maxCopyNumber + 1})` : ''}`;
+
+    // Truncate the title if it exceeds the maximum length
+    if (newTitle.length > MAX_TITLE_LENGTH) {
+        newTitle = newTitle.substring(0, MAX_TITLE_LENGTH);
+    }
+
+    return newTitle;
 };
 
 // Function to paste copied workouts

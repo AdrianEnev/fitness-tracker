@@ -28,7 +28,6 @@ import { payWithApplePay } from '../handleStripe/handlePaymentApplePay'
 const GenerateWorkoutPage = ({navigation, route}: any) => {
 
     const {initPaymentSheet} = usePaymentSheet();
-    const [ready, setReady] = useState(false);
     const [isPaymentSheetShown, setIsPaymentSheetShown] = useState(false);
     const [isPaymentSheetLoading, setPaymentSheetLoading] = useState(false);
 
@@ -50,8 +49,9 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
         const userInfo = await getDoc(userDocRef).then((doc) => {
             if (doc.exists()) {
                 const data = doc.data();
+
                 console.log('Free trials fetched:', data.lungeCoins);
-                return data.lungeCoins; // Return the fetched free trials value
+                setlungeCoins(data.lungeCoins); 
             } else {
                 console.log('No user document found.');
                 return 0; // Return 0 if no document is found
@@ -109,11 +109,16 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
             }
         })
 
-
     }
-        
 
     const setupFinished = async () => {
+        
+        console.log('setupFinished function ran...');
+
+        if (!internetConnected || internetSpeed < 64) {
+            alert(t('unstable-connection'));
+            return;
+        }
 
         const levels = ['Beginner', 'Intermediate', 'Advanced', 'Elite'];
         const goals = ['muscle gain', 'fat loss', 'endurance', 'flexibility'];
@@ -123,8 +128,10 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
             en: 'english',
             bg: 'bulgarian',
             de: 'german',
-            rs: 'russian',
-            fr: 'french'
+            ru: 'russian',
+            fr: 'french',
+            sp: 'spanish',
+            it: 'italian',
         };
 
         const level = levels[experienceLevel - 1] || 'unspecified';
@@ -155,58 +162,48 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
     }
 
     const purchaseFirstTierCard = async () => {
-        if (isPaymentSheetLoading) return;
+        if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
         setPaymentSheetLoading(true);
 
-        await initializePaymentSheet(initPaymentSheet, setReady, 199);
-        buy(setIsPaymentSheetShown, setPaymentSheetLoading, 199, addLungeCoins);
+        await initializePaymentSheet(initPaymentSheet, 199);
+        buy(setIsPaymentSheetShown, setPaymentSheetLoading, 199, addLungeCoins, getLungeCoins);
         setIsPaymentSheetShown(true);
         setPaymentSheetLoading(false);
     }
 
     const purchaseSecondTier = async () => {
-        if (isPaymentSheetLoading) return;
+        if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
         setPaymentSheetLoading(true);
 
-        await initializePaymentSheet(initPaymentSheet, setReady, 699);
-        buy(setIsPaymentSheetShown, setPaymentSheetLoading, 699, addLungeCoins);
+        await initializePaymentSheet(initPaymentSheet, 699);
+        buy(setIsPaymentSheetShown, setPaymentSheetLoading, 699, addLungeCoins, getLungeCoins);
         setIsPaymentSheetShown(true);
         setPaymentSheetLoading(false);
     }
 
     const purchaseFirstTierApplePay = async () => {
-
-        if (isPaymentSheetLoading) return;
+        if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
         setPaymentSheetLoading(true);
     
-        await payWithApplePay(199, addLungeCoins);
-        setIsStripeFirstTierChoosePaymentMethodModalVisible(false);
-        setIsStripeModalVisible(false);
+        await payWithApplePay(199, addLungeCoins, getLungeCoins);
+        //setIsStripeFirstTierChoosePaymentMethodModalVisible(false);
+        //setIsStripeModalVisible(false);
         setPaymentSheetLoading(false);
     };
     
     const purchaseSecondTierApplePay = async () => {
-        if (isPaymentSheetLoading) return;
+        if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
         setPaymentSheetLoading(true);
     
-        await payWithApplePay(699, addLungeCoins);
-        setIsStripeSecondTierChoosePaymentMethodModalVisible(false);
-        setIsStripeModalVisible(false);
+        await payWithApplePay(699, addLungeCoins, getLungeCoins);
+        //setIsStripeSecondTierChoosePaymentMethodModalVisible(false);
+        //setIsStripeModalVisible(false);
         setPaymentSheetLoading(false);
     };
 
     useEffect(() => {
-        const query = async () => {
-            const lungeCoins = await getLungeCoins();
-            
-            if (lungeCoins){
-                setlungeCoins(lungeCoins);
-            }
-        }
-
-        query();
-
-    }, [purchaseFirstTierApplePay, purchaseSecondTierApplePay])
+        getLungeCoins();
+    }, [])
 
     const nextPage = async () => {
         
@@ -224,6 +221,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
             
             if (!internetConnected || internetSpeed < 64) {
                 alert(t('unstable-connection'));
+                return;
             }
 
             if (equipment.length === 0) return;

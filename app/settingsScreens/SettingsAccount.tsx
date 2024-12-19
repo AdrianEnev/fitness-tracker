@@ -48,7 +48,7 @@ const SettingsAccount = ({navigation}: any) => {
         // add confirmation alert before logging out
         Alert.alert(
             t('account-logout'),
-            t('accont-logout-prompt'),
+            t('account-logout-prompt'),
             [
                 {
                     text: t(('cancel')),

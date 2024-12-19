@@ -30,7 +30,7 @@ const fetchPaymentIntentClientSecret = async (price: number) => {
     return clientSecret;
 };
 
-export const payWithApplePay = async (price: number, addLungeCoins: any) => {
+export const payWithApplePay = async (price: number, addLungeCoins: any, getLungeCoins: any) => {
     try {
         const clientSecret = await fetchPaymentIntentClientSecret(price);
         const { error } = await confirmPlatformPayPayment(
@@ -65,13 +65,20 @@ export const payWithApplePay = async (price: number, addLungeCoins: any) => {
         } else {
             if (price == 199) {
                 alert('Success! You have received 10 Lunge Coins!');
-                addLungeCoins(10);
+                await addLungeCoins(10);
+                getLungeCoins();
             } else if (price == 699) {
                 alert('Success! You have received 50 Lunge Coins!');
-                addLungeCoins(50);
+                await addLungeCoins(50);
+                getLungeCoins();
             }
         }
     } catch (error) {
+        if (error === "[TypeError: Network request failed]" || error === "TypeError: Network request failed") {
+            alert('Network request failed. Please check your internet connection.');
+            return;
+        }
+
         console.error('Error in payWithApplePay:', error);
     }
 };

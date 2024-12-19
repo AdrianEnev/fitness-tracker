@@ -14,7 +14,7 @@ import getProfilePicture from './app/use/useGetProfilePicture';
 import GlobalContext from './GlobalContext';
 import getFriendRequests from './app/useFriends/useGetFriendRequestsRecieved';
 import ChangePassword from './app/screens/ChangePassword';
-import { checkUserGoalNutrientsLocally, checkLanguageDocumentLocally } from './app/use/useCheckUserInfo';
+import { checkUserGoalNutrientsLocally, checkLanguageDocumentLocally, checkUsernamesMatch } from './app/use/useCheckUserInfo';
 import LottieView from 'lottie-react-native';
 import tw from 'twrnc';
 import { useTranslation } from 'react-i18next';
@@ -201,11 +201,15 @@ function App() {
             setSetupRan(setupHasRanLocally);
 
             checkLanguageDocumentLocally();
+            checkUsernamesMatch();
             
             let profilePic = null;
             let friendRequests = 0;
 
-            if (isConnected) {
+            const netInfo = await NetInfo.fetch();
+            setIsConnected(netInfo.isConnected ?? false);
+
+            if (netInfo.isConnected) {
                 profilePic = await getProfilePicture();
                 friendRequests = await getFriendRequests();
             }
@@ -343,7 +347,7 @@ function App() {
                     const speed = await checkInternetSpeed();
                     setInternetSpeed(speed);
                 }
-                setIsConnected(state.isConnected ?? false);
+                //setIsConnected(state.isConnected ?? false);
             } catch (error) {
                 console.error("Error checking internet speed or setting connection state:", error);
             }
@@ -362,11 +366,11 @@ function App() {
                     const speed = await checkInternetSpeed()
                     setInternetSpeed(speed);
 
-                    if (speed < 32) {
+                    /*if (speed < 32) {
                         setIsConnected(false)
                     }else{
                         setIsConnected(true)
-                    }
+                    }*/
                     //console.log(speed)
                 }
             } catch (error: any) {
@@ -377,13 +381,21 @@ function App() {
         };
 
         // Run checkInternetConnection every 10 seconds
-        const interval = setInterval(() => {
+        // Delay the first call to checkInternetConnection by 2 seconds
+        const timeout = setTimeout(() => {
             checkInternetConnection();
-            //console.log('checked internet connection')
-        }, 10000);
+            // Run checkInternetConnection every 10 seconds after the initial delay
+            const interval = setInterval(() => {
+                checkInternetConnection();
+                //console.log('checked internet connection')
+            }, 10000);
+
+            // Clear interval on unmount
+            return () => clearInterval(interval);
+        }, 2000);
 
         // Clear interval on unmount
-        return () => clearInterval(interval);
+        return () => clearInterval(timeout);
     }, []);
 
     useEffect(() => {
