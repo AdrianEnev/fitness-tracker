@@ -3,7 +3,7 @@ import React, { useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
-import { collection, deleteDoc, doc, getDoc } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalContext from '../../GlobalContext';
 import { BlurView } from 'expo-blur';
@@ -19,6 +19,17 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
 
     const {internetConnected} = useContext(GlobalContext)
 
+    const deleteSubcollections = async (docRef: any) => {
+        const subcollections = await getDocs(collection(docRef, 'info'));
+        for (const subcollectionDoc of subcollections.docs) {
+            const setsCollection = await getDocs(collection(subcollectionDoc.ref, 'sets'));
+            for (const setDoc of setsCollection.docs) {
+                await deleteDoc(setDoc.ref);
+            }
+            await deleteDoc(subcollectionDoc.ref);
+        }
+    };
+
     const deleteSavedWorkout = async () => {
 
         // Delete the workout from AsyncStorage
@@ -30,7 +41,7 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
 
         navigation.goBack();
        
-        if (internetConnected ) {
+        if (internetConnected) {
             const usersCollectionRef = collection(FIRESTORE_DB, 'users');
             const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
             const savedWorkoutsCollectionRef = collection(userDocRef, 'saved_workouts');
@@ -39,16 +50,20 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
             const workoutDocSnapshot = await getDoc(workoutDocRef);
 
             if (workoutDocSnapshot.exists()) {
+
+                // Delete all subcollections and their documents
+                await deleteSubcollections(workoutDocRef);
+
+                // Delete the workout document
                 await deleteDoc(workoutDocRef);
-                
             }
         }
-       
     }
 
     const [startEnd, setStartEnd] = useState<any>();
     
     const getStartEnd = () => {
+
         // Example -> 18:34ч.
         const timeClock = time;
     

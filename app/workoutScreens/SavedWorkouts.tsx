@@ -1,16 +1,17 @@
-import { View, Text, Button, SafeAreaView, TouchableOpacity, FlatList, Pressable, Alert } from 'react-native'
+import { View, Text, FlatList, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
-import { collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, setDoc, Timestamp, updateDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
-import { Exercise, Workout } from '../../interfaces';
+import { Timestamp } from 'firebase/firestore';
+import { Workout } from '../../interfaces';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getSavedWorkoutInfoLocally from '../useWorkout/useGetSavedWorkoutInfoLocally';
 
 const Workouts = ({navigation}: any) => {
+
+    const {t} = useTranslation();
 
     const [savedWorkouts, setSavedWorkouts] = useState<Workout[]>([]);
     const [viewWorkoutButtonDisabled, setViewWorkoutButtonDisabled] = useState(false);
@@ -103,8 +104,6 @@ const Workouts = ({navigation}: any) => {
             </Pressable>
         );
     };
-
-    const {t} = useTranslation();
 
     return (
         <View style={tw`w-full h-full bg-white`}>

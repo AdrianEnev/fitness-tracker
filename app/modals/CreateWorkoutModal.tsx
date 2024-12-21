@@ -6,6 +6,7 @@ import addWorkoutLocally from '../useWorkout/useAddWorkoutLocally';
 import generateID from '../use/useGenerateID';
 import { useTranslation } from 'react-i18next';
 import GlobalContext from '../../GlobalContext';
+import { checkWorkoutsCountFolder } from '../useWorkout/useCheckWorkoutsCount';
 
 interface CreateWorkoutModalProps {
     exercises: any;
@@ -68,7 +69,7 @@ const CreateWorkoutModal: React.FC<CreateWorkoutModalProps> = ({
                                         setSaveButtonDisabled(false);
                                         return
                                     }
-
+                                        
                                     const id = generateID();
 
                                     await addWorkoutLocally(exercises, workoutTitle, id, folder);

@@ -4,6 +4,7 @@ import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
 import GlobalContext from '../../GlobalContext';
+import { checkWorkoutsCountFolder, checkWorkoutsCountTotal } from '../useWorkout/useCheckWorkoutsCount';
 
 const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) => {
     return (
@@ -233,7 +234,14 @@ const BottomNavigationBar = (
                     {selectionMode === false ? (
                         <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
 
-                            <Pressable onPress={() => {
+                            <Pressable onPress={async () => {
+                                const limitReachedTotal = await checkWorkoutsCountTotal();
+
+                                if (limitReachedTotal) {
+                                    alert('You cannot add more than 30 workouts in total!')
+                                    return;
+                                }
+
                                 navigation.navigate('Тренировка-Добави', {folder: undefined});
                             }}>
                                 <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
@@ -343,8 +351,21 @@ const BottomNavigationBar = (
                 <View>
                     {selectionMode === false ? (
                         <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
-                    
-                            <Pressable onPress={() => navigation.navigate("Тренировка-Добави", {folder: folder})}>
+
+                            <Pressable onPress={async () => {
+                                const limitReachedFolder = await checkWorkoutsCountFolder(folder.id)
+                                const limitReachedTotal = await checkWorkoutsCountTotal();
+                                
+                                if (limitReachedFolder) {
+                                    alert('You cannot add any more workouts in this folder!')
+                                    return;
+                                }else if (limitReachedTotal) {
+                                    alert('You cannot add more than 30 workouts in total!')
+                                    return;
+                                }
+
+                                navigation.navigate("Тренировка-Добави", {folder: folder})
+                            }}>
                                 <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
                             </Pressable>
 

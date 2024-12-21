@@ -3,7 +3,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "./useGetEmail";
 import addWorkoutLocally from "../useWorkout/useAddWorkoutLocally";
-import { useTranslation } from "react-i18next";
+import addRetrievedWorkoutLocally from "../useWorkout/useAddRetreivedWorkoutLocally";
 
 const retreiveInfo = async (type: string, navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number, t: any) => {
 
@@ -27,14 +27,12 @@ const retreiveInfo = async (type: string, navigation: any, setIsRetreivingInfoAn
 
 };
 const updateFood = async (foodDayKey: any, foodDaysCollectionRef: any) => {
-
     const storedData = await AsyncStorage.getItem(foodDayKey);
     const data = storedData ? JSON.parse(storedData) : [];
 
     const [email, foodDay, year, month, day] = foodDayKey.split('-');
-    //const formattedDate = `${year}-${month}-${day}`;
     const formattedDate = `${year}-${month}-${day}`;
-    const invertedFoodDayKey = `${email}-${foodDay}-${day}-${month}-${year}`
+    const invertedFoodDayKey = `${email}-${foodDay}-${day}-${month}-${year}`;
 
     const foodDayDocRef = doc(foodDaysCollectionRef, formattedDate);
     const foodDayFoodsCollectionRef = collection(foodDayDocRef, 'foods');
@@ -43,11 +41,12 @@ const updateFood = async (foodDayKey: any, foodDaysCollectionRef: any) => {
 
     foodDaySnapshot.forEach(doc => {
         const foodData = doc.data();
-        data.push(foodData);
+        if (Object.keys(foodData).length > 0) {
+            data.push(foodData);
+        }
     });
 
     await AsyncStorage.setItem(invertedFoodDayKey, JSON.stringify(data));
-
 };
 
 // A slight problem to this implementation is that the number of workouts on the phone can be the same as the ones in the database, but the data inside the workouts can be different.
@@ -68,7 +67,6 @@ const retreiveFoods = async (navigation: any, setIsRetreivingInfoAnimationModalV
 
     console.log('foodDaysCountDB', foodDaysCountDB);
     console.log('foodDaysCountAS', foodDaysCountAS);
-
     console.log(foodDayKeys)
 
     if (foodDaysCountDB > foodDaysCountAS) {
@@ -88,11 +86,10 @@ const retreiveFoods = async (navigation: any, setIsRetreivingInfoAnimationModalV
 
                 const foodDayKey = `${email}-foodDay-${foodDay}`;
                 await updateFood(foodDayKey, foodDaysCollectionRef);
-
             }
 
             setIsRetreivingInfoAnimationModalVisible(false);
-            navigation.navigate('Храна');
+            navigation.navigate('Хранене');
 
         } catch (err) {
             console.error(err);
@@ -162,7 +159,7 @@ const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationMod
                         id: exerciseDoc.id,
                         ...exerciseData,
                         sets,
-                        exerciseIndex: (exerciseData.exerciseIndex || 1) - 1 // Decrement exerciseIndex by 1
+                        exerciseIndex: (exerciseData.exerciseIndex || 1) - 1
                     });
                 }
             
@@ -175,7 +172,7 @@ const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationMod
                 });
             
                 // Add missing workout to AsyncStorage
-                await addWorkoutLocally(exercises, workout.title, workout.id, workout.folderId);
+                await addRetrievedWorkoutLocally(exercises, workout.title, workout.id, workout.folderId);
             }
 
             setIsRetreivingInfoAnimationModalVisible(false);

@@ -28,7 +28,8 @@
     "food": "Essen",
     "steps": "Schritte",
     "rest-day": "Ruhetag",
-    "end-workout": "Beenden",
+    "you-can-take-a-break-today": "Sie können heute eine Pause machen!",
+    "end-workout": "Workout beenden",
     "end-workout-alert": "Sind Sie sicher, dass Sie dieses Workout beenden möchten? Alle Änderungen werden gespeichert!",
     "add-workout": "Workout hinzufügen",
     "enter-workout-name": "Bitte geben Sie einen Namen für dieses Workout ein",
@@ -248,7 +249,4 @@
     "how-active-are-you": "Wie aktiv sind Sie?",
     "retreiving-info": "Informationen abrufen...",
     "try-face-id-again": "Versuchen Sie es erneut"
-    
-
-
 }

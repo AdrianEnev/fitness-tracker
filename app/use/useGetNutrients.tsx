@@ -24,23 +24,32 @@ const getNutrients = async (search: any, inputedGrams: any) => {
     try {
         const foodItems = await fetchFoodData(search);
         
-        // Map through each food item and extract nutrient information
-        const nutrients = foodItems.map((item: any) => {
-            const food = item.food;
-            const calories = (food.nutrients.ENERC_KCAL / 100) * inputedGrams;
-            const protein = (food.nutrients.PROCNT / 100) * inputedGrams;
-            const carbs = (food.nutrients.CHOCDF / 100) * inputedGrams;
-            const fat = (food.nutrients.FAT / 100) * inputedGrams;
-      
-            return {
-              title: food.label,
-              calories: calories,
-              protein: protein,
-              carbs: carbs,
-              fat: fat,
-              grams: inputedGrams
-            };
-        });
+        const seenTitles = new Set();
+        const nutrients = foodItems
+            .map((item: any) => {
+                const food = item.food;
+                const calories = (food.nutrients.ENERC_KCAL / 100) * inputedGrams;
+                const protein = (food.nutrients.PROCNT / 100) * inputedGrams;
+                const carbs = (food.nutrients.CHOCDF / 100) * inputedGrams;
+                const fat = (food.nutrients.FAT / 100) * inputedGrams;
+          
+                return {
+                  title: food.label,
+                  calories: calories,
+                  protein: protein,
+                  carbs: carbs,
+                  fat: fat,
+                  grams: inputedGrams
+                };
+            })
+            .filter((nutrient: any) => {
+                if (seenTitles.has(nutrient.title)) {
+                    return false;
+                } else {
+                    seenTitles.add(nutrient.title);
+                    return true;
+                }
+            });
 
         nutrients.sort((a: any, b: any) => a.title.length - b.title.length);
 

@@ -9,11 +9,11 @@ import it from "../locales/it.json";
 import sp from "../locales/sp.json";
 
 const languageResources = {
+    en: {
+      translation: en,
+    },
     bg: {
       translation: bg,
-    },
-    en: {
-        translation: en,
     },
     fr: {
       translation: fr,
@@ -36,8 +36,8 @@ i18next
   .use(initReactI18next)
   .init({
     compatibilityJSON: 'v3',
-    lng: "bg",
-    fallbackLng: "en",
+    lng: "en",
+    fallbackLng: "bg",
     resources: languageResources,
   });
 

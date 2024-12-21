@@ -305,7 +305,7 @@ const SettingsAccount = ({navigation}: any) => {
                         </View>
                         
                         <View style={tw`flex justify-center`}>
-                            <Text style={tw`text-lg font-medium`}>{title}</Text>
+                            <Text style={tw`text-lg font-mediu`} numberOfLines={2}>{title === t('receive-friend-requests') ? title : title}</Text>
                         </View>
                     </View>
 

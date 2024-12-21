@@ -241,7 +241,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
                                                             <View style={tw`flex flex-row gap-x-2`}>
                                                                 
                                                                 <View style={tw`flex flex-col`}>
-                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>Сет</Text>
+                                                                    <Text style={tw`text-base font-medium mb-1 ml-1 ${mapIndex != 0 ? 'hidden' : ''}`}>{t('set')}</Text>
 
                                                                     <View style={tw`w-10 h-10 ${backgroundColor} rounded-xl flex items-center justify-center ${mapIndex != 0 ? '' : ''}`}>
                                                                         <Text style={tw`text-base font-medium ${textColor}`}>{mapIndex + 1}</Text>

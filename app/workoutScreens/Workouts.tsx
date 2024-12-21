@@ -76,7 +76,7 @@ const Workouts = ({navigation}: any) => {
             const data = await AsyncStorage.getItem(`folders_${email}`);
             let folders = data ? JSON.parse(data) : [];
     
-            setFolders(folders); // Update state with fetched folders
+            setFolders(folders);
         } catch (err) {
             console.error(err);
         }
@@ -217,10 +217,10 @@ const Workouts = ({navigation}: any) => {
                             
                             <View style={tw`flex flex-col ml-3 justify-center w-full`}>
                                 <Text style={tw`text-xl font-medium w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>
-                                    Rest Day
+                                    {t('rest-day')}
                                 </Text>
     
-                                <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>You can take a break today!</Text>
+                                <Text style={tw`text-lg font-medium text-gray-500 w-[80%]`} ellipsizeMode='tail' numberOfLines={1}>{t('you-can-take-a-break-today')}</Text>
                             </View>
                         </View>
     
