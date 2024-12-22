@@ -1,4 +1,4 @@
-import { View, Text, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput, Alert, ActivityIndicator } from 'react-native'
+import { View, Text, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput, Alert, ActivityIndicator, Pressable } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
 import BottomNavigationBar from '../components/BottomNavigationBar';
@@ -10,6 +10,9 @@ import { BlurView } from 'expo-blur';
 import DeleteSavedWorkoutModal from '../modals/DeleteSavedWorkoutModal';
 import { duration } from 'moment';
 import { useTranslation } from 'react-i18next';
+import getEmail from '../use/useGetEmail';
+import { Ionicons } from '@expo/vector-icons';
+import SavedWorkoutNotes from '../modals/SavedWorkoutNotes';
 
 const ViewSavedWorkout = ({navigation, route}: any) => {
 
@@ -32,12 +35,14 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
 
     const deleteSavedWorkout = async () => {
 
+        const email = await getEmail();
+
         // Delete the workout from AsyncStorage
-        const savedWorkouts = await AsyncStorage.getItem('savedWorkouts');
+        const savedWorkouts = await AsyncStorage.getItem(`savedWorkouts_${email}`);
         const savedWorkoutsArray = savedWorkouts ? JSON.parse(savedWorkouts) : [];
 
         const updatedWorkoutsArray = savedWorkoutsArray.filter((savedWorkout: any) => savedWorkout.id !== workout.id);
-        await AsyncStorage.setItem('savedWorkouts', JSON.stringify(updatedWorkoutsArray));
+        await AsyncStorage.setItem(`savedWorkouts_${email}`, JSON.stringify(updatedWorkoutsArray));
 
         navigation.goBack();
        
@@ -97,13 +102,13 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
     }, [])
 
     const [isDeleteSavedWorkoutModalVisible, setIsDeleteSavedWorkoutModalVisible] = useState(false);
+    const [isSavedWorkoutNotesVisible, setIsSavedWorkoutNotesVisible] = useState(false);
 
     const {t} = useTranslation();
 
     return (
         <>
-
-            { isDeleteSavedWorkoutModalVisible && (
+            { (isDeleteSavedWorkoutModalVisible || isSavedWorkoutNotesVisible) && (
 
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
@@ -120,6 +125,13 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
                         isDeleteSavedWorkoutModalVisible={isDeleteSavedWorkoutModalVisible}
                         setIsDeleteSavedWorkoutModalVisible={setIsDeleteSavedWorkoutModalVisible}
                         deleteSavedWorkout={deleteSavedWorkout}
+                    />
+
+                    <SavedWorkoutNotes 
+                        isSavedWorkoutNotesVisible={isSavedWorkoutNotesVisible}
+                        setIsSavedWorkoutNotesVisible={setIsSavedWorkoutNotesVisible}
+                        exercises={exercises}
+                        currentIndex={currentIndex}
                     />
 
                     <Text style={tw`text-2xl font-bold mx-3 mb-5 max-w-[81%] mt-2`}>
@@ -188,6 +200,15 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
                                                                         <Text style={tw`ml-3`}>{set.rpe === "" ? '0' : set.rpe.toString()}</Text>
                                                                     </View>
                                                                 </View>
+
+                                                                <Pressable style={tw`${mapIndex != 0 || !exercises[currentIndex].note ? 'hidden' : 'absolute right-16'}  
+                                                                w-10 h-6 bg-white shadow-sm border border-gray-200 rounded-2xl flex items-center justify-center
+                                                                `}
+                                                                onPress={() => {
+                                                                    setIsSavedWorkoutNotesVisible(true);
+                                                                }}>
+                                                                    <Ionicons name='ellipsis-horizontal' size={24} color='black' />
+                                                                </Pressable>
                                                             </View>
                                                         </View>
                                                     </View>

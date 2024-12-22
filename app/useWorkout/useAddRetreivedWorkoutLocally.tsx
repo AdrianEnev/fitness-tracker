@@ -60,6 +60,7 @@ const addRetrievedWorkoutLocally = async (exercises: any, workoutTitle: string, 
         const existingWorkouts = await AsyncStorage.getItem(`workouts_${email}`);
         const workouts = existingWorkouts ? JSON.parse(existingWorkouts) : [];
 
+        // if the exercise title wasn't able to be retreived, it falls back to an automatically generated one
         let exerciseTitleLang = "Exercise";
         const currentLanguage = await AsyncStorage.getItem('language');
         if (currentLanguage == "bg") {
@@ -119,8 +120,14 @@ const addRetrievedWorkoutLocally = async (exercises: any, workoutTitle: string, 
                 folders.push(folder);
             }
 
-            folder.workouts.push(newWorkout);
-            await AsyncStorage.setItem(`folders_${email}`, JSON.stringify(folders));
+            // Check if workout with the same id already exists in the folder
+            const workoutExists = folder.workouts.some((workout: any) => workout.id === id);
+            if (!workoutExists) {
+                folder.workouts.push(newWorkout);
+                await AsyncStorage.setItem(`folders_${email}`, JSON.stringify(folders));
+            } else {
+                console.log('Workout with the same id already exists in the folder');
+            }
         }
 
         console.log('Retrieved workout saved locally:', newWorkout);

@@ -32,15 +32,17 @@ const endWorkoutLocally = async (exercises: any, workoutTitle: string, duration:
     };
 
     try {
+        const email = await getEmail();
+
         // Retrieve existing workouts from AsyncStorage
-        const savedWorkouts = await AsyncStorage.getItem('savedWorkouts');
+        const savedWorkouts = await AsyncStorage.getItem(`savedWorkouts_${email}`);
         const savedWorkoutsArray = savedWorkouts ? JSON.parse(savedWorkouts) : [];
 
         // Add new workout to the array
         savedWorkoutsArray.push(workoutObj);
 
         // Save updated workouts array back to AsyncStorage
-        await AsyncStorage.setItem('savedWorkouts', JSON.stringify(savedWorkoutsArray));
+        await AsyncStorage.setItem(`savedWorkouts_${email}`, JSON.stringify(savedWorkoutsArray));
 
         // Update local statistics
         let totalWeight = 0;
@@ -52,8 +54,7 @@ const endWorkoutLocally = async (exercises: any, workoutTitle: string, duration:
                 }
             });
         });
-
-        const email = await getEmail();
+        
         const statistics = await AsyncStorage.getItem(`statistics_${email}`);
         const statisticsData = statistics ? JSON.parse(statistics) : { weightLifted: 0, finishedWorkouts: 0 };
 

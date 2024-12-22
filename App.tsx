@@ -33,6 +33,7 @@ import checkInternetSpeed from './app/use/useCheckInternetSpeed';
 import * as Device from 'expo-device';
 import LanguageScreenSmall from './app/screens/LanguageScreenSmall';
 import { StripeProvider } from '@stripe/stripe-react-native';
+import getEmail from './app/use/useGetEmail';
 //import { useStripe } from '@stripe/stripe-react-native';
 //import fetchKey from './app/handleStripe/fetchKey';
 
@@ -115,6 +116,20 @@ const UnauthenticatedTabNavigator = () => (
 );
 
 function App() {
+
+    const clearEmailFoodDayData = async () => {
+        try {
+
+            const email = await getEmail();
+
+            const keys = await AsyncStorage.getAllKeys();
+            const emailKeys = keys.filter(key => key.startsWith(`folders_${email}`));
+            await AsyncStorage.multiRemove(emailKeys);
+            console.log(`Cleared all items in folders_${email}`);
+        } catch (error) {
+            console.error("Error clearing AsyncStorage items:", error);
+        }
+    };
 
     const onAuthenticate = async () => {
 
@@ -467,6 +482,7 @@ function App() {
         //clearEmailFoodDayData('test')
         //tempFunc()
         getIphoneModel();
+        //clearEmailFoodDayData();
 
     }, [])
 

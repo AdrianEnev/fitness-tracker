@@ -117,7 +117,17 @@ const ChangeNutrientModal = ({ nutrient, oldValue, setNewName, setNewCalories, s
                     }`
                 }>
 
-                    <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>{nutrient}</Text>
+                    <Text style={tw`text-2xl text-white font-medium text-center mt-1`}>
+                        {
+                            nutrient === "Food Name" ? t('food-name') : 
+                            nutrient === "Food Name" ? t('food-name') : 
+                            nutrient === "Calories" ? t('calories') : 
+                            nutrient === "Protein" ? t('protein') : 
+                            nutrient === "Carbs" ? t('carbs') : 
+                            nutrient === "Fat" ? t('fat') : 
+                            null
+                        }
+                    </Text>
 
                     <View style={tw`flex-1 items-center justify-center mb-1`}>
                         <TextInput

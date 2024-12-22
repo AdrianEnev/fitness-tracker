@@ -8,6 +8,7 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getSavedWorkoutInfoLocally from '../useWorkout/useGetSavedWorkoutInfoLocally';
+import getEmail from '../use/useGetEmail';
 
 const Workouts = ({navigation}: any) => {
 
@@ -18,7 +19,9 @@ const Workouts = ({navigation}: any) => {
 
     const getWorkoutsLocally = async () => {
         try {
-            const savedWorkouts = await AsyncStorage.getItem('savedWorkouts');
+            const email = await getEmail();
+
+            const savedWorkouts = await AsyncStorage.getItem(`savedWorkouts_${email}`);
             const savedWorkoutsArray = savedWorkouts ? JSON.parse(savedWorkouts) : [];
     
             let convertedWorkouts = savedWorkoutsArray.map((workout: any) => {

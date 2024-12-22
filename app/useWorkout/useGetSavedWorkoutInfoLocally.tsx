@@ -1,8 +1,11 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import getEmail from '../use/useGetEmail';
 
 const getSavedWorkoutInfoLocally = async (workoutId: string) => {
     try {
-        const savedWorkouts = await AsyncStorage.getItem('savedWorkouts');
+        const email = await getEmail();
+
+        const savedWorkouts = await AsyncStorage.getItem(`savedWorkouts_${email}`);
         if (!savedWorkouts) {
             console.log('No saved workouts found in local storage.');
             return null;

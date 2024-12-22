@@ -2,8 +2,8 @@ import { collection, doc, getDocs } from "firebase/firestore";
 import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "./useGetEmail";
-import addWorkoutLocally from "../useWorkout/useAddWorkoutLocally";
 import addRetrievedWorkoutLocally from "../useWorkout/useAddRetreivedWorkoutLocally";
+import useAddRetreivedWorkoutLocally from "../useWorkout/useAddRetreivedSavedWorkoutLocally";
 
 const retreiveInfo = async (type: string, navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number, t: any) => {
 
@@ -19,8 +19,15 @@ const retreiveInfo = async (type: string, navigation: any, setIsRetreivingInfoAn
     console.log('internet connection - good')
 
     if (type == "workouts") {
-        console.log('checking workouts')
-        retreiveWorkouts(navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed, t);
+
+        await retreiveWorkouts(navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed, t);
+        await retreiveSavedWorkouts(navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed, t)
+
+        //setIsRetreivingInfoAnimationModalVisible(false);
+        //navigation.navigate('Тренировки');
+        navigation.goBack();
+
+        // optionally show pop up alerts - da izliza i che savenati i normalni sa vuzstanoveni
     }else if(type == "foods") {
         retreiveFoods(navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed, t);
     }
@@ -175,9 +182,6 @@ const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationMod
                 await addRetrievedWorkoutLocally(exercises, workout.title, workout.id, workout.folderId);
             }
 
-            setIsRetreivingInfoAnimationModalVisible(false);
-            navigation.navigate('Тренировки');
-
         }catch(err){
             console.error(err);
             alert(t('error'));
@@ -185,6 +189,94 @@ const retreiveWorkouts = async (navigation: any, setIsRetreivingInfoAnimationMod
     } else {
         alert(t('all-workouts-retreived'));
     }
+}
+
+const retreiveSavedWorkouts = async (navigation: any, setIsRetreivingInfoAnimationModalVisible: any, internetSpeed: number, t: any) => {
+    
+    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
+    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
+    const savedWorkoutsCollectionRef = collection(userDocRef, 'saved_workouts');
+    const savedWorkoutsSnapshot = await getDocs(savedWorkoutsCollectionRef);
+    const savedWorkoutsCountDB = savedWorkoutsSnapshot.size;
+
+    const email = await getEmail();
+    const asyncStorageSavedWorkouts = await AsyncStorage.getItem(`savedWorkouts_${email}`);
+
+    // get number of saved workouts in async storage
+    const savedWorkoutsCountAS = asyncStorageSavedWorkouts ? JSON.parse(asyncStorageSavedWorkouts).length : 0;
+
+    console.log('savedWorkoutsCountDB', savedWorkoutsCountDB);
+    console.log('savedWorkoutsCountAS', savedWorkoutsCountAS);
+
+    if (savedWorkoutsCountDB > savedWorkoutsCountAS) { 
+
+        //setIsRetreivingInfoAnimationModalVisible(true);
+
+        const savedWorkouts = savedWorkoutsSnapshot.docs.map(doc => ({ 
+            id: doc.id, 
+            title: doc.data().title, 
+            created: doc.data().created, 
+            duration: doc.data().duration, 
+            ...doc.data() 
+        }));
+
+        const savedWorkoutsAS = asyncStorageSavedWorkouts ? JSON.parse(asyncStorageSavedWorkouts) : [];
+
+        const missingSavedWorkouts = savedWorkouts.filter((savedWorkout: any) => {
+            return !savedWorkoutsAS.some((savedWorkoutAS: any) => savedWorkoutAS.id === savedWorkout.id);
+        });
+
+        console.log('missingWorkouts', missingSavedWorkouts);
+
+        try{
+            for (const savedWorkout of missingSavedWorkouts) {
+
+                if (internetSpeed < 50) {
+                    alert(t('unstable-connection'));
+                    setIsRetreivingInfoAnimationModalVisible(false);
+                    return;
+                }
+
+                const savedWorkoutInfoCollectionRef = collection(savedWorkoutsCollectionRef, savedWorkout.id, 'info');
+                const savedWorkoutInfoSnapshot = await getDocs(savedWorkoutInfoCollectionRef);
+                let exercises = [];
+            
+                for (const exerciseDoc of savedWorkoutInfoSnapshot.docs) {
+                    const exerciseData = exerciseDoc.data();
+                    const setsCollectionRef = collection(savedWorkoutInfoCollectionRef, exerciseDoc.id, 'sets');
+                    const setsSnapshot = await getDocs(setsCollectionRef);
+                    let sets = setsSnapshot.docs.map(setDoc => setDoc.data());
+            
+                    // Sort sets by setIndex
+                    sets = sets.sort((a, b) => a.setIndex - b.setIndex);
+            
+                    exercises.push({
+                        id: exerciseDoc.id,
+                        ...exerciseData,
+                        sets,
+                        exerciseIndex: (exerciseData.exerciseIndex || 1),
+                        description: exerciseData.description,
+                        note: exerciseData.note
+                    });
+                }
+            
+                // Sort exercises by exerciseIndex
+                exercises = exercises.sort((a, b) => a.exerciseIndex - b.exerciseIndex);
+            
+                console.log('Missing Workout:', {
+                    ...savedWorkout,
+                    exercises
+                });
+            
+                // add missing workout to asyncstorage
+                useAddRetreivedWorkoutLocally(exercises, savedWorkout.title, savedWorkout.id, savedWorkout.duration);
+            }
+        }catch(err){
+            console.error(err);
+            alert(t('error'));
+        }
+    }
+
 }
 
 export default retreiveInfo;

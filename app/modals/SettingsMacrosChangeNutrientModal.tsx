@@ -4,6 +4,7 @@ import Ionicons from '@expo/vector-icons/Ionicons';
 import { normalizeValue } from "../use/useNormalizeValue";
 import { useContext } from "react";
 import GlobalContext from "../../GlobalContext";
+import { useTranslation } from "react-i18next";
 
 interface SettingsMacrosChangeNutrientModalProps {
     nutrient: string;
@@ -17,6 +18,8 @@ interface SettingsMacrosChangeNutrientModalProps {
 }
 
 const SettingsMacrosChangeNutrientModal = ({ nutrient, oldValue, setCalories, setProtein, setCarbs, setFat, isSettingsMacrosChangeNutrientModalVisible, setIsSettingsMacrosChangeNutrientModalVisible, position }: SettingsMacrosChangeNutrientModalProps & { position: { top: number, left: number } }) => {
+
+    const { t } = useTranslation();
 
     let tempValue = oldValue;
 
@@ -95,7 +98,17 @@ const SettingsMacrosChangeNutrientModal = ({ nutrient, oldValue, setCalories, se
                     }`
                 }>
 
-                    <Text style={tw`text-2xl text-white font-semibold text-center mt-1`}>{nutrient}</Text>
+                    <Text style={tw`text-2xl text-white font-semibold text-center mt-1`}>
+                        {
+                            nutrient === "Food Name" ? t('food-name') : 
+                            nutrient === "Food Name" ? t('food-name') : 
+                            nutrient === "Calories" ? t('calories') : 
+                            nutrient === "Protein" ? t('protein') : 
+                            nutrient === "Carbs" ? t('carbs') : 
+                            nutrient === "Fat" ? t('fat') : 
+                            null
+                        }
+                    </Text>
 
                     <View style={tw`flex-1 items-center justify-center mb-2`}>
                         <TextInput

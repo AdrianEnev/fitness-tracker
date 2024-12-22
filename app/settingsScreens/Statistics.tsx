@@ -1,7 +1,5 @@
 import { View, Text, SafeAreaView } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { collection, doc, getDocs, onSnapshot } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -17,8 +15,10 @@ const Statistics = () => {
     const [formattedLastWorkoutDate, setFormattedLastWorkoutDate] = useState("");
 
     const getTotalWorkoutsDurationAsyncStorage = async () => {
+
+        const email = await getEmail();
         
-        const savedWorkoutsAS = await AsyncStorage.getItem('savedWorkouts')
+        const savedWorkoutsAS = await AsyncStorage.getItem(`savedWorkouts_${email}`)
 
         if (!savedWorkoutsAS) {
             setFormattedTotalWorkoutsDuration(t('no-workouts'))
@@ -145,8 +145,10 @@ const Statistics = () => {
 
     const getAverageWorkoutsDurationAsyncStorage = async () => {
 
+        const email = await getEmail();
+
         // get total seconds
-        const savedWorkoutsAS = await AsyncStorage.getItem('savedWorkouts')
+        const savedWorkoutsAS = await AsyncStorage.getItem(`savedWorkouts_${email}`)
         if (!savedWorkoutsAS) {
             setFormattedAverageWorkoutDuration(t('no-workouts'))
             return
@@ -275,7 +277,10 @@ const Statistics = () => {
     };*/
 
     const getLastWorkoutDateAsyncStorage = async () => {
-        const savedWorkoutsAS = await AsyncStorage.getItem('savedWorkouts')
+
+        const email = await getEmail();
+
+        const savedWorkoutsAS = await AsyncStorage.getItem(`savedWorkouts_${email}`)
         if (!savedWorkoutsAS) {
             setFormattedLastWorkoutDate(t('no-workouts'))
             return

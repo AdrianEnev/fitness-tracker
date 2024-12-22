@@ -55,11 +55,7 @@ const AddFoodChangeNutrientModal = ({ nutrient, oldValue, setName, setCalories, 
     
     const SaveAndCancelButtons = () => {
         return (
-            <View 
-                style={tw
-                `
-                    w-[94%] flex flex-row justify-between mt-3
-                `}>
+            <View style={tw`w-[94%] flex flex-row justify-between mt-3`}>
 
                 <Pressable style={tw`w-[49%] h-12 bg-[#fd3e54] rounded-xl shadow-lg`} onPress={() => setIsAddFoodChangeNutrientModalVisible(false)}>
                     <Text style={tw`text-2xl text-white font-medium text-center mt-[6px]`}>{t('cancel')}</Text>
@@ -128,7 +124,17 @@ const AddFoodChangeNutrientModal = ({ nutrient, oldValue, setName, setCalories, 
                     }`
                 }>
 
-                    <Text style={tw`text-2xl text-white font-semibold text-center mt-1`}>{nutrient}</Text>
+                    <Text style={tw`text-2xl text-white font-semibold text-center mt-1`}>
+                        {
+                            nutrient === "Food Name" ? t('food-name') : 
+                            nutrient === "Food Name" ? t('food-name') : 
+                            nutrient === "Calories" ? t('calories') : 
+                            nutrient === "Protein" ? t('protein') : 
+                            nutrient === "Carbs" ? t('carbs') : 
+                            nutrient === "Fat" ? t('fat') : 
+                            null
+                        }
+                    </Text>
 
                     <View style={tw`flex-1 items-center justify-center mb-2`}>
                         <TextInput
