@@ -16,6 +16,7 @@ import { copySelectedWorkouts, cutSelectedWorkouts, deleteSelectedWorkouts, past
 import PasteWorkoutsModal from '../modals/PasteWorkoutsModal';
 import { BlurView } from 'expo-blur';
 import GeneratingWorkoutAnimationModal from '../modals/GeneratingWorkoutAnimationModal';
+import DeletingMultipleWorkoutsModal from '../loadingModals/DeletingMultipleWorkoutsModal';
 
 const Workouts = ({navigation}: any) => {
 
@@ -29,6 +30,8 @@ const Workouts = ({navigation}: any) => {
     const [viewWorkoutButtonDisabled, setViewWorkoutButtonDisabled] = useState(false);
 
     const [userWorkoutsCollectionRef, setUserWorkoutsCollectionRef] = useState<any>();
+
+    const [isDeletingMultipleWorkoutsModalVisible, setIsDeletingMultipleWorkoutsModalVisible] = useState(false);
 
     const addEmptyFolder = async () => {
 
@@ -353,13 +356,20 @@ const Workouts = ({navigation}: any) => {
 
     const combinedData = [...folders, ...workouts];
 
-    const deleteWorkouts = () => {
-        deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef);
+    const deleteWorkouts = async () => {
+        
+        if (selectedWorkouts.length > 1) {
+            setIsDeletingMultipleWorkoutsModalVisible(true);
+        }
+
+        await deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, internetConnected, userWorkoutsCollectionRef);
         setSelectedWorkouts([]);
+
+        setIsDeletingMultipleWorkoutsModalVisible(false);
     }
 
     const cutWorkouts = () => {
-        cutSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef);
+        //cutSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, internetConnected, userWorkoutsCollectionRef);
         setSelectedWorkouts([]);
     }
 
@@ -391,7 +401,7 @@ const Workouts = ({navigation}: any) => {
     return (
         <>
 
-            { (isPasteWorkoutsModalVisible || isGeneratingWorkoutAnimationModalVisible) && (
+            { (isPasteWorkoutsModalVisible || isGeneratingWorkoutAnimationModalVisible || isDeletingMultipleWorkoutsModalVisible) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -414,6 +424,11 @@ const Workouts = ({navigation}: any) => {
                     setIsGeneratingWorkoutAnimationModalVisible={setIsGeneratingWorkoutAnimationModalVisible}
                     generatingWorkoutInFolder={generatingWorkoutInFolder}
                     
+                />
+
+                <DeletingMultipleWorkoutsModal
+                    isDeletingMultipleWorkoutsModalVisible={isDeletingMultipleWorkoutsModalVisible}
+                    setIsDeletingMultipleWorkoutsModalVisible={setIsDeletingMultipleWorkoutsModalVisible}
                 />
 
                 <Pressable style={tw`bg-gray-100 h-[15%] w-full flex justify-end`} onPress={() => setIsPasteWorkoutsModalVisible(true)}>

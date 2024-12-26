@@ -38,6 +38,7 @@
     "skip-exercise": "Übung überspringen",
     "skip-exercise-alert": "Sind Sie sicher, dass Sie diese Übung überspringen möchten?",
     "cancel": "Abbrechen",
+    "cancel-2": "Abbrechen",
     "yes": "Ja",
     "no-workouts-added": "Sie haben keine Workouts erstellt!",
     "finish-workout-alert": "Sind Sie sicher, dass Sie dieses Workout beenden möchten?",
@@ -248,5 +249,6 @@
     "female": "Weiblich",
     "how-active-are-you": "Wie aktiv sind Sie?",
     "retreiving-info": "Informationen abrufen...",
-    "try-face-id-again": "Versuchen Sie es erneut"
+    "try-face-id-again": "Versuchen Sie es erneut",
+    "deleting-multiple-workouts": "Workouts werden gelöscht..."
 }

@@ -38,6 +38,7 @@
     "skip-exercise": "Skip Exercise",
     "skip-exercise-alert": "Are you sure you want to skip this exercise?",
     "cancel": "Cancel",
+    "cancel-2": "Cancel",
     "yes": "Yes",
     "no-workouts-added": "You have no created workouts!",
     "finish-workout-alert": "Are you sure you want to end this workout?",
@@ -250,5 +251,6 @@
     "retrieving-info": "Retrieving Info...",
     "retreive-info-information": "This feature can restore workouts or meals that you had saved on another phone from the same account!",
     "try-face-id-again": "Try Face ID Again",
-    "no-lunge-coins": "You've got no Lunge Coins!"
+    "no-lunge-coins": "You've got no Lunge Coins!",
+    "deleting-multiple-workouts": "Deleting workouts..."
 }

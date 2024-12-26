@@ -35,31 +35,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
 
     const {folder = null} = route.params || {};
 
-    const {internetConnected, internetSpeed, setGeneratingWorkout, setGeneratingWorkoutInFolder} = useContext(GlobalContext)
-
-    const [lungeCoins, setlungeCoins] = useState<number>(0);
-
-    const getLungeCoins = async () => {
-
-        console.log('getLungeCoins ran...');
-    
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    
-        const userInfo = await getDoc(userDocRef).then((doc) => {
-            if (doc.exists()) {
-                const data = doc.data();
-
-                console.log('Free trials fetched:', data.lungeCoins);
-                setlungeCoins(data.lungeCoins); 
-            } else {
-                console.log('No user document found.');
-                return 0; // Return 0 if no document is found
-            }
-        });
-    
-        return userInfo;
-    }
+    const {internetConnected, internetSpeed, setGeneratingWorkout, setGeneratingWorkoutInFolder, lungeCoinsAmount} = useContext(GlobalContext)
 
     const decrementLungeCoins = async () => {
 
@@ -76,10 +52,10 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
                     data.lungeCoins -= 1;
                     data.lastGeneratedWorkout = new Date().toISOString();
                     await updateDoc(userDocRef, { lungeCoins: data.lungeCoins, lastGeneratedWorkout: data.lastGeneratedWorkout });
-                    console.log('Free trials decremented:', data.lungeCoins);
+                    console.log('lunge coins decremented:', data.lungeCoins);
 
                 } else {
-                    console.log('No free trials left to decrement.');
+                    console.log('No lunge coins left to decrement.');
                 }
                 
             } else {
@@ -87,28 +63,6 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
                 return false;
             }
         })
-    }
-
-    const addLungeCoins = async (coins: number) => {
-            
-        console.log('addLungeCoins function ran...');
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        
-        await getDoc(userDocRef).then(async (doc) => {
-            if (doc.exists()) {
-                const data = doc.data();
-                
-                data.lungeCoins += coins;
-                await updateDoc(userDocRef, { lungeCoins: data.lungeCoins });
-                console.log('Free trials incremented:', data.lungeCoins);
-                
-            } else {
-                console.log('No user document found.');
-                return false;
-            }
-        })
-
     }
 
     const setupFinished = async () => {
@@ -166,7 +120,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
         setPaymentSheetLoading(true);
 
         await initializePaymentSheet(initPaymentSheet, 199);
-        buy(setIsPaymentSheetShown, setPaymentSheetLoading, 199, addLungeCoins, getLungeCoins);
+        buy(setIsPaymentSheetShown, setPaymentSheetLoading, 199);
         setIsPaymentSheetShown(true);
         setPaymentSheetLoading(false);
     }
@@ -176,7 +130,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
         setPaymentSheetLoading(true);
 
         await initializePaymentSheet(initPaymentSheet, 699);
-        buy(setIsPaymentSheetShown, setPaymentSheetLoading, 699, addLungeCoins, getLungeCoins);
+        buy(setIsPaymentSheetShown, setPaymentSheetLoading, 699);
         setIsPaymentSheetShown(true);
         setPaymentSheetLoading(false);
     }
@@ -185,7 +139,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
         if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
         setPaymentSheetLoading(true);
     
-        await payWithApplePay(199, addLungeCoins, getLungeCoins);
+        await payWithApplePay(199);
         //setIsStripeFirstTierChoosePaymentMethodModalVisible(false);
         //setIsStripeModalVisible(false);
         setPaymentSheetLoading(false);
@@ -195,15 +149,11 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
         if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
         setPaymentSheetLoading(true);
     
-        await payWithApplePay(699, addLungeCoins, getLungeCoins);
+        await payWithApplePay(699);
         //setIsStripeSecondTierChoosePaymentMethodModalVisible(false);
         //setIsStripeModalVisible(false);
         setPaymentSheetLoading(false);
     };
-
-    useEffect(() => {
-        getLungeCoins();
-    }, [])
 
     const nextPage = async () => {
         
@@ -226,7 +176,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
 
             if (equipment.length === 0) return;
             
-            if (lungeCoins === 0) {
+            if (lungeCoinsAmount === 0) {
 
                 Vibration.vibrate();
                 setIsStripeModalVisible(true);

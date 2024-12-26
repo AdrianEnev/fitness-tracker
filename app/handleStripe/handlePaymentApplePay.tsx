@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { confirmPlatformPayPayment } from '@stripe/stripe-react-native';
 import { Alert } from 'react-native';
+import { addLungeCoins } from '../use/useAddLungeCoins';
 
 const API_URL = 'http://localhost:3000';
 
@@ -30,7 +31,7 @@ const fetchPaymentIntentClientSecret = async (price: number) => {
     return clientSecret;
 };
 
-export const payWithApplePay = async (price: number, addLungeCoins: any, getLungeCoins: any) => {
+export const payWithApplePay = async (price: number) => {
     try {
         const clientSecret = await fetchPaymentIntentClientSecret(price);
         const { error } = await confirmPlatformPayPayment(
@@ -66,11 +67,9 @@ export const payWithApplePay = async (price: number, addLungeCoins: any, getLung
             if (price == 199) {
                 alert('Success! You have received 10 Lunge Coins!');
                 await addLungeCoins(10);
-                getLungeCoins();
             } else if (price == 699) {
                 alert('Success! You have received 50 Lunge Coins!');
                 await addLungeCoins(50);
-                getLungeCoins();
             }
         }
     } catch (error) {

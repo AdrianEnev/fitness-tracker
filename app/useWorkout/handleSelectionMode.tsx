@@ -2,24 +2,26 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
 import { Workout } from "../../interfaces";
 import generateID from "../use/useGenerateID";
-import { collection, deleteDoc, doc, getDocs } from "firebase/firestore";
+import { collection, deleteDoc, doc, getDocs, writeBatch } from "firebase/firestore";
 import i18next from "i18next";
+import { FIRESTORE_DB } from "../../firebaseConfig";
 
-const deleteSubcollections = async (docRef: any) => {
+const deleteSubcollections = async (docRef: any, batch: any) => {
     const subcollections = await getDocs(collection(docRef, 'info'));
     for (const subcollectionDoc of subcollections.docs) {
         const setsCollection = await getDocs(collection(subcollectionDoc.ref, 'sets'));
         for (const setDoc of setsCollection.docs) {
-            await deleteDoc(setDoc.ref);
+            batch.delete(setDoc.ref);
         }
-        await deleteDoc(subcollectionDoc.ref);
+        batch.delete(subcollectionDoc.ref);
     }
 };
 
 export const deleteSelectedWorkouts = async (
-    selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, firebaseWorkouts: any, internetConnected: any,
+    selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, internetConnected: any,
     userWorkoutsCollectionRef: any
 ) => {
+
     try {
         const email = await getEmail();
         if (!email) return;
@@ -45,18 +47,23 @@ export const deleteSelectedWorkouts = async (
     }
 
     if (internetConnected) {
+        const batch = writeBatch(FIRESTORE_DB);
+
         try {
             for (const selectedWorkout of selectedWorkouts) {
                 const selectedWorkoutID = selectedWorkout.id;
                 const selectedWorkoutDoc = doc(userWorkoutsCollectionRef, selectedWorkoutID);
 
                 // Delete all subcollections and their documents
-                await deleteSubcollections(selectedWorkoutDoc);
+                await deleteSubcollections(selectedWorkoutDoc, batch);
 
                 // Delete the workout document
-                await deleteDoc(selectedWorkoutDoc);
-                console.log(`Workout with ID ${selectedWorkoutID} deleted from Firebase`);
+                batch.delete(selectedWorkoutDoc);
+                console.log(`Workout with ID ${selectedWorkoutID} added to batch for deletion`);
             }
+
+            await batch.commit();
+            console.log('Batch deletion committed');
         } catch (err) {
             console.error(err);
         }
@@ -88,7 +95,7 @@ export const copySelectedWorkouts = async (selectedWorkouts: any) => {
 
 // Function to cut selected workouts
 export const cutSelectedWorkouts = async (
-    selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, firebaseWorkouts: any, internetConnected: any,
+    selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, internetConnected: any,
     userWorkoutsCollectionRef: any
 ) => {
     try {
@@ -107,7 +114,7 @@ export const cutSelectedWorkouts = async (
         await AsyncStorage.setItem(`cut_workouts_${email}`, JSON.stringify(selectedWorkoutsData));
 
         // Delete the selected workouts from the main workouts list
-        await deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef);
+        await deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, internetConnected, userWorkoutsCollectionRef);
 
         if (internetConnected) {
             try {

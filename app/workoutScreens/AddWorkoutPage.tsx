@@ -71,7 +71,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
 
     const addSet = (exerciseId: string) => {
         setExercises(exercises.map(exercise => 
-            exercise.id === exerciseId && exercise.sets.length < 15
+            exercise.id === exerciseId && exercise.sets.length < 9
             ? { ...exercise, sets: [...exercise.sets, { reps: '', weight: '', id: Math.random().toString(), intensity: 0 }] }
             : exercise
         ));

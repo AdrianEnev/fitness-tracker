@@ -27,6 +27,7 @@
     "skip-exercise": "Passer l'exercice",
     "skip-exercise-alert": "Êtes-vous sûr de vouloir passer cet exercice ?",
     "cancel": "Annuler",
+    "cancel-2": "Annuler",
     "calories-short": "Cal.",
     "done": "Terminé",
     "add": "Ajouter",
@@ -248,5 +249,6 @@
     "delete-account": "Supprimer le compte",
     "no-saved-workouts": "Vous n'avez pas d'entraînements enregistrés",
     "set-language": "Définir la langue",
-    "language": "Langue"
+    "language": "Langue",
+    "deleting-multiple-workouts": "Suppression des entraînements..."
 }

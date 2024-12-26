@@ -13,6 +13,7 @@ interface GlobalContextType {
     syncingInfoRunning: any;
     internetSpeed: any;
     iphoneModel: string;
+    lungeCoinsAmount: number;
     setFaceIdEnabled: (value: boolean) => void;
     setReceiveFriendRequests: (value: boolean) => void;
     setProfilePicture: (profilePicture: string) => void;
@@ -23,6 +24,7 @@ interface GlobalContextType {
     setSyncingInfoRunning: (value: any) => void;
     setAccountJustRegistered: (value: any) => void;
     setLoggingIn: (value: boolean) => void;
+    setLungeCoinsAmount: (value: number) => void;
 }
 
 const defaultValues: GlobalContextType = {
@@ -38,6 +40,7 @@ const defaultValues: GlobalContextType = {
     syncingInfoRunning: false,
     internetSpeed: 0,
     iphoneModel: "",
+    lungeCoinsAmount: 0,
     setSyncingInfoRunning: () => {},
     setFaceIdEnabled: () => {},
     setReceiveFriendRequests: () => {},
@@ -48,6 +51,7 @@ const defaultValues: GlobalContextType = {
     setGeneratingWorkoutInFolder: () => {},
     setAccountJustRegistered: () => {},
     setLoggingIn: () => {},
+    setLungeCoinsAmount: () => {}
 
 };
 

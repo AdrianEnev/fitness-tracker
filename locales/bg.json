@@ -38,6 +38,7 @@
     "skip-exercise": "Пропусни Упражнение",
     "skip-exercise-alert": "Сигурен ли си, че искаш да пропуснеш това упражнение?",
     "cancel": "Назад",
+    "cancel-2": "Отказ",
     "yes": "Да",
     "no-workouts-added": "Нямаш създадени тренировки!",
     "finish-workout-alert": "Сигурен ли си, че искаш да приключиш тази тренировка?",
@@ -248,5 +249,6 @@
     "female": "Жена",
     "how-active-are-you": "Колко си активен?",
     "retreiving-info": "Възвръщане на информация...",
-    "try-face-id-again": "Опитай оптново"
+    "try-face-id-again": "Опитай оптново",
+    "deleting-multiple-workouts": "Изтриване на тренировки..."
 }

@@ -38,6 +38,7 @@
     "skip-exercise": "Saltar ejercicio",
     "skip-exercise-alert": "¿Estás seguro de que quieres saltar este ejercicio?",
     "cancel": "Cancelar",
+    "cancel-2": "Cancelar",
     "yes": "Sí",
     "no-workouts-added": "¡No has creado entrenamientos!",
     "finish-workout-alert": "¿Estás seguro de que quieres terminar este entrenamiento?",
@@ -248,5 +249,6 @@
     "female": "Mujer",
     "how-active-are-you": "¿Qué tan activo eres?",
     "retreiving-info": "Recuperando información...",
-    "try-face-id-again": "Intentar otra vez"
+    "try-face-id-again": "Intentar otra vez",
+    "deleting-multiple-workouts": "Eliminando entrenamientos..."
 }

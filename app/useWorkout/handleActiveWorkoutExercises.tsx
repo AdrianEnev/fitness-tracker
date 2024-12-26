@@ -100,7 +100,7 @@ export const addSet = (
     const currentExerciseIndex = updatedExercises.findIndex((exercise: any) => exercise.exerciseIndex === currentIndex + 1);
     if (currentExerciseIndex !== -1) {
         // Check if the current number of sets is less than 20
-        if (updatedExercises[currentExerciseIndex].sets.length < 15) {
+        if (updatedExercises[currentExerciseIndex].sets.length < 9) {
             const newSet = {
                 id: Math.random().toString(),
                 reps: "",

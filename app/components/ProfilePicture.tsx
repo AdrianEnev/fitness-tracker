@@ -1,4 +1,4 @@
-import { View, Pressable, Image, Text } from "react-native"
+import { View, Pressable, Image, Text, TouchableOpacity } from "react-native"
 import Ionicons from '@expo/vector-icons/Ionicons';
 import tw from 'twrnc';
 import * as ImagePicker from 'expo-image-picker';
@@ -13,15 +13,14 @@ import { useTranslation } from "react-i18next";
 interface ProfilePictureProps {
     page: any;
     navigation?: NavigationProp<any>;
+    setIsLungeCoinsModalVisible?: any;
 }
 
-const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
+const ProfilePicture = ({ page, navigation, setIsLungeCoinsModalVisible }: ProfilePictureProps) => {
 
     const {t} = useTranslation();
 
-    const { profilePicture, setProfilePicture, internetConnected } = useContext(GlobalContext);
-
-    const [showConnectionStatus, setShowConnectionStatus] = useState(false);
+    const { profilePicture, setProfilePicture, internetConnected, lungeCoinsAmount } = useContext(GlobalContext);
 
     const uriToBlob = async (uri: string): Promise<Blob> => {
         const response = await fetch(uri);
@@ -60,25 +59,13 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
                 alert(t('unsupported-image'))
             }
            
-    
         }
     };
-
-    useEffect(() => {
-        const timer = setInterval(() => {
-            setShowConnectionStatus(false);
-        }, 4000);
-
-        return () => {
-            clearInterval(timer);
-        };
-    }, []);
 
     return (
         <View>
             {profilePicture === '' ? (
-                <View>
-
+                <View> 
                     <Pressable 
                         style={tw`bg-white ${page === 'Main' ? 'w-16 h-16' : 'w-22 h-22'} rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}
                         onPress={() => {
@@ -104,18 +91,12 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
             ) : (
                 <View style={tw`w-full`}>
 
-                    {(showConnectionStatus && internetConnected && page === 'Main') && (
-                        <View style={tw`absolute bottom-[-13px] left-17 z-30 shadow-md rounded-[10px] w-44 h-8 flex items-center justify-center bg-green-500`}>
-                            <Text style={tw`text-base font-medium text-white`}>Connection: Stable</Text>
-                        </View>
-                    )}
+                    <Pressable style={tw`absolute right-[-6px] w-7 h-7 rounded-xl bg-[#fd1c47] z-20 flex items-center justify-center`} onPress={() => {
+                        setIsLungeCoinsModalVisible(true);
+                    }}>
+                        <Text style={tw`text-white font-semibold text-lg`}>{lungeCoinsAmount}</Text>
+                    </Pressable> 
 
-                    {(showConnectionStatus && !internetConnected && page === 'Main') && (
-                        <View style={tw`absolute bottom-[-13px] left-17 z-30 shadow-md rounded-[10px] w-42 h-8 flex items-center justify-center bg-gray-300`}>
-                            <Text style={tw`text-base font-medium text-black`}>Connection: None</Text>
-                        </View>
-                    )}
-                    
                     <Pressable onPress={() => {
                         if (page === 'Main') {
                             navigation?.navigate('Настройки-Акаунт')
@@ -127,9 +108,7 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
                         }
 
                         
-                    }}
-                        onLongPress={() => setShowConnectionStatus(!showConnectionStatus)}
-                    >
+                    }}>
                         <Image
                             source={{ uri: profilePicture }}
                             style={tw`${page === 'Main' ? 'w-16 h-16' : 'w-22 h-22'} border border-gray-300 rounded-full ml-2`}

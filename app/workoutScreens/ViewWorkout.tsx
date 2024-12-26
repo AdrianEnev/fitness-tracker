@@ -45,7 +45,7 @@ const ViewWorkout = ({route, navigation}: any) => {
         const currentExerciseIndex = updatedExercises.findIndex((exercise: any) => exercise.exerciseIndex === pageNumber + 1);
         
         if (currentExerciseIndex !== -1) {
-            if (updatedExercises[currentExerciseIndex].sets.length < 15) { // Check if the number of sets is less than 20
+            if (updatedExercises[currentExerciseIndex].sets.length < 9) { // Check if the number of sets is less than 20
                 const newSet = {
                     id: generateID(),
                     reps: "",

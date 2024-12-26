@@ -1,6 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { presentPaymentSheet } from "@stripe/stripe-react-native";
 import { Alert } from "react-native";
+import { addLungeCoins } from "../use/useAddLungeCoins";
 
 export const initializePaymentSheet = async (initPaymentSheet: any, price: number) => {
 
@@ -102,7 +103,7 @@ const fetchPaymentSheetParams = async (price: number) => {
     };
 };
 
-export const buy = async (setIsPaymentSheetShown: any, setIsPaymentSheetLoading: any, price: number, addLungeCoins: any, getLungeCoins: any) => {
+export const buy = async (setIsPaymentSheetShown: any, setIsPaymentSheetLoading: any, price: number) => {
     const {error} = await presentPaymentSheet();
 
     if (error) {
@@ -116,12 +117,9 @@ export const buy = async (setIsPaymentSheetShown: any, setIsPaymentSheetLoading:
         if (price == 199) {
             alert('Success! You have received 10 Lunge Coins!')
             await addLungeCoins(10);
-            getLungeCoins();
-            
         } else if (price == 699) {
             alert('Success! You have received 50 Lunge Coins!')
             await addLungeCoins(50);
-            getLungeCoins();
         }
     }
 }

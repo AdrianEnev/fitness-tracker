@@ -34,8 +34,7 @@ import * as Device from 'expo-device';
 import LanguageScreenSmall from './app/screens/LanguageScreenSmall';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import getEmail from './app/use/useGetEmail';
-//import { useStripe } from '@stripe/stripe-react-native';
-//import fetchKey from './app/handleStripe/fetchKey';
+import { getLungeCoins } from './app/use/useGetLungeCoins';
 
 const Stack = createStackNavigator();
 
@@ -200,6 +199,8 @@ function App() {
     const [loggingIn, setLoggingIn] = useState(false);
 
     const [internetSpeed, setInternetSpeed] = useState(0);
+    
+    const [lungeCoinsAmount, setLungeCoinsAmount] = useState(0)
 
     const getIphoneModel = async () => {
         if (Device.brand === 'Apple') {
@@ -215,6 +216,9 @@ function App() {
             const setupHasRanLocally = await checkUserGoalNutrientsLocally();
             setSetupRan(setupHasRanLocally);
 
+            const lungeCoins = await getLungeCoins();
+            setLungeCoinsAmount(lungeCoins)
+            
             checkLanguageDocumentLocally();
             checkUsernamesMatch();
             
@@ -551,7 +555,7 @@ function App() {
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
             internetConnected: isConnected, isAccountDeleted, setIsAccountDeleted, generatingWorkout, setGeneratingWorkout,
             generatingWorkoutInFolder, setGeneratingWorkoutInFolder, syncingInfoRunning, setSyncingInfoRunning, internetSpeed, setAccountJustRegistered,
-            iphoneModel, setLoggingIn
+            iphoneModel, setLoggingIn, lungeCoinsAmount, setLungeCoinsAmount
         }}>
 
             <StripeProvider 
