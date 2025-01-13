@@ -3,9 +3,11 @@ import { confirmPlatformPayPayment } from '@stripe/stripe-react-native';
 import { Alert } from 'react-native';
 import { addLungeCoins } from '../use/useAddLungeCoins';
 
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://fitness-tracker-0mda.onrender.com';
 
 const fetchPaymentIntentClientSecret = async (price: number) => {
+
+    console.log('fetchPaymentIntentClientSecret ran:');
 
     const customerEmail = await AsyncStorage.getItem('email');
 
@@ -72,10 +74,11 @@ export const payWithApplePay = async (price: number) => {
                 await addLungeCoins(50);
             }
         }
-    } catch (error) {
-        if (error === "[TypeError: Network request failed]" || error === "TypeError: Network request failed") {
-            alert('Network request failed. Please check your internet connection.');
-            return;
+    } catch (error: any) {
+
+        if (error.includes('Network request failed')) {
+            alert('Network request failed. Please check your internet connection and try again!');
+            //return;
         }
 
         console.error('Error in payWithApplePay:', error);

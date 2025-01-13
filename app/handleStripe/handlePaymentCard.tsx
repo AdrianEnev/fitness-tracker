@@ -5,6 +5,8 @@ import { addLungeCoins } from "../use/useAddLungeCoins";
 
 export const initializePaymentSheet = async (initPaymentSheet: any, price: number) => {
 
+    console.log('initializePaymentSheet ran');
+
     const userDeviceEmail = await AsyncStorage.getItem('email');
     const trimmedEmail = userDeviceEmail ? userDeviceEmail.split('@')[0] : '';
 
@@ -38,9 +40,10 @@ export const initializePaymentSheet = async (initPaymentSheet: any, price: numbe
     }
 };
 
-const API_URL = 'http://localhost:3000';
+const API_URL = 'https://fitness-tracker-0mda.onrender.com';
 
 const fetchPaymentSheetParams = async (price: number) => {
+    
     const customerEmail = await AsyncStorage.getItem('email');
 
     // Fetch or create the customer

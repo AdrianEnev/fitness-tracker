@@ -8,6 +8,7 @@ import GlobalContext from '../../GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { collection, doc, getDoc } from 'firebase/firestore';
+import { BlurView } from 'expo-blur';
 
 
 const Login = ({navigation}: any) => {
@@ -179,7 +180,7 @@ const Login = ({navigation}: any) => {
                             <View style={tw`mb-2`}>
                                 <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('email')}</Text>
                                 <TextInput 
-                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
+                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2 font-medium`} 
                                     placeholder={t('example-email')}
                                     onChangeText={(text: string) => setEmail(text)} 
                                     value={email} 
@@ -193,7 +194,7 @@ const Login = ({navigation}: any) => {
                                 <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('password')}</Text>
                                     
                                 <TextInput 
-                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
+                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2 font-medium`} 
                                     placeholder={t('enter-password')}
                                     onChangeText={(text: string) => setPassword(text)} 
                                     value={password} 
@@ -215,14 +216,30 @@ const Login = ({navigation}: any) => {
                                 </View>
 
                                 <Pressable style={tw`flex items-end w-full mt-1 mb-2`} onPress={() => navigation.navigate('Парола-Смяна')}>
-                                    <Text style={tw`font-medium text-gray-500`}>{t('forgot-password')}</Text>
+                                    <Text style={tw`font-semibold text-gray-500`}>{t('forgot-password')}</Text>
                                 </Pressable>
                             </View>
                             
                             <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-lg flex justify-center items-center shadow-md`}
                                 onPress={signIn}>
-                                <Text style={tw`text-2xl text-white`}>{t('login')}</Text>
+                                <Text style={tw`text-2xl text-white font-semibold`}>{t('login')}</Text>
                             </TouchableOpacity>
+
+                            <View style={tw`w-full h-[2px] bg-gray-300 mt-2`}></View>
+
+                            <Pressable style={tw`flex flex-col items-center`}>
+
+                                <View style={tw`flex flex-row gap-x-5`}>
+
+                                    <Pressable>
+                                        <Ionicons name='logo-apple' size={64} color='#f43f5e'></Ionicons>
+                                    </Pressable>
+
+                                    <Pressable>
+                                        <Ionicons name='logo-google' size={55} color='#3b82f6' style={tw`mt-2`}></Ionicons>
+                                    </Pressable>
+                                </View>
+                            </Pressable>
                             
                                 
                         </View>

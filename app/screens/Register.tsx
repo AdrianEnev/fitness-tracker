@@ -11,7 +11,6 @@ import { checkUserDocument } from '../use/useCheckUserInfo';
 import checkUsernameNSFW from '../use/useCheckUsernameNSFW';
 import Ionicons from '@expo/vector-icons/Ionicons';
 
-
 const Register = ({navigation}: any) => {
 
     const { t } = useTranslation();
@@ -34,7 +33,6 @@ const Register = ({navigation}: any) => {
     const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false)
 
     const auth = FIREBASE_AUTH;
-
 
     const signUp = async() => {
 
@@ -306,7 +304,7 @@ const Register = ({navigation}: any) => {
                                     signUp()
                                 }} disabled={registerButtonDisabled}>
 
-                                <Text style={tw`text-2xl text-white`}>{t('register')}</Text>
+                                <Text style={tw`text-2xl text-white font-semibold`}>{t('register')}</Text>
 
                             </TouchableOpacity>
 

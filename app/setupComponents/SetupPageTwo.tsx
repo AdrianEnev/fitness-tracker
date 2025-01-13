@@ -31,7 +31,7 @@ const SetupPageTwo = ({age, setAge}: any) => {
             <View style={tw`mx-5`}>
                 <Text style={tw`font-medium text-2xl text-center`}>{t('setup-age')}</Text>
                 {currentLanguage === 'en' ? 
-                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>This will<Text style={tw`font-bold`}> only</Text> be used to calculate your daily BMR!</Text> : currentLanguage == "bg" ? (
+                    <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>This will <Text style={tw`font-bold`}> only</Text> be used to calculate your daily BMR!</Text> : currentLanguage == "bg" ? (
                     <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Това ще бъде използвано <Text style={tw`font-bold`}>само</Text> за изчисляване на твоят дневен BMR!</Text> ) : currentLanguage == "de" ? (
                     <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Dies wird<Text style={tw`font-bold`}> nur</Text> verwendet, um Ihren täglichen BMR zu berechnen!</Text> ) : currentLanguage == "fr" ? (
                     <Text style={tw`font-medium text-lg text-gray-500 mt-3 text-center`}>Cela sera<Text style={tw`font-bold`}> uniquement</Text> utilisé pour calculer votre BMR quotidien!</Text> ) : currentLanguage == "ru" ? (

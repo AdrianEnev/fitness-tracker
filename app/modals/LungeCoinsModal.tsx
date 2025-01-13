@@ -3,6 +3,7 @@ import { Ionicons } from '@expo/vector-icons';
 import React, { useContext} from 'react'
 import tw from 'twrnc'
 import GlobalContext from '../../GlobalContext';
+import { useTranslation } from 'react-i18next';
 
 interface LungeCoinsModalProps {
     isLungeCoinsModalVisible: boolean;
@@ -16,7 +17,7 @@ const LungeCoinsModal: React.FC<LungeCoinsModalProps> = (
     { isLungeCoinsModalVisible, setIsLungeCoinsModalVisible, isPaymentSheetLoading, setIsStripeFirstTierChoosePaymentMethodModalVisible, setIsStripeSecondTierChoosePaymentMethodModalVisible }
 ) => { 
 
-    //const {t} = useTranslation();
+    const {t} = useTranslation();
     //const currentLanguage = i18next.language;
 
     const { iphoneModel, lungeCoinsAmount } = useContext(GlobalContext);
@@ -76,7 +77,7 @@ const LungeCoinsModal: React.FC<LungeCoinsModalProps> = (
                         </View>
 
                         <Pressable style={tw`mt-4 w-full h-12 flex items-center justify-center bg-gray-200 rounded-lg`} onPress={() => setIsLungeCoinsModalVisible(false)}>
-                            <Text style={tw`text-xl font-medium`}>Go Back</Text>
+                            <Text style={tw`text-xl font-medium`}>{t('back')}</Text>
                         </Pressable>
                         
                         
