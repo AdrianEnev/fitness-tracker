@@ -3,6 +3,12 @@ import generateID from '../use/useGenerateID';
 import getEmail from '../use/useGetEmail';
 
 const saveWorkoutEditsLocally = async (workout: any, userInputs: any, newExercises: any, newWorkoutTitle: any) => {
+
+    // return if no changes have been made (probably unnecessary for async storage) => stays unimplemented for now
+
+    // this implementation gets all local workouts, finds the current one and then compares it to the changes made
+    // would be very slow if used for firebase
+
     try {
         const email = await getEmail();
         if (!email) return;

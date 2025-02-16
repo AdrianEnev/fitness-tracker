@@ -3,7 +3,11 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
 import generateID from "../use/useGenerateID";
 
 const saveWorkoutEdits = async (workout: any, userInputs: any, newExercises: any, newWorkoutTitle: any) => {
-    
+
+    // check if any workout changes have been made before continuing... (unimplemented)
+    // workout and userInputs seem to be tied and have the same values
+    // both are passed though, to avoid confusion for now
+
     const usersCollectionRef = collection(FIRESTORE_DB, "users");
     const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
     const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
@@ -99,7 +103,7 @@ const saveWorkoutEdits = async (workout: any, userInputs: any, newExercises: any
 
     // check if any new exercises have been added to the workout
     const addedExercises = userInputs.filter((input: any) => !exercisesData.some((dbExercise: any) => dbExercise.id === input.id));
-    let nextIndex = exercisesData.length;
+    let nextIndex = 0;
 
     for (let addedExercise of addedExercises) {
         // Generate title if empty, similar to useAddWorkout.tsx logic
@@ -131,6 +135,7 @@ const saveWorkoutEdits = async (workout: any, userInputs: any, newExercises: any
         nextIndex++;
     }
 
+    //workout.created gets converted from timestamp to string when saving edits
     if (newWorkoutTitle === '') {
         await setDoc(workoutDocRef, {
             title: workout.title,

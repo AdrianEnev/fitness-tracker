@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import generateRandomColour from "../use/useGenerateColour";
 import getEmail from "../use/useGetEmail";
 import generateID from "../use/useGenerateID";
+import { serverTimestamp } from "firebase/firestore";
 
 const addGeneratedWorkoutLocally = async (generatedWorkout: any, setGeneratingWorkout: any, folder?: any) => {
     
@@ -70,7 +71,7 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, setGeneratingWo
                 id: generateID(),
                 title: newWorkoutTitle,
                 previousTitle: workoutTitle,
-                created: new Date().toISOString(),
+                created: serverTimestamp(), //new Date().toISOString() - ako ne raboti timestamp
                 colour: getUniqueColour(),
                 numberOfExercises: exercises.length,
                 info: exercises,

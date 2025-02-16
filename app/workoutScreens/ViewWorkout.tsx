@@ -34,7 +34,6 @@ const ViewWorkout = ({route, navigation}: any) => {
         sets: exercise.sets.map((set: any) => ({...set, reps: set.reps, weight: set.weight}))
     })));
 
-
     const [saveChangesRan, setSaveChangesRan] = useState(false);
 
     const [deleteWorkoutCalled, setDeleteWorkoutCalled] = useState(false);
@@ -106,6 +105,8 @@ const ViewWorkout = ({route, navigation}: any) => {
         }
 
         if (internetConnected) {
+            console.log(workout)
+            console.log(userInputs)
             saveWorkoutEdits(workout, userInputs, newExercises, newWorkoutTitle);
         }
 

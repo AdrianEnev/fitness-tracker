@@ -114,7 +114,9 @@ const WorkoutFolder = ({ route, navigation }: any) => {
         setViewWorkoutButtonDisabled(true);
 
         const workoutInfo = await getWorkoutInfoLocally(workout.id, folder);
-        console.log(workoutInfo)
+
+        //console.log(workoutInfo)
+        
         if (workoutInfo) {
             const { exercisesData, workoutTitle } = workoutInfo;
             navigation.navigate('Тренировка-Детайли', { exercises: exercisesData, workoutTitle: workoutTitle, workout: workout, folder: folder });
