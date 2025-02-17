@@ -20,13 +20,6 @@ import ProfilePicture from '../components/ProfilePicture';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
 import { getLanguageLocally } from '../use/useGetLanguageLocally';
-import { BlurView } from 'expo-blur';
-import LungeCoinsModal from '../modals/LungeCoinsModal';
-import StripeSecondTierChoosePaymentMethodModal from '../handleStripe/StripeSecondTierChoosePaymentMethodModal';
-import StripeFirstTierChoosePaymentMethodModal from '../handleStripe/StripeFirstTierChoosePaymentMethodModal';
-import { payWithApplePay } from '../handleStripe/handlePaymentApplePay';
-import { buy, initializePaymentSheet } from '../handleStripe/handlePaymentCard';
-import { usePaymentSheet } from '@stripe/stripe-react-native';
 
 //bg-[#fd3e6b]
 //bg-[#3d5875]
@@ -35,20 +28,11 @@ const Main = ({navigation}: any) => {
 
     const { t } = useTranslation();
 
-    const {initPaymentSheet} = usePaymentSheet();
-    const [isPaymentSheetShown, setIsPaymentSheetShown] = useState(false);
-    const [isStripeModalVisible, setIsStripeModalVisible] = useState(false);
-
     const { internetConnected, iphoneModel, friendRequestsNumber, internetSpeed } = useContext(GlobalContext);
 
     const [currentFormattedDate, setCurrentFormattedDate] = useState<any>();
 
     const [username, setUsername] = useState<string | null>(null);
-
-    const [isLungeCoinsModalVisible, setIsLungeCoinsModalVisible] = useState(false);
-    const [isPaymentSheetLoading, setisPaymentSheetLoading] = useState(false);
-    const [isStripeFirstTierChoosePaymentMethodModalVisible, setIsStripeFirstTierChoosePaymentMethodModalVisible] = useState(false);
-    const [isStripeSecondTierChoosePaymentMethodModalVisible, setIsStripeSecondTierChoosePaymentMethodModalVisible] = useState(false);
 
     const getUsernameLocally = async () => {
         const email = await getEmail();
@@ -149,99 +133,18 @@ const Main = ({navigation}: any) => {
         }
     }
 
-     const purchaseFirstTierCard = async () => {
-        if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
-        setisPaymentSheetLoading(true);
-
-        await initializePaymentSheet(initPaymentSheet, 199);
-        buy(setIsPaymentSheetShown, setisPaymentSheetLoading, 199);
-        setIsPaymentSheetShown(true);
-        setisPaymentSheetLoading(false);
-    }
-
-    const purchaseSecondTier = async () => {
-        if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
-        setisPaymentSheetLoading(true);
-
-        await initializePaymentSheet(initPaymentSheet, 699);
-        buy(setIsPaymentSheetShown, setisPaymentSheetLoading, 699);
-        setIsPaymentSheetShown(true);
-        setisPaymentSheetLoading(false);
-    }
-
-    const purchaseFirstTierApplePay = async () => {
-        if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
-        setisPaymentSheetLoading(true);
-    
-        await payWithApplePay(199);
-        //setIsStripeFirstTierChoosePaymentMethodModalVisible(false);
-        //setIsStripeModalVisible(false);
-        setisPaymentSheetLoading(false);
-    };
-    
-    const purchaseSecondTierApplePay = async () => {
-        if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
-        setisPaymentSheetLoading(true);
-    
-        await payWithApplePay(699);
-        //setIsStripeSecondTierChoosePaymentMethodModalVisible(false);
-        //setIsStripeModalVisible(false);
-        setisPaymentSheetLoading(false);
-    };
-
     return (
         <>
-
-            {(
-                isLungeCoinsModalVisible || 
-                isPaymentSheetShown || 
-                isStripeModalVisible || 
-                isStripeFirstTierChoosePaymentMethodModalVisible || 
-                isStripeSecondTierChoosePaymentMethodModalVisible
-            ) && (
-                <BlurView
-                    style={tw`absolute w-full h-full z-10`}
-                    intensity={50}
-                    tint='dark'
-                />
-            )}
-
             <SafeAreaView style={tw`h-full`}>
 
                 <ScrollView style={tw`h-full w-full`} contentContainerStyle={tw`pb-24`} showsVerticalScrollIndicator={false} scrollEnabled={iphoneModel.includes('SE') ? false : true}>
-
-                    <LungeCoinsModal
-                        isLungeCoinsModalVisible={isLungeCoinsModalVisible}
-                        setIsLungeCoinsModalVisible={setIsLungeCoinsModalVisible}
-                        isPaymentSheetLoading={isPaymentSheetLoading}
-                        setIsStripeFirstTierChoosePaymentMethodModalVisible={setIsStripeFirstTierChoosePaymentMethodModalVisible}
-                        setIsStripeSecondTierChoosePaymentMethodModalVisible={setIsStripeSecondTierChoosePaymentMethodModalVisible}
-                    />
-
-                    <StripeFirstTierChoosePaymentMethodModal 
-                        isStripeFirstTierChoosePaymentMethodModalVisible={isStripeFirstTierChoosePaymentMethodModalVisible}
-                        setIsStripeFirstTierChoosePaymentMethodModalVisible={setIsStripeFirstTierChoosePaymentMethodModalVisible}
-                        purchaseFirstTierCard={purchaseFirstTierCard}
-                        purchaseFirstTierApplePay={purchaseFirstTierApplePay}
-                        isPaymentSheetLoading={isPaymentSheetLoading}
-                        setIsStripeModalVisible={setIsLungeCoinsModalVisible}
-                    />
-
-                    <StripeSecondTierChoosePaymentMethodModal 
-                        isStripeSecondTierChoosePaymentMethodModalVisible={isStripeSecondTierChoosePaymentMethodModalVisible}
-                        setIsStripeSecondTierChoosePaymentMethodModalVisible={setIsStripeSecondTierChoosePaymentMethodModalVisible}
-                        purchaseSecondTier={purchaseSecondTier}
-                        purchaseSecondTierApplePay={purchaseSecondTierApplePay}
-                        isPaymentSheetLoading={isPaymentSheetLoading}
-                        setIsStripeModalVisible={setIsLungeCoinsModalVisible}
-                    />
 
                     <View style={tw`flex flex-row justify-between mt-2 mx-1`}>
 
                         <View style={tw`flex flex-row`}>
                             
                             <View style={tw`z-20`}>
-                                <ProfilePicture navigation={navigation} page='Main' setIsLungeCoinsModalVisible={setIsLungeCoinsModalVisible}/>
+                                <ProfilePicture navigation={navigation} page='Main'/>
                             </View>
 
                             {/* Zdravei User */}

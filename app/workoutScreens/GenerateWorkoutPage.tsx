@@ -18,18 +18,8 @@ import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
-import { usePaymentSheet, PlatformPayButton, isPlatformPaySupported } from '@stripe/stripe-react-native'
-import { buy, initializePaymentSheet } from '../handleStripe/handlePaymentCard'
-import StripeModal from '../handleStripe/StripeModal'
-import StripeFirstTierChoosePaymentMethodModal from '../handleStripe/StripeFirstTierChoosePaymentMethodModal'
-import StripeSecondTierChoosePaymentMethodModal from '../handleStripe/StripeSecondTierChoosePaymentMethodModal'
-import { payWithApplePay } from '../handleStripe/handlePaymentApplePay'
 
 const GenerateWorkoutPage = ({navigation, route}: any) => {
-
-    const {initPaymentSheet} = usePaymentSheet();
-    const [isPaymentSheetShown, setIsPaymentSheetShown] = useState(false);
-    const [isPaymentSheetLoading, setPaymentSheetLoading] = useState(false);
 
     const {t} = useTranslation();
 
@@ -115,46 +105,6 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
         console.log('generated workout');
     }
 
-    const purchaseFirstTierCard = async () => {
-        if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
-        setPaymentSheetLoading(true);
-
-        await initializePaymentSheet(initPaymentSheet, 199);
-        buy(setIsPaymentSheetShown, setPaymentSheetLoading, 199);
-        setIsPaymentSheetShown(true);
-        setPaymentSheetLoading(false);
-    }
-
-    const purchaseSecondTier = async () => {
-        if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
-        setPaymentSheetLoading(true);
-
-        await initializePaymentSheet(initPaymentSheet, 699);
-        buy(setIsPaymentSheetShown, setPaymentSheetLoading, 699);
-        setIsPaymentSheetShown(true);
-        setPaymentSheetLoading(false);
-    }
-
-    const purchaseFirstTierApplePay = async () => {
-        if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
-        setPaymentSheetLoading(true);
-    
-        await payWithApplePay(199);
-        //setIsStripeFirstTierChoosePaymentMethodModalVisible(false);
-        //setIsStripeModalVisible(false);
-        setPaymentSheetLoading(false);
-    };
-    
-    const purchaseSecondTierApplePay = async () => {
-        if (isPaymentSheetLoading || !internetConnected || internetSpeed < 64) return;
-        setPaymentSheetLoading(true);
-    
-        await payWithApplePay(699);
-        //setIsStripeSecondTierChoosePaymentMethodModalVisible(false);
-        //setIsStripeModalVisible(false);
-        setPaymentSheetLoading(false);
-    };
-
     const nextPage = async () => {
         
         if (currentPage === 1 && experienceLevel !== 0) {
@@ -175,37 +125,9 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
             }
 
             if (equipment.length === 0) return;
+            setupFinished();
             
-            if (lungeCoinsAmount === 0) {
-
-                Vibration.vibrate();
-                setIsStripeModalVisible(true);
-
-                return;
-
-            }else{
-                Alert.alert(
-                    'Generate Workout',
-                    'Would you like to use 1 Lunge Coin to generate a workout?',
-                    [
-                        {
-                            text: 'Cancel',
-                            style: 'destructive',
-                        },
-                        {
-                            text: 'Proceed',
-                            style: 'default',
-                            onPress: () => {
-                                setupFinished();
-                            },
-                        },
-                    ],
-                    
-                );
-            }
-            
-        }
-
+        }   
     }
     const previousPage = () => {
         if (currentPage > 1) {
@@ -235,18 +157,11 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
     const [equipment, setEquipment] = useState([]);
 
     const [isGenerateWorkoutModalVisible, setIsGenerateWorkoutModalVisible] = useState(false);
-    const [isStripeModalVisible, setIsStripeModalVisible] = useState(false);
-    const [isStripeFirstTierChoosePaymentMethodModalVisible, setIsStripeFirstTierChoosePaymentMethodModalVisible] = useState(false)
-    const [isStripeSecondTierChoosePaymentMethodModalVisible, setIsStripeSecondTierChoosePaymentMethodModalVisible] = useState(false)
 
     return (
         <>
             {(
-                isGenerateWorkoutModalVisible || 
-                isPaymentSheetShown || 
-                isStripeModalVisible || 
-                isStripeFirstTierChoosePaymentMethodModalVisible || 
-                isStripeSecondTierChoosePaymentMethodModalVisible
+                isGenerateWorkoutModalVisible
             ) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
@@ -258,32 +173,6 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
             <GenerateWorkoutModal
                 isGenerateWorkoutModalVisible={isGenerateWorkoutModalVisible}
                 setIsGenerateWorkoutModalVisible={setIsGenerateWorkoutModalVisible}
-            />
-
-            <StripeModal 
-                isStripeModalVisible={isStripeModalVisible}
-                setIsStripeModalVisible={setIsStripeModalVisible}
-                isPaymentSheetLoading={isPaymentSheetLoading}
-                setIsStripeFirstTierChoosePaymentMethodModalVisible={setIsStripeFirstTierChoosePaymentMethodModalVisible}
-                setIsStripeSecondTierChoosePaymentMethodModalVisible={setIsStripeSecondTierChoosePaymentMethodModalVisible}
-            />
-
-            <StripeFirstTierChoosePaymentMethodModal 
-                isStripeFirstTierChoosePaymentMethodModalVisible={isStripeFirstTierChoosePaymentMethodModalVisible}
-                setIsStripeFirstTierChoosePaymentMethodModalVisible={setIsStripeFirstTierChoosePaymentMethodModalVisible}
-                purchaseFirstTierCard={purchaseFirstTierCard}
-                purchaseFirstTierApplePay={purchaseFirstTierApplePay}
-                isPaymentSheetLoading={isPaymentSheetLoading}
-                setIsStripeModalVisible={setIsStripeModalVisible}
-
-            />
-            <StripeSecondTierChoosePaymentMethodModal 
-                isStripeSecondTierChoosePaymentMethodModalVisible={isStripeSecondTierChoosePaymentMethodModalVisible}
-                setIsStripeSecondTierChoosePaymentMethodModalVisible={setIsStripeSecondTierChoosePaymentMethodModalVisible}
-                purchaseSecondTier={purchaseSecondTier}
-                purchaseSecondTierApplePay={purchaseSecondTierApplePay}
-                isPaymentSheetLoading={isPaymentSheetLoading}
-                setIsStripeModalVisible={setIsStripeModalVisible}
             />
 
             <SafeAreaView style={tw`flex-1 bg-white`}>

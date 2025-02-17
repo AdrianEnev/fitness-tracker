@@ -12,11 +12,10 @@ import { useTranslation } from "react-i18next";
 
 interface ProfilePictureProps {
     page: any;
-    navigation?: NavigationProp<any>;
-    setIsLungeCoinsModalVisible?: any;
+    navigation?: NavigationProp<any>
 }
 
-const ProfilePicture = ({ page, navigation, setIsLungeCoinsModalVisible }: ProfilePictureProps) => {
+const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
 
     const {t} = useTranslation();
 
@@ -90,12 +89,6 @@ const ProfilePicture = ({ page, navigation, setIsLungeCoinsModalVisible }: Profi
                 </View>
             ) : (
                 <View style={tw`w-full`}>
-
-                    <Pressable style={tw`absolute right-[-6px] w-7 h-7 rounded-xl bg-[#fd1c47] z-20 flex items-center justify-center`} onPress={() => {
-                        setIsLungeCoinsModalVisible(true);
-                    }}>
-                        <Text style={tw`text-white font-semibold text-lg`}>{lungeCoinsAmount}</Text>
-                    </Pressable> 
 
                     <Pressable onPress={() => {
                         if (page === 'Main') {

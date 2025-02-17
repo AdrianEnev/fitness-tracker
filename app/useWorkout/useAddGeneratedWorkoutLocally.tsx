@@ -29,6 +29,7 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, setGeneratingWo
 
         if (!generatedWorkout || !generatedWorkout.days) {
             console.error('Invalid generated workout structure:', generatedWorkout);
+            setGeneratingWorkout(false)
             return;
         }
 
