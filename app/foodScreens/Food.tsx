@@ -1,11 +1,12 @@
 import { View } from 'react-native'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import tw from 'twrnc'
 import { bgLocaleConfig, deLocaleConfig, enLocaleConfig, frLocaleConfig, ruLocaleConfig, itLocaleConfig, esLocaleConfig } from "../../CalendarConfig";
 import { CalendarList, LocaleConfig } from 'react-native-calendars';
 import i18next from '../../services/i18next';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '../use/useGetEmail';
+import GlobalContext from 'GlobalContext';
 
 LocaleConfig.locales['bg'] = bgLocaleConfig;
 LocaleConfig.locales['en'] = enLocaleConfig;
@@ -16,6 +17,8 @@ LocaleConfig.locales['it'] = itLocaleConfig;
 LocaleConfig.locales['es'] = esLocaleConfig;
 
 const Food = ({navigation}: any) => {
+
+    const {iphoneModel} = useContext(GlobalContext)
 
     const [localeKey, setLocaleKey] = useState(i18next.language);
     const [renderKey, setRenderKey] = useState(Date.now());
@@ -120,11 +123,11 @@ const Food = ({navigation}: any) => {
                         console.log('held')
                     }}
                     theme={{
-                        textDayFontSize: 20,
-                        textDayHeaderFontSize: 24,
-                        textMonthFontSize: 24,
+                        textDayFontSize: iphoneModel.includes('Ipad') ? 20 : 16,
+                        textDayHeaderFontSize: iphoneModel.includes('Ipad') ? 24 : 16,
+                        textMonthFontSize: iphoneModel.includes('Ipad') ? 24 : 16,
                         textDayStyle: {
-                            lineHeight: 22, // Adjust based on fontSize
+                            lineHeight: iphoneModel.includes('Ipad') ? 22 : 20, // Adjust based on fontSize
                         },
                     }}
                 />

@@ -148,19 +148,19 @@ const Main = ({navigation}: any) => {
                             </View>
 
                             {/* Zdravei User */}
-                            <View style={tw`flex flex-col ml-3 w-full ${true ? "mt-2" : ""}`}>
-                                <Text style={tw`${true ? "text-3xl" : "text-lg"} text-gray-500`}>{getHelloText()} 👋</Text>
-                                <Text style={tw`${true ? "text-4xl mt-2" : "text-xl"} font-medium max-w-[85%]`}>{username ? username : t('loading')}</Text>
+                            <View style={tw`flex flex-col ml-3 w-full ${iphoneModel.includes('Ipad') ? "mt-2" : ""}`}>
+                                <Text style={tw`${iphoneModel.includes('Ipad') ? "text-3xl" : "text-lg"} text-gray-500`}>{getHelloText()} 👋</Text>
+                                <Text style={tw`${iphoneModel.includes('Ipad') ? "text-4xl mt-2" : "text-xl"} font-medium max-w-[85%]`}>{username ? username : t('loading')}</Text>
                             </View>
                                 
                         </View>
 
                         <View style={tw`absolute top-0 right-2`}>
                             <TouchableWithoutFeedback onPress={() => navigation.navigate("Настройки-Страница")} 
-                                    style={tw`bg-white ${true ? "w-32 h-32" : "w-16 h-16"} rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
+                                    style={tw`bg-white ${iphoneModel.includes('Ipad') ? "w-32 h-32" : "w-16 h-16"} rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
                                 <View>
                                     <Ionicons name='settings-outline' 
-                                        size={true ? 86 : 40}
+                                        size={iphoneModel.includes('Ipad') ? 86 : 40}
                                         color='#000000'
                                     />
                                     {friendRequestsNumber >= "1" && 

@@ -13,7 +13,7 @@ import RetreiveInfoInformationModal from '../modals/RetreiveInfoInformationModal
 
 const Settings = ({navigation}: any) => {
 
-    const { friendRequestsNumber, internetSpeed } = useContext(GlobalContext);
+    const { friendRequestsNumber, internetSpeed, iphoneModel } = useContext(GlobalContext);
 
     const { t } = useTranslation();
 
@@ -33,7 +33,7 @@ const Settings = ({navigation}: any) => {
     const button = (navigationPath: string, icon: any, iconColor: any, background: string, title: string) => {
 
         return (
-            <Pressable style={tw`w-full h-14 bg-white p-3 ${true ? "mb-3" : "mb-1"}`} onPress={() => {
+            <Pressable style={tw`w-full h-14 bg-white p-3 ${iphoneModel.includes('Ipad') ? "mb-3" : "mb-1"}`} onPress={() => {
 
                 if (title === t('account') && !internetConnected) {
                     Vibration.vibrate();
@@ -49,12 +49,12 @@ const Settings = ({navigation}: any) => {
                 <View style={tw`flex flex-row justify-between`}>
 
                     <View style={tw`flex flex-row`}>
-                        <View style={tw`${true ? "w-14 h-14" : "w-10 h-10"} bg-${background} rounded-full flex items-center justify-center mr-2`}>
-                            <Ionicons name={icon} size={true ? 38 : 28} color={iconColor} />
+                        <View style={tw`${iphoneModel.includes('Ipad') ? "w-14 h-14" : "w-10 h-10"} bg-${background} rounded-full flex items-center justify-center mr-2`}>
+                            <Ionicons name={icon} size={iphoneModel.includes('Ipad') ? 38 : 28} color={iconColor} />
                         </View>
                         
                         <View style={tw`flex justify-center`}>
-                            <Text style={tw`${true ? "text-2xl" : "text-lg"} font-medium`}>{title}</Text>
+                            <Text style={tw`${iphoneModel.includes('Ipad') ? "text-2xl" : "text-lg"} font-medium`}>{title}</Text>
                             {(
                                 title === t('friends') && !internetConnected || 
                                 title === t('account') && !internetConnected
@@ -117,7 +117,7 @@ const Settings = ({navigation}: any) => {
             />
 
             <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
-                <Text style={tw`${true ? "text-7xl" : "text-4xl"} font-medium text-black m-3`}>{t('settings')}</Text>
+                <Text style={tw`${iphoneModel.includes('Ipad') ? "text-7xl" : "text-4xl"} font-medium text-black m-3`}>{t('settings')}</Text>
             </View>
 
             <View style={tw`bg-white h-full`}>
@@ -141,19 +141,19 @@ const Settings = ({navigation}: any) => {
                 {button('Запазени-Тренировки', 'cloud-outline', '#ef4444', 'red-300', t('saved-workouts'))}
 
 
-                <Pressable style={tw`w-full h-14 bg-white p-3 ${true ? "mb-3" : "mb-1"}`} onPress={() => (
+                <Pressable style={tw`w-full h-14 bg-white p-3 ${iphoneModel.includes('Ipad') ? "mb-3" : "mb-1"}`} onPress={() => (
                     //retreiveInfo()
                     setIsRetreiveInfoModalVisible(true)
                 )}>
                     <View style={tw`flex flex-row justify-between`}>
 
                         <View style={tw`flex flex-row`}>
-                            <View style={tw`${true ? "w-14 h-14" : "w-10 h-10"} bg-pink-300 rounded-full flex items-center justify-center mr-2`}>
-                                <Ionicons name='reload-outline' size={true ? 38 : 28} color='#ec4899' />
+                            <View style={tw`${iphoneModel.includes('Ipad') ? "w-14 h-14" : "w-10 h-10"} bg-pink-300 rounded-full flex items-center justify-center mr-2`}>
+                                <Ionicons name='reload-outline' size={iphoneModel.includes('Ipad') ? 38 : 28} color='#ec4899' />
                             </View>
                             
                             <View style={tw`flex justify-center`}>
-                                <Text style={tw`${true ? "text-2xl" : "text-lg"} font-medium`}>{t('retreive-info')}</Text>
+                                <Text style={tw`${iphoneModel.includes('Ipad') ? "text-2xl" : "text-lg"} font-medium`}>{t('retreive-info')}</Text>
                             </View>
                         </View>
 
@@ -168,12 +168,12 @@ const Settings = ({navigation}: any) => {
                     <View style={tw`flex flex-row justify-between`}>
 
                         <View style={tw`flex flex-row`}>
-                            <View style={tw`${true ? "w-14 h-14" : "w-10 h-10"} bg-indigo-300 rounded-full flex items-center justify-center mr-2`}>
-                                <Ionicons name='globe-outline' size={true ? 38 : 28} color='#8b5cf6' />
+                            <View style={tw`${iphoneModel.includes('Ipad') ? "w-14 h-14" : "w-10 h-10"} bg-indigo-300 rounded-full flex items-center justify-center mr-2`}>
+                                <Ionicons name='globe-outline' size={iphoneModel.includes('Ipad') ? 38 : 28} color='#8b5cf6' />
                             </View>
                             
                             <View style={tw`flex justify-center`}>
-                                <Text style={tw`${true ? "text-2xl" : "text-lg"} font-medium`}>{t('language')}</Text>
+                                <Text style={tw`${iphoneModel.includes('Ipad') ? "text-2xl" : "text-lg"} font-medium`}>{t('language')}</Text>
                             </View>
                         </View>
 

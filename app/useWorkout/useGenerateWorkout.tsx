@@ -1,4 +1,4 @@
-import { EXPO_OPENAI_GPT_PAT } from "@env";
+import Constants from "expo-constants";
 
 const useGenerateWorkout = async (
   experienceLevel: any, 
@@ -13,7 +13,7 @@ const useGenerateWorkout = async (
 
     console.log('useGenerateWorkout called')
 
-    const PAT = EXPO_OPENAI_GPT_PAT;
+    const PAT = Constants.expoConfig?.extra?.EXPO_OPENAI_GPT_PAT;
 
     const USER_ID = 'openai';    
     const APP_ID = 'chat-completion';

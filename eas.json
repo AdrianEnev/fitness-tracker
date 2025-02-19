@@ -12,7 +12,24 @@
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "autoIncrement": true,
+      "env": {
+        "EXPO_OPENAI_PROJECT_API_KEY": "sk-proj-V7StkAKcaYwk4rBz51F9T3BlbkFJVVdF3OGCTMtAK7i81pTG",
+        "EXPO_OPENAI_ASSISTANCE_NUTRITIONIST": "asst_16SFcbwuPU721E6Iz6TVybbD",
+        "EXPO_OPENAI_GPT_PAT":"50168f0b50684ef29f9d5c774f7833cd",
+        "EXPO_EDAMAM_APP_ID": "90e2036b",
+        "EXPO_EDAMAM_APP_KEY": "b1e82289782395cb48b50b4b11520754",
+        "EXPO_HUGGINGFACE_API": "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",
+        "EXPO_STRIPE_SECRET_KEY": "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",
+        "EXPO_STRIPE_PUBLISHABLE_KEY": "pk_live_51QVygSBQgjh8yS4RaETuRan0FbyEXul8jW5nZ3hBgifdl569WcuEFVf13gtO4CJljkzTictxrijHJvAplHuqvOow00QoyahQqQ",
+        "EXPO_FIREBASE_API_KEY": "AIzaSyCU2y_-Elwo74ZyKy8CjQytK-BedpsX-o0",
+        "EXPO_FIREBASE_AUTH_DOMAIN": "todo-mobile-app-3dcbc.firebaseapp.com",
+        "EXPO_FIREBASE_PROJECT_ID": "todo-mobile-app-3dcbc",
+        "EXPO_FIREBASE_STORAGE_BUCKET": "todo-mobile-app-3dcbc.appspot.com",
+        "EXPO_FIREBASE_MESSAGING_SENDER_ID": "418018705359",
+        "EXPO_FIREBASE_APP_ID": "1:418018705359:web:45d6427d74cd12ec471cba",
+        "EXPO_FIREBASE_MEASUREMENT_ID": "G-L8LBR0BEZ4"
+      }
     }
   },
   "submit": {

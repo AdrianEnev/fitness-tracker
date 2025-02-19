@@ -35,6 +35,7 @@ import LanguageScreenSmall from './app/screens/LanguageScreenSmall';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import getEmail from './app/use/useGetEmail';
 import { getLungeCoins } from './app/use/useGetLungeCoins';
+import Constants from 'expo-constants';
 
 const Stack = createStackNavigator();
 
@@ -222,7 +223,7 @@ function App() {
             checkLanguageDocumentLocally();
             checkUsernamesMatch();
             
-            let profilePic = null;
+            let profilePic: string | null = null;
             let friendRequests = 0;
 
             const netInfo = await NetInfo.fetch();
@@ -456,6 +457,21 @@ function App() {
             query();
         }
     }, [isConnected, isAuthenticated, hasSynced]);
+
+    // temp useEffect to test expo constants
+
+    useEffect(() => {
+
+        const tempFunc = async () => {
+            const apiToken = Constants.expoConfig?.extra?.EXPO_FIREBASE_API_KEY;
+            console.log(apiToken);
+        };
+
+        tempFunc()
+
+    }, [])
+
+    
 
     // listen for firebase.logOut and navigate to unauthenticated screen if called
     useEffect(() => {

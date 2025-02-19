@@ -1,4 +1,4 @@
-import { EXPO_EDAMAM_APP_ID, EXPO_EDAMAM_APP_KEY } from "@env";
+import Constants from "expo-constants";
 
 // Function to scan image nutrients based on a barcode and date
 const scanImageNutrients = async (barcode: any, date: any) => {
@@ -44,7 +44,7 @@ async function getProductInfo(barcode: string) {
 // Function to get nutritional information from Edamam based on the product name
 async function getNutritionalInfoFromEdamam(productName: string): Promise<any> {
     
-    const url = `https://api.edamam.com/api/food-database/v2/parser?app_id=${EXPO_EDAMAM_APP_ID}&app_key=${EXPO_EDAMAM_APP_KEY}&ingr=${encodeURIComponent(productName)}`;
+    const url = `https://api.edamam.com/api/food-database/v2/parser?app_id=${Constants.expoConfig?.extra?.EXPO_EDAMAM_APP_ID}&app_key=${Constants.expoConfig?.extra?.EXPO_EDAMAM_APP_KEY}&ingr=${encodeURIComponent(productName)}`;
 
     try {
         const response = await fetch(url);

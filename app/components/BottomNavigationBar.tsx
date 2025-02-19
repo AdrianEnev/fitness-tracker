@@ -6,17 +6,17 @@ import { useTranslation } from 'react-i18next';
 import GlobalContext from '../../GlobalContext';
 import { checkWorkoutsCountFolder, checkWorkoutsCountTotal } from '../useWorkout/useCheckWorkoutsCount';
 
-const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) => {
+const Button = ({currentPage, goalPage, navigation, icon, navigationPage, iphoneModel}: any) => {
     return (
-        <Pressable style={tw`${true ? "w-[70px]" : "w-[39px]"} h-full flex flex-col justify-center`} onPress={() => {
+        <Pressable style={tw`${iphoneModel.includes('Ipad') ? "w-[70px]" : "w-[39px]"} h-full flex flex-col justify-center`} onPress={() => {
             navigation.navigate(navigationPage);
         }}>
             <Ionicons name={icon} 
-                size={true ? 70 : 40}
+                size={iphoneModel.includes('Ipad') ? 70 : 40}
                 color='#fd1c47'  
             />
             {currentPage === goalPage && (
-                <View style={tw`${true ? "w-[70px]" : "w-[39px]"} h-1 bg-[#fd1c47] rounded-lg`}></View>
+                <View style={tw`${iphoneModel.includes('Ipad') ? "w-[70px]" : "w-[39px]"} h-1 bg-[#fd1c47] rounded-lg`}></View>
             )}
         </Pressable>
     )
@@ -88,7 +88,7 @@ const BottomNavigationBar = (
     
     return (
         <View style={tw`
-            absolute w-[96.5%] ${true ? "h-28" : "h-20"} shadow-lg mx-2 rounded-2xl flex flex-row justify-around items-center bg-white
+            absolute w-[96.5%] ${iphoneModel.includes('Ipad') ? "h-28" : "h-20"} shadow-lg mx-2 rounded-2xl flex flex-row justify-around items-center bg-white
             ${iphoneModel.includes('SE') ? 'bottom-4' : 'bottom-8'}
         `}>
         
@@ -193,18 +193,18 @@ const BottomNavigationBar = (
             ) : currentPage === "FoodDay" ? (
                 <View style={tw`flex flex-row justify-around w-full items-center`}>
                     <Pressable onPress={() => navigation.navigate("Храна-Добави", { date: foodDayDate })}>
-                        <Ionicons name="add-circle-outline" size={true ? 96 : 72} color="#fd1c47"/>
+                        <Ionicons name="add-circle-outline" size={iphoneModel.includes('Ipad') ? 96 : 72} color="#fd1c47"/>
                     </Pressable>
 
                     <Pressable onPress={() => navigation.navigate("Храна-Сканиране", { date: foodDayDate })}>
-                        <Ionicons name="scan-outline" size={true ? 96 : 72} color="#fd1c47"/>
+                        <Ionicons name="scan-outline" size={iphoneModel.includes('Ipad') ? 96 : 72} color="#fd1c47"/>
                     </Pressable>
 
                     <Pressable onPress={() => {
                         if (!internetConnected) {return;}
                         navigation.navigate("Храна-Потърси", { date: foodDayDate })
                     }}>
-                        <Ionicons name="search-circle-outline" size={true ? 96 : 72} color="#fd1c47"/>
+                        <Ionicons name="search-circle-outline" size={iphoneModel.includes('Ipad') ? 96 : 72} color="#fd1c47"/>
                     </Pressable>
                 </View>
             ) : currentPage === "AddCustomFoodPage" ? (
@@ -399,10 +399,10 @@ const BottomNavigationBar = (
                 </View>
             ) : (
                 <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
-                    {Button({currentPage, navigation, icon: 'home-outline', navigationPage: 'Главна Страница', goalPage: 'Main'})}
-                    {Button({currentPage, navigation, icon: 'fitness-outline', navigationPage: 'Тренировки', goalPage: 'Workouts'})}
-                    {Button({currentPage, navigation, icon: 'calendar-clear-outline', navigationPage: 'Хранене', goalPage: 'Food'})}
-                    {Button({currentPage, navigation, icon: 'settings-outline', navigationPage: 'Настройки-Страница', goalPage: 'Settings'})}
+                    {Button({currentPage, navigation, icon: 'home-outline', navigationPage: 'Главна Страница', goalPage: 'Main', iphoneModel})}
+                    {Button({currentPage, navigation, icon: 'fitness-outline', navigationPage: 'Тренировки', goalPage: 'Workouts', iphoneModel})}
+                    {Button({currentPage, navigation, icon: 'calendar-clear-outline', navigationPage: 'Хранене', goalPage: 'Food', iphoneModel})}
+                    {Button({currentPage, navigation, icon: 'settings-outline', navigationPage: 'Настройки-Страница', goalPage: 'Settings', iphoneModel})}
                 </View>
             )}
             

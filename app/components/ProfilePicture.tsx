@@ -19,7 +19,7 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
 
     const {t} = useTranslation();
 
-    const { profilePicture, setProfilePicture, internetConnected, lungeCoinsAmount } = useContext(GlobalContext);
+    const { profilePicture, setProfilePicture, internetConnected, lungeCoinsAmount, iphoneModel } = useContext(GlobalContext);
 
     const uriToBlob = async (uri: string): Promise<Blob> => {
         const response = await fetch(uri);
@@ -66,7 +66,7 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
             {profilePicture === '' ? (
                 <View> 
                     <Pressable 
-                        style={tw`bg-white ${page === 'Main' ? 'w-16 h-16' : 'w-22 h-22'} ${true ? "w-32 h-32" : ""} rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}
+                        style={tw`bg-white ${page === 'Main' ? 'w-16 h-16' : 'w-22 h-22'} ${iphoneModel.includes('Ipad') ? "w-32 h-32" : ""} rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}
                         onPress={() => {
                             if (page === 'Main') {
                                 navigation?.navigate('Настройки-Акаунт')
@@ -104,7 +104,7 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
                     }}>
                         <Image
                             source={{ uri: profilePicture }}
-                            style={tw`${page === 'Main' ? 'w-16 h-16' : 'w-22 h-22'} ${true ? "w-32 h-32" : ""} border border-gray-300 rounded-full ml-2`}
+                            style={tw`${page === 'Main' ? 'w-16 h-16' : 'w-22 h-22'} ${iphoneModel.includes('Ipad') ? "w-32 h-32" : ""} border border-gray-300 rounded-full ml-2`}
                         />
                     </Pressable>
                 </View>

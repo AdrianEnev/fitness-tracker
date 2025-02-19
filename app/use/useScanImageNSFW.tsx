@@ -1,7 +1,7 @@
 import { HfInference } from "@huggingface/inference";
-import { EXPO_HUGGINGFACE_API } from "@env";
+import Constants from "expo-constants";
 
-const apiToken = EXPO_HUGGINGFACE_API;
+const apiToken = Constants.expoConfig?.extra?.EXPO_HUGGINGFACE_API;
 const model = 'Falconsai/nsfw_image_detection';
 
 const inference = new HfInference(apiToken);

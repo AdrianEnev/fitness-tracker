@@ -1,8 +1,9 @@
 import { View, Text, Pressable } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import tw from 'twrnc';
 import i18next from 'i18next';
 import { useTranslation } from 'react-i18next';
+import GlobalContext from 'GlobalContext';
 
 const HorizontalCalendar = ({navigation}: any) => {
 
@@ -81,11 +82,13 @@ const HorizontalCalendar = ({navigation}: any) => {
 
     const {t} = useTranslation();
 
+    const {iphoneModel} = useContext(GlobalContext)
+
     return (
         <View>
             <View style={tw`flex flex-row justify-between mt-4 mx-2`}>
                 {dates.map((date, index) => (
-                    <Pressable key={index} style={tw`${isToday(date) ? 'bg-[#fd1c47]' : 'bg-white shadow-md'} w-[18%] ${true ? "h-34" : "h-20"} rounded-xl flex items-center pt-1`}
+                    <Pressable key={index} style={tw`${isToday(date) ? 'bg-[#fd1c47]' : 'bg-white shadow-md'} w-[18%] ${iphoneModel.includes('Ipad') ? "h-34" : "h-20"} rounded-xl flex items-center pt-1`}
                     onPress={() => {
 
                         const dateString = date.toISOString().split('T')[0];
@@ -105,11 +108,11 @@ const HorizontalCalendar = ({navigation}: any) => {
                         });
                     }}
                     >
-                        <Text style={tw`${isToday(date) ? 'text-white' : 'text-black'} font-medium ${true ? "text-3xl mt-7" : "text-lg mt-2"}`}>
+                        <Text style={tw`${isToday(date) ? 'text-white' : 'text-black'} font-medium ${iphoneModel.includes('Ipad') ? "text-3xl mt-7" : "text-lg mt-2"}`}>
                             {formatDate(date, 'ddd')}
                         </Text>
 
-                        <Text style={tw`${isToday(date) ? 'text-white' : 'text-black'} font-medium ${true ? "text-xl" : ""}`}>
+                        <Text style={tw`${isToday(date) ? 'text-white' : 'text-black'} font-medium ${iphoneModel.includes('Ipad') ? "text-xl" : ""}`}>
                             {formatDate(date, 'DD.MM')}
                         </Text> 
                     </Pressable>

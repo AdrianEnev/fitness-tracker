@@ -65,28 +65,28 @@ const Nutrients = ({ currentNutrients, regularDate}: RenderNutrientsProps) => {
         
         if (redWidthPercentage) {
             return (
-                <View style={tw`${true ? "w-[32%] mt-2" : "w-[30.3%]"} h-16 bg-white flex flex-col`}>
+                <View style={tw`${iphoneModel.includes('Ipad') ? "w-[32%] mt-2" : "w-[30.3%]"} h-16 bg-white flex flex-col`}>
     
-                    <Text style={tw`${true ? "text-3xl" : "text-xl"} font-medium text-center text-gray-600 mb-1`}>{title}</Text>
+                    <Text style={tw`${iphoneModel.includes('Ipad') ? "text-3xl" : "text-xl"} font-medium text-center text-gray-600 mb-1`}>{title}</Text>
     
                     <View style={tw`flex flex-row`}>
                         <View style={tw`w-[${redWidthPercentage}%] h-4 bg-[#fd3e6b] ${redWidthPercentage >= 100 ? 'rounded-lg' : 'rounded-l-lg'} mr-[-1px]`}></View>
                         <View style={tw`w-[${blueWidthPercentage}%] h-4 bg-[#3d5875] rounded-r-lg`}></View>
                     </View>
     
-                    <Text style={tw`font-bold ${true ? "text-xl" : "text-sm"} text-center mt-1`}>{currentProgress <= 9999 ? currentProgress : '9999'}/{goalProgress}g</Text>
+                    <Text style={tw`font-bold ${iphoneModel.includes('Ipad') ? "text-xl" : "text-sm"} text-center mt-1`}>{currentProgress <= 9999 ? currentProgress : '9999'}/{goalProgress}g</Text>
     
                 </View>
             )
         }else{
             return(
-                <View style={tw`${true ? "w-[32%] mt-2" : "w-[30.3%]"} h-16 bg-white flex flex-col`}>
+                <View style={tw`${iphoneModel.includes('Ipad') ? "w-[32%] mt-2" : "w-[30.3%]"} h-16 bg-white flex flex-col`}>
     
-                    <Text style={tw`${true ? "text-3xl" : "text-xl"} font-medium text-center text-gray-600 mb-1`}>{title}</Text>
+                    <Text style={tw`${iphoneModel.includes('Ipad') ? "text-3xl" : "text-xl"} font-medium text-center text-gray-600 mb-1`}>{title}</Text>
     
-                    <View style={tw`w-full ${true ? "h-5" : "h-4"} bg-[#3d5875] rounded-lg`}></View>
+                    <View style={tw`w-full ${iphoneModel.includes('Ipad') ? "h-5" : "h-4"} bg-[#3d5875] rounded-lg`}></View>
                         
-                    <Text style={tw`font-bold ${true ? "text-xl" : "text-sm"} text-center mt-1`}>{currentProgress <= 9999 ? currentProgress : '9999'}/{goalProgress}g</Text>
+                    <Text style={tw`font-bold ${iphoneModel.includes('Ipad') ? "text-xl" : "text-sm"} text-center mt-1`}>{currentProgress <= 9999 ? currentProgress : '9999'}/{goalProgress}g</Text>
     
                 </View>
             )
@@ -97,13 +97,13 @@ const Nutrients = ({ currentNutrients, regularDate}: RenderNutrientsProps) => {
     // The key in AnimatedCircularProgress ensures that the fill value updates correctly, as it is initially 0 until passed from main to nutrients
     return (
         <View style={tw`mt-3 w-full`}>
-            <View style={tw`${iphoneModel.includes('SE') ? 'h-[41%]' : 'h-[31%]'} ${true ? "h-[21.5%]" : ""} w-full px-1 mt-[-10px] bg-white rounded-lg mx-2`}>
+            <View style={tw`${iphoneModel.includes('SE') ? 'h-[41%]' : 'h-[31%]'} ${iphoneModel.includes('Ipad') ? "h-[21.5%]" : ""} w-full px-1 mt-[-10px] bg-white rounded-lg mx-2`}>
 
                 <View style={tw`flex flex-row justify-between w-full mt-3`}>
 
                     <View style={tw`flex flex-col ml-1`}>
-                        <Text style={tw`${true ? "text-5xl" : "text-2xl"} font-medium`}>{t('calories')}</Text>
-                        <Text style={tw`${true ? "text-2xl" : "text-lg"} text-gray-600 mt-[-5px]`}>{regularDate}</Text>
+                        <Text style={tw`${iphoneModel.includes('Ipad') ? "text-5xl" : "text-2xl"} font-medium`}>{t('calories')}</Text>
+                        <Text style={tw`${iphoneModel.includes('Ipad') ? "text-2xl" : "text-lg"} text-gray-600 mt-[-5px]`}>{regularDate}</Text>
                     </View>
 
                     <AnimatedCircularProgress
@@ -131,7 +131,7 @@ const Nutrients = ({ currentNutrients, regularDate}: RenderNutrientsProps) => {
 
                 </View>
 
-                <View style={tw`flex flex-row gap-x-3 mt-1 ${true ? "mb-3" : ""}`}>
+                <View style={tw`flex flex-row gap-x-3 mt-1 ${iphoneModel.includes('Ipad') ? "mb-3" : ""}`}>
                         
                     {progressElement(currentProtein, goalProtein, t('protein'))}
                     {progressElement(currentCarbs, goalCarbs, t('carbs-short'))}
