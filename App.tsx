@@ -35,7 +35,6 @@ import LanguageScreenSmall from './app/screens/LanguageScreenSmall';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import getEmail from './app/use/useGetEmail';
 import { getLungeCoins } from './app/use/useGetLungeCoins';
-import Constants from 'expo-constants';
 
 const Stack = createStackNavigator();
 
@@ -458,21 +457,6 @@ function App() {
         }
     }, [isConnected, isAuthenticated, hasSynced]);
 
-    // temp useEffect to test expo constants
-
-    useEffect(() => {
-
-        const tempFunc = async () => {
-            const apiToken = Constants.expoConfig?.extra?.EXPO_FIREBASE_API_KEY;
-            console.log(apiToken);
-        };
-
-        tempFunc()
-
-    }, [])
-
-    
-
     // listen for firebase.logOut and navigate to unauthenticated screen if called
     useEffect(() => {
 
@@ -573,28 +557,21 @@ function App() {
             generatingWorkoutInFolder, setGeneratingWorkoutInFolder, syncingInfoRunning, setSyncingInfoRunning, internetSpeed, setAccountJustRegistered,
             iphoneModel, setLoggingIn, lungeCoinsAmount, setLungeCoinsAmount
         }}>
-
-            <StripeProvider 
-                publishableKey='pk_live_51QVygSBQgjh8yS4RaETuRan0FbyEXul8jW5nZ3hBgifdl569WcuEFVf13gtO4CJljkzTictxrijHJvAplHuqvOow00QoyahQqQ'
-                merchantIdentifier="com.nafle.LungeFitnessTracker"
-                urlScheme='lunge-fitness-tracker'
-            >
-                <GestureHandlerRootView style={tw`w-full h-full`}>
-                    <StatusBar barStyle='dark-content' />
-                    
-                    {/*<
-                        {handleNavigation()}
-                        <SetupPage />
-                        {handleNavigation()}
-                        <LanguageScreen />
-                    */}
-                    
-                    <NavigationContainer ref={navigationRef}>
-                        {handleNavigation()}
-                    </NavigationContainer>
+            <GestureHandlerRootView style={tw`w-full h-full`}>
+                <StatusBar barStyle='dark-content' />
                 
-                </GestureHandlerRootView>
-            </StripeProvider>
+                {/*<
+                    {handleNavigation()}
+                    <SetupPage />
+                    {handleNavigation()}
+                    <LanguageScreen />
+                */}
+                
+                <NavigationContainer ref={navigationRef}>
+                    {handleNavigation()}
+                </NavigationContainer>
+            
+            </GestureHandlerRootView>
         </GlobalContext.Provider>
     );
 };
