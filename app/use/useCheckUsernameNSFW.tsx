@@ -1,4 +1,6 @@
-const apiToken = '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';
+import { EXPO_HUGGINGFACE_API } from "@env";
+
+const apiToken = EXPO_HUGGINGFACE_API;
 
 const checkUsernameNSFW = async (username: string) => {
 

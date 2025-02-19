@@ -1,6 +1,18 @@
 {
-  "extends": "expo/tsconfig.base",
-  "compilerOptions": {
-    "strict": true
+    "extends": "expo/tsconfig.base",
+    "compilerOptions": {
+      "strict": true,
+      "moduleResolution": "node",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "target": "ES2022",
+      "lib": ["DOM", "DOM.Iterable", "ES2022"],
+      "baseUrl": ".",
+      "paths": {
+        "~/*": ["./app/*"]
+      },
+      "resolveJsonModule": true,
+      "allowJs": true
+    },
+    "include": ["@types/**/*.d.ts", "src", "app", "services", "types"]
   }
-}

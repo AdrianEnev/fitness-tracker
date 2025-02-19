@@ -8,15 +8,15 @@ import { checkWorkoutsCountFolder, checkWorkoutsCountTotal } from '../useWorkout
 
 const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) => {
     return (
-        <Pressable style={tw`w-[39px] h-full flex flex-col justify-center`} onPress={() => {
+        <Pressable style={tw`${true ? "w-[70px]" : "w-[39px]"} h-full flex flex-col justify-center`} onPress={() => {
             navigation.navigate(navigationPage);
         }}>
             <Ionicons name={icon} 
-                size={40}
+                size={true ? 70 : 40}
                 color='#fd1c47'  
             />
             {currentPage === goalPage && (
-                <View style={tw`w-[39px] h-1 bg-[#fd1c47] rounded-lg`}></View>
+                <View style={tw`${true ? "w-[70px]" : "w-[39px]"} h-1 bg-[#fd1c47] rounded-lg`}></View>
             )}
         </Pressable>
     )
@@ -88,7 +88,7 @@ const BottomNavigationBar = (
     
     return (
         <View style={tw`
-            absolute w-[96.5%] h-20 shadow-lg mx-2 rounded-2xl flex flex-row justify-around items-center bg-white
+            absolute w-[96.5%] ${true ? "h-28" : "h-20"} shadow-lg mx-2 rounded-2xl flex flex-row justify-around items-center bg-white
             ${iphoneModel.includes('SE') ? 'bottom-4' : 'bottom-8'}
         `}>
         
@@ -193,18 +193,18 @@ const BottomNavigationBar = (
             ) : currentPage === "FoodDay" ? (
                 <View style={tw`flex flex-row justify-around w-full items-center`}>
                     <Pressable onPress={() => navigation.navigate("Храна-Добави", { date: foodDayDate })}>
-                        <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
+                        <Ionicons name="add-circle-outline" size={true ? 96 : 72} color="#fd1c47"/>
                     </Pressable>
 
                     <Pressable onPress={() => navigation.navigate("Храна-Сканиране", { date: foodDayDate })}>
-                        <Ionicons name="scan-outline" size={72} color="#fd1c47"/>
+                        <Ionicons name="scan-outline" size={true ? 96 : 72} color="#fd1c47"/>
                     </Pressable>
 
                     <Pressable onPress={() => {
                         if (!internetConnected) {return;}
                         navigation.navigate("Храна-Потърси", { date: foodDayDate })
                     }}>
-                        <Ionicons name="search-circle-outline" size={72} color="#fd1c47"/>
+                        <Ionicons name="search-circle-outline" size={true ? 96 : 72} color="#fd1c47"/>
                     </Pressable>
                 </View>
             ) : currentPage === "AddCustomFoodPage" ? (

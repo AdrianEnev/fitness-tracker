@@ -108,7 +108,7 @@ const FoodDay = ({route, navigation}: any) => {
 
             <View style={tw`w-full h-full flex flex-col`}>
 
-                <Nutrients 
+                <Nutrients
                     currentNutrients={currentNutrients} 
                     navigation={navigation} 
                     regularDate={getDate()} 

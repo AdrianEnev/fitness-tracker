@@ -100,7 +100,6 @@ const Food = ({navigation}: any) => {
    
     return (
         <View style={tw`bg-white`}>
-
             <View style={tw`bg-white`}>
 
                 <CalendarList 
@@ -120,11 +119,17 @@ const Food = ({navigation}: any) => {
                     onDayLongPress={(day: any) => {
                         console.log('held')
                     }}
+                    theme={{
+                        textDayFontSize: 20,
+                        textDayHeaderFontSize: 24,
+                        textMonthFontSize: 24,
+                        textDayStyle: {
+                            lineHeight: 22, // Adjust based on fontSize
+                        },
+                    }}
                 />
                 
-
             </View>
-            
         </View>
     )
 }

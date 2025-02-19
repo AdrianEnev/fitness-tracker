@@ -24,8 +24,6 @@ import SyncingInfoInformationModal from '../modals/SyncInfoInformationModal'
 import SyncInfoModal from '../modals/SyncInfoModal'
 
 const SettingsAccount = ({navigation}: any) => {
-
-    
  
     const { 
         receiveFriendRequests, 
@@ -233,16 +231,16 @@ const SettingsAccount = ({navigation}: any) => {
 
     const button = (title: any, icon: any, background: string, iconColor: any, iconSize: number, action: any) => {
         return (
-            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={action}>
+            <Pressable style={tw`w-full h-14 bg-white p-3 ${true ? "mb-3" : "mb-1"}`} onPress={action}>
                 <View style={tw`flex flex-row justify-between`}>
 
                     <View style={tw`flex flex-row`}>
-                        <View style={tw`w-10 h-10 bg-${background} rounded-full flex items-center justify-center mr-2`}>
+                        <View style={tw`${true ? "w-14 h-14" : "w-10 h-10"} bg-${background} rounded-full flex items-center justify-center mr-2`}>
                             <Ionicons name={icon} size={iconSize} color={iconColor} />
                         </View>
                         
                         <View style={tw`flex justify-center`}>
-                            <Text style={tw`text-lg font-medium`}>{title}</Text>
+                            <Text style={tw`${true ? "text-xl" : "text-lg"} font-medium`}>{title}</Text>
                             {(
                                 title === t('change-username') && !internetConnected || 
                                 title === t('change-password') && !internetConnected || 
@@ -272,8 +270,6 @@ const SettingsAccount = ({navigation}: any) => {
         )
     }
 
-
-
     const [isFaceIdEnabled, setIsFaceIdEnabled] = useState(faceIdEnabled);
     const toggleFaceIdSwitch = async () => {
 
@@ -296,16 +292,16 @@ const SettingsAccount = ({navigation}: any) => {
 
     const switchButton = (title: any, icon: any, background: string, iconColor: any, iconSize: number) => {
         return (
-            <View style={tw`w-full h-14 bg-white p-3 mb-1`}>
+            <View style={tw`w-full h-14 bg-white p-3 ${true ? "mb-3" : "mb-1"}`}>
                 <View style={tw`flex flex-row justify-between`}>
 
                     <View style={tw`flex flex-row`}>
-                        <View style={tw`w-10 h-10 bg-${background} rounded-full flex items-center justify-center mr-2`}>
+                        <View style={tw`${true ? "w-14 h-14" : "w-10 h-10"} bg-${background} rounded-full flex items-center justify-center mr-2`}>
                             <Ionicons name={icon} size={iconSize} color={iconColor} />
                         </View>
                         
                         <View style={tw`flex justify-center`}>
-                            <Text style={tw`text-lg font-mediu`} numberOfLines={2}>{title === t('receive-friend-requests') ? title : title}</Text>
+                            <Text style={tw`text-lg font-medium`} numberOfLines={2}>{title === t('receive-friend-requests') ? title : title}</Text>
                         </View>
                     </View>
 
@@ -439,8 +435,8 @@ const SettingsAccount = ({navigation}: any) => {
 
                         <View style={tw`flex flex-col justify-center ml-2`}>
 
-                            <Text style={tw`text-xl font-medium`}>{username}</Text>
-                            <Text style={tw`text-base text-gray-500`}>{email}</Text>
+                            <Text style={tw`${true ? "text-3xl mb-1" : "text-xl"} font-medium`}>User</Text>
+                            <Text style={tw`${true ? "text-xl" : "text-base"} text-gray-500`}>example@gmail.com</Text>
 
                         </View>
 
@@ -450,7 +446,7 @@ const SettingsAccount = ({navigation}: any) => {
                     <View style={tw`h-[2px] w-[94%] bg-gray-300 rounded-full mx-2`}></View>
 
                     {/* Icons */}
-                    {button(t('change-username'), 'text-outline', 'yellow-300', '#eab308', 24, () => {
+                    {button(t('change-username'), 'text-outline', 'yellow-300', '#eab308', true ? 32 : 24, () => {
                         if (internetConnected) {
                             changeUsername()
                         }else{
@@ -460,7 +456,7 @@ const SettingsAccount = ({navigation}: any) => {
 
 
 
-                    {button(t('change-password'), 'create-outline', 'green-300', '#22c55e', 26, () => {
+                    {button(t('change-password'), 'create-outline', 'green-300', '#22c55e', true ? 34 : 26, () => {
                         
                         if (internetConnected) {
                             const auth = getAuth();
@@ -471,14 +467,14 @@ const SettingsAccount = ({navigation}: any) => {
                         }
                         
                     })}
-                    {button(t('log-out'), 'log-out-outline', 'blue-300', '#3b82f6', 28, () => {
+                    {button(t('log-out'), 'log-out-outline', 'blue-300', '#3b82f6', true ? 36 : 28, () => {
                         if (internetConnected) {
                             logOut()
                         }else{
                             Vibration.vibrate()
                         }
                     })}
-                    {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, () => {
+                    {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', true ? 42 : 34, () => {
 
                         if (internetConnected && internetSpeed > 32) {
                             const auth = getAuth();
@@ -498,8 +494,8 @@ const SettingsAccount = ({navigation}: any) => {
                         
                     })}
 
-                    {switchButton(t('face-id'), 'eye-outline', 'orange-300', '#d97706', 30)}
-                    {switchButton(t('receive-friend-requests'), 'notifications-outline', 'purple-300', '#8b5cf6', 24)}
+                    {switchButton(t('face-id'), 'eye-outline', 'orange-300', '#d97706', true ? 38 : 30)}
+                    {switchButton(t('receive-friend-requests'), 'notifications-outline', 'purple-300', '#8b5cf6', true ? 32 : 24)}
                     
 
                 </View>

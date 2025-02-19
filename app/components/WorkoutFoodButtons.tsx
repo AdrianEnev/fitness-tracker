@@ -9,12 +9,12 @@ const WorkoutFoodButtons = ({navigation}: any) => {
             
             <View style={tw`flex flex-row gap-x-2`}>
                 
-                <Pressable style={tw`w-[49%] h-32 bg-[#fd1c47] rounded-lg shadow-lg flex items-center justify-center`} onPress={() => navigation.navigate('Тренировки')}>
-                    <Ionicons name='fitness-outline' size={64} color='white'/>
+                <Pressable style={tw`w-[49.6%] ${true ? "h-72" : "h-32"}  bg-[#fd1c47] rounded-lg shadow-lg flex items-center justify-center`} onPress={() => navigation.navigate('Тренировки')}>
+                    <Ionicons name='fitness-outline' size={124} color='white'/>
                 </Pressable>
                 
-                <Pressable style={tw`w-[49%] h-32 bg-white rounded-lg shadow-md flex items-center justify-center`} onPress={() => navigation.navigate('Хранене')}>
-                    <Ionicons name='calendar-clear-outline' size={64} />
+                <Pressable style={tw`w-[49.6%] ${true ? "h-72" : "h-32"}  bg-white rounded-lg shadow-md flex items-center justify-center`} onPress={() => navigation.navigate('Хранене')}>
+                    <Ionicons name='calendar-clear-outline' size={124} />
                 </Pressable>
 
             </View>

@@ -4,14 +4,20 @@ import * as firebaseAuth from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
 import { getStorage } from 'firebase/storage';
 
+import { 
+    EXPO_FIREBASE_API_KEY, EXPO_FIREBASE_AUTH_DOMAIN, EXPO_FIREBASE_PROJECT_ID,
+    EXPO_FIREBASE_STORAGE_BUCKET, EXPO_FIREBASE_MESSAGING_SENDER_ID, EXPO_FIREBASE_APP_ID,
+    EXPO_FIREBASE_MEASUREMENT_ID
+} from '@env';
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCU2y_-Elwo74ZyKy8CjQytK-BedpsX-o0",
-  authDomain: "todo-mobile-app-3dcbc.firebaseapp.com",
-  projectId: "todo-mobile-app-3dcbc",
-  storageBucket: "todo-mobile-app-3dcbc.appspot.com",
-  messagingSenderId: "418018705359",
-  appId: "1:418018705359:web:45d6427d74cd12ec471cba",
-  measurementId: "G-L8LBR0BEZ4"
+    apiKey: EXPO_FIREBASE_API_KEY,
+    authDomain: EXPO_FIREBASE_AUTH_DOMAIN,
+    projectId: EXPO_FIREBASE_PROJECT_ID,
+    storageBucket: EXPO_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: EXPO_FIREBASE_MESSAGING_SENDER_ID,
+    appId: EXPO_FIREBASE_APP_ID,
+    measurementId: EXPO_FIREBASE_MEASUREMENT_ID
 };
 
 const AsyncStorage = ReactNativeAsyncStorage;

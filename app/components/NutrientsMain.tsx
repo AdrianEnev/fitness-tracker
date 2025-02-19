@@ -41,34 +41,32 @@ const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate, g
                 redWidthPercentage = 3; // min value for redWidthPercentage
             }
             blueWidthPercentage = 100 - redWidthPercentage;
-
-
         }
         
         if (redWidthPercentage) {
             return (
-                <View style={tw`w-[30.3%] h-16 bg-white flex flex-col`}>
+                <View style={tw`${true ? "w-[32%] mt-2" : "w-[30.3%]"} h-16 bg-white flex flex-col`}>
     
-                    <Text style={tw`text-xl font-medium text-center text-gray-600 mb-1`}>{title}</Text>
+                    <Text style={tw`${true ? "text-3xl" : "text-xl"} font-medium text-center text-gray-600 mb-1`}>{title}</Text>
     
                     <View style={tw`flex flex-row`}>
                         <View style={tw`w-[${redWidthPercentage}%] h-4 bg-[#fd3e6b] ${redWidthPercentage >= 100 ? 'rounded-lg' : 'rounded-l-lg'} mr-[-1px]`}></View>
                         <View style={tw`w-[${blueWidthPercentage}%] h-4 bg-[#3d5875] rounded-r-lg`}></View>
                     </View>
     
-                    <Text style={tw`font-bold text-sm text-center mt-1`}>{currentProgress <= 9999 ? currentProgress : '9999'}/{goalProgress}g</Text>
+                    <Text style={tw`font-bold ${true ? "text-xl" : "text-sm"} text-center mt-1`}>{currentProgress <= 9999 ? currentProgress : '9999'}/{goalProgress}g</Text>
     
                 </View>
             )
         }else{
             return(
-                <View style={tw`w-[30.3%] h-16 bg-white flex flex-col`}>
+                <View style={tw`${true ? "w-[32%] mt-2" : "w-[30.3%]"} h-16 bg-white flex flex-col`}>
     
-                    <Text style={tw`text-xl font-medium text-center text-gray-600 mb-1`}>{title}</Text>
+                    <Text style={tw`${true ? "text-3xl" : "text-xl"} font-medium text-center text-gray-600 mb-1`}>{title}</Text>
     
-                    <View style={tw`w-full h-4 bg-[#3d5875] rounded-lg`}></View>
+                    <View style={tw`w-full ${true ? "h-5" : "h-4"} bg-[#3d5875] rounded-lg`}></View>
                         
-                    <Text style={tw`font-bold text-sm text-center mt-1`}>{currentProgress <= 9999 ? currentProgress : '9999'}/{goalProgress}g</Text>
+                    <Text style={tw`font-bold ${true ? "text-xl" : "text-sm"} text-center mt-1`}>{currentProgress <= 9999 ? currentProgress : '9999'}/{goalProgress}g</Text>
     
                 </View>
             )
@@ -79,24 +77,22 @@ const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate, g
     // The key in AnimatedCircularProgress ensures that the fill value updates correctly, as it is initially 0 until passed from main to nutrients
     return (
         <Pressable style={tw`mt-3 mx-2 w-full h-66`} onPress={() => {
-            
             navigation.navigate("Хранене-Ден", {date: formattedDate});
-           
         }}>
 
-            <View style={tw` w-[96.5%] h-66 shadow-lg pt-2 pl-3 bg-white rounded-lg`}>
+            <View style={tw`w-[98.5%] ${true ? "h-92" : "h-66"} shadow-lg pt-2 pl-3 bg-white rounded-lg`}>
                 
                 <View style={tw`flex flex-row justify-between`}>
 
                     <View style={tw`flex flex-col`}>
-                        <Text style={tw`text-2xl font-medium`}>{t('calories')}</Text>
-                        <Text style={tw`text-lg text-gray-600 mt-[-5px]`}>{regularDate}</Text>
+                        <Text style={tw`${true ? "text-6xl m-2" : "text-2xl"} font-medium`}>{t('calories')}</Text>
+                        <Text style={tw`${true ? "text-2xl m-2" : "text-lg"} text-gray-600 mt-[-5px]`}>{regularDate}</Text>
                     </View>
 
                     <AnimatedCircularProgress
                         key={goalCalories}
                         style={tw`mr-3`}
-                        size={160}
+                        size={true ? 230 : 160}
                         width={15}
                         fill={(currentCalories / goalCalories) * 100}
                         tintColor="#fd2e5b"
@@ -108,8 +104,8 @@ const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate, g
                         {() => (
                             <View style={tw`flex flex-row items-center justify-center`}>
                             
-                                <Text style={tw`${currentCalories <= 9999 ? 'text-2xl' : 'text-xl'} font-medium`}>{currentCalories <= 50000 ? currentCalories : '50000'}/</Text>
-                                <Text style={tw`text-base font-medium mt-2`}>{goalCalories}</Text>
+                                <Text style={tw`${currentCalories <= 9999 ? 'text-2xl' : 'text-xl'} font-medium ${true ? "text-5xl" : ""}`}>{currentCalories <= 50000 ? currentCalories : '50000'}/</Text>
+                                <Text style={tw`text-base font-medium mt-2 ${true ? "text-2xl" : ""}`}>{goalCalories}</Text>
                                 
                             </View>
                         )}
