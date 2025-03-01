@@ -33,7 +33,7 @@ import checkInternetSpeed from './app/use/useCheckInternetSpeed';
 import * as Device from 'expo-device';
 import LanguageScreenSmall from './app/screens/LanguageScreenSmall';
 import { StripeProvider } from '@stripe/stripe-react-native';
-import getEmail from './app/use/useGetEmail';
+//import getEmail from './app/use/useGetEmail';
 import { getLungeCoins } from './app/use/useGetLungeCoins';
 
 const Stack = createStackNavigator();
@@ -116,7 +116,7 @@ const UnauthenticatedTabNavigator = () => (
 
 function App() {
 
-    const clearEmailFoodDayData = async () => {
+    /*const clearEmailFoodDayData = async () => {
         try {
 
             const email = await getEmail();
@@ -128,7 +128,7 @@ function App() {
         } catch (error) {
             console.error("Error clearing AsyncStorage items:", error);
         }
-    };
+    };*/
 
     const onAuthenticate = async () => {
 
@@ -205,10 +205,7 @@ function App() {
     const getIphoneModel = async () => {
         if (Device.brand === 'Apple') {
             setIphoneModel(Device.modelName || 'Unknown iPhone');
-        } else {
-            setIphoneModel('Not an iPhone');
-        }
-        //console.log(Device.modelName)
+        } 
     };
 
     const fetchData = async () => {
@@ -217,7 +214,7 @@ function App() {
             setSetupRan(setupHasRanLocally);
 
             const lungeCoins = await getLungeCoins();
-            setLungeCoinsAmount(lungeCoins)
+            setLungeCoinsAmount(lungeCoins);
             
             checkLanguageDocumentLocally();
             checkUsernamesMatch();
@@ -390,7 +387,6 @@ function App() {
                     }else{
                         setIsConnected(true)
                     }*/
-                    //console.log(speed)
                 }
             } catch (error: any) {
                 console.log('failed to check internet speed');
@@ -402,7 +398,9 @@ function App() {
         // Run checkInternetConnection every 10 seconds
         // Delay the first call to checkInternetConnection by 2 seconds
         const timeout = setTimeout(() => {
+
             checkInternetConnection();
+
             // Run checkInternetConnection every 10 seconds after the initial delay
             const interval = setInterval(() => {
                 checkInternetConnection();
@@ -500,10 +498,8 @@ function App() {
         }
 
         if (!localEmail && !user) {
-            // Unauthenticated flow
             return <UnauthenticatedTabNavigator />;
         } else {
-            // Authenticated or setup flow
             return isAccountDeleted && setupRan && !user ? (
                 <UnauthenticatedTabNavigator />
             ) : setupRan && isAuthenticated && user && !accountJustRegistered  ? (

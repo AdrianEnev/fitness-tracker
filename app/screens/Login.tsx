@@ -224,23 +224,6 @@ const Login = ({navigation}: any) => {
                                 onPress={signIn}>
                                 <Text style={tw`text-2xl text-white font-semibold`}>{t('login')}</Text>
                             </TouchableOpacity>
-
-                            <View style={tw`w-full h-[2px] bg-gray-300 mt-2`}></View>
-
-                            <Pressable style={tw`flex flex-col items-center`}>
-
-                                <View style={tw`flex flex-row gap-x-5`}>
-
-                                    <Pressable>
-                                        <Ionicons name='logo-apple' size={64} color='#f43f5e'></Ionicons>
-                                    </Pressable>
-
-                                    <Pressable>
-                                        <Ionicons name='logo-google' size={55} color='#3b82f6' style={tw`mt-2`}></Ionicons>
-                                    </Pressable>
-                                </View>
-                            </Pressable>
-                            
                                 
                         </View>
                     

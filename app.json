@@ -21,8 +21,11 @@
         "NSFaceIDUsageDescription": "This app uses FaceID to secure your data.",
         "NSPhotoLibraryUsageDescription": "This app uses the photo library to upload profile pictures.",
         "UIBackgroundModes": [
+          "fetch",
           "fetch"
-        ]
+        ],
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIDeviceFamily": [1]
       },
       "bundleIdentifier": "com.nafle.LungeFitnessTracker"
     },
