@@ -15,5 +15,4 @@ const scanImage = async (blob: any) => {
     return result
 }
 
-
 export default scanImage;

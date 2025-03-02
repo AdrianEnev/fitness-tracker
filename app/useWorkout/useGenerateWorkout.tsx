@@ -38,7 +38,6 @@ const useGenerateWorkout = async (
     Try not to overshoot with the weight on single-arm exercises.
     The names of the days and exercises should be in this language: ${language}. Only the name of a rest day should always remain "Rest Day" regardless of the language.
     
-
     Please provide the workout plan in the following JSON format:
     {
       "days": [
