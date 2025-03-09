@@ -151,7 +151,7 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
                                             {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => 
                                             {
                                                 // Get the intensity value
-                                                const intensity = set.intensity;  // Assuming you want to get the intensity from newExercises or userInputs
+                                                const intensity = set.intensity;
 
                                                 // Determine the background color based on the intensity value
                                                 let backgroundColor = 'bg-neutral-100';

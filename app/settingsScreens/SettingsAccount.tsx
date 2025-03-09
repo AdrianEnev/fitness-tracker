@@ -25,8 +25,6 @@ import SyncInfoModal from '../modals/SyncInfoModal'
 
 const SettingsAccount = ({navigation}: any) => {
 
-    
- 
     const { 
         receiveFriendRequests, 
         setReceiveFriendRequests, 
@@ -305,7 +303,7 @@ const SettingsAccount = ({navigation}: any) => {
                         </View>
                         
                         <View style={tw`flex justify-center`}>
-                            <Text style={tw`text-lg font-mediu`} numberOfLines={2}>{title === t('receive-friend-requests') ? title : title}</Text>
+                            <Text style={tw`text-lg font-medium`} numberOfLines={2}>{title === t('receive-friend-requests') ? title : title}</Text>
                         </View>
                     </View>
 

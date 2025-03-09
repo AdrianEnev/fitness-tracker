@@ -77,7 +77,7 @@ const isFriendLimitReached = async (loggedInUser: any) => {
     const friendsSnapshot = await getDocs(friendsListCollectionRef);
     const numFriends = friendsSnapshot.size;
 
-    // Assuming the friend limit is 5
+    // Friend limit -> 5
     return numFriends >= 5; 
 }
 

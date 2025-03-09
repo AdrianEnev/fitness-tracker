@@ -154,7 +154,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
 
     const handleContentSizeChange = (event: any) => {
         const { height } = event.nativeEvent.contentSize;
-        const lineHeight = 20; // Assuming the line height is 20, adjust this based on your TextInput style
+        const lineHeight = 20;
         const lines = height / lineHeight;
     
         if (lines >= 2) {
@@ -202,10 +202,10 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
         const existingWorkouts = await AsyncStorage.getItem(`workouts_${email}`);
         const workouts = existingWorkouts ? JSON.parse(existingWorkouts) : [];
 
-        const id = generateID();
+        const workoutId = generateID();
 
         const newWorkout = {
-            id: id,
+            id: workoutId,
             title: 'Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($',
             created: new Date().toISOString(),
             colour: generateRandomColour(),
@@ -231,7 +231,7 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
             addWorkout(
                 [], 
                 'Rest~+!_@)#($*&^@&$^*@^$&@*$&#@&#@(&#$@*&($', 
-                id, 
+                workoutId, 
                 folder
             );
         }

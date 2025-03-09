@@ -63,6 +63,8 @@ const Setup = () => {
 
     const calculateCalories = (units: string) => {
 
+        console.log(weight, height)
+
         let w = weight;
         let h = height;
         let a = age;

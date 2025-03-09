@@ -27,7 +27,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
 
     const {internetConnected, internetSpeed, setGeneratingWorkout, setGeneratingWorkoutInFolder, lungeCoinsAmount} = useContext(GlobalContext)
 
-    const decrementLungeCoins = async () => {
+    /*const decrementLungeCoins = async () => {
 
         console.log('decrementLungeCoins function ran...');
         const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -53,7 +53,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
                 return false;
             }
         })
-    }
+    }*/
 
     const setupFinished = async () => {
         
@@ -97,7 +97,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
             navigation.goBack();
         }
 
-        decrementLungeCoins();
+        //decrementLungeCoins();
 
         const generatedWorkout = await generateWorkout(level, goal, numberOfDays, location, specificBodyparts, group, equipment, language);
         await addGeneratedWorkoutLocally(generatedWorkout, setGeneratingWorkout, folder)

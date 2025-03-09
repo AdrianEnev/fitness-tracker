@@ -28,6 +28,8 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
       };
     
     const uploadProfilePicture = async () => {
+
+        console.log('uploading profile picture')
         
         // get image from gallery
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -36,8 +38,12 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
             aspect: [1, 1],
             quality: 1,
         });
+
+        console.log('result', result)
       
         if (!result.canceled) {
+
+            console.log('not cancelled')
             
             const blob = await uriToBlob(result.assets[0].uri);
 
@@ -51,6 +57,8 @@ const ProfilePicture = ({ page, navigation }: ProfilePictureProps) => {
             }
             
             try {
+                console.log('uploading')
+
                 await uploadFile(blob, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
                 alert(t('profile-picture-uploaded-successfuly'))
                 setProfilePicture(result.assets[0].uri);

@@ -21,15 +21,16 @@ const LanguageScreen = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: 
 
     const {iphoneModel} = useContext(GlobalContext);
     console.log(iphoneModel)
+    console.log('large screen')
 
     const iphonesWithDynamicIsland = [
-        '15', '15 Plus', '16', '16 Plus', '16 Pro', '16 Pro Max', 'SE'
+        '15', '15 Plus', '16', '16 Plus', '16 Pro', '16 Pro Max', 'SE', 'Simulator iOS'
     ]
     
     return (
         <View style={tw`flex-1 flex-col bg-white`}>
 
-            <View style={tw`w-full h-24 bg-[#fd1c47] absolute top-0 justify-center items-center pt-8`}>
+            <View style={tw`w-full ${iphonesWithDynamicIsland.includes(iphoneModel) ? 'h-26' : 'h-24'} bg-[#fd1c47] absolute top-0 justify-center items-center pt-8`}>
                 <Text style={tw`text-4xl text-white font-bold ${iphonesWithDynamicIsland.includes(iphoneModel) ? 'mt-3' : ''}`}>Lunge</Text>
             </View>
             

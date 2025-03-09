@@ -22,7 +22,6 @@ const Food = ({navigation}: any) => {
 
     useEffect(() => {
         const setLocale = (lng: any) => {
-            // Assuming lng is one of 'bg', 'en', 'ge', 'fr', 'ru', 'it', 'es'
             LocaleConfig.defaultLocale = lng;
             // Update LocaleConfig with the new language's configuration
             switch (lng) {

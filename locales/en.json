@@ -218,6 +218,7 @@
     "setup-gender": "Please enter your gender!",
     "setup-height": "Please enter your height!",
     "setup-age": "Please enter your age!",
+    "setup-weight": "Please enter your weight!",
     "exercise-activity-one": "Sedentary",
     "exercise-activity-two": "Exercise 1-3 times/week",
     "exercise-activity-three": "Exercise 4-5 times/week",

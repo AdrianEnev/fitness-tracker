@@ -35,6 +35,7 @@ import LanguageScreenSmall from './app/screens/LanguageScreenSmall';
 import { StripeProvider } from '@stripe/stripe-react-native';
 //import getEmail from './app/use/useGetEmail';
 import { getLungeCoins } from './app/use/useGetLungeCoins';
+import clearAsyncStorage from './app/use/useClearAsyncStorage';
 
 const Stack = createStackNavigator();
 
@@ -479,7 +480,7 @@ function App() {
 
     useEffect(() => {
 
-        //clearAsyncStorage()
+        //clearAsyncStorage();
         //logAsyncStorage()
         //clearEmailFoodDayData('test')
         //tempFunc()

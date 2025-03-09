@@ -62,7 +62,7 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, setGeneratingWo
                     id: Math.random().toString(),
                     reps: exercise.reps,
                     weight: exercise.weight, 
-                    intensity: null, // Assuming intensity is not provided by the AI model
+                    intensity: null, // Intensity not provided by AI model by design
                     setIndex: setIndex + 1
                 }))
             })) : [];
@@ -116,7 +116,7 @@ const addGeneratedWorkoutLocally = async (generatedWorkout: any, setGeneratingWo
                             id: Math.random().toString(),
                             reps: exercise.reps,
                             weight: exercise.weight,
-                            intensity: null, // Assuming intensity is not provided by the AI model
+                            intensity: null, // Intensity not provied by AI model by design
                             setIndex: setIndex + 1
                         }))
                     })) : [];

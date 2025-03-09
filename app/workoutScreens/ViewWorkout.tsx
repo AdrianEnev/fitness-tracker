@@ -230,7 +230,7 @@ const ViewWorkout = ({route, navigation}: any) => {
 
     const handleContentSizeChange = (event: any) => {
         const { height } = event.nativeEvent.contentSize;
-        const lineHeight = 20; // Assuming the line height is 20, adjust this based on your TextInput style
+        const lineHeight = 20;
         const lines = height / lineHeight;
     
         if (lines >= 2) {
@@ -456,8 +456,8 @@ const ViewWorkout = ({route, navigation}: any) => {
                                                 {exercise.sets.sort((a: any, b: any) => a.setIndex - b.setIndex).map((set: any, mapIndex: any) => {
 
                                                     // Get the intensity value
-                                                    const intensity = set.intensity;  // Assuming you want to get the intensity from newExercises or userInputs
-
+                                                    const intensity = set.intensity;  
+                                                    
                                                     // Determine the background color based on the intensity value
                                                     let backgroundColor = 'bg-neutral-100';
                                                     let textColor = 'text-black';

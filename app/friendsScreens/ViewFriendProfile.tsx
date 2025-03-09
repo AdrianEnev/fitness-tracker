@@ -147,7 +147,7 @@ const ViewFriendProfile = ({route, navigation}: any) => {
                     </View>
                     
                     <View style={tw`ml-3`}>
-                        <Text style={tw`text-base font-medium text-gray-700`}>{t('first-joined')}{friendRegistrationDate ? friendRegistrationDate : t('loading-friends')}</Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>{t('first-joined')} {friendRegistrationDate ? friendRegistrationDate : t('loading-friends')}</Text>
                         <Text style={tw`text-base font-medium text-gray-700`}>{workoutsFinished} {workoutsFinished > 1 || workoutsFinished == 0 ? t('workouts'): t('workout')} {t('completed-workouts')}.</Text>
                         <Text style={tw`text-base font-medium text-gray-700`}>{weightLifted ? weightLifted : '0'} {t('kilograms-short')} {t('lifted-in-total')}</Text>
                     </View>
