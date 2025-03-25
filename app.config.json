@@ -25,9 +25,14 @@
           "fetch"
         ],
         "ITSAppUsesNonExemptEncryption": false,
-        "UIDeviceFamily": [1]
+        "UIDeviceFamily": [
+          1
+        ]
       },
-      "bundleIdentifier": "com.nafle.LungeFitnessTracker"
+      "bundleIdentifier": "com.nafle.LungeFitnessTracker",
+      "config": {
+        "googleMobileAdsAppId": "ca-app-pub-3289864451968314~2406960469"
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -39,7 +44,8 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-build-properties"
+      "expo-build-properties",
+      "react-native-google-mobile-ads"
     ],
     "newArchEnabled": true,
     "extra": {

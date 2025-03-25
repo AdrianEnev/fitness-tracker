@@ -19,15 +19,21 @@ import i18next from 'i18next'
 import { collection, doc, getDoc, updateDoc } from 'firebase/firestore'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
 
+import { BannerAd, BannerAdSize, TestIds } from 'react-native-google-mobile-ads';
+
+const adUnitId = __DEV__ ? TestIds.BANNER : 'ca-app-pub-3289864451968314/6082417958';
+
 const GenerateWorkoutPage = ({navigation, route}: any) => {
 
     const {t} = useTranslation();
+
+    const [showRewardAd, setShowRewardAd] = useState(false);
 
     const {folder = null} = route.params || {};
 
     const {internetConnected, internetSpeed, setGeneratingWorkout, setGeneratingWorkoutInFolder, lungeCoinsAmount} = useContext(GlobalContext)
 
-    /*const decrementLungeCoins = async () => {
+    const decrementLungeCoins = async () => {
 
         console.log('decrementLungeCoins function ran...');
         const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -53,7 +59,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
                 return false;
             }
         })
-    }*/
+    }
 
     const setupFinished = async () => {
         
@@ -62,6 +68,29 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
         if (!internetConnected || internetSpeed < 64) {
             alert(t('unstable-connection'));
             return;
+        }
+
+        // Check if user has any lunge coins, if not, show alert and return
+        if (lungeCoinsAmount === 0) {
+            Alert.alert(
+                t('no-coins-title'),
+                t('no-coins-description'),
+                [
+                    {
+                        text: t('cancel'),
+                        onPress: () => {
+                            return;
+                        },
+                    },
+                    {
+                        text: t('watch-ad'),
+                        onPress: () => {
+                            console.log('User chose to watch an ad.');
+                            setShowRewardAd(true);
+                        },
+                    },
+                ]
+            );
         }
 
         const levels = ['Beginner', 'Intermediate', 'Advanced', 'Elite'];
@@ -97,7 +126,8 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
             navigation.goBack();
         }
 
-        //decrementLungeCoins();
+        // User does have lunge coins, decrement 1 and proceed with generating the workout
+        decrementLungeCoins();
 
         const generatedWorkout = await generateWorkout(level, goal, numberOfDays, location, specificBodyparts, group, equipment, language);
         await addGeneratedWorkoutLocally(generatedWorkout, setGeneratingWorkout, folder)
@@ -160,6 +190,17 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
 
     return (
         <>
+            {showRewardAd && (
+                <BannerAd
+                    unitId={adUnitId}
+                    size={BannerAdSize.BANNER}
+                    requestOptions={{ requestNonPersonalizedAdsOnly: true }}
+                    onAdClosed={() => {
+                        setShowRewardAd(false);
+                    }}
+                />
+            )}
+
             {(
                 isGenerateWorkoutModalVisible
             ) && (
