@@ -124,8 +124,7 @@ const SettingsAccount = ({navigation}: any) => {
                 ],
             );
 
-            return
-            
+            return;
         }
 
         Alert.prompt(

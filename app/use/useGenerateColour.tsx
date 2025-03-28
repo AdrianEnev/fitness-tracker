@@ -1,16 +1,8 @@
-const generateRandomColour = (includeBG?: boolean) => {
+const generateRandomColour = () => {
 
-
-    if (includeBG) {
-        const colours = ['bg-[#fd3e54]', 'bg-[#3f8aff]', 'bg-[#15c48a]', 'bg-[#ffca2c]', 'bg-[#f053a3]', 'bg-[#9263fa]', 'bg-[#07c0da]'];
-        const randomIndex = Math.floor(Math.random() * colours.length);
-        return colours[randomIndex];
-    } else{
-        const colours = ['[#fd3e54]', '[#3f8aff]', '[#15c48a]', '[#ffca2c]', '[#f053a3]', '[#9263fa]', '[#07c0da]'];
-        const randomIndex = Math.floor(Math.random() * colours.length);
-        return colours[randomIndex];
-    }
-    
+    const colours = ['[#fd3e54]', '[#3f8aff]', '[#15c48a]', '[#ffca2c]', '[#f053a3]', '[#9263fa]', '[#07c0da]'];
+    const randomIndex = Math.floor(Math.random() * colours.length);
+    return colours[randomIndex];
     
 };
 

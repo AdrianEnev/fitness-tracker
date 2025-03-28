@@ -18,6 +18,7 @@ interface ExerciseInfo {
 }
 
 const addEmptyFolder = async (folderId: string) => {
+    
     let folderTitle = "New Folder";
     const currentLanguage = await AsyncStorage.getItem('language');
     if (currentLanguage == "bg") {

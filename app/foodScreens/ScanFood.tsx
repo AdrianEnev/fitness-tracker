@@ -2,7 +2,7 @@ import { CameraView, useCameraPermissions } from 'expo-camera';
 import { useEffect, useRef, useState } from 'react';
 import { Button, Text, View } from 'react-native';
 import tw from 'twrnc';
-import scanImageNutrients from '../use/useScanImageNutrients';
+//import checkImageNutrients from '../use/usecheckImageNutrients';
 import { useTranslation } from 'react-i18next';
 
 export default function ScanFood({navigation, route}: any) {
@@ -18,7 +18,7 @@ export default function ScanFood({navigation, route}: any) {
 
     useEffect(() => {
         if (barcode) {
-            scanImageNutrients(barcode, date)
+            // checkImageNutrients(barcode, date)
         }
     }, [barcode]);
 

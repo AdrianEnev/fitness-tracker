@@ -1,5 +1,5 @@
 // Function to scan image nutrients based on a barcode and date
-const scanImageNutrients = async (barcode: any, date: any) => {
+const checkImageNutrients = async (barcode: any, date: any) => {
     
     console.log("Barcode:", barcode);
     console.log("Date:", date);
@@ -59,4 +59,4 @@ async function getNutritionalInfoFromEdamam(productName: string): Promise<any> {
     }
 }
 
-export default scanImageNutrients;
+export default checkImageNutrients;

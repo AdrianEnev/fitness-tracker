@@ -99,7 +99,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
 
         //decrementLungeCoins();
 
-        const generatedWorkout = await generateWorkout(level, goal, numberOfDays, location, specificBodyparts, group, equipment, language);
+        const generatedWorkout = await generateWorkout(level, goal, numberOfDays, location, specificBodyparts, equipment, language);
         await addGeneratedWorkoutLocally(generatedWorkout, setGeneratingWorkout, folder)
 
         console.log('generated workout');
