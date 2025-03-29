@@ -25,7 +25,6 @@ const Workouts = ({navigation}: any) => {
     const { internetConnected, generatingWorkoutInFolder, generatingWorkout } = useContext(GlobalContext);
 
     const [workouts, setWorkouts] = useState<Workout[]>([]);
-    const [firebaseWorkouts, setFirebaseWorkouts] = useState<Workout[]>([]);
     const [folders, setFolders] = useState<any[]>([]);
     const [viewWorkoutButtonDisabled, setViewWorkoutButtonDisabled] = useState(false);
 
@@ -103,24 +102,12 @@ const Workouts = ({navigation}: any) => {
         }
     };
 
-    const getWorkouts = async () => {
-        const usersCollectionRef = collection(FIRESTORE_DB, "users");
-        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
-
-        const userWorkoutsSnapshot = await getDocs(userWorkoutsCollectionRef);
-        const userWorkoutsData = userWorkoutsSnapshot.docs.map(doc => doc.data() as Workout);
-
-        setFirebaseWorkouts(userWorkoutsData);
-    }
-
     useFocusEffect(
         useCallback(() => {
             if (!initialLoad) {
                 setTimeout(() => {
                     getWorkoutsLocally();
                     getFoldersLocally();
-                    getWorkouts();
 
 
                     if (internetConnected) {
