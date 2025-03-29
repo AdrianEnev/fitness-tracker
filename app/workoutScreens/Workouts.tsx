@@ -362,7 +362,7 @@ const Workouts = ({navigation}: any) => {
             setIsDeletingMultipleWorkoutsModalVisible(true);
         }
 
-        await deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, internetConnected, userWorkoutsCollectionRef);
+        await deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, internetConnected);
         setSelectedWorkouts([]);
 
         setIsDeletingMultipleWorkoutsModalVisible(false);

@@ -2,26 +2,15 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
 import { Workout } from "../../interfaces";
 import generateID from "../use/useGenerateID";
-import { collection, deleteDoc, doc, getDocs, writeBatch } from "firebase/firestore";
+import { deleteDoc, doc } from "firebase/firestore";
 import i18next from "i18next";
-import { FIRESTORE_DB } from "../../firebaseConfig";
-
-const deleteSubcollections = async (docRef: any, batch: any) => {
-    const subcollections = await getDocs(collection(docRef, 'info'));
-    for (const subcollectionDoc of subcollections.docs) {
-        const setsCollection = await getDocs(collection(subcollectionDoc.ref, 'sets'));
-        for (const setDoc of setsCollection.docs) {
-            batch.delete(setDoc.ref);
-        }
-        batch.delete(subcollectionDoc.ref);
-    }
-};
+import { FIREBASE_AUTH } from "../../firebaseConfig";
 
 export const deleteSelectedWorkouts = async (
-    selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, internetConnected: any,
-    userWorkoutsCollectionRef: any
+    selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, internetConnected: any
 ) => {
 
+    // Remove workouts from  asyncstorage
     try {
         const email = await getEmail();
         if (!email) return;
@@ -46,26 +35,32 @@ export const deleteSelectedWorkouts = async (
         console.error(err);
     }
 
+    // Remove workouts from firebase
+    const userId = FIREBASE_AUTH.currentUser?.uid;
+
     if (internetConnected) {
-        const batch = writeBatch(FIRESTORE_DB);
-
+        // Request workout deletion by sending userId and workouts to delete
         try {
-            for (const selectedWorkout of selectedWorkouts) {
-                const selectedWorkoutID = selectedWorkout.id;
-                const selectedWorkoutDoc = doc(userWorkoutsCollectionRef, selectedWorkoutID);
+            const response = await fetch(`http://localhost:3000/api/workouts/${userId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json', // Specifies the request body is JSON
+                },
+                body: JSON.stringify({
+                    selectedWorkouts: selectedWorkouts,
+                    userId: userId
+                }),
+            });
 
-                // Delete all subcollections and their documents
-                await deleteSubcollections(selectedWorkoutDoc, batch);
-
-                // Delete the workout document
-                batch.delete(selectedWorkoutDoc);
-                console.log(`Workout with ID ${selectedWorkoutID} added to batch for deletion`);
+            if (!response.ok) {
+                console.error("deleteWorkout: error deleting workout/s", response.statusText);
+                return null;
             }
 
-            await batch.commit();
-            console.log('Batch deletion committed');
-        } catch (err) {
-            console.error(err);
+            console.log('Successfuly removed workout/s from firebase');
+        } catch (error) {
+            console.error("deleteWorkout: error deleting workout/s", error);
+            return null;
         }
     }
 };
@@ -174,8 +169,6 @@ export const copySelectedWorkouts = async (selectedWorkouts: any) => {
     }
 }
 
-
-// Function to paste copied workouts
 export const pasteCopiedWorkouts = async () => {
     try {
         const email = await getEmail();
