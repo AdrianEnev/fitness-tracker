@@ -11,7 +11,7 @@ const useGenerateWorkout = async (
 ) => {
     
     try {
-        const response = await fetch(`http://localhost:3000/api/global/generateWorkout/`, {
+        const response = await fetch(`http://localhost:3000/api/models/generateWorkout/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Specifies the request body is JSON

@@ -70,7 +70,88 @@ export const deleteSelectedWorkouts = async (
     }
 };
 
-// Function to copy selected workouts
+export const cutSelectedWorkouts = async (
+    selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any) => 
+{
+    try {
+        const email = await getEmail();
+        if (!email) return;
+
+        const data = await AsyncStorage.getItem(`workouts_${email}`);
+        let workouts = data ? JSON.parse(data) : [];
+
+        // Filter out selected workouts
+        const selectedWorkoutsData = workouts.filter((workout: Workout) => 
+            selectedWorkouts.some((selectedWorkout: any) => selectedWorkout.id === workout.id)
+        );
+
+        // Store cut workouts in AsyncStorage
+        await AsyncStorage.setItem(`cut_workouts_${email}`, JSON.stringify(selectedWorkoutsData));
+
+        // Remove them from local storage but **NOT Firebase**
+        const remainingWorkouts = workouts.filter((workout: Workout) => 
+            !selectedWorkouts.some((selectedWorkout: any) => selectedWorkout.id === workout.id)
+        );
+        await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(remainingWorkouts));
+
+        // Update state
+        setWorkouts(remainingWorkouts);
+        setSelectedWorkouts([]);
+        setSelectionMode(false);
+
+        console.log('Selected workouts cut (but not deleted from Firebase)');
+    } catch (err) {
+        console.error(err);
+    }
+};
+
+export const pasteCutWorkouts = async (setWorkouts: any, internetConnected: any, userWorkoutsCollectionRef: any) => {
+    try {
+        const email = await getEmail();
+        if (!email) return;
+
+        // Get cut workouts from AsyncStorage
+        const cutData = await AsyncStorage.getItem(`cut_workouts_${email}`);
+        const cutWorkouts = cutData ? JSON.parse(cutData) : [];
+
+        if (cutWorkouts.length === 0) {
+            console.log('No cut workouts to paste');
+            return;
+        }
+
+        // Get current workouts
+        const data = await AsyncStorage.getItem(`workouts_${email}`);
+        let workouts = data ? JSON.parse(data) : [];
+
+        // Add cut workouts back
+        const updatedWorkouts = [...workouts, ...cutWorkouts];
+
+        // Update AsyncStorage
+        await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(updatedWorkouts));
+        setWorkouts(updatedWorkouts);
+
+        // Now delete from Firebase (if online)
+        if (internetConnected) {
+            try {
+                for (const workout of cutWorkouts) {
+                    const workoutDoc = doc(userWorkoutsCollectionRef, workout.id);
+                    await deleteDoc(workoutDoc);
+                    console.log(`Workout with ID ${workout.id} deleted from Firebase`);
+                }
+            } catch (err) {
+                console.error('Error deleting from Firebase:', err);
+            }
+        }
+
+        // Clear cut workouts from AsyncStorage
+        await AsyncStorage.removeItem(`cut_workouts_${email}`);
+
+        console.log('Cut workouts pasted and deleted from Firebase');
+    } catch (err) {
+        console.error(err);
+    }
+};
+
 export const copySelectedWorkouts = async (selectedWorkouts: any) => {
     try {
         const email = await getEmail();
@@ -93,60 +174,19 @@ export const copySelectedWorkouts = async (selectedWorkouts: any) => {
     }
 }
 
-// Function to cut selected workouts
-export const cutSelectedWorkouts = async (
-    selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, internetConnected: any,
-    userWorkoutsCollectionRef: any
-) => {
+
+// Function to paste copied workouts
+export const pasteCopiedWorkouts = async () => {
     try {
         const email = await getEmail();
         if (!email) return;
 
-        const data = await AsyncStorage.getItem(`workouts_${email}`);
-        let workouts = data ? JSON.parse(data) : [];
+        // Get the copied workouts from AsyncStorage
+        const cutData = await AsyncStorage.getItem(`copied_workouts_${email}`);
+        const copiedWorkouts = cutData ? JSON.parse(cutData) : [];
 
-        // Filter out the selected workouts
-        const selectedWorkoutsData = workouts.filter((workout: Workout) => 
-            selectedWorkouts.some((selectedWorkout: any) => selectedWorkout.id === workout.id)
-        );
-
-        // Store the selected workouts in a separate AsyncStorage item
-        await AsyncStorage.setItem(`cut_workouts_${email}`, JSON.stringify(selectedWorkoutsData));
-
-        // Delete the selected workouts from the main workouts list
-        await deleteSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, internetConnected, userWorkoutsCollectionRef);
-
-        if (internetConnected) {
-            try {
-                for (const selectedWorkout of selectedWorkouts) {
-                    const selectedWorkoutID = selectedWorkout.id;
-                    const selectedWorkoutDoc = doc(userWorkoutsCollectionRef, selectedWorkoutID);
-                    await deleteDoc(selectedWorkoutDoc);
-                    console.log(`Workout with ID ${selectedWorkoutID} deleted from Firebase`);
-                }
-            } catch (err) {
-                console.error(err);
-            }
-        }
-
-        console.log('Selected workouts cut');
-    } catch (err) {
-        console.error(err);
-    }
-};
-
-// Function to paste cut workouts
-export const pasteCutWorkouts = async (setWorkouts: any) => {
-    try {
-        const email = await getEmail();
-        if (!email) return;
-
-        // Get the cut workouts from AsyncStorage
-        const cutData = await AsyncStorage.getItem(`cut_workouts_${email}`);
-        const cutWorkouts = cutData ? JSON.parse(cutData) : [];
-
-        if (cutWorkouts.length === 0) {
-            console.log('No cut workouts to paste');
+        if (copiedWorkouts.length === 0) {
+            console.log('No copied workouts to paste');
             return;
         }
 
@@ -154,19 +194,28 @@ export const pasteCutWorkouts = async (setWorkouts: any) => {
         const data = await AsyncStorage.getItem(`workouts_${email}`);
         let workouts = data ? JSON.parse(data) : [];
 
-        // Add the cut workouts to the current workouts
-        const updatedWorkouts = [...workouts, ...cutWorkouts];
+        // Check for duplicates and rename if necessary
+        const updatedCopiedWorkouts = copiedWorkouts.map((copiedWorkout: any) => {
+            const exists = workouts.some((workout: any) => workout.id === copiedWorkout.id);
+            if (exists) {
+                const existingTitles = workouts.map((workout: any) => workout.title);
+                const { baseTitle } = extractBaseTitleAndCopyNumber(copiedWorkout.title);
+                copiedWorkout.title = generateNewTitle(baseTitle, existingTitles);
+                copiedWorkout.id = generateID();
+            }
+            return copiedWorkout;
+        });
+
+        // Add the copied workouts to the current workouts
+        const updatedWorkouts = [...workouts, ...updatedCopiedWorkouts];
 
         // Update AsyncStorage with the new list of workouts
         await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(updatedWorkouts));
 
-        // Clear the cut workouts from AsyncStorage
-        await AsyncStorage.removeItem(`cut_workouts_${email}`);
+        // Clear the copied workouts from AsyncStorage
+        await AsyncStorage.removeItem(`copied_workouts_${email}`);
 
-        // Update state
-        setWorkouts(updatedWorkouts);
-
-        console.log('Cut workouts pasted');
+        console.log('Copied workouts pasted');
     } catch (err) {
         console.error(err);
     }
@@ -218,50 +267,4 @@ const generateNewTitle = (baseTitle: string, existingTitles: string[]) => {
     }
 
     return newTitle;
-};
-
-// Function to paste copied workouts
-export const pasteCopiedWorkouts = async () => {
-    try {
-        const email = await getEmail();
-        if (!email) return;
-
-        // Get the copied workouts from AsyncStorage
-        const cutData = await AsyncStorage.getItem(`copied_workouts_${email}`);
-        const copiedWorkouts = cutData ? JSON.parse(cutData) : [];
-
-        if (copiedWorkouts.length === 0) {
-            console.log('No copied workouts to paste');
-            return;
-        }
-
-        // Get the current workouts from AsyncStorage
-        const data = await AsyncStorage.getItem(`workouts_${email}`);
-        let workouts = data ? JSON.parse(data) : [];
-
-        // Check for duplicates and rename if necessary
-        const updatedCopiedWorkouts = copiedWorkouts.map((copiedWorkout: any) => {
-            const exists = workouts.some((workout: any) => workout.id === copiedWorkout.id);
-            if (exists) {
-                const existingTitles = workouts.map((workout: any) => workout.title);
-                const { baseTitle } = extractBaseTitleAndCopyNumber(copiedWorkout.title);
-                copiedWorkout.title = generateNewTitle(baseTitle, existingTitles);
-                copiedWorkout.id = generateID();
-            }
-            return copiedWorkout;
-        });
-
-        // Add the copied workouts to the current workouts
-        const updatedWorkouts = [...workouts, ...updatedCopiedWorkouts];
-
-        // Update AsyncStorage with the new list of workouts
-        await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(updatedWorkouts));
-
-        // Clear the copied workouts from AsyncStorage
-        await AsyncStorage.removeItem(`copied_workouts_${email}`);
-
-        console.log('Copied workouts pasted');
-    } catch (err) {
-        console.error(err);
-    }
 };

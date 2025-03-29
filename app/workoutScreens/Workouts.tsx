@@ -369,7 +369,8 @@ const Workouts = ({navigation}: any) => {
     }
 
     const cutWorkouts = () => {
-        //cutSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode, internetConnected, userWorkoutsCollectionRef);
+
+        cutSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode);
         setSelectedWorkouts([]);
     }
 
@@ -380,7 +381,7 @@ const Workouts = ({navigation}: any) => {
     }
 
     const pasteCutWorkoutsFunc = () => {
-        pasteCutWorkouts(setWorkouts);
+        pasteCutWorkouts(setWorkouts, internetConnected, userWorkoutsCollectionRef);
     }
 
     const pasteCopiedWorkoutsFunc = () => {
