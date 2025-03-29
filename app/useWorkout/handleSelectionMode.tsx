@@ -2,7 +2,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
 import { Workout } from "../../interfaces";
 import generateID from "../use/useGenerateID";
-import { deleteDoc, doc } from "firebase/firestore";
 import i18next from "i18next";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 
@@ -124,19 +123,6 @@ export const pasteCutWorkouts = async (setWorkouts: any, internetConnected: any,
         // Update AsyncStorage
         await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(updatedWorkouts));
         setWorkouts(updatedWorkouts);
-
-        // Now delete from Firebase (if online)
-        if (internetConnected) {
-            try {
-                for (const workout of cutWorkouts) {
-                    const workoutDoc = doc(userWorkoutsCollectionRef, workout.id);
-                    await deleteDoc(workoutDoc);
-                    console.log(`Workout with ID ${workout.id} deleted from Firebase`);
-                }
-            } catch (err) {
-                console.error('Error deleting from Firebase:', err);
-            }
-        }
 
         // Clear cut workouts from AsyncStorage
         await AsyncStorage.removeItem(`cut_workouts_${email}`);
