@@ -1,5 +1,5 @@
 import { View, Text, Pressable, FlatList, Alert, ActivityIndicator } from 'react-native';
-import React, { useCallback, useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import tw from 'twrnc';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
@@ -11,14 +11,13 @@ import getWorkoutInfoLocally from '../useWorkout/useGetWorkoutInfoLocally';
 import { BlurView } from 'expo-blur';
 import { copySelectedWorkoutsInFolder, cutSelectedWorkoutsInFolder, deleteSelectedWorkoutsInFolder, pasteCopiedWorkoutsInFolder, pasteCutWorkoutsInFolder } from '../useWorkout/handleSelectionModeForFolders';
 import PasteWorkoutsInFolderModal from '../modals/PasteWorkoutsInFolderModal';
-import { useFocusEffect } from '@react-navigation/native';
 import GlobalContext from '../../GlobalContext';
 import { collection, deleteDoc, doc, getDocs } from 'firebase/firestore';
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import GeneratingWorkoutAnimationModal from '../modals/GeneratingWorkoutAnimationModal';
-import { checkWorkoutsCountFolder } from '../useWorkout/useCheckWorkoutsCount';
 
 const WorkoutFolder = ({ route, navigation }: any) => {
+    
     const { folderId } = route.params;
     const { t } = useTranslation();
 
@@ -26,8 +25,6 @@ const WorkoutFolder = ({ route, navigation }: any) => {
     const [viewWorkoutButtonDisabled, setViewWorkoutButtonDisabled] = useState(false);
     const [selectedWorkouts, setSelectedWorkouts] = useState<any[]>([]);
     const [selectionMode, setSelectionMode] = useState(false);
-
-    const [userWorkoutsCollectionRef, setUserWorkoutsCollectionRef] = useState<any>();
 
     const {internetConnected, generatingWorkout, generatingWorkoutInFolder, setGeneratingWorkoutInFolder} = useContext(GlobalContext)
 
@@ -50,21 +47,6 @@ const WorkoutFolder = ({ route, navigation }: any) => {
         fetchFolderDetails();
     }, [folder]);
 
-    useFocusEffect(
-        useCallback(() => {
-            if (internetConnected) {
-                    // set the firebase path to the workouts so it can be passed to functions faster
-                    const usersCollectionRef = collection(FIRESTORE_DB, "users");
-                    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-                    const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
-                    setUserWorkoutsCollectionRef(userWorkoutsCollectionRef);
-
-                    // get the workouts from firebase
-                    getWorkouts();
-                } 
-            }, [])
-    );
-
     const getInitials = (name: string) => {
         const dayMatch = name.match(/^Day (\d) - /);
         if (dayMatch && dayMatch[1] >= '1' && dayMatch[1] <= '8') {
@@ -74,6 +56,7 @@ const WorkoutFolder = ({ route, navigation }: any) => {
     };
 
     const deleteFolder = async () => {
+
         console.log('Deleting folder: ', folder);
 
         try {
@@ -245,12 +228,12 @@ const WorkoutFolder = ({ route, navigation }: any) => {
     }
 
     const deleteWorkouts = () => {
-        deleteSelectedWorkoutsInFolder(selectedWorkouts, folder.id, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef);
+        deleteSelectedWorkoutsInFolder(selectedWorkouts, folder.id, setSelectedWorkouts, setSelectionMode, internetConnected);
         setSelectedWorkouts([]);
     };
 
     const cutWorkouts = () => {
-        cutSelectedWorkoutsInFolder(selectedWorkouts, folder.id, setSelectedWorkouts, setSelectionMode, firebaseWorkouts, internetConnected, userWorkoutsCollectionRef);
+        cutSelectedWorkoutsInFolder(selectedWorkouts, folder.id, setSelectedWorkouts, setSelectionMode);
         setSelectedWorkouts([]);
     };
 

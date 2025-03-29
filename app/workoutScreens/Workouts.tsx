@@ -2,8 +2,6 @@ import { View, Text, FlatList, Pressable, Alert, ActivityIndicator } from 'react
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
-import { collection, doc, getDocs } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { Workout } from '../../interfaces';
 import Ionicons from '@expo/vector-icons/Ionicons'
 import BottomNavigationBar from '../components/BottomNavigationBar';
@@ -27,8 +25,6 @@ const Workouts = ({navigation}: any) => {
     const [workouts, setWorkouts] = useState<Workout[]>([]);
     const [folders, setFolders] = useState<any[]>([]);
     const [viewWorkoutButtonDisabled, setViewWorkoutButtonDisabled] = useState(false);
-
-    const [userWorkoutsCollectionRef, setUserWorkoutsCollectionRef] = useState<any>();
 
     const [isDeletingMultipleWorkoutsModalVisible, setIsDeletingMultipleWorkoutsModalVisible] = useState(false);
 
@@ -104,19 +100,11 @@ const Workouts = ({navigation}: any) => {
 
     useFocusEffect(
         useCallback(() => {
+
             if (!initialLoad) {
                 setTimeout(() => {
                     getWorkoutsLocally();
                     getFoldersLocally();
-
-
-                    if (internetConnected) {
-                        const usersCollectionRef = collection(FIRESTORE_DB, "users");
-                        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-                        const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
-                        setUserWorkoutsCollectionRef(userWorkoutsCollectionRef);
-                    }
-
                 }, 100)
             }else{
                 getWorkoutsLocally();
@@ -368,7 +356,7 @@ const Workouts = ({navigation}: any) => {
     }
 
     const pasteCutWorkoutsFunc = () => {
-        pasteCutWorkouts(setWorkouts, internetConnected, userWorkoutsCollectionRef);
+        pasteCutWorkouts(setWorkouts);
     }
 
     const pasteCopiedWorkoutsFunc = () => {

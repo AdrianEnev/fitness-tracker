@@ -105,7 +105,7 @@ export const cutSelectedWorkoutsInFolder = async (
 };
 
 export const pasteCutWorkoutsInFolder = async (
-    folderId: string, internetConnected: any, userWorkoutsCollectionRef: any
+    folderId: string
 ) => {
     try {
         const email = await getEmail();

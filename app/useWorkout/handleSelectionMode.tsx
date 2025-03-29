@@ -99,7 +99,7 @@ export const cutSelectedWorkouts = async (
     }
 };
 
-export const pasteCutWorkouts = async (setWorkouts: any, internetConnected: any, userWorkoutsCollectionRef: any) => {
+export const pasteCutWorkouts = async (setWorkouts: any) => {
     try {
         const email = await getEmail();
         if (!email) return;
