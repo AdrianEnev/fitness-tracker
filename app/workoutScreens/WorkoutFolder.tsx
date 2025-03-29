@@ -1,4 +1,4 @@
-import { View, Text, Pressable, FlatList, Alert, ActivityIndicator } from 'react-native';
+import { View, Text, Pressable, FlatList, ActivityIndicator } from 'react-native';
 import React, { useContext, useEffect, useState } from 'react';
 import tw from 'twrnc';
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -17,7 +17,7 @@ import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import GeneratingWorkoutAnimationModal from '../modals/GeneratingWorkoutAnimationModal';
 
 const WorkoutFolder = ({ route, navigation }: any) => {
-    
+
     const { folderId } = route.params;
     const { t } = useTranslation();
 
@@ -26,7 +26,7 @@ const WorkoutFolder = ({ route, navigation }: any) => {
     const [selectedWorkouts, setSelectedWorkouts] = useState<any[]>([]);
     const [selectionMode, setSelectionMode] = useState(false);
 
-    const {internetConnected, generatingWorkout, generatingWorkoutInFolder, setGeneratingWorkoutInFolder} = useContext(GlobalContext)
+    const { internetConnected, generatingWorkout, generatingWorkoutInFolder } = useContext(GlobalContext)
 
     const fetchFolderDetails = async () => {
         try {
@@ -94,6 +94,7 @@ const WorkoutFolder = ({ route, navigation }: any) => {
     };
 
     const viewWorkout = async (workout: Workout) => {
+
         setViewWorkoutButtonDisabled(true);
 
         const workoutInfo = await getWorkoutInfoLocally(workout.id, folder);
@@ -213,19 +214,6 @@ const WorkoutFolder = ({ route, navigation }: any) => {
             );
         }
     };
-
-    const [firebaseWorkouts, setFirebaseWorkouts] = useState<Workout[]>([]);
-
-    const getWorkouts = async () => {
-        const usersCollectionRef = collection(FIRESTORE_DB, "users");
-        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
-
-        const userWorkoutsSnapshot = await getDocs(userWorkoutsCollectionRef);
-        const userWorkoutsData = userWorkoutsSnapshot.docs.map(doc => doc.data() as Workout);
-
-        setFirebaseWorkouts(userWorkoutsData);
-    }
 
     const deleteWorkouts = () => {
         deleteSelectedWorkoutsInFolder(selectedWorkouts, folder.id, setSelectedWorkouts, setSelectionMode, internetConnected);
