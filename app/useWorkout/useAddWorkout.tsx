@@ -21,11 +21,11 @@ const addWorkout = async (exercises: any, workoutTitle: string, workoutId: any, 
             }),
         });
         if (!response.ok) {
-            console.error("syncWorkouts: Error fetching data:", response.statusText);
+            console.error("addWorkout: error:", response.statusText);
             return null;
         }
     } catch (error) {
-        console.error("syncWorkouts: Error fetching data:", error);
+        console.error("addWorkout: error:", error);
         return null;
     }
 }

@@ -6,8 +6,7 @@ import { useTranslation } from 'react-i18next';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import getEmail from '../use/useGetEmail';
 import GlobalContext from '../../GlobalContext';
-import { collection, doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { FIREBASE_AUTH } from '../../firebaseConfig';
 import generateID from '../use/useGenerateID';
 import AddFoodNutrientsComponent from './AddFoodNutrientsComponent';
 
@@ -82,19 +81,27 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
             // add to database in the background
             if (internetConnected && internetSpeed > 32) {
 
-                // Update Firestore
-                const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-                const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-                const foodDaysCollectionRef = collection(userDocRef, 'food_days');  
-                const foodDayDocRef = doc(foodDaysCollectionRef, formattedDate);
-    
-                const docSnapshot = await getDoc(foodDayDocRef);
-
-                if (docSnapshot.exists()) {
-                    await updateDoc(foodDayDocRef, updatedNutrients);
-                } else {
-                    await setDoc(foodDayDocRef, updatedNutrients);
+                const userId = FIREBASE_AUTH.currentUser?.uid;
+            
+                try {
+                    const response = await fetch(`http://localhost:3000/api/foodDays/${userId}/${formattedDate}`, {
+                        method: 'put',
+                        headers: {
+                            'Content-Type': 'application/json', // Specifies the request body is JSON
+                        },
+                        body: JSON.stringify({
+                            updatedNutrients: updatedNutrients
+                        }),
+                    });
+                    if (!response.ok) {
+                        console.error("addFoodDay: error:", response.statusText);
+                        return null;
+                    }
+                } catch (error) {
+                    console.error("addFoodDay: error:", error);
+                    return null;
                 }
+
             }
         } catch (err) {
             console.error(err);
@@ -118,7 +125,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         const storedData = await AsyncStorage.getItem(foodDayKey);
         const data = storedData ? JSON.parse(storedData) : [];
 
-        const formattedDate = formatDate(date); // 2024-11-15
+        const formattedDate = formatDate(date); // Example format: 2024-11-15
 
         let newCalories = Number(String(calories).replace(',', '.'));
         newCalories = Math.ceil(newCalories);
@@ -141,7 +148,6 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
             carbs: newCarbs,
             fat: newFat,
             grams: Math.round(grams),
-            //timestamp: serverTimestamp()
         };
     
         data.push(documentInfo);
@@ -151,17 +157,29 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
         navigation.goBack();
 
         if (internetConnected) {
-            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-            const foodDaysCollectionRef = collection(userDocRef, 'food_days');  
-            const foodDayDocRef = doc(foodDaysCollectionRef, formattedDate);
 
-            //await setDoc(foodDayDocRef, { calories: newCalories, protein: newProtein, carbs: newCarbs, fat: newFat }, { merge: true });
+            const userId = FIREBASE_AUTH.currentUser?.uid;
+            
+            try {
+                const response = await fetch(`http://localhost:3000/api/foodDays/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', // Specifies the request body is JSON
+                    },
+                    body: JSON.stringify({
+                        itemInfo: documentInfo,
+                        formattedDate: formattedDate
+                    }),
+                });
+                if (!response.ok) {
+                    console.error("addFoodDay: error:", response.statusText);
+                    return null;
+                }
+            } catch (error) {
+                console.error("addFoodDay: error:", error);
+                return null;
+            }
 
-            const foodDayFoodsCollectionRef = collection(foodDayDocRef, 'foods');
-            const foodDocRef = doc(foodDayFoodsCollectionRef, documentInfo.id);
-    
-            await setDoc(foodDocRef, documentInfo);
         }
         
         updateCurrentNutrients();

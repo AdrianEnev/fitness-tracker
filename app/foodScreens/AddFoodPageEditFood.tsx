@@ -8,8 +8,7 @@ import tw from 'twrnc'
 import ChangeNutrientModal from '../modals/ChangeNutrientModal';
 import { BlurView } from 'expo-blur';
 import BottomNavigationBar from '../components/BottomNavigationBar';
-import { collection, doc, getDoc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { FIREBASE_AUTH } from '../../firebaseConfig';
 import generateID from '../use/useGenerateID';
 import Slider from '@react-native-community/slider';
 import { useTranslation } from 'react-i18next';
@@ -167,25 +166,40 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
             protein: Number(newProtein),
             carbs: Number(newCarbs),
             fat: Number(newCarbs),
-            grams: Number(newGrams),
-            timestamp: serverTimestamp()
+            grams: Number(newGrams)
         };
 
         data.push(documentInfo);
         await AsyncStorage.setItem(foodDayKey, JSON.stringify(data));
 
+        // Not sure if this was added twice on purpose. Will leave as it is until tested
         navigation.goBack();
         navigation.goBack();
 
         if (internetConnected) {
-            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-            const foodDaysCollectionRef = collection(userDocRef, 'food_days');  
-            const foodDayDocRef = doc(foodDaysCollectionRef, formattedDate);
-            const foodDayFoodsCollectionRef = collection(foodDayDocRef, 'foods');
-            const foodDocRef = doc(foodDayFoodsCollectionRef, documentInfo.id);
 
-            await setDoc(foodDocRef, documentInfo);
+            const userId = FIREBASE_AUTH.currentUser?.uid;
+            
+            try {
+                const response = await fetch(`http://localhost:3000/api/foodDays/${userId}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json', // Specifies the request body is JSON
+                    },
+                    body: JSON.stringify({
+                        itemInfo: documentInfo,
+                        formattedDate: formattedDate
+                    }),
+                });
+                if (!response.ok) {
+                    console.error("addFoodDay: error:", response.statusText);
+                    return null;
+                }
+            } catch (error) {
+                console.error("addFoodDay: error:", error);
+                return null;
+            }
+
         }
 
         updateCurrentNutrients();
@@ -225,17 +239,25 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
             await AsyncStorage.setItem(`${email}-foodDay-${date.day}-${date.month}-${date.year}-nutrients`, JSON.stringify(updatedNutrients));
 
             if (internetConnected) {
-                const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-                const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-                const foodDaysCollectionRef = collection(userDocRef, 'food_days');  
-                const foodDayDocRef = doc(foodDaysCollectionRef, formattedDate);
-
-                const docSnapshot = await getDoc(foodDayDocRef);
-
-                if (docSnapshot.exists()) {
-                    await updateDoc(foodDayDocRef, updatedNutrients);
-                } else {
-                    await setDoc(foodDayDocRef, updatedNutrients);
+                const userId = FIREBASE_AUTH.currentUser?.uid;
+            
+                try {
+                    const response = await fetch(`http://localhost:3000/api/foodDays/${userId}/${formattedDate}`, {
+                        method: 'put',
+                        headers: {
+                            'Content-Type': 'application/json', // Specifies the request body is JSON
+                        },
+                        body: JSON.stringify({
+                            updatedNutrients: updatedNutrients
+                        }),
+                    });
+                    if (!response.ok) {
+                        console.error("addFoodDay: error:", response.statusText);
+                        return null;
+                    }
+                } catch (error) {
+                    console.error("addFoodDay: error:", error);
+                    return null;
                 }
             }
         } catch (err) {
