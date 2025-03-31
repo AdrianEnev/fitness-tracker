@@ -82,10 +82,11 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
             if (internetConnected && internetSpeed > 32) {
 
                 const userId = FIREBASE_AUTH.currentUser?.uid;
-            
+                
+                console.log('Attempting to update nutrients...')
                 try {
                     const response = await fetch(`http://localhost:3000/api/foodDays/${userId}/${formattedDate}`, {
-                        method: 'put',
+                        method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json', // Specifies the request body is JSON
                         },
@@ -94,13 +95,15 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
                         }),
                     });
                     if (!response.ok) {
-                        console.error("addFoodDay: error:", response.statusText);
+                        console.error("error updating nutrients: ", response.statusText);
                         return null;
                     }
                 } catch (error) {
-                    console.error("addFoodDay: error:", error);
+                    console.error("error updating nutrients: ", error);
                     return null;
                 }
+
+                console.log('Nutrients successfuly updated!');
 
             }
         } catch (err) {
@@ -112,8 +115,8 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
     const [saveFoodRan, setSaveFoodRan] = useState(false)
 
     const saveFood = async () => {
+
         if (!name && saveFoodRan) {
-            //console.log('save food already ran')
             return;
         }
 
@@ -160,6 +163,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
 
             const userId = FIREBASE_AUTH.currentUser?.uid;
             
+            console.log('Attempting to add food')
             try {
                 const response = await fetch(`http://localhost:3000/api/foodDays/${userId}`, {
                     method: 'POST',
@@ -171,18 +175,24 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
                         formattedDate: formattedDate
                     }),
                 });
+                
+                //console.log('Response received: ', response);
+
                 if (!response.ok) {
                     console.error("addFoodDay: error:", response.statusText);
                     return null;
                 }
+
+                // Update total nutrients for the day after adding food
+                console.log('Food added, updating total nutrients')
+                await updateCurrentNutrients();
+
             } catch (error) {
                 console.error("addFoodDay: error:", error);
                 return null;
             }
-
         }
         
-        updateCurrentNutrients();
     }
 
     return (

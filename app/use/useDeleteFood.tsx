@@ -1,76 +1,23 @@
-import { collection, deleteDoc, doc, getDocs, updateDoc } from "firebase/firestore";
-import { FIREBASE_AUTH, FIRESTORE_DB } from "../../firebaseConfig";
-import { Food } from "../../interfaces";
-
-const deleteFood = async (item: any, date: any) => {
-
-    const milliseconds = date.seconds * 1000;
-    const newDate = new Date(milliseconds);
-    const day = newDate.getDate(); 
-    const month = newDate.getMonth() + 1; 
-    const year = newDate.getFullYear(); 
-    const formattedDate = `${day}-${month}-${year}`;
-
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-
-    const foodDaysCollectionRef = collection(userDocRef, 'food_days');
-    const foodDayDocRef = doc(foodDaysCollectionRef, formattedDate);
-    const foodDayCollectionRef = collection(foodDayDocRef, 'foods');
-        
-    try {
-
-        const foodDocRef = doc(foodDayCollectionRef, item.id);
-        await deleteDoc(foodDocRef);
-
-        const data = await getDocs(foodDaysCollectionRef);
-        const matchingDoc = data.docs.find((doc) => doc.id === formattedDate);
-
-        if (matchingDoc) {
+const deleteFood = async (item: any, formattedDate: any, updatedNutrients: any, userId: string) => {
             
-            try {
-                const data = await getDocs(foodDayCollectionRef);
-    
-                if (data.empty) {
-                    const updatedNutrients = {
-                        calories: 0,
-                        protein: 0,
-                        carbs: 0,
-                        fat: 0
-                    };
-        
-                    await updateDoc(foodDayDocRef, updatedNutrients);
-                }
-    
-                let totalCalories = 0;
-                let totalProtein = 0;
-                let totalCarbs = 0;
-                let totalFat = 0;
-    
-                data.forEach((doc) => {
-                    const food = doc.data() as Food;
-                    totalCalories += food.calories || 0;
-                    totalProtein += food.protein || 0;
-                    totalCarbs += food.carbs || 0;
-                    totalFat += food.fat || 0;
-                });
-    
-                const updatedNutrients = {
-                    calories: totalCalories,
-                    protein: totalProtein,
-                    carbs: totalCarbs,
-                    fat: totalFat
-                };
-    
-                await updateDoc(foodDayDocRef, updatedNutrients);
-                //updateCurrentNutrients();
-            } catch (err) {
-                console.error(err);
-            }
+    try {
+        const response = await fetch(`http://localhost:3000/api/foodDays/${userId}/${formattedDate}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json', // Specifies the request body is JSON
+            },
+            body: JSON.stringify({
+                item: item,
+                updatedNutrients: updatedNutrients
+            }),
+        });
+        if (!response.ok) {
+            console.error("deleteFoodDay: error:", response.statusText);
+            return null;
         }
-        
-    } catch (err) {
-        console.error(err);
+    } catch (error) {
+        console.error("deleteFoodDay: error:", error);
+        return null;
     }
 }
 

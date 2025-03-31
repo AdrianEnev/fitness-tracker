@@ -7,9 +7,9 @@ import { useNavigation } from '@react-navigation/native';
 import tw from 'twrnc';
 import GlobalContext from '../../GlobalContext';
 import getEmail from '../use/useGetEmail';
-import { collection, deleteDoc, doc, getDoc, updateDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { FIREBASE_AUTH } from '../../firebaseConfig';
 import FoodInfoNutrients from '../components/FoodInfoNutrients';
+import deleteFood from '../use/useDeleteFood';
 
 const FoodInfo = ({route}: any) => {
 
@@ -42,7 +42,8 @@ const FoodInfo = ({route}: any) => {
     };
 
     const removeFromAsyncStorage = async () => {
-        // delete from asyncstorage
+
+        // Delete from asyncstorage
         const email = await getEmail();
         const foodDayKey = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}`;
         const foodDayKeyNutrients = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}-nutrients`;
@@ -68,51 +69,8 @@ const FoodInfo = ({route}: any) => {
         }
     }
 
-    const removeFromFirebase = async (foodDayDocRef: any) => {
-        
-        // delete from firebase
-        const foodDayFoodsCollectionRef = collection(foodDayDocRef, 'foods');
-
-        // Delete food item from Firebase
-        await deleteDoc(doc(foodDayFoodsCollectionRef, food.id));
-        
-    }
-
-    const recalculateNutrientsFirebase = async (foodDayDocRef: any) => {
-
-        try {
-            // Retrieve the current nutrient values from the foodDayDocRef
-            const foodDayDocSnapshot = await getDoc(foodDayDocRef);
-            if (!foodDayDocSnapshot.exists()) {
-                console.error("Food day document does not exist.");
-                return;
-            }
-    
-            const foodDayData = foodDayDocSnapshot.data();
-            let { calories, carbs, fat, protein } = foodDayData as { calories: number, carbs: number, fat: number, protein: number };
-    
-            // Subtract the nutrients of the food item that is being deleted
-            calories -= food.calories ?? 0;
-            carbs -= food.carbs ?? 0;
-            fat -= food.fat ?? 0;
-            protein -= food.protein ?? 0;
-    
-            // Update the foodDayDocRef with the new nutrient values
-            await updateDoc(foodDayDocRef, {
-                calories,
-                carbs,
-                fat,
-                protein
-            })
-                
-            //console.log("Nutrient values recalculated and updated in Firebase.");
-        } catch (error) {
-            console.error("Error recalculating nutrients in Firebase:", error);
-        }
-        
-    }
-
     const recalculateNutrientsAsyncStorage = async () => {
+
         const email = await getEmail();
         const foodDayKey = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}`;
         const nutrientsKey = `${foodDayKey}-nutrients`;
@@ -145,31 +103,32 @@ const FoodInfo = ({route}: any) => {
     
         // Save the recalculated nutrients back to AsyncStorage
         await AsyncStorage.setItem(nutrientsKey, JSON.stringify(nutrients));
+
+        return nutrients;
     }
 
     const removeFood = async () => {
-        try {
+        
 
-            await removeFromAsyncStorage();
-            recalculateNutrientsAsyncStorage();
+        // Remove item from asyncstorage then recalculate the total nutrients for the whole day
+        await removeFromAsyncStorage();
+        const updatedNutrients = await recalculateNutrientsAsyncStorage();
 
-            navigation.goBack();
+        // Navigate back and execute firebase deletion in the background
+        navigation.goBack();
 
-            if (internetConnected) {
-                const date = formatDate(formalDate);
+        const formattedDate = formatDate(unformattedDate);
 
-                const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-                const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-                const foodDaysCollectionRef = collection(userDocRef, 'food_days');  
-                const foodDayDocRef = doc(foodDaysCollectionRef, date);
+        if (internetConnected){
 
-                await removeFromFirebase(foodDayDocRef)
-                recalculateNutrientsFirebase(foodDayDocRef);
-            }
-           
-        } catch (err) {
-            console.error("Error in removeFood function:", err);
+            const userId = FIREBASE_AUTH.currentUser?.uid;
+            if (!userId) return;
+
+            const item = food;
+
+            await deleteFood(item, formattedDate, updatedNutrients, userId); 
         }
+
     }
 
     const navigation = useNavigation();
