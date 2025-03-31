@@ -1,18 +1,21 @@
-import axios from "axios";
-
-const EDAMAM_APP_ID = '90e2036b';
-const EDAMAM_APP_KEY = 'b1e82289782395cb48b50b4b11520754';
-
 const fetchFoodData = async (search: any) => {
-  try {
-    const response = await axios.get(
-      `https://api.edamam.com/api/food-database/v2/parser?ingr=${search}&app_id=${EDAMAM_APP_ID}&app_key=${EDAMAM_APP_KEY}`
-    );
-    return response.data.hints; // Return array of food items
-  } catch (error) {
-    console.error('Error fetching food data:', error);
-    throw error; // Rethrow error to handle it outside
-  }
+
+    console.log('Fetching food data...');
+
+    try {
+        const response = await fetch(`http://localhost:3000/api/models/searchFood?searchQuery=${search}`);
+
+        if (!response.ok) {
+            console.error("search food: error:", response.statusText);
+            return null;
+        }
+
+        const data = await response.json();
+        return data || [];
+    } catch (error) {
+        console.error("search food: error:", error);
+        return null;
+    }
 };
 
 const getNutrients = async (search: any, inputedGrams: any) => {
@@ -20,6 +23,7 @@ const getNutrients = async (search: any, inputedGrams: any) => {
     if (inputedGrams == 0 || inputedGrams == null) {
         inputedGrams = 100;
     }
+    
 
     try {
         const foodItems = await fetchFoodData(search);

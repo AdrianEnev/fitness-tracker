@@ -1,5 +1,4 @@
 const checkImage = async (uri: any) => {
-
     try {
         const response = await fetch(`http://localhost:3000/api/models/checkImageNSFW/${uri}`);
         if (!response.ok) {
