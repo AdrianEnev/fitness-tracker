@@ -251,5 +251,10 @@
     "workout-name": "Имя тренировки",
     "no-workouts-added": "У вас нет созданных тренировок!",
     "no-saved-workouts": "У вас нет сохраненных тренировок",
-    "deleting-multiple-workouts": "Удаление тренировок..."
+    "deleting-multiple-workouts": "Удаление тренировок...",
+    "weak": "Слабый",
+    "decent": "Достойный",
+    "good": "Хороший",
+    "strong": "Сильный",
+    "very-strong": "Очень сильный"
 }

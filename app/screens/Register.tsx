@@ -137,33 +137,32 @@ const Register = ({navigation}: any) => {
     const checkPasswordStrength = (password: string): string => {
 
         if (password.length <= 8) {
-            return 'weak';
+            return t('weak');
         }
         if (password.length <= 12) {
             let hasNumber = /\d/.test(password);
             let hasSpecialChar = /[^A-Za-z0-9]/.test(password);
             if (hasNumber && hasSpecialChar) {
-                return 'strong';
+                return t('strong');
             } else if (hasNumber || hasSpecialChar) {
-                return 'decent';
+                return t('decent');
             } else {
-                return 'weak';
+                return t('weak');
             }
         }
         if (password.length > 12) {
             let hasNumber = /\d/.test(password);
             let hasSpecialChar = /[^A-Za-z0-9]/.test(password);
             if (hasNumber && hasSpecialChar) {
-                return 'very strong';
+                return t('very-strong');
             } else if (hasNumber || hasSpecialChar) {
-                return 'good';
+                return t('good');
             } else {
-                return 'decent';
+                return t('decent');
             }
         }
-        return 'weak';
+        return t('weak');
     }
-
 
     useEffect(() => {
 
@@ -305,11 +304,7 @@ const Register = ({navigation}: any) => {
                         </View>
                     
                     </KeyboardAvoidingView>
-
-
-
                 </View>
-                
             </TouchableWithoutFeedback>
         </SafeAreaView>
     )

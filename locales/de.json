@@ -251,5 +251,10 @@
     "how-active-are-you": "Wie aktiv sind Sie?",
     "retreiving-info": "Informationen abrufen...",
     "try-face-id-again": "Versuchen Sie es erneut",
-    "deleting-multiple-workouts": "Workouts werden gelöscht..."
+    "deleting-multiple-workouts": "Workouts werden gelöscht...",
+    "weak": "Schwach",
+    "decent": "Anständig",
+    "good": "Gut",
+    "strong": "Stark",
+    "very-strong": "Sehr stark"
 }

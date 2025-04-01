@@ -253,5 +253,10 @@
     "retreive-info-information": "This feature can restore workouts or meals that you had saved on another phone from the same account!",
     "try-face-id-again": "Try Face ID Again",
     "no-lunge-coins": "You've got no Lunge Coins!",
-    "deleting-multiple-workouts": "Deleting workouts..."
+    "deleting-multiple-workouts": "Deleting workouts...",
+    "weak": "Weak",
+    "decent": "Decent",
+    "good": "Good",
+    "strong": "Strong",
+    "very-strong": "Very Strong"
 }

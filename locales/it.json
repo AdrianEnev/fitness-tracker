@@ -251,5 +251,10 @@
     "how-active-are-you": "Quanto sei attivo?",
     "retreiving-info": "Recupero delle informazioni...",
     "try-face-id-again": "Prova di nuovo Face ID",
-    "deleting-multiple-workouts": "Eliminazione degli allenamenti..."
+    "deleting-multiple-workouts": "Eliminazione degli allenamenti...",
+    "weak": "Debole",
+    "decent": "Decente",
+    "good": "Buono",
+    "strong": "Forte",
+    "very-strong": "Molto forte"
 }

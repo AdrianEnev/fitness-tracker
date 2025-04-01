@@ -251,5 +251,10 @@
     "no-saved-workouts": "Vous n'avez pas d'entraînements enregistrés",
     "set-language": "Définir la langue",
     "language": "Langue",
-    "deleting-multiple-workouts": "Suppression des entraînements..."
+    "deleting-multiple-workouts": "Suppression des entraînements...",
+    "weak": "Faible",
+    "decent": "Décent",
+    "good": "Bon",
+    "strong": "Fort",
+    "very-strong": "Très fort"
 }

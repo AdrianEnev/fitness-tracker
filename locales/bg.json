@@ -251,5 +251,10 @@
     "how-active-are-you": "Колко си активен?",
     "retreiving-info": "Възвръщане на информация...",
     "try-face-id-again": "Опитай оптново",
-    "deleting-multiple-workouts": "Изтриване на тренировки..."
+    "deleting-multiple-workouts": "Изтриване на тренировки...",
+    "weak": "Слаба",
+    "decent": "Средна",
+    "good": "Добра",
+    "strong": "Силна",
+    "very-strong": "Много силна"
 }

@@ -44,14 +44,15 @@ const EmailNotVerified = () => {
 
     const deleteAccount = () => {
 
-        Alert.prompt((t('delete-account')), (t('enter-password-to-delete-account')), [
+        Alert.alert((t('delete-account')), '', [
             {
-                text: 'Cancel',
+                text: t('cancel'),
                 style: 'cancel',
             },
             {
-                text: 'Delete',
-                onPress: async (password) => {
+                text: t('delete'),
+                style: 'destructive',
+                onPress: async () => {
                     deleteAccountDatabase();
                 }
             }
