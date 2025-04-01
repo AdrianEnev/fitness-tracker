@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { checkUserDocument } from '../use/useCheckUserInfo';
 import checkUsernameNSFW from '../use/useCheckUsernameNSFW';
 import Ionicons from '@expo/vector-icons/Ionicons';
+import checkIsAccountLimitReached from '../use/useCheckAccountLimitReached';
 
 const Register = ({navigation}: any) => {
 
@@ -71,7 +72,7 @@ const Register = ({navigation}: any) => {
             return;
         }
 
-        if (await isAccountLimitReached()) {
+        if (await checkIsAccountLimitReached()) {
             alert(t('max-number-accounts-device'));
             return;
         }    
@@ -131,13 +132,6 @@ const Register = ({navigation}: any) => {
         }
 
         return false; 
-    }
-
-    const isAccountLimitReached = async () => {
-        // Check if asyncstorage contains 5 usernames (username_email), if so, return true
-        const keys = await AsyncStorage.getAllKeys();
-        const usernameKeys = keys.filter(key => key.startsWith('username_'));
-        return usernameKeys.length >= 2;
     }
 
     const checkPasswordStrength = (password: string): string => {

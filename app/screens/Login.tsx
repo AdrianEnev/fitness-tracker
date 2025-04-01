@@ -88,6 +88,8 @@ const Login = ({navigation}: any) => {
 
                 const usernameToStore = firebaseUsername.username
 
+                if (!usernameToStore) return;
+                
                 await AsyncStorage.setItem(`username_${email}`, usernameToStore);
                 console.log('set username to: ', usernameToStore)
                 return true;

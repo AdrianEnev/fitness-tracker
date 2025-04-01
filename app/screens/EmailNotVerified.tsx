@@ -1,7 +1,7 @@
 import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { useContext, useEffect, useState } from 'react';
 import { deleteUser, sendEmailVerification } from 'firebase/auth';
-import { View, Text } from 'react-native';
+import { View, Text, Alert } from 'react-native';
 import tw from 'twrnc';
 import { deleteObject, getStorage, ref } from 'firebase/storage';
 import { deleteDoc, doc } from 'firebase/firestore';
@@ -44,6 +44,23 @@ const EmailNotVerified = () => {
 
     const deleteAccount = () => {
 
+        Alert.prompt((t('delete-account')), (t('enter-password-to-delete-account')), [
+            {
+                text: 'Cancel',
+                style: 'cancel',
+            },
+            {
+                text: 'Delete',
+                onPress: async (password) => {
+                    deleteAccountDatabase();
+                }
+            }
+        ]);
+            
+    }
+
+    const deleteAccountDatabase = async () => {
+
         const user = FIREBASE_AUTH.currentUser;
         if (!user) return
         
@@ -69,7 +86,7 @@ const EmailNotVerified = () => {
                 console.log(error)
             }
         });
-            
+        
     }
 
     const {t} = useTranslation();

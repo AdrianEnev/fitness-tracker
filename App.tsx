@@ -36,6 +36,7 @@ import { StripeProvider } from '@stripe/stripe-react-native';
 //import getEmail from './app/use/useGetEmail';
 import { getLungeCoins } from './app/use/useGetLungeCoins';
 import clearAsyncStorage from './app/use/useClearAsyncStorage';
+import checkIsAccountLimitReached from './app/use/useCheckAccountLimitReached';
 
 const Stack = createStackNavigator();
 
