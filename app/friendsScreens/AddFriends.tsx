@@ -5,117 +5,35 @@ import Ionicons from '@expo/vector-icons/Ionicons'
 import searchForFriend from '../use/useSearchForFriend'
 import { Friend } from '../../interfaces'
 import { FlatList } from 'react-native-gesture-handler'
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig'
-import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import BottomNavigationBar from '../components/BottomNavigationBar'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import getEmail from '../use/useGetEmail'
 import { useTranslation } from 'react-i18next'
+import { validateFriendSearch } from '../useFriends/useValidateFriendSearch'
 
-const AddFriends = ({route, navigation}: any) => {
+const AddFriends = ({navigation}: any) => {
 
     const {t} = useTranslation();
 
+    const [suggestedFriends, setSuggestedFriends] = useState<Friend[]>([]);
+
     // Logged in user username
-    const [username, setUsername] = useState<any>('');
+    const [usernameLogged, setUsernameLogged] = useState<any>('');
+
+    const [searchQuery, setSearchQuery] = useState('');
+    //const [searchResults, setSearchResults] = useState<any[]>([]);
+    const [searchingAnimation, setSearchingAnimation] = useState(false);
+    const [noUserFoundMessage, setNoUserFoundMessage] = useState("");
 
     useEffect(() => {
         const fetch = async () => {
             const email = await getEmail();
             const asyncStorageUsername = await AsyncStorage.getItem(`username_${email}`);
-            setUsername(asyncStorageUsername)
+            setUsernameLogged(asyncStorageUsername)
         }
         fetch();
         
     }, [])
-
-    const [searchQuery, setSearchQuery] = useState('');
-    const [searchResults, setSearchResults] = useState<any[]>([]);
-
-    const [suggestedFriends, setSuggestedFriends] = useState<Friend[]>([]);
-
-    const [searchingAnimation, setSearchingAnimation] = useState(false);
-
-    const userDisabledFriendRequests = async (checkUser: any) => {
-
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, checkUser.id);
-        const userInfoCollectionRef = collection(userDocRef, 'user_info');
-        const receiveFriendRequestsDocRef = doc(userInfoCollectionRef, 'receiveFriendRequests');
-        const receiveFriendRequestsDoc = await getDoc(receiveFriendRequestsDocRef);
-    
-        if (receiveFriendRequestsDoc.data()) {
-            const friendRequestsEnabled = receiveFriendRequestsDoc.data()?.receiveFriendRequests;
-
-            if (friendRequestsEnabled === false) {
-                return true;
-            } else {
-                return false;
-            }
-        } else {
-            return false;
-        }
-        
-    }
-
-    // ako user 1 e pratil pokana na user 2 i posle user 2 prati na user 1, stavat priqteli
-    /*const hasUserSentRequest = async (checkUser: any) => {
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, checkUser.id);
-        const userInfoCollectionRef = collection(userDocRef, 'user_info');
-        const friendRequestsCollectionRef = doc(userInfoCollectionRef, 'friendRequests');
-        const receivedCollectionRef = collection(friendRequestsCollectionRef, 'sent');
-    
-        const requestDocRef = doc(receivedCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const requestDoc = await getDoc(requestDocRef);
-    
-        if (requestDoc.data()) {
-            return true;
-        } else {
-            return false;
-        }
-    }*/
-
-    const isFriendAlready = async (checkUser: any, currentUserInfoCollectionRef: any) => {
-
-        const friendsDocRef = doc(currentUserInfoCollectionRef, 'friends');
-        const listCollectionRef = collection(friendsDocRef, 'list');
-
-        const friendDocRef = doc(listCollectionRef, checkUser.id);
-        const friendDoc = await getDoc(friendDocRef);
-
-        if (friendDoc.data()) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-    
-    const isRequestPending = async (checkUser: any, currentUserInfoCollectionRef: any, usersCollectionRef: any) => {
-        
-        const currentUserSentRequestsCollectionRef = collection(currentUserInfoCollectionRef, 'friendRequests', 'sent');
-        //const currentUserReceivedRequestsCollectionRef = collection(currentUserInfoCollectionRef, 'friendRequests', 'received');
-    
-        const otherUserDocRef = doc(usersCollectionRef, checkUser.id);
-        const otherUserInfoCollectionRef = collection(otherUserDocRef, 'user_info');
-        const otherUserSentRequestsCollectionRef = collection(otherUserInfoCollectionRef, 'friendRequests', 'sent');
-    
-        // Check if the current user has sent a request to the other user
-        const sentRequestDocRef = doc(currentUserSentRequestsCollectionRef, checkUser.id);
-        const sentRequestDoc = await getDoc(sentRequestDocRef);
-    
-        // Check if the other user has sent a request to the current user
-        const receivedRequestDocRef = doc(otherUserSentRequestsCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const receivedRequestDoc = await getDoc(receivedRequestDocRef);
-    
-        if (sentRequestDoc.exists() || receivedRequestDoc.exists()) {
-            console.log('requestPending:', sentRequestDoc.data() || receivedRequestDoc.data());
-            return true;
-        } else {
-            console.log('requestPending:', false);
-            return false;
-        }
-    };
 
     const searchButton = async () => {
 
@@ -127,7 +45,7 @@ const AddFriends = ({route, navigation}: any) => {
     
         try {
             const results = await searchForFriend(searchQuery);
-            setSearchResults(results);
+            //setSearchResults(results);
             if (results.length > 0) {
                 await addToSuggestions(results);
             } else {
@@ -140,55 +58,15 @@ const AddFriends = ({route, navigation}: any) => {
             setSearchingAnimation(false); // Stop the searching animation in case of error
         }
     };
-
-    const userAddedThemself = async (username: string) => {
-        const email = await getEmail()
-        const asyncStorageUsername = await AsyncStorage.getItem(`username_${email}`)
-
-        if (asyncStorageUsername == username) {
-            return true
-        }else {
-            return false
-        }
-    }
     
     const addToSuggestions = async (users: any) => {
-
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const currentUserDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const currentUserInfoCollectionRef = collection(currentUserDocRef, 'user_info');
-
         const suggestions = await Promise.all(users.map(async (user: any) => {
-            if (user.username !== username) {
+            if (user.username !== usernameLogged) {
 
-                const userAddedThemselfBool = await userAddedThemself(user.username);
-                if (userAddedThemselfBool) {
-                    console.log('You cannot add yourself!')
-                    return null;
-                }
-
-                const alreadyFriend = await isFriendAlready(user, currentUserInfoCollectionRef);
-                if (alreadyFriend) {
-                    console.log(user.username, 'is already a friend, not adding to suggestions');
-                    return null;
-                }
-
-                const pending = await isRequestPending(user, currentUserInfoCollectionRef, usersCollectionRef);
-                if (pending) {
-                    return null;
-                }
-
-                const friendRequestsDisabled = await userDisabledFriendRequests(user);
-                if ( !friendRequestsDisabled) {
-                    console.log('Added', user.username, 'to suggestions');
-                    return user;
-                } else {
-                    console.log(user.username, 'is already a friend or has a pending request or has disabled friend requests, not adding to suggestions');
-                    return null;
-                }
+                return await validateFriendSearch(user);
 
             } else {
-                console.log('filtered username: ' + username);
+                console.log('filtered username: ' + user.username);
                 return null;
             }
         }));
@@ -196,8 +74,6 @@ const AddFriends = ({route, navigation}: any) => {
         setSuggestedFriends(suggestions.filter(user => user !== null));
         setSearchingAnimation(false); // Stop the searching animation after processing suggestions
     };
-
-    const [noUserFoundMessage, setNoUserFoundMessage] = useState("");
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

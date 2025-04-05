@@ -34,7 +34,7 @@ const syncNutrients = async () => {
     if (parsedLocalNutrients && (!remoteNutrients || JSON.stringify(sortObject(parsedLocalNutrients)) !== JSON.stringify(sortObject(remoteNutrients)))) {
         // Sync local nutrients to Firestore
         await setDoc(nutrientsDocRef, parsedLocalNutrients, { merge: true });
-        console.log('Nutrients synced');
+        //console.log('Nutrients synced');
     } else {
         //console.log('No nutrients to sync');
     }

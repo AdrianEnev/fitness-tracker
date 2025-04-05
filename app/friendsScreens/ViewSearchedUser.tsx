@@ -13,12 +13,13 @@ import declineFriendRequest from '../useFriends/useDeclineFriendRequest';
 import { useTranslation } from 'react-i18next';
 import GlobalContext from '../../GlobalContext';
 
-
 const ViewSearchedUser = ({route, navigation}: any) => {
 
     const {friend, page} = route.params;
 
-    const {iphoneModel} = useContext(GlobalContext)
+    const {iphoneModel} = useContext(GlobalContext);
+
+    const {t} = useTranslation();
 
     const [profilePicture, setProfilePicture] = useState('')
     const [friendRequestButtonDisabled, setFriendRequestButtonDisabled] = useState(false);
@@ -35,7 +36,6 @@ const ViewSearchedUser = ({route, navigation}: any) => {
             setProfilePicture(downloadURL);
         } catch (error) {
             //console.log('Error getting profile picture:', error);
-            // Handle the error, e.g., set a default profile picture
         }
     }
 
@@ -103,9 +103,7 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                 } catch (error) {
                     console.error('Error fetching data:', error);
                 }
-                
             }
-            
         };
 
         getUserInfo();
@@ -129,7 +127,8 @@ const ViewSearchedUser = ({route, navigation}: any) => {
         )
     }
 
-    const {t} = useTranslation();
+    const acceptRequest = async () => {}
+    const declineRequest = async () => {}
 
     return (
         <>
@@ -184,14 +183,13 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                             </TouchableOpacity>
                         ) : page == "searchedUsers" ?
                         (
-                            <TouchableOpacity style={tw`w-64 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md`}
+                            <TouchableOpacity style={
+                                tw`w-64 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md`
+                            }
                                 onPress={async () => {
                                     setFriendRequestButtonDisabled(true);
-                                    console.log('sending friend request...');
-                                    await sendFriendRequest(friend, navigation)
-                                    navigation.goBack();
+                                    await sendFriendRequest(friend, navigation, t)
                                     setFriendRequestButtonDisabled(false);
-
                                 }}
                                 disabled={friendRequestButtonDisabled}
                             >

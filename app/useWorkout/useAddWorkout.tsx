@@ -20,6 +20,7 @@ const addWorkout = async (exercises: any, workoutTitle: string, workoutId: any, 
                 folder: folder || null
             }),
         });
+        
         if (!response.ok) {
             console.error("addWorkout: error:", response.statusText);
             return null;

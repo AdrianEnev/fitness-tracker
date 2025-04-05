@@ -11,6 +11,8 @@ import { checkUserDocument } from '../use/useCheckUserInfo';
 import checkUsernameNSFW from '../use/useCheckUsernameNSFW';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import checkIsAccountLimitReached from '../use/useCheckAccountLimitReached';
+import { BlurView } from 'expo-blur';
+import CreatingAccountModal from '../loadingModals/CreatingAccountModal';
 
 const Register = ({navigation}: any) => {
 
@@ -53,37 +55,45 @@ const Register = ({navigation}: any) => {
         const weirdCharPattern = /[^a-zA-Z0-9@#$£€%^&*()"'-/|.,?![]{}+=_~<>¥]/;
         if (weirdCharPattern.test(password)) {
             alert(t('password-no-emojis'));
+            setRegisterButtonDisabled(false)
             return;
         }
         if (password !== confirmPassword) {
             alert(t('passwords-not-match'));
+            setRegisterButtonDisabled(false)
             return;
         }
         if (trimmedUsername.length <= 2) {
             alert(t('username-at-least-three-symbols'));
+            setRegisterButtonDisabled(false)
             return;
         } 
         if (password.length <= 8) {
             alert(t('password-at-least-eight-symbols'));
+            setRegisterButtonDisabled(false)
             return;
         }
         if (password === trimmedUsername) {
             alert(t('password-not-same-as-username'));
+            setRegisterButtonDisabled(false)
             return;
         }
 
         if (await checkIsAccountLimitReached()) {
             alert(t('max-number-accounts-device'));
+            setRegisterButtonDisabled(false)
             return;
         }    
         
         if (await checkUsernameNSFW(trimmedUsername)) {
             alert(t('nsfw-username'));
+            setRegisterButtonDisabled(false)
             return;
         }
     
         if (await isUsernameTaken(trimmedUsername)) {
             alert(t('username-taken'));
+            setRegisterButtonDisabled(false)
             return;
         }
     
@@ -178,135 +188,150 @@ const Register = ({navigation}: any) => {
     }, [password, confirmPassword])
     
     return (
-        <SafeAreaView style={tw`bg-white flex-1`}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={tw`p-5 `}>
+        <>
+            {registerButtonDisabled && (
+                <BlurView
+                    style={tw`absolute w-full h-full z-10`}
+                    intensity={50}
+                    tint='dark'
+                />
+            )}
 
-                    <Text style={tw`text-4xl text-center text-[#fd1c47] font-bold my-2`}>{t('register')}</Text>
+            <CreatingAccountModal
+                isCreatingAccountModalVisible={registerButtonDisabled}
+                setIsCreatingAccountModalVisible={setRegisterButtonDisabled}
+            />
 
-                    <KeyboardAvoidingView behavior='padding'>
-                        
-                        <View style={tw`flex-col gap-y-2 my-5`}>
+            <SafeAreaView style={tw`bg-white flex-1`}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={tw`p-5 `}>
 
-                            <View style={tw`mb-2`}>
-                                <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('email')}</Text>
-                                <TextInput 
-                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
-                                    placeholder={t('example-email')}
-                                    onChangeText={(text: string) => setEmail(text)} 
-                                    value={email} 
-                                    autoCapitalize='none'
-                                    maxLength={50}
-                                />
-                            </View>
+                        <Text style={tw`text-4xl text-center text-[#fd1c47] font-bold my-2`}>{t('register')}</Text>
 
-                            <View style={tw`mb-2`}>
-                                <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('username')}</Text>
-                                <TextInput 
-                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
-                                    placeholder={t('username')}
-                                    onChangeText={(text: string) => setUsername(text)} 
-                                    value={username} 
-                                    autoCapitalize='none' 
-                                    maxLength={22}
-                                />
-                            </View>
-
-                            <View style={tw`mb-2`}>
-                                
-                                <View style={tw`flex flex-row justify-between`}>
-
-                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>
-                                        {t('password')} <Text style={tw`${passwordStrength == "weak" ? "text-red-500" : 
-                                            passwordStrength == "decent" ? "text-yellow-500" : 
-                                            passwordStrength == "good" ? "text-orange-500" : 
-                                            passwordStrength == "strong" ? "text-green-500" : 
-                                            passwordStrength == "very strong" ? "text-blue-500" : 
-                                            ""
-                                        }`}>{password.length > 0 ? '(' + passwordStrength + ')' : ''}
-                                    </Text></Text>
-
-                                    <Text style={tw`font-medium text-gray-400 mb-1 mr-2`}>{passwordCharacters}</Text>
-                                </View>
-
-                                <TextInput 
-                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
-                                    placeholder={t('password')}
-                                    onChangeText={(text: string) => setPassword(text)} 
-                                    value={password} 
-                                    autoCapitalize='none'
-                                    maxLength={65}
-                                    secureTextEntry={!isPasswordVisible}
-                                />
-
-                                <View style={tw`absolute right-2 bottom-[12px]`}>
-                                    {isPasswordVisible ? 
-                                        (
-                                            <Ionicons name='eye-outline' size={32} color="#fd3e6b" onPress={() => setIsPasswordVisible(false)}/>
-                                        ) : 
-                                        (
-                                            <Ionicons name='eye-off-outline' size={32} color="#fd3e6b" onPress={() => setIsPasswordVisible(true)}/>
-
-                                        )
-                                    }
-                                </View>
-                            </View>
-
-                            <View style={tw`mb-2`}>
-
-                                <View style={tw`flex flex-row justify-between`}>
-                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>
-                                        {t('confirm-password')} <Text style={tw`${confirmPasswordStrength == "weak" ? "text-red-500" : 
-                                            confirmPasswordStrength == "decent" ? "text-yellow-500" :
-                                            confirmPasswordStrength == "good" ? "text-orange-500" : 
-                                            confirmPasswordStrength == "strong" ? "text-green-500" : 
-                                            confirmPasswordStrength == "very strong" ? "text-blue-500" :
-                                            ""
-                                        }`}>{confirmPassword.length > 0 ? '(' + confirmPasswordStrength + ')' : ''}
-                                    </Text></Text>
-
-                                    <Text style={tw`font-medium text-gray-400 mb-1 mr-2`}>{confirmPasswordCharacters}</Text>
-                                </View>
-
-                                <TextInput 
-                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
-                                    placeholder={t('confirm-password')}
-                                    onChangeText={(text: string) => setConfirmPassword(text)} 
-                                    value={confirmPassword} 
-                                    autoCapitalize='none'
-                                    maxLength={65}
-                                    secureTextEntry={!isConfirmPasswordVisible}
-                                />
-
-                                <View style={tw`absolute right-2 bottom-[12px]`}>
-                                    {isConfirmPasswordVisible ? 
-                                        (
-                                            <Ionicons name='eye-outline' size={32} color="#fd3e6b" onPress={() => setIsConfirmPasswordVisible(false)}/>
-                                        ) : 
-                                        (
-                                            <Ionicons name='eye-off-outline' size={32} color="#fd3e6b" onPress={() => setIsConfirmPasswordVisible(true)}/>
-
-                                        )
-                                    }
-                                </View>
-                            </View>
+                        <KeyboardAvoidingView behavior='padding'>
                             
-                            <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-lg flex justify-center items-center shadow-md`}
-                                onPress={() => {
-                                    setRegisterButtonDisabled(true)
-                                    signUp()
-                                }} disabled={registerButtonDisabled}>
+                            <View style={tw`flex-col gap-y-2 my-5`}>
 
-                                <Text style={tw`text-2xl text-white font-semibold`}>{t('register')}</Text>
+                                <View style={tw`mb-2`}>
+                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('email')}</Text>
+                                    <TextInput 
+                                        style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
+                                        placeholder={t('example-email')}
+                                        onChangeText={(text: string) => setEmail(text)} 
+                                        value={email} 
+                                        autoCapitalize='none'
+                                        maxLength={50}
+                                    />
+                                </View>
 
-                            </TouchableOpacity>
+                                <View style={tw`mb-2`}>
+                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('username')}</Text>
+                                    <TextInput 
+                                        style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
+                                        placeholder={t('username')}
+                                        onChangeText={(text: string) => setUsername(text)} 
+                                        value={username} 
+                                        autoCapitalize='none' 
+                                        maxLength={22}
+                                    />
+                                </View>
 
-                        </View>
-                    
-                    </KeyboardAvoidingView>
-                </View>
-            </TouchableWithoutFeedback>
-        </SafeAreaView>
+                                <View style={tw`mb-2`}>
+                                    
+                                    <View style={tw`flex flex-row justify-between`}>
+
+                                        <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>
+                                            {t('password')} <Text style={tw`${passwordStrength == "weak" ? "text-red-500" : 
+                                                passwordStrength == t('decent') ? "text-yellow-500" : 
+                                                passwordStrength == t('good') ? "text-orange-500" : 
+                                                passwordStrength == t('strong') ? "text-green-500" : 
+                                                passwordStrength == t('very-strong') ? "text-blue-500" : 
+                                                ""
+                                            }`}>{password.length > 0 ? '(' + passwordStrength + ')' : ''}
+                                        </Text></Text>
+
+                                        <Text style={tw`font-medium text-gray-400 mb-1 mr-2`}>{passwordCharacters}</Text>
+                                    </View>
+
+                                    <TextInput 
+                                        style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
+                                        placeholder={t('password')}
+                                        onChangeText={(text: string) => setPassword(text)} 
+                                        value={password} 
+                                        autoCapitalize='none'
+                                        maxLength={65}
+                                        secureTextEntry={!isPasswordVisible}
+                                    />
+
+                                    <View style={tw`absolute right-2 bottom-[12px]`}>
+                                        {isPasswordVisible ? 
+                                            (
+                                                <Ionicons name='eye-outline' size={32} color="#fd3e6b" onPress={() => setIsPasswordVisible(false)}/>
+                                            ) : 
+                                            (
+                                                <Ionicons name='eye-off-outline' size={32} color="#fd3e6b" onPress={() => setIsPasswordVisible(true)}/>
+
+                                            )
+                                        }
+                                    </View>
+                                </View>
+
+                                <View style={tw`mb-2`}>
+
+                                    <View style={tw`flex flex-row justify-between`}>
+                                        <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>
+                                            {t('confirm-password')} <Text style={tw`${confirmPasswordStrength == "weak" ? "text-red-500" : 
+                                                confirmPasswordStrength == t('decent') ? "text-yellow-500" : 
+                                                confirmPasswordStrength == t('good') ? "text-orange-500" : 
+                                                confirmPasswordStrength == t('strong') ? "text-green-500" : 
+                                                confirmPasswordStrength == t('very-strong') ? "text-blue-500" : 
+                                                ""
+                                            }`}>{confirmPassword.length > 0 ? '(' + confirmPasswordStrength + ')' : ''}
+                                        </Text></Text>
+
+                                        <Text style={tw`font-medium text-gray-400 mb-1 mr-2`}>{confirmPasswordCharacters}</Text>
+                                    </View>
+
+                                    <TextInput 
+                                        style={tw`h-14 border-2 rounded-lg border-gray-200 px-2`} 
+                                        placeholder={t('confirm-password')}
+                                        onChangeText={(text: string) => setConfirmPassword(text)} 
+                                        value={confirmPassword} 
+                                        autoCapitalize='none'
+                                        maxLength={65}
+                                        secureTextEntry={!isConfirmPasswordVisible}
+                                    />
+
+                                    <View style={tw`absolute right-2 bottom-[12px]`}>
+                                        {isConfirmPasswordVisible ? 
+                                            (
+                                                <Ionicons name='eye-outline' size={32} color="#fd3e6b" onPress={() => setIsConfirmPasswordVisible(false)}/>
+                                            ) : 
+                                            (
+                                                <Ionicons name='eye-off-outline' size={32} color="#fd3e6b" onPress={() => setIsConfirmPasswordVisible(true)}/>
+
+                                            )
+                                        }
+                                    </View>
+                                </View>
+                                
+                                <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-lg flex justify-center items-center shadow-md`}
+                                    onPress={() => {
+                                        setRegisterButtonDisabled(true)
+                                        signUp()
+                                    }} disabled={registerButtonDisabled}>
+
+                                    <Text style={tw`text-2xl text-white font-semibold`}>{t('register')}</Text>
+
+                                </TouchableOpacity>
+
+                            </View>
+                        
+                        </KeyboardAvoidingView>
+                    </View>
+                </TouchableWithoutFeedback>
+            </SafeAreaView>
+        </>
     )
 }
 

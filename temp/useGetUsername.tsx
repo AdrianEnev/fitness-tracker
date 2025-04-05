@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
+/*
 
 const getUsername = async (userInfoCollectionRef: any) => {
     try {
@@ -13,4 +13,4 @@ const getUsername = async (userInfoCollectionRef: any) => {
     }
 }
 
-export default getUsername;
+export default getUsername;*/

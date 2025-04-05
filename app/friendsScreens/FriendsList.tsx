@@ -1,16 +1,16 @@
-import { View, Text, SafeAreaView, TouchableOpacity, Pressable } from 'react-native'
+import { View, Text, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import { Friend } from '../../interfaces';
-import { collection, deleteDoc, doc, getDoc, getDocs, onSnapshot } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import { FlatList } from 'react-native-gesture-handler';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import { useTranslation } from 'react-i18next';
 import getEmail from '../use/useGetEmail';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import getFriendsList from '../useFriends/useGetFriendsList';
+import { FIREBASE_AUTH } from '../../firebaseConfig';
 
-const FriendsList = ({navigation, route}: any) => {
+const FriendsList = ({navigation}: any) => {
 
     const [username, setUsername] = useState<any>('');
 
@@ -21,32 +21,23 @@ const FriendsList = ({navigation, route}: any) => {
             setUsername(asyncStorageUsername)
         }
         fetch();
-        
-    }, [])
+    }, []);
 
     const [friends, setFriends] = useState<Friend[]>([]);
 
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const userInfoCollectionRef = collection(userDocRef, 'user_info');
-    const friendsDocRef = doc(userInfoCollectionRef, 'friends');
-    const listCollectionRef = collection(friendsDocRef, 'list');
-
-    const getFriends = async () => {
-        
-        const querySnapshot = await getDocs(listCollectionRef);
-        const friendsList: Friend[] = [];
-        querySnapshot.forEach((doc) => {
-            friendsList.push(doc.data() as Friend);
-        });
-        setFriends(friendsList);
-    }
-
     useEffect(() => {
-        onSnapshot(listCollectionRef, (_snapshot) => {
-            getFriends();
-        });
-    })
+
+        const fetch = async () => {
+            const friendsList = await getFriendsList(FIREBASE_AUTH.currentUser?.uid);
+            if (friendsList) {
+                setFriends(friendsList);
+            } else {
+                setFriends([]);
+            }
+        }
+
+        fetch();
+    }, []);
 
     const {t} = useTranslation();
 

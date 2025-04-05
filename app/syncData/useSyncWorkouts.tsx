@@ -30,10 +30,12 @@ const syncWorkouts = async () => {
                 parsedLocalWorkouts: parsedLocalWorkouts
             }),
         });
+        
         if (!response.ok) {
             console.error("syncWorkouts: Error fetching data:", response.statusText);
             return null;
         }
+
     } catch (error) {
         console.error("syncWorkouts: Error fetching data:", error);
         return null;

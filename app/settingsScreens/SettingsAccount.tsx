@@ -112,7 +112,7 @@ const SettingsAccount = ({navigation}: any) => {
         const daysDifference = difference / (1000 * 3600 * 24);
 
         // if 7 days haven't passed since the last username change, alert the user that there is still a cooldown
-        if (daysDifference < 7) {
+        /*if (daysDifference < 7) {
             Alert.alert(
                 t('error-short'),
                 t('change-name-delay') + (7 - Math.floor(daysDifference)) + t('change-name-days'),
@@ -125,7 +125,7 @@ const SettingsAccount = ({navigation}: any) => {
             );
 
             return;
-        }
+        }*/
 
         Alert.prompt(
             t('change-username'),
@@ -343,7 +343,7 @@ const SettingsAccount = ({navigation}: any) => {
     const [username, setUsername] = useState<string | null>(null);
     const [email, setEmail] = useState<string | null>(null)
 
-    const getUsername = async () => {
+    const getUsernameLocally = async () => {
         const email = await getEmail()
 
         const AsyncStorageUsername = await AsyncStorage.getItem(`username_${email}`);
@@ -351,7 +351,7 @@ const SettingsAccount = ({navigation}: any) => {
     }
 
     useEffect(()=> {
-        getUsername();
+        getUsernameLocally();
         
         const fetch = async () => {
             const AsyncStorageEmail = await getEmail();

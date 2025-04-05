@@ -1,48 +1,23 @@
 import { View, Text, FlatList, Pressable } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import {  collection, doc, getDoc, getDocs, onSnapshot, setDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
 import BottomNavigationBar from '../components/BottomNavigationBar';
+import getReceivedFriendRequests from '../useFriends/useGetReceivedFriendRequests';
 
-const FriendRequestsRecieved = ({route, navigation}: any) => {
+const FriendRequestsRecieved = ({navigation}: any) => {
     
     const [receivedFriendRequests, setReceivedFriendRequests] = useState<any[]>([]);
 
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const userInfoCollectionRef = collection(userDocRef, 'user_info');
-    const friendRequestsDocRef = doc(userInfoCollectionRef, 'friendRequests');
-
-    const getRequests = async () => {
-
-        const friendRequestsDoc = await getDoc(friendRequestsDocRef);
-        if (!friendRequestsDoc.exists()) {
-
-            // if the friendRequests document does not exist, create a new empty one
-            //console.log('no friend requests sent or recieved')
-            await setDoc(friendRequestsDocRef, {});
-        }
-
-        try{
-            const sentCollectionRef = collection(friendRequestsDocRef, 'received');
-            const snapshot = await getDocs(sentCollectionRef);
-            const sentRequests = snapshot.docs.map(doc => doc.data());
-
-            setReceivedFriendRequests(sentRequests);
-
-        } catch (err) {
-            //console.log('no friend requests sent');
-        }
-
-    }
-
     useEffect(() => {
-        const receivedCollectionRef = collection(friendRequestsDocRef, 'received');
-        onSnapshot(receivedCollectionRef, (_snapshot) => {
-            getRequests();
-        });
+
+        const fetch = async () => {
+            const receivedRequests = await getReceivedFriendRequests();
+            setReceivedFriendRequests(receivedRequests);
+        }
+
+        fetch();
+
     }, [])
 
     const {t} = useTranslation();
@@ -61,9 +36,9 @@ const FriendRequestsRecieved = ({route, navigation}: any) => {
                         <Pressable style={tw`w-full h-14 bg-white shadow-md border border-gray-200 rounded-xl mb-[2px] px-2 py-3 flex flex-row justify-between`}
                             onPress={() => navigation.navigate('Виж-Потърсен-Потребител', {friend: item, page: "receivedRequests"})}
                         >
-                            
-                            <Text style={tw`text-lg font-medium`}>{item.username}</Text>
-
+                            <Text style={tw`text-lg font-medium max-w-[100%]`} ellipsizeMode='tail' numberOfLines={1}>
+                                {item.username}
+                            </Text>
                         </Pressable>
                     )}
                     ListEmptyComponent={() => (

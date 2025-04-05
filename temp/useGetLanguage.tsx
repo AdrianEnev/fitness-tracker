@@ -1,4 +1,4 @@
-import { doc, getDoc } from "firebase/firestore";
+/*
 import i18next from "i18next";
 
 const getLanguage = async (userInfoCollectionRef: any) => {
@@ -10,8 +10,6 @@ const getLanguage = async (userInfoCollectionRef: any) => {
             await i18next.changeLanguage(language);
            
         } else {
-
-            // moje bi da napravq da izchaka 2 sek da probva pak ili neshto takova che ponqkoga ne go udpateva na vreme
             console.log('Language document does not exist');
         }
     } catch (err) {
@@ -19,4 +17,4 @@ const getLanguage = async (userInfoCollectionRef: any) => {
     }
 }
 
-export default getLanguage;
+export default getLanguage;*/
