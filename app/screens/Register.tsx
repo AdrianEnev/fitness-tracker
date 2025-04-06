@@ -12,7 +12,7 @@ import checkUsernameNSFW from '../use/useCheckUsernameNSFW';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import checkIsAccountLimitReached from '../use/useCheckAccountLimitReached';
 import { BlurView } from 'expo-blur';
-import CreatingAccountModal from '../loadingModals/CreatingAccountModal';
+import LoadingModal from '../loadingModals/LoadingModal';
 
 const Register = ({navigation}: any) => {
 
@@ -197,9 +197,9 @@ const Register = ({navigation}: any) => {
                 />
             )}
 
-            <CreatingAccountModal
-                isCreatingAccountModalVisible={registerButtonDisabled}
-                setIsCreatingAccountModalVisible={setRegisterButtonDisabled}
+            <LoadingModal
+                isLoadingModalVisible={registerButtonDisabled}
+                setIsLoadingModalVisible={setRegisterButtonDisabled}
             />
 
             <SafeAreaView style={tw`bg-white flex-1`}>

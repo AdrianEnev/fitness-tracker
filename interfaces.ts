@@ -1,4 +1,5 @@
 import { Timestamp } from "firebase/firestore";
+import { StorageReference } from "firebase/storage";
 
 export interface Set {
     reps: string;
@@ -59,4 +60,29 @@ export interface Food {
     fat?: number;
     grams?: number;
     id: any;
+}
+
+export interface FoodDay {
+    title: string;
+    calories: number;
+    carbs: number;
+    protein: number;
+    fat: number;
+    id: string;
+    created: any;
+}
+
+export interface UserInfo {
+    language: string;
+    statistics: {
+        weightLifted: number;
+        finishedWorkouts: number;
+    };
+    dateRegistered: string;
+    profilePictureRef: any;
+    workouts: Workout[];
+    savedWorkouts: Workout[];
+    friends: Friend[];
+    foodDays: FoodDay[];
+    dailyGoals: GoalNutrients[];
 }

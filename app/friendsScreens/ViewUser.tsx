@@ -2,18 +2,18 @@ import { View, Text, SafeAreaView, Image } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import sendFriendRequest from '../useFriends/useSendFriendRequest'
 import tw from 'twrnc'
-import { getDownloadURL, getStorage, ref } from 'firebase/storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { TouchableOpacity } from 'react-native-gesture-handler';
-import { collection, doc, getDoc, getDocs, Timestamp } from 'firebase/firestore';
-import { FIRESTORE_DB } from '../../firebaseConfig';
 import deleteFriendRequest from '../useFriends/useDeleteFriendRequest'
 import acceptFriendRequest from '../useFriends/useAcceptFriendRequest';
 import declineFriendRequest from '../useFriends/useDeclineFriendRequest';
 import { useTranslation } from 'react-i18next';
 import GlobalContext from '../../GlobalContext';
+import getUserInfo from '../use/getUserInfo';
+import { UserInfo } from '../../interfaces';
+import { getDownloadURL } from 'firebase/storage';
 
-const ViewSearchedUser = ({route, navigation}: any) => {
+const ViewUser = ({route, navigation}: any) => {
 
     const {friend, page} = route.params;
 
@@ -27,97 +27,36 @@ const ViewSearchedUser = ({route, navigation}: any) => {
     const [acceptingFriendRequestButtonDisabled, setAcceptingFriendRequestButtonDisabled] = useState(false);
     const [decliningFriendRequestButtonDisabled, setDecliningFriendRequestButtonDisabled] = useState(false);
 
-    const getProfilePicture = async () => {
-        const storage = getStorage();
-        const profilePictureRef = ref(storage, `users/${friend.id}/profile_picture`);
+    const [workoutsCompleted, setWorkoutsCompleted] = useState(0);
+    const [dateRegistered, setDateRegistered] = useState<string>('')
 
+    // Not yet implemented
+    const [isUserPremium, setIsUserPremium] = useState(false);
+
+    const fetchUserInfo = async () => {
+        const userInfo = await getUserInfo(friend.id) as UserInfo;
+
+        if (!userInfo) {
+            console.error('Error fetching user info');
+            return;
+        }
+
+        setWorkoutsCompleted(userInfo.statistics?.finishedWorkouts || 0);
+        setDateRegistered(userInfo.dateRegistered || 'unknown');
+
+        const profilePictureRef = userInfo.profilePictureRef;
         try {
             const downloadURL = await getDownloadURL(profilePictureRef);
             setProfilePicture(downloadURL);
         } catch (error) {
-            //console.log('Error getting profile picture:', error);
+            console.log('Error fetching profile picture:', error);
+            setProfilePicture('');
         }
     }
-
-    const [workoutsCompleted, setWorkoutsCompleted] = useState(0);
-    const [dateJoined, setDateJoined] = useState<string>('')
-
-    const [usersCollectionRefState, setUsersCollectionRefState] = useState<any>(null)
-
-    // Not yet implemented
-    const [isUserPremium, setIsUserPremium] = useState(false);
     
     useEffect(() => {
-        getProfilePicture();
-
-        const getUserInfo = async () => {
-
-            // users collection ref not initialized yet
-            if (!usersCollectionRefState) {
-                const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-                const userDocRef = doc(usersCollectionRef, friend.id); 
-                const workoutsCollectionRef = collection(userDocRef, 'saved_workouts');
-
-                setUsersCollectionRefState(usersCollectionRef)
-
-                try {
-                    const workoutsSnapshot = await getDocs(workoutsCollectionRef);
-                    setWorkoutsCompleted(workoutsSnapshot.size);
-    
-                    // Get registration date from user document
-                    const userDocSnapshot = await getDoc(userDocRef);
-                    if (userDocSnapshot.exists()) {
-                        const registrationTimestamp = userDocSnapshot.data().registrationDate;
-                        if (registrationTimestamp instanceof Timestamp) {
-                            const formattedDate = formatDateJoined(registrationTimestamp.toDate())
-    
-                            setDateJoined(formattedDate);
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-
-            // use the already initialized variable to save time
-            }else{
-
-                const userDocRef = doc(usersCollectionRefState, friend.id); 
-                const workoutsCollectionRef = collection(userDocRef, 'saved_workouts');
-
-                setUsersCollectionRefState(usersCollectionRefState)
-
-                try {
-                    const workoutsSnapshot = await getDocs(workoutsCollectionRef);
-                    setWorkoutsCompleted(workoutsSnapshot.size);
-    
-                    // Get registration date from user document
-                    const userDocSnapshot = await getDoc(userDocRef);
-                    if (userDocSnapshot.exists()) {
-                        const registrationTimestamp = userDocSnapshot.data().registrationDate;
-                        if (registrationTimestamp instanceof Timestamp) {
-                            const formattedDate = formatDateJoined(registrationTimestamp.toDate())
-    
-                            setDateJoined(formattedDate);
-                        }
-                    }
-                } catch (error) {
-                    console.error('Error fetching data:', error);
-                }
-            }
-        };
-
-        getUserInfo();
+        fetchUserInfo();
     }, []);
-
-    const formatDateJoined = (date: any) => {
-        if (date) {
-            const day = date.getDate().toString().padStart(2, '0');
-            const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Months are zero-based
-            const year = date.getFullYear();
-            return `${day}/${month}/${year}`;
-        }
-        return 'unknown'; // Or any other placeholder you prefer
-    }
 
     const ActivityIndicator = () => {
         return (
@@ -126,9 +65,6 @@ const ViewSearchedUser = ({route, navigation}: any) => {
             </View>
         )
     }
-
-    const acceptRequest = async () => {}
-    const declineRequest = async () => {}
 
     return (
         <>
@@ -162,8 +98,8 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                     </View>
                     
                     <View style={tw`ml-3`}>
-                        <Text style={tw`text-base font-medium text-gray-700`}>{workoutsCompleted} {workoutsCompleted > 1 ? t('workouts') : t('workout')} {t('completed-workouts')}.</Text>
-                        <Text style={tw`text-base font-medium text-gray-700`}>{t('first-joined')} {dateJoined ? dateJoined : t('loading-friends')}</Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>{workoutsCompleted} {workoutsCompleted != 1 ? t('workouts') : t('workout')} {t('completed-workouts').toLowerCase()}.</Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>{t('first-joined')}{dateRegistered ? dateRegistered : t('loading-friends')}</Text>
                     </View>
                     
                     <View style={tw`flex-1 justify-end items-center mb-3`}>
@@ -172,9 +108,7 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                             <TouchableOpacity style={tw`w-64 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md`}
                                 onPress={async () => {
                                     setCancellingFriendRequestButtonDisabled(true);
-                                    console.log('cancelling request');
-                                    await deleteFriendRequest(friend, usersCollectionRefState)
-                                    navigation.goBack();
+                                    await deleteFriendRequest(friend, navigation, t)
                                     setCancellingFriendRequestButtonDisabled(false);
                                 }}
                                 disabled={cancellingFriendRequestButtonDisabled}
@@ -203,9 +137,7 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                                 <TouchableOpacity style={tw`w-36 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md ${iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? 'pt-2' : ''}`}
                                     onPress={async () => {
                                         setAcceptingFriendRequestButtonDisabled(true);
-                                        console.log('accepting friend request...');
-                                        acceptFriendRequest(friend, navigation);
-                                        navigation.goBack();
+                                        acceptFriendRequest(friend, navigation, t);
                                         setAcceptingFriendRequestButtonDisabled(false);
 
                                     }}
@@ -218,9 +150,7 @@ const ViewSearchedUser = ({route, navigation}: any) => {
                                 <TouchableOpacity style={tw`w-36 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md ${iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? 'pt-2' : ''}`}
                                     onPress={async () => {
                                         setDecliningFriendRequestButtonDisabled(true);
-                                        console.log('accepting friend request...');
-                                        declineFriendRequest(friend, navigation);
-                                        navigation.goBack();
+                                        declineFriendRequest(friend, navigation, t);
                                         setDecliningFriendRequestButtonDisabled(false);
 
                                     }}
@@ -239,4 +169,4 @@ const ViewSearchedUser = ({route, navigation}: any) => {
     )
 }
 
-export default ViewSearchedUser
+export default ViewUser

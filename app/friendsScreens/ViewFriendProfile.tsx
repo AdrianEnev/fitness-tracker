@@ -1,13 +1,14 @@
-import { View, Text, SafeAreaView, Image, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import { View, Text, SafeAreaView, Image, TouchableOpacity, Alert } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { ref, getDownloadURL } from "firebase/storage";
 import { FIREBASE_STORAGE, FIRESTORE_DB } from '../../firebaseConfig';
-import { useFocusEffect } from '@react-navigation/native';
 import { collection, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import removeFriend from '../useFriends/useRemoveFriend';
 import { useTranslation } from 'react-i18next';
+import LoadingModal from '../loadingModals/LoadingModal';
+import { BlurView } from 'expo-blur';
 
 const ViewFriendProfile = ({route, navigation}: any) => {
 
@@ -18,10 +19,10 @@ const ViewFriendProfile = ({route, navigation}: any) => {
     const [friendRegistrationDate, setFriendRegistrationDate] = useState<React.ReactNode | null>(null);
 
     const [workoutsFinished, setWorkoutsFinished] = useState(0);
-    const [removingFriend, setRemovingFriend] = useState(false)
+    const [removingFriend, setRemovingFriend] = useState(false);
 
-    const [isFriendPremium, setIsFriendPremium] = useState(false)
-    const [isFriendOnline, setIsFriendOnline] = useState(false)
+    const [isFriendPremium, setIsFriendPremium] = useState(false);
+    const [isFriendOnline, setIsFriendOnline] = useState(false);
 
     const getIsFriendOnline = async () => {
         const friendID = friend_info.id;
@@ -89,28 +90,57 @@ const ViewFriendProfile = ({route, navigation}: any) => {
                 setFriendRegistrationDate(formattedDate);
 
             } else {
-                console.log("No such document!");
+                Alert.alert(
+                    `${friend_info.username} has deleted their account!`,
+                    'Press OK to remove them from your friends list.',
+                    [
+                        {
+                            text: t('ok'),
+                            style: 'destructive',
+                            onPress: () => {
+                                deleteFriend();
+                            },
+                        },
+                    ],
+                );
             }
         } catch (error) {
             console.log("Error getting document:", error);
         }
     }
 
-    useFocusEffect(() => {
+    useEffect(() => {
         getFriendProfilePicture();
         getFriendWeightLifted();
         getFriendRegistrationDate();
-    })
+        getIsFriendOnline();
+    }, [])
 
     const deleteFriend = async () => {
-        removeFriend(friend_info);
-        navigation.navigate('Приятели')
+        setRemovingFriend(true);
+        await removeFriend(friend_info);
+        setRemovingFriend(false);
+        navigation.navigate('Настройки-Страница');
     }
 
     const {t} = useTranslation();
 
     return (
         <>
+
+            {removingFriend && (
+                <BlurView
+                    style={tw`absolute w-full h-full z-10`}
+                    intensity={50}
+                    tint='dark'
+                />
+            )}
+
+            <LoadingModal
+                isLoadingModalVisible={removingFriend}
+                setIsLoadingModalVisible={setRemovingFriend}
+            />
+
             <SafeAreaView style={tw`w-full h-full flex items-center justify-center`}>
                 <View style={tw`w-[80%] h-[33%] mb-8 bg-white shadow-md rounded-xl flex pt-2`}>
 
@@ -155,12 +185,8 @@ const ViewFriendProfile = ({route, navigation}: any) => {
                     <View style={tw`flex-1 justify-end items-center mb-3`}>
 
                     <TouchableOpacity style={tw`w-64 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md`}
-                                onPress={async () => {
-                                    setRemovingFriend(true);
-                                    //console.log('removing friend');
-                                    await deleteFriend()
-                                    navigation.goBack();
-                                    setRemovingFriend(false);
+                                onPress={() => {
+                                    deleteFriend();
                                 }}
                                 disabled={removingFriend}
                             >
@@ -168,9 +194,6 @@ const ViewFriendProfile = ({route, navigation}: any) => {
                             </TouchableOpacity>
                     </View>
                 </View>
-
-                
-
             </SafeAreaView>
         </>
     )

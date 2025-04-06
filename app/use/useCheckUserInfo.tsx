@@ -11,7 +11,7 @@ export const checkUserDocument = async (userDocRef: any, user: any, userInfoColl
             await setDoc(userDocRef, { 
                 userID: user.uid, 
                 lastLogin: new Date(), 
-                registrationDate: new Date() 
+                registrationDate: new Date()
             });
             console.log("User document created with userID, lastLogin, and registrationDate.");
         } else {

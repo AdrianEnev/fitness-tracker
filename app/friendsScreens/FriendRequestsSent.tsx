@@ -4,21 +4,21 @@ import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
 import BottomNavigationBar from '../components/BottomNavigationBar';
 import getSentFriendRequests from '../useFriends/useGetSentFriendRequests';
+import { useFocusEffect } from '@react-navigation/native';
 
 const FriendRequestsSent = ({navigation}: any) => {
 
     const [sentFriendRequests, setSentFriendRequests] = useState<any[]>([]);
-
-    useEffect(() => {
-
-        const fetch = async () => {
-            const sentRequests = await getSentFriendRequests();
-            setSentFriendRequests(sentRequests);
-        }
-
-        fetch();
-
-    }, [])
+    useFocusEffect(
+        React.useCallback(() => {
+            const fetch = async () => {
+                const sentRequests = await getSentFriendRequests();
+                setSentFriendRequests(sentRequests);
+            }
+    
+            fetch();
+        }, []) 
+    );
 
     const {t} = useTranslation();
 

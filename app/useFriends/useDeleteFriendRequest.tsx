@@ -1,47 +1,39 @@
-import { collection, doc, deleteDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
-import { Friend } from '../../interfaces';
+import { FIREBASE_AUTH } from "../../firebaseConfig";
 
-const deleteFriendRequest = async (user: Friend, usersCollectionRefState: any) => {
+const deleteFriendRequest = async (userToCheck: any, navigation: any, translation: any) => {
 
-    let usersCollectionRef = usersCollectionRefState;
+    const currentUserUid = FIREBASE_AUTH.currentUser?.uid;
 
-    if (!usersCollectionRefState) {
-        usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    }
-
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const userInfoCollectionRef = collection(userDocRef, 'user_info');
-    const friendRequestsDocRef = doc(userInfoCollectionRef, 'friendRequests');
-
-    // delete sent from logged user
-    const sentCollectionRef = collection(friendRequestsDocRef, 'sent');
-    const requestDocRef = doc(sentCollectionRef, user.id);
+    console.log('Attempting to delete friend request to:', userToCheck.username);
 
     try {
-        await deleteDoc(requestDocRef);
-        console.log(`Step 1 - sucessful (Deleted request to ${user.username})`);
+        const response = await fetch(`http://localhost:3000/api/friends/${currentUserUid}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json', // Specifies the request body is JSON
+            },
+            body: JSON.stringify({
+                userToCheck: userToCheck
+            }),
+        });
 
-    } catch (err) {
-        console.error(`Step 1 - error -> Error deleting request to ${user.username}: `, err);
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("deleteFriendRequest: error:", errorData.message);
+            alert(translation(errorData.message));
+            navigation.goBack();
+            return null;
+        }
+
+        console.log('Friend request deleted successfully!');
+        navigation.goBack();
+        navigation.goBack();
+        alert(translation('friend-request-deleted'))
+
+    } catch (error) {
+        alert(translation('error'))
+        return null;
     }
-
-    // delete recieved from other user
-    const otherUserDocRef = doc(usersCollectionRef, user.id);
-    const otherUserInfoCollectionRef = collection(otherUserDocRef, 'user_info');
-    const otherUserFriendRequestsDocRef = doc(otherUserInfoCollectionRef, 'friendRequests');
-
-    try {
-        const receivedCollectionRef = collection(otherUserFriendRequestsDocRef, 'received');
-        const recievedDocRef = doc(receivedCollectionRef, FIREBASE_AUTH.currentUser?.uid)
-
-        await deleteDoc(recievedDocRef)
-        console.log(`Step 2 - successful (deleted request by ${user.username})`)
-
-    }catch (err) {
-        console.log('Step 2 - error -> ', err)
-    }
-    
 }
 
 export default deleteFriendRequest;

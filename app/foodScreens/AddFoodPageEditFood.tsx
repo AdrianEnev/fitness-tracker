@@ -243,7 +243,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
             
                 try {
                     const response = await fetch(`http://localhost:3000/api/foodDays/${userId}/${formattedDate}`, {
-                        method: 'put',
+                        method: 'PUT',
                         headers: {
                             'Content-Type': 'application/json', // Specifies the request body is JSON
                         },

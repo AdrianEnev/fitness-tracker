@@ -24,7 +24,7 @@ import GenerateWorkoutPage from "../workoutScreens/GenerateWorkoutPage";
 import ScanFood from "../foodScreens/ScanFood";
 import WorkoutFolder from "../workoutScreens/WorkoutFolder";
 import AddFoodPageEditFood from "../foodScreens/AddFoodPageEditFood";
-import ViewSearchedUser from "../friendsScreens/ViewSearchedUser";
+import ViewUser from "../friendsScreens/ViewUser";
 
 const Stack = createNativeStackNavigator();
 
@@ -240,7 +240,7 @@ const MainPageComponent = () => {
           />
           <Stack.Screen
               name="Виж-Потърсен-Потребител"
-              component={ViewSearchedUser}
+              component={ViewUser}
               options={{
                   headerShown: false,
               }}
