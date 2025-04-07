@@ -11,7 +11,8 @@ import { useTranslation } from 'react-i18next';
 import GlobalContext from '../../GlobalContext';
 import getUserInfo from '../use/getUserInfo';
 import { UserInfo } from '../../interfaces';
-import { getDownloadURL } from 'firebase/storage';
+import { getDownloadURL, getStorage, ref } from 'firebase/storage';
+import { FIREBASE_AUTH } from '../../firebaseConfig';
 
 const ViewUser = ({route, navigation}: any) => {
 
@@ -30,7 +31,7 @@ const ViewUser = ({route, navigation}: any) => {
     const [workoutsCompleted, setWorkoutsCompleted] = useState(0);
     const [dateRegistered, setDateRegistered] = useState<string>('')
 
-    // Not yet implemented
+    // Not yet implemented fully
     const [isUserPremium, setIsUserPremium] = useState(false);
 
     const fetchUserInfo = async () => {
@@ -41,10 +42,12 @@ const ViewUser = ({route, navigation}: any) => {
             return;
         }
 
-        setWorkoutsCompleted(userInfo.statistics?.finishedWorkouts || 0);
-        setDateRegistered(userInfo.dateRegistered || 'unknown');
+        setWorkoutsCompleted(userInfo.statistics.finishedWorkouts || 0);
+        setDateRegistered(userInfo.dateRegistered || t('unknown'));
 
-        const profilePictureRef = userInfo.profilePictureRef;
+        const storage = getStorage();
+        const profilePictureRef = ref(storage, `users/${friend.id}/profile_picture`);
+
         try {
             const downloadURL = await getDownloadURL(profilePictureRef);
             setProfilePicture(downloadURL);
@@ -98,8 +101,14 @@ const ViewUser = ({route, navigation}: any) => {
                     </View>
                     
                     <View style={tw`ml-3`}>
-                        <Text style={tw`text-base font-medium text-gray-700`}>{workoutsCompleted} {workoutsCompleted != 1 ? t('workouts') : t('workout')} {t('completed-workouts').toLowerCase()}.</Text>
-                        <Text style={tw`text-base font-medium text-gray-700`}>{t('first-joined')}{dateRegistered ? dateRegistered : t('loading-friends')}</Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>
+                            <Text style={tw`font-bold`}>{workoutsCompleted} </Text>
+                            {workoutsCompleted != 1 ? t('workouts') : t('workout')} {t('completed-workouts').toLowerCase()}.    
+                        </Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>
+                            {t('first-joined')}
+                            <Text style={tw`font-bold`}> {dateRegistered ? dateRegistered : t('loading-friends')}</Text>
+                        </Text>
                     </View>
                     
                     <View style={tw`flex-1 justify-end items-center mb-3`}>

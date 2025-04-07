@@ -79,7 +79,7 @@ export interface UserInfo {
         finishedWorkouts: number;
     };
     dateRegistered: string;
-    profilePictureRef: any;
+    isOnline: boolean;
     workouts: Workout[];
     savedWorkouts: Workout[];
     friends: Friend[];

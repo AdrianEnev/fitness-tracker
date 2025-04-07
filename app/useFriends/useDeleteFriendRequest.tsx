@@ -1,6 +1,7 @@
 import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { Friend } from "../../interfaces";
 
-const deleteFriendRequest = async (userToCheck: any, navigation: any, translation: any) => {
+const deleteFriendRequest = async (userToCheck: Friend, navigation: any, translation: any) => {
 
     const currentUserUid = FIREBASE_AUTH.currentUser?.uid;
 
@@ -26,8 +27,7 @@ const deleteFriendRequest = async (userToCheck: any, navigation: any, translatio
         }
 
         console.log('Friend request deleted successfully!');
-        navigation.goBack();
-        navigation.goBack();
+        navigation.navigate('Настройки-Страница');
         alert(translation('friend-request-deleted'))
 
     } catch (error) {

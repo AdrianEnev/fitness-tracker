@@ -2,29 +2,32 @@ import { View, Text, SafeAreaView, Image, TouchableOpacity, Alert } from 'react-
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { ref, getDownloadURL } from "firebase/storage";
-import { FIREBASE_STORAGE, FIRESTORE_DB } from '../../firebaseConfig';
-import { collection, doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { ref, getDownloadURL, getStorage } from "firebase/storage";
 import removeFriend from '../useFriends/useRemoveFriend';
 import { useTranslation } from 'react-i18next';
 import LoadingModal from '../loadingModals/LoadingModal';
 import { BlurView } from 'expo-blur';
+import getUserInfo from '../use/getUserInfo';
+import { UserInfo } from '../../interfaces';
 
 const ViewFriendProfile = ({route, navigation}: any) => {
 
     const {friend_info} = route.params;
 
+    const {t} = useTranslation();
+
     const [profilePicture, setProfilePicture] = useState('');
     const [weightLifted, setWeightLifted] = useState(0);
-    const [friendRegistrationDate, setFriendRegistrationDate] = useState<React.ReactNode | null>(null);
+    const [isFriendOnline, setIsFriendOnline] = useState(false);
+    const [friendRegistrationDate, setFriendRegistrationDate] = useState<string>('')
 
-    const [workoutsFinished, setWorkoutsFinished] = useState(0);
+    const [workoutsCompleted, setWorkoutsCompleted] = useState(0);
     const [removingFriend, setRemovingFriend] = useState(false);
 
+    // Not yet implemented fully
     const [isFriendPremium, setIsFriendPremium] = useState(false);
-    const [isFriendOnline, setIsFriendOnline] = useState(false);
 
-    const getIsFriendOnline = async () => {
+    /*const getIsFriendOnline = async () => {
         const friendID = friend_info.id;
 
         const usersCollectionRef = collection(FIRESTORE_DB, 'users');
@@ -36,98 +39,40 @@ const ViewFriendProfile = ({route, navigation}: any) => {
         });
 
         return () => unsubscribe();
-    }
+    }*/
 
-    const getFriendProfilePicture = async () => {
- 
-        const imagePath = `users/${friend_info.id}/profile_picture`;
-        const imageRef = ref(FIREBASE_STORAGE, imagePath);
-
-        try {
-            const url = await getDownloadURL(imageRef);
-            setProfilePicture(url);
-
-        } catch (error) {
-            //console.error("Error getting document:", error);
-            return null;
-        }
-
-    }
-
-    const getFriendWeightLifted = async () => {
+    const fetchUserInfo = async () => {
         
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, friend_info.id);
-        const userInfoCollectionRef = collection(userDocRef, 'user_info')
-        const userStatisticsDocRef = doc(userInfoCollectionRef, 'statistics');
+        const userInfo = await getUserInfo(friend_info.id) as UserInfo;
 
-        const unsubscribe = onSnapshot(userStatisticsDocRef, (doc) => {
-            setWeightLifted(doc.data()?.weightLifted);
-            setWorkoutsFinished(doc.data()?.finishedWorkouts || 0);
-        });
+        if (!userInfo) {
+            console.error('Error fetching user info');
+            return;
+        }
 
-        // Cleanup function
-        return () => unsubscribe();
-    }
+        setWorkoutsCompleted(userInfo.statistics.finishedWorkouts || 0);
+        setFriendRegistrationDate(userInfo.dateRegistered || t('unknown'));
+        setWeightLifted(userInfo.statistics.weightLifted || 0);
+        setIsFriendOnline(userInfo.isOnline || false);
 
-    const getFriendRegistrationDate = async () => {
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, friend_info.id);
-    
+        const storage = getStorage();
+        const profilePictureRef = ref(storage, `users/${friend_info.id}/profile_picture`);
+
         try {
-            const docSnapshot = await getDoc(userDocRef);
-            if (docSnapshot.exists()) {
-
-                let registrationDate = docSnapshot.data()?.registrationDate;
-                let date = registrationDate.toDate();
-                
-                let formattedDate = date.toLocaleDateString('en-GB', {
-                    day: '2-digit',
-                    month: '2-digit',
-                    year: 'numeric'
-                });
-
-                setFriendRegistrationDate(formattedDate);
-
-            } else {
-                Alert.alert(
-                    `${friend_info.username} has deleted their account!`,
-                    'Press OK to remove them from your friends list.',
-                    [
-                        {
-                            text: t('ok'),
-                            style: 'destructive',
-                            onPress: () => {
-                                deleteFriend();
-                            },
-                        },
-                    ],
-                );
-            }
+            const downloadURL = await getDownloadURL(profilePictureRef);
+            setProfilePicture(downloadURL);
         } catch (error) {
-            console.log("Error getting document:", error);
+            console.log('Error fetching profile picture:', error);
+            setProfilePicture('');
         }
     }
-
+    
     useEffect(() => {
-        getFriendProfilePicture();
-        getFriendWeightLifted();
-        getFriendRegistrationDate();
-        getIsFriendOnline();
-    }, [])
-
-    const deleteFriend = async () => {
-        setRemovingFriend(true);
-        await removeFriend(friend_info);
-        setRemovingFriend(false);
-        navigation.navigate('Настройки-Страница');
-    }
-
-    const {t} = useTranslation();
+        fetchUserInfo();
+    }, []);
 
     return (
         <>
-
             {removingFriend && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
@@ -178,15 +123,17 @@ const ViewFriendProfile = ({route, navigation}: any) => {
                     
                     <View style={tw`ml-3`}>
                         <Text style={tw`text-base font-medium text-gray-700`}>{t('first-joined')} {friendRegistrationDate ? friendRegistrationDate : t('loading-friends')}</Text>
-                        <Text style={tw`text-base font-medium text-gray-700`}>{workoutsFinished} {workoutsFinished > 1 || workoutsFinished == 0 ? t('workouts'): t('workout')} {t('completed-workouts')}.</Text>
+                        <Text style={tw`text-base font-medium text-gray-700`}>{workoutsCompleted} {workoutsCompleted > 1 || workoutsCompleted == 0 ? t('workouts'): t('workout')} {t('completed-workouts')}.</Text>
                         <Text style={tw`text-base font-medium text-gray-700`}>{weightLifted ? weightLifted : '0'} {t('kilograms-short')} {t('lifted-in-total')}</Text>
                     </View>
 
                     <View style={tw`flex-1 justify-end items-center mb-3`}>
 
                     <TouchableOpacity style={tw`w-64 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md`}
-                                onPress={() => {
-                                    deleteFriend();
+                                onPress={async () => {
+                                    setRemovingFriend(true);
+                                    await removeFriend(friend_info, navigation, t);
+                                    setRemovingFriend(false);
                                 }}
                                 disabled={removingFriend}
                             >

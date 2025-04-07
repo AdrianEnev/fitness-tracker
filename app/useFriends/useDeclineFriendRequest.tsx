@@ -1,6 +1,11 @@
+import { useContext } from "react";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
+import GlobalContext from "../../GlobalContext";
+import { Friend } from "../../interfaces";
 
-const declineFriendRequest = async (userToCheck: any, navigation: any, translation: any) => {
+const declineFriendRequest = async (userToCheck: Friend, navigation: any, translation: any) => {
+
+    const {friendRequestsNumber, setFriendRequestsNumber} = useContext(GlobalContext);
     
     const currentUserUid = FIREBASE_AUTH.currentUser?.uid;
 
@@ -25,9 +30,11 @@ const declineFriendRequest = async (userToCheck: any, navigation: any, translati
             return null;
         }
 
+        // Remove 1 friend request from the friend requests received count
+        setFriendRequestsNumber((Number(friendRequestsNumber) - 1).toString());
+
         console.log('Friend request declined successfully!');
-        navigation.goBack();
-        navigation.goBack();
+        navigation.navigate('Настройки-Страница');
         alert(translation('friend-request-declined'))
 
     } catch (error) {

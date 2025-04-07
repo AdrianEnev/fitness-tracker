@@ -9,7 +9,7 @@ const getUserInfo = async (userId: string) => {
         }
 
         const data = await response.json() as UserInfo;
-        console.log(data)
+        //console.log(data)
         return data;
 
     } catch (error) {

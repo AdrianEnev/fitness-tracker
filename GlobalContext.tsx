@@ -17,6 +17,7 @@ interface GlobalContextType {
     setFaceIdEnabled: (value: boolean) => void;
     setReceiveFriendRequests: (value: boolean) => void;
     setProfilePicture: (profilePicture: string) => void;
+    setFriendRequestsNumber: (friendRequestsNumber: string) => void;
     setSetupRan: (value: boolean) => void;
     setIsAccountDeleted: (value: boolean) => void;
     setGeneratingWorkout: (value: boolean) => void;
@@ -44,6 +45,7 @@ const defaultValues: GlobalContextType = {
     setSyncingInfoRunning: () => {},
     setFaceIdEnabled: () => {},
     setReceiveFriendRequests: () => {},
+    setFriendRequestsNumber: () => {},
     setProfilePicture: () => {},
     setSetupRan: () => {},
     setIsAccountDeleted: () => {},

@@ -1,9 +1,10 @@
 import { FIREBASE_AUTH } from "../../firebaseConfig";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
+import { Friend } from "../../interfaces";
 
 // Function to send a friend request
-const sendFriendRequest = async (userToCheck: any, navigation: any, translation: any) => {
+const sendFriendRequest = async (userToCheck: Friend, navigation: any, translation: any) => {
 
     const email = await getEmail();
     const loggedUserUsername = await AsyncStorage.getItem(`username_${email}`)
@@ -33,8 +34,7 @@ const sendFriendRequest = async (userToCheck: any, navigation: any, translation:
         }
 
         console.log('Friend request sent successfully!');
-        navigation.goBack();
-        navigation.goBack();
+        navigation.navigate('Настройки-Страница');
         alert(translation('friend-request-sent'))
 
     } catch (error) {

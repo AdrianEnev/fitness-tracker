@@ -549,7 +549,7 @@ function App() {
 
     return (
         <GlobalContext.Provider value={{
-            setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber,
+            setupRan, setSetupRan, profilePicture, setProfilePicture, friendRequestsNumber, setFriendRequestsNumber,
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
             internetConnected: isConnected, isAccountDeleted, setIsAccountDeleted, generatingWorkout, setGeneratingWorkout,
             generatingWorkoutInFolder, setGeneratingWorkoutInFolder, syncingInfoRunning, setSyncingInfoRunning, internetSpeed, setAccountJustRegistered,

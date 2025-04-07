@@ -1,8 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import getEmail from "../use/useGetEmail";
 import { FIREBASE_AUTH } from "../../firebaseConfig";
+import { useContext } from "react";
+import GlobalContext from "../../GlobalContext";
+import { Friend } from "../../interfaces";
 
-const acceptFriendRequest = async (userToCheck: any, navigation: any, translation: any) => {
+const acceptFriendRequest = async (userToCheck: Friend, navigation: any, translation: any) => {
+
+    const {friendRequestsNumber, setFriendRequestsNumber} = useContext(GlobalContext);
     
     const email = await getEmail();
     const loggedUserUsername = await AsyncStorage.getItem(`username_${email}`)
@@ -31,9 +36,11 @@ const acceptFriendRequest = async (userToCheck: any, navigation: any, translatio
             return null;
         }
 
+        // Remove 1 friend request from the friend requests received count
+        setFriendRequestsNumber((Number(friendRequestsNumber) - 1).toString());
+
         console.log('Friend request accepted successfully!');
-        navigation.goBack();
-        navigation.goBack();
+        navigation.navigate('Настройки-Страница');
         alert(translation('friend-request-accepted'))
 
     } catch (error) {
