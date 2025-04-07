@@ -1,5 +1,7 @@
 const checkInternetSpeed = async () => {
 
+    //console.log('checking internet speed...')
+
     const startTime = new Date().getTime();
     
     const response = await fetch('https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png', {

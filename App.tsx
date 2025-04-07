@@ -35,8 +35,6 @@ import LanguageScreenSmall from './app/screens/LanguageScreenSmall';
 import { StripeProvider } from '@stripe/stripe-react-native';
 //import getEmail from './app/use/useGetEmail';
 import { getLungeCoins } from './app/use/useGetLungeCoins';
-import clearAsyncStorage from './app/use/useClearAsyncStorage';
-import checkIsAccountLimitReached from './app/use/useCheckAccountLimitReached';
 
 const Stack = createStackNavigator();
 
@@ -322,6 +320,7 @@ function App() {
         const initializeApp = async () => {
 
             await checkLocalEmail();
+            getIphoneModel();
 
             const localLanguageSet = await getLocalLanguageSet();
             if (localLanguageSet) {
@@ -359,29 +358,17 @@ function App() {
     }, []);
 
     useEffect(() => {
+        let lastChecked = 0;
+    
+        // Check internet speed every time a change is detected
+        // Prevent check if 6.9 seconds have not passed
         const netListener = NetInfo.addEventListener(async state => {
             try {
-                if (state.isConnected) {
-                    const speed = await checkInternetSpeed();
-                    setInternetSpeed(speed);
-                }
-                //setIsConnected(state.isConnected ?? false);
-            } catch (error) {
-                console.error("Error checking internet speed or setting connection state:", error);
-            }
-        });
+                const now = Date.now();
     
-        return () => netListener();
-    }, []);
-
-    useEffect(() => {
-        
-        const checkInternetConnection = async () => {
-            const netInfo = await NetInfo.fetch();
-
-            try {
-                if (netInfo.isConnected) {
-                    const speed = await checkInternetSpeed()
+                if (state.isConnected && (now - lastChecked > 6900)) { // 6.9 Sec delay
+                    lastChecked = now;
+                    const speed = await checkInternetSpeed();
                     setInternetSpeed(speed);
 
                     /*if (speed < 32) {
@@ -390,33 +377,16 @@ function App() {
                         setIsConnected(true)
                     }*/
                 }
-            } catch (error: any) {
-                console.log('failed to check internet speed');
-                console.log(error);
+            } catch (error) {
+                console.error("Error checking internet speed:", error);
             }
-            
-        };
-
-        // Run checkInternetConnection every 10 seconds
-        // Delay the first call to checkInternetConnection by 2 seconds
-        const timeout = setTimeout(() => {
-
-            checkInternetConnection();
-
-            // Run checkInternetConnection every 10 seconds after the initial delay
-            const interval = setInterval(() => {
-                checkInternetConnection();
-                //console.log('checked internet connection')
-            }, 10000);
-
-            // Clear interval on unmount
-            return () => clearInterval(interval);
-        }, 2000);
-
-        // Clear interval on unmount
-        return () => clearInterval(timeout);
+        });
+    
+        return () => netListener();
     }, []);
 
+    // Run useEffect every 1 second to check if user has verified their email
+    // This only starts executing while the "email-not-verified" page is active
     useEffect(() => {
         const interval = setInterval(async () => {
 
@@ -443,6 +413,8 @@ function App() {
         }
     }, [emailVerifiedChanged]);
 
+    // Compare firebase data to local storage data and sync any mismatches
+    // Only runs once per log in if the user is connected to the internet and authenticated
     useEffect(() => {
 
         if (isConnected && isAuthenticated && !hasSynced && user && internetSpeed > 32) {
@@ -478,17 +450,6 @@ function App() {
           return () => unsubscribe();
 
     }, [navigationRef])
-
-    useEffect(() => {
-
-        //clearAsyncStorage();
-        //logAsyncStorage()
-        //clearEmailFoodDayData('test')
-        //tempFunc()
-        getIphoneModel();
-        //clearEmailFoodDayData();
-
-    }, [])
 
     const handleNavigation = () => {
 
