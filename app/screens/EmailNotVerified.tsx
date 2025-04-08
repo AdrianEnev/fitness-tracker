@@ -1,11 +1,11 @@
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { FIREBASE_AUTH, FIRESTORE_DB } from '@config/firebaseConfig';
 import { useContext, useEffect, useState } from 'react';
 import { deleteUser, sendEmailVerification } from 'firebase/auth';
 import { View, Text, Alert } from 'react-native';
 import tw from 'twrnc';
 import { deleteObject, getStorage, ref } from 'firebase/storage';
 import { deleteDoc, doc } from 'firebase/firestore';
-import GlobalContext from '../../GlobalContext';
+import GlobalContext from '@config/GlobalContext';
 import { useTranslation } from 'react-i18next';
 
 const EmailNotVerified = () => {

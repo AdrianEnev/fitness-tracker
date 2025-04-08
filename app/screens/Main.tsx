@@ -3,23 +3,19 @@ import React, { useCallback, useContext, useState } from 'react'
 import tw from "twrnc";
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
-
 import { useTranslation } from 'react-i18next';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-import getCurrentDate from '../use/useGetCurrentDate';
-
 import { TouchableWithoutFeedback } from 'react-native-gesture-handler';
-
-import GlobalContext from '../../GlobalContext';
-import HorizontalCalendar from '../components/HorizontalCalendar';
-import WorkoutFoodButtons from '../components/WorkoutFoodButtons';
-import Nutrients from '../components/NutrientsMain';
-import BottomNavigationBar from '../components/BottomNavigationBar';
-import ProfilePicture from '../components/ProfilePicture';
+import GlobalContext from '@config/GlobalContext';
+import HorizontalCalendar from '@app/components/main/HorizontalCalendar';
+import WorkoutFoodButtons from '@components/main/WorkoutFoodButtons';
+import Nutrients from '@components/main/NutrientsMain';
+import BottomNavigationBar from '@components/BottomNavigationBar';
+import ProfilePicture from '@app/components/settings/ProfilePicture';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import getEmail from '../use/useGetEmail';
-import { getLanguageLocally } from '../use/useGetLanguageLocally';
+import getEmail from '@use/settings/get/useGetEmail';
+import getCurrentDate from '@use/settings/get/useGetCurrentDate';
+import { getLanguageLocally } from '@use/settings/get/useGetLanguageLocally';
 
 //bg-[#fd3e6b]
 //bg-[#3d5875]

@@ -3,8 +3,8 @@ import React, { useContext } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { useTranslation } from 'react-i18next';
-import GlobalContext from '../../GlobalContext';
-import { checkWorkoutsCountFolder, checkWorkoutsCountTotal } from '../useWorkout/useCheckWorkoutsCount';
+import GlobalContext from '@config/GlobalContext';
+import { checkWorkoutsCountFolder, checkWorkoutsCountTotal } from '@use/workouts/get/useCheckWorkoutsCount';
 
 const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) => {
     return (

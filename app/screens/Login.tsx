@@ -1,15 +1,13 @@
 import { View, TextInput, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity, Pressable } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { FIREBASE_AUTH, FIRESTORE_DB } from '@config/firebaseConfig';
 import tw from "twrnc";
 import { useTranslation } from 'react-i18next';
-import GlobalContext from '../../GlobalContext';
+import GlobalContext from '@config/GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { collection, doc, getDoc } from 'firebase/firestore';
-import { BlurView } from 'expo-blur';
-
 
 const Login = ({navigation}: any) => {
 

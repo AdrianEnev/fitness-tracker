@@ -1,18 +1,18 @@
 import { View, TextInput, Button, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '../../firebaseConfig';
+import { FIREBASE_AUTH, FIRESTORE_DB } from '@config/firebaseConfig';
 import tw from "twrnc";
 import { useTranslation } from 'react-i18next';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
-import GlobalContext from '../../GlobalContext';
+import GlobalContext from '@config/GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { checkUserDocument } from '../use/useCheckUserInfo';
-import checkUsernameNSFW from '../use/useCheckUsernameNSFW';
+import { checkUserDocument } from '@use/settings/check/useCheckUserInfo';
+import checkUsernameNSFW from '@use/settings/check/useCheckUsernameNSFW';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import checkIsAccountLimitReached from '../use/useCheckAccountLimitReached';
+import checkIsAccountLimitReached from '@use/settings/check/useCheckAccountLimitReached';
 import { BlurView } from 'expo-blur';
-import LoadingModal from '../loadingModals/LoadingModal';
+import LoadingModal from '@modals/loading/LoadingModal';
 
 const Register = ({navigation}: any) => {
 

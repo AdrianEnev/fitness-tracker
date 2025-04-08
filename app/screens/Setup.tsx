@@ -3,17 +3,17 @@ import React, { useState, useEffect } from 'react'
 import tw from "twrnc";
 import { useTranslation } from 'react-i18next';
 import { useContext } from 'react';
-import GlobalContext from '../../GlobalContext';
+import GlobalContext from '@config/GlobalContext';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import SetupPageOne from '../setupComponents/SetupPageOne';
-import SetupPageTwo from '../setupComponents/SetupPageTwo';
-import SetupPageThree from '../setupComponents/SetupPageThree';
-import SetupPageFour from '../setupComponents/SetupPageFour';
-import SetupPageFive from '../setupComponents/SetupPageFive';
+import SetupPageOne from '@components/setup/SetupPageOne';
+import SetupPageTwo from '@components/setup/SetupPageTwo';
+import SetupPageThree from '@components/setup/SetupPageThree';
+import SetupPageFour from '@components/setup/SetupPageFour';
+import SetupPageFive from '@components/setup/SetupPageFive';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import getEmail from '../use/useGetEmail';
-import { getLanguageLocally } from '../use/useGetLanguageLocally';
+import getEmail from '@use/settings/get/useGetEmail';
+import { getLanguageLocally } from '@use/settings/get/useGetLanguageLocally';
 
 const Setup = () => {
 

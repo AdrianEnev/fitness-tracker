@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, Image } from 'react-native'
+import { View, Text, SafeAreaView } from 'react-native'
 import React, { useEffect } from 'react'
 import tw from "twrnc"
 import { TouchableOpacity } from 'react-native-gesture-handler'
