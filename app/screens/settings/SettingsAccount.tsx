@@ -22,6 +22,7 @@ import checkUsernameNSFW from '@use/settings/check/useCheckUsernameNSFW'
 import ChangingUsernameModal from '@modals/loading/ChangingUsernameModal'
 import SyncingInfoInformationModal from '@modals/settings/SyncInfoInformationModal'
 import SyncInfoModal from '@modals/settings/SyncInfoModal'
+import reauthenticateAndDelete from '@use/settings/remove/useDeleteAccount'
 
 const SettingsAccount = ({navigation}: any) => {
 
@@ -37,9 +38,14 @@ const SettingsAccount = ({navigation}: any) => {
         syncingInfoRunning, 
         setSyncingInfoRunning,
         internetSpeed
+
     } = useContext(GlobalContext);
 
     const [changingUsernameRunning, setChangingUsernameRunning] = useState(false);
+    const [isSyncInfoModalVisible, setIsSyncInfoModalVisible] = useState(false)
+    const [isSyncingInfoModalVisible, setIsSyncingInfoModalVisible] = useState(false)
+    const [isSyncingInfoInformationModalVisible, setIsSyncingInfoInformationModalVisible] = useState(false)
+    const [isDeletingAccountModalVisible, setIsDeletingAccountModalVisible] = useState(false)
 
     const logOut = () => {
 
@@ -344,7 +350,7 @@ const SettingsAccount = ({navigation}: any) => {
     const [email, setEmail] = useState<string | null>(null)
 
     const getUsernameLocally = async () => {
-        const email = await getEmail()
+        const email = await getEmail();
 
         const AsyncStorageUsername = await AsyncStorage.getItem(`username_${email}`);
         setUsername(AsyncStorageUsername);
@@ -381,10 +387,31 @@ const SettingsAccount = ({navigation}: any) => {
         }
     };
 
-    const [isSyncInfoModalVisible, setIsSyncInfoModalVisible] = useState(false)
-    const [isSyncingInfoModalVisible, setIsSyncingInfoModalVisible] = useState(false)
-    const [isSyncingInfoInformationModalVisible, setIsSyncingInfoInformationModalVisible] = useState(false)
-    const [isDeletingAccountModalVisible, setIsDeletingAccountModalVisible] = useState(false)
+    const deleteAccountPrompt = async () => {
+        // Prompt the user to enter their password for account deletion
+        Alert.prompt(
+            'Изтриване на акаунт',
+            'Въведи паролата за този акаунт, за да го изтриеш',
+            [
+                {
+                    text: t('cancel'),
+                    style: 'cancel',
+                },
+                {
+                    text: t('delete'),
+                    style: 'destructive',
+                    onPress: async (password: string | undefined) => {
+
+                        const isVerified = true;
+                        setIsDeletingAccountModalVisible(true)
+                        await reauthenticateAndDelete(setProfilePicture, setSetupRan, setIsAccountDeleted, isVerified, password);                    
+                        setIsAccountDeleted(true)
+                    },
+                },
+            ],
+            'secure-text'
+        );
+    }
 
     return (
         <>
@@ -475,14 +502,10 @@ const SettingsAccount = ({navigation}: any) => {
                             Vibration.vibrate()
                         }
                     })}
-                    {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, () => {
+                    {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, async () => {
 
                         if (internetConnected && internetSpeed > 32) {
-                            const auth = getAuth();
-                            const user = auth.currentUser;
-                            
-                            deleteAccount(email, user, setProfilePicture, setSetupRan, setIsAccountDeleted, setIsSyncingInfoModalVisible)
-                            
+                            deleteAccountPrompt();
                         }else{
                             alert(t('unstable-connection'))
                             Vibration.vibrate()

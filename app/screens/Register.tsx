@@ -7,7 +7,6 @@ import { useTranslation } from 'react-i18next';
 import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import GlobalContext from '@config/GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { checkUserDocument } from '@use/settings/check/useCheckUserInfo';
 import checkUsernameNSFW from '@use/settings/check/useCheckUsernameNSFW';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import checkIsAccountLimitReached from '@use/settings/check/useCheckAccountLimitReached';
@@ -99,26 +98,18 @@ const Register = ({navigation}: any) => {
     
         try {
             const after = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
-            setIsAccountDeleted(false)
+            setIsAccountDeleted(false);
 
             const usersCollectionRef = collection(FIRESTORE_DB, 'users');
             const userDocRef = doc(usersCollectionRef, after.user.uid);
 
             await setDoc(userDocRef, { lungeCoins: 1, lastGeneratedWorkout: null }, { merge: false });
 
-            const userInfoCollectionRef = collection(userDocRef, 'user_info');
-    
-            // add a document inside userInfoCollectionRef and call that document "username"
-            await setDoc(doc(userInfoCollectionRef, 'username'), { username: trimmedUsername });
-
-            // save username locally using AsyncStorage
-            //console.log(trimmedEmail)
             await AsyncStorage.setItem(`email`, trimmedEmail);
             await AsyncStorage.setItem(`username_${email}`, trimmedUsername);
 
             // send email verification
-            sendEmailVerification(after.user);
-            checkUserDocument(userDocRef, after.user, userInfoCollectionRef);
+            await sendEmailVerification(after.user);
             setAccountJustRegistered(true)
             navigation.navigate('Непотвърден-Имейл')
 

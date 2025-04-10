@@ -23,7 +23,7 @@ const getMissingAccounts = async (asyncStorageEmails: any) => {
         }
 
         const data = await response.json();
-        console.log('backend response', data);
+        //console.log('backend response', data);
         return data;
 
     } catch (error) {

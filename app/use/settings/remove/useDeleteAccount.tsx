@@ -1,135 +1,99 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '@config/firebaseConfig'
-import { deleteUser, reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
-import { collection, deleteDoc, doc, getDoc, getDocs, query, updateDoc, where } from 'firebase/firestore';
-import { deleteObject, getStorage, ref } from 'firebase/storage';
-import { Alert } from 'react-native';
+import { FIREBASE_AUTH } from '@config/firebaseConfig'
+import { reauthenticateWithCredential, EmailAuthProvider } from 'firebase/auth'
 import getEmail from '@use/settings/get/useGetEmail';
 
-// Function to change the username of the user to "Deleted User" in friends' lists
-const changeUsername = async (user: any) => {
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    getDocs(usersCollectionRef).then((snapshot) => {
-        if (snapshot.empty) {
-            return;
-        }
-        snapshot.docs.forEach((doc) => {
-            const userId = doc.id;
-            const userFriendsCollectionRef = collection(FIRESTORE_DB, 'users', userId, 'user_info', 'friends', 'list');
-            const q = query(userFriendsCollectionRef, where('id', '==', user.uid));
-            getDocs(q).then((snapshot) => {
-                snapshot.docs.forEach((doc) => {
-                    const deletedUserName = "Deleted User" + Math.floor(Math.random() * 100000);
-                    updateDoc(doc.ref, { username: deletedUserName });
-                });
-            });
-        });
-    });
-}
-
-// Function to remove received friend requests for the user
-const removeReceivedRequests = async (user: any) => {
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const snapshot = await getDocs(usersCollectionRef);
-    console.log(`Found ${snapshot.size} users.`);
-    await Promise.all(snapshot.docs.map(async (docSnapshot) => {
-        const userId = docSnapshot.id;
-        console.log(`Processing user with ID: ${userId}`);
-        const ReceivedRequestsDocRef = doc(usersCollectionRef, userId, 'user_info', 'friendRequests', 'received', user.uid);
-        const friendRequestDocSnapshot = await getDoc(ReceivedRequestsDocRef);
-        if (friendRequestDocSnapshot.exists()) {
-            console.log(`Found friend request for user with ID: ${user.uid}`);
-            await deleteDoc(ReceivedRequestsDocRef);
-        } else {
-            console.log(`No friend request found for user with ID: ${user.uid}`);
-        }
-    }));
-}
-
-// Function to execute the deletion of the user account and related data
-const executeDeletion = async (setProfilePicture: any, setSetupRan: any, setIsAccountDeleted: any, user: any) => {
-    deleteUser(user).then(() => {
-        FIREBASE_AUTH.signOut();
-        setIsAccountDeleted(true)
-    }).catch((error: any) => {
-        console.log(error);
-    });
-
-    await changeUsername(user);
-    await removeReceivedRequests(user);
-
-    const userDocRef = doc(FIRESTORE_DB, 'users', user.uid);
-    deleteDoc(userDocRef).catch((error) => {
-        console.log(error);
-    });
-
-    const storage = getStorage();
-    const desertRef = ref(storage, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
-
-    deleteObject(desertRef).then(() => {
-        console.log("File deleted successfully");
-    }).catch((error) => {
-        if (error !== "[FirebaseError: Firebase Storage: Object 'users/undefined/profile_picture' does not exist. (storage/object-not-found)]"){
-            console.log(error)
-        }
-    });
-
-    const asyncStorageEmail = await getEmail()
-
-    AsyncStorage.removeItem(`username_${asyncStorageEmail}`)
-    AsyncStorage.removeItem(`email`)
-    AsyncStorage.removeItem(`statistics_${asyncStorageEmail}`)
-    AsyncStorage.removeItem(`workouts_${asyncStorageEmail}`)
-    AsyncStorage.removeItem(`savedWorkouts`)
-    AsyncStorage.removeItem(`goal_nutrients_${asyncStorageEmail}`)
-
-    // Reset GlobalContext to default values
-    setProfilePicture('');
-    setSetupRan(false);
-}
-
-// Function to handle the account deletion process
-const deleteAccount = async (
-    email: any, 
-    user: any, 
+// Function to reauthenticate the user and delete the account
+const reauthenticateAndDelete = async (
     setProfilePicture: any, 
     setSetupRan: any, 
-    setIsAccountDeleted: any,
-    setIsDeletingAccountModalVisible: any
+    setIsAccountDeleted: any, 
+    isVerified: boolean,
+    password?: string | undefined, 
 ) => {
-    // Prompt the user to enter their password for account deletion
-    Alert.prompt(
-        'Изтриване на акаунт',
-        'Въведи паролата за този акаунт, за да го изтриеш',
-        [
-            {
-                text: 'Отказ',
-                style: 'cancel',
-            },
-            {
-                text: 'Изтриване',
-                style: 'destructive',
-                onPress: (password: string | undefined) => {
-                    reauthenticateAndDelete(password, setProfilePicture, setSetupRan, setIsAccountDeleted);
-                },
-            },
-        ],
-        'secure-text'
-    );
 
-    // Function to reauthenticate the user and delete the account
-    const reauthenticateAndDelete = (password: string | undefined, setProfilePicture: any, setSetupRan: any, setIsAccountDeleted: any) => {
-        if (email && password && user) {
-            const credentials = EmailAuthProvider.credential(email, password);
-            reauthenticateWithCredential(user, credentials).then(async () => {
-                if (user) {
-                    await executeDeletion(setProfilePicture, setSetupRan, setIsAccountDeleted, user);
-                }
-            }).catch((error) => {
-                console.log(error);
-            });
-        }
+    const email = await getEmail();
+    const user = FIREBASE_AUTH.currentUser;
+
+    if (!email || !user) {
+        return
+    }
+
+    if (password && isVerified) {
+
+        // Reauthenticate user before deleting account
+        // Required by firebase
+        const credentials = EmailAuthProvider.credential(email, password);
+        reauthenticateWithCredential(user, credentials).then(async () => {
+            if (user) {
+                await deleteAccountDatabase(
+                    user, 
+                    email, 
+                    setProfilePicture, 
+                    setSetupRan, 
+                    setIsAccountDeleted, 
+                    isVerified
+                );
+            }
+        }).catch((error) => {
+            console.log(error);
+        });
+    }else{
+        await deleteAccountDatabase(
+            user, 
+            email, 
+            setProfilePicture, 
+            setSetupRan, 
+            setIsAccountDeleted, 
+            isVerified
+        );
     }
 }
 
-export default deleteAccount;
+const deleteAccountDatabase = async (
+    user: any, 
+    email: string, 
+    setProfilePicture: any, 
+    setSetupRan: any, 
+    setIsAccountDeleted: any, 
+    isVerified: boolean
+) => {
+
+    if (!user) return
+    
+    try {
+        const response = await fetch(`http:/localhost:3000/api/users/${user.uid}?isVerified=${isVerified}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        })
+
+        if (!response.ok) {
+            console.error("error deleting account:", response);
+            return null;
+        }
+
+        // Delete asyncstorage data for this user
+        AsyncStorage.removeItem(`username_${email}`)
+        AsyncStorage.removeItem(`email`)
+        AsyncStorage.removeItem(`statistics_${email}`)
+        AsyncStorage.removeItem(`workouts_${email}`)
+        AsyncStorage.removeItem(`savedWorkouts`)
+        AsyncStorage.removeItem(`goal_nutrients_${email}`)
+
+        FIREBASE_AUTH.signOut();
+
+        // Reset GlobalContext to default values
+        setProfilePicture('');
+        setSetupRan(false);
+        setIsAccountDeleted(true)
+
+        console.log('Account deleted from database');
+
+    }catch (error) {
+        console.error('Error deleting account:', error);
+    }
+}
+
+export default reauthenticateAndDelete;

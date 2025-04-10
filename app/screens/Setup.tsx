@@ -213,7 +213,7 @@ const Setup = () => {
     const [weight, setWeight] = useState(60);
 
     const [heightType, setHeightType] = useState('CM');
-    const [height, setHeight] = useState(170);
+    const [height, setHeight] = useState(120);
 
     const [activityLevel, setActivityLevel] = useState(0)
 

@@ -14,7 +14,7 @@ import getProfilePicture from '@use/settings/get/useGetProfilePicture';
 import GlobalContext from '@config/GlobalContext';
 import getFriendRequests from '@use/friends/get/useGetFriendRequestsRecieved';
 import ChangePassword from '@screens/ChangePassword';
-import { checkUserGoalNutrientsLocally, checkLanguageDocumentLocally, checkUsernamesMatch } from '@use/settings/check/useCheckUserInfo';
+import { checkUserGoalNutrientsLocally, checkLanguageDocumentLocally, checkUsernamesMatch, checkUsernameDoc } from '@use/settings/check/useCheckUserInfo';
 import LottieView from 'lottie-react-native';
 import tw from 'twrnc';
 import { useTranslation } from 'react-i18next';
@@ -390,12 +390,16 @@ function App() {
         const interval = setInterval(async () => {
 
             if (user && !isEmailVerified) {
-                await user.reload().then(() => {
+                await user.reload().then(async () => {
                     if (user.emailVerified) {
                         setIsEmailVerified(true);
                         setEmailVerifiedChanged(true);
                         setAccountJustRegistered(false);
                         setSetupRan(false);
+
+                        // Adds username to the user_info collection
+                        await checkUsernameDoc();
+
                     }
                     console.log('interval ran')
                 });
@@ -428,7 +432,7 @@ function App() {
         }
     }, [isConnected, isAuthenticated, hasSynced]);
 
-    // listen for firebase.logOut and navigate to unauthenticated screen if called
+    // listen for firebase.logOut/logIn and navigate to unauthenticated screen if called
     useEffect(() => {
 
         const unsubscribe = FIREBASE_AUTH.onAuthStateChanged(async (user) => {
@@ -436,8 +440,8 @@ function App() {
                 setIsAuthenticated(true);
 
                 // check goal nutrients again -> prevents setup from running unnecessarily on login
-                //const setupHasRanLocally = await checkUserGoalNutrientsLocally();
-                //setSetupRan(setupHasRanLocally);
+                const setupHasRanLocally = await checkUserGoalNutrientsLocally();
+                setSetupRan(setupHasRanLocally);
                 
                 setIsAccountDeleted(false);
             } else if (!user && isConnected) {

@@ -1,18 +1,18 @@
-import { FIREBASE_AUTH, FIRESTORE_DB } from '@config/firebaseConfig';
+import { FIREBASE_AUTH } from '@config/firebaseConfig';
 import { useContext, useEffect, useState } from 'react';
-import { deleteUser, sendEmailVerification } from 'firebase/auth';
+import { sendEmailVerification } from 'firebase/auth';
 import { View, Text, Alert } from 'react-native';
 import tw from 'twrnc';
-import { deleteObject, getStorage, ref } from 'firebase/storage';
-import { deleteDoc, doc } from 'firebase/firestore';
 import GlobalContext from '@config/GlobalContext';
 import { useTranslation } from 'react-i18next';
+import deleteAccount from '@app/use/settings/remove/useDeleteAccount';
+import reauthenticateAndDelete from '@app/use/settings/remove/useDeleteAccount';
 
 const EmailNotVerified = () => {
     
     const [countDown, setCountDown] = useState(60);
 
-    const {setIsAccountDeleted} = useContext(GlobalContext);
+    const { setIsAccountDeleted, setProfilePicture, setSetupRan } = useContext(GlobalContext);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -38,12 +38,11 @@ const EmailNotVerified = () => {
                     });
             }
         } else {
-            console.log('Please wait');
+            console.log('Cooldown period active. Please wait before resending the email.');
         }
     };
 
-    const deleteAccount = () => {
-
+    const deleteAccountPrompt = () => {
         Alert.alert((t('delete-account')), '', [
             {
                 text: t('cancel'),
@@ -53,41 +52,14 @@ const EmailNotVerified = () => {
                 text: t('delete'),
                 style: 'destructive',
                 onPress: async () => {
-                    deleteAccountDatabase();
+                    // email not verified => account not verified => pass false for isVerified
+                    const isVerified = false
+
+                    reauthenticateAndDelete(setProfilePicture, setSetupRan, setIsAccountDeleted, isVerified);                    
+                    setIsAccountDeleted(true)
                 }
             }
         ]);
-            
-    }
-
-    const deleteAccountDatabase = async () => {
-
-        const user = FIREBASE_AUTH.currentUser;
-        if (!user) return
-        
-        deleteUser(user).then(() => {
-            FIREBASE_AUTH.signOut();
-            setIsAccountDeleted(true)
-        }).catch((error: any) => {
-            console.log(error);
-        });
-
-        const userDocRef = doc(FIRESTORE_DB, 'users', user.uid);
-        deleteDoc(userDocRef).catch((error) => {
-            console.log(error);
-        });
-
-        const storage = getStorage();
-        const desertRef = ref(storage, `users/${FIREBASE_AUTH.currentUser?.uid}/profile_picture`);
-
-        deleteObject(desertRef).then(() => {
-            console.log("File deleted successfully");
-        }).catch((error) => {
-            if (error !== "[FirebaseError: Firebase Storage: Object 'users/undefined/profile_picture' does not exist. (storage/object-not-found)]"){
-                console.log(error)
-            }
-        });
-        
     }
 
     const {t} = useTranslation();
@@ -103,7 +75,7 @@ const EmailNotVerified = () => {
                     {t('didnt-receive-email')} <Text onPress={resendEmail} style={tw`font-bold underline`}>{t('send-again')}</Text> ({countDown})
                 </Text>
                 <Text style={tw`font-medium text-base text-center mt-2`}>
-                    {t('or')} <Text onPress={deleteAccount} style={tw`font-bold underline`}>{t('delete-account')}</Text>
+                    {t('or')} <Text onPress={deleteAccountPrompt} style={tw`font-bold underline`}>{t('delete-account')}</Text>
                 </Text>
             </View>
         </View>
