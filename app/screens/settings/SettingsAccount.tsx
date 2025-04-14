@@ -3,7 +3,6 @@ import React, { useContext, useEffect, useState } from 'react'
 import { FIREBASE_AUTH, FIRESTORE_DB } from '@config/firebaseConfig'
 import tw from 'twrnc'
 import { getAuth } from 'firebase/auth'
-import deleteAccount  from '@use/settings/remove/useDeleteAccount';
 import changePassword from '@use/settings/change/useChangePassword'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Ionicons from '@expo/vector-icons/Ionicons';
@@ -18,11 +17,11 @@ import { BlurView } from 'expo-blur'
 import SyncingInfoModal from '@modals/loading/SyncingInfoModal'
 import syncInformation from '@use/settings/useSyncInfo'
 import DeletingAccountModal from '@modals/loading/DeletingAccountModal'
-import checkUsernameNSFW from '@use/settings/check/useCheckUsernameNSFW'
 import ChangingUsernameModal from '@modals/loading/ChangingUsernameModal'
 import SyncingInfoInformationModal from '@modals/settings/SyncInfoInformationModal'
 import SyncInfoModal from '@modals/settings/SyncInfoModal'
 import reauthenticateAndDelete from '@use/settings/remove/useDeleteAccount'
+import changeUsername from '@app/use/settings/change/useChangeUsername'
 
 const SettingsAccount = ({navigation}: any) => {
 
@@ -38,7 +37,6 @@ const SettingsAccount = ({navigation}: any) => {
         syncingInfoRunning, 
         setSyncingInfoRunning,
         internetSpeed
-
     } = useContext(GlobalContext);
 
     const [changingUsernameRunning, setChangingUsernameRunning] = useState(false);
@@ -70,68 +68,7 @@ const SettingsAccount = ({navigation}: any) => {
 
     }
 
-    const changeUsernameForFriends = async (currentUserID: any, newUsername: any) => {
-        // go through all users -> userID -> userInfo -> friends and see if anyone has currentUserID as a document there 
-        // if they have currentUserID, set that document's username property as newUsername
-
-        try {
-            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-            const usersSnapshot = await getDocs(usersCollectionRef);
-
-            const batch = writeBatch(FIRESTORE_DB);
-
-            for (const userDoc of usersSnapshot.docs) {
-                const userInfoCollectionRef = collection(userDoc.ref, 'user_info');
-                const friendsDocRef = doc(userInfoCollectionRef, 'friends');
-                const friendsListCollectionRef = collection(friendsDocRef, 'list');
-                const friendDocRef = doc(friendsListCollectionRef, currentUserID);
-
-                const friendDocSnapshot = await getDoc(friendDocRef);
-
-                if (friendDocSnapshot.exists()) {
-                    // Update the friend's username
-                    batch.update(friendDocRef, { username: newUsername });
-                }
-            }
-
-            await batch.commit();
-            console.log('Successfully updated username for friends');
-        } catch (error) {
-            console.error("Error updating username for friends:", error);
-        }
-
-    }
-
-    const changeUsername = async () => {
-
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const userInfoCollectionRef = collection(userDocRef, 'user_info');
-
-        const usernameDocRef = doc(userInfoCollectionRef, 'username');
-        // get the date property inside the usernameDocRef and check the difference between the timestamp property and the current date
-        const usernameDoc = await getDoc(usernameDocRef);
-        const usernameData = usernameDoc.data();
-        const date = usernameData?.date?.toDate(); // add a check for undefined date
-        const currentDate = new Date();
-        const difference = currentDate.getTime() - (date?.getTime() || 0); // use 0 if date is undefined
-        const daysDifference = difference / (1000 * 3600 * 24);
-
-        // if 7 days haven't passed since the last username change, alert the user that there is still a cooldown
-        /*if (daysDifference < 7) {
-            Alert.alert(
-                t('error-short'),
-                t('change-name-delay') + (7 - Math.floor(daysDifference)) + t('change-name-days'),
-                [
-                    {
-                        text: t('understood'),
-                        style: 'cancel',
-                    },
-                ],
-            );
-
-            return;
-        }*/
+    const changeUsernamePrompt = async () => {
 
         Alert.prompt(
             t('change-username'),
@@ -146,87 +83,17 @@ const SettingsAccount = ({navigation}: any) => {
                     style: 'default',
                     onPress: async (newUsername: string | undefined) => {
 
-                        if (newUsername) {
+                        if (!internetConnected) {
+                            alert(t('unstable-connection'))
+                            return
+                        };
+                        if (!username){
+                            alert(t('error'))
+                            return
+                        };
 
-                            try {
-                                if (await checkUsernameNSFW(newUsername)) {
-                                    alert(t('nsfw-username'));
-                                    return;
-                                }
-                            } catch (error: any) {
-                                // Check if the error message contains the specific model loading error
-                                if (error && error.error && error.error.includes('Model facebook/bart-large-mnli is currently loading')) {
-                                    alert(t('error'));
-                                    return;
-                                }
-                            }
-                            
-                            setChangingUsernameRunning(true)
-
-                            const trimmedUsername = newUsername.trim();
-                            console.log(trimmedUsername);
-
-                            if (newUsername.length <= 2) {
-                                alert(t('username-at-least-three-symbols'));
-                                return;
-                            } 
-
-                            if (newUsername == username) {
-                                alert(t('password-at-least-eight-symbols'));
-                                return;
-                            }
-
-                            const weirdCharPattern = /[^a-zA-Z0-9@#$£€%^&*()"'-/|.,?![]{}+=_~<>¥]/;
-                            if (weirdCharPattern.test(newUsername)) {
-                                alert(t('password-no-emojis'));
-                                return;
-                            }
-                        
-                            let isUsernameTaken = false;
-                        
-                            const usersSnapshot = await getDocs(collection(FIRESTORE_DB, 'users'));
-                            for (const doc of usersSnapshot.docs) {
-                                const userInfoCollectionRef = collection(doc.ref, 'user_info');
-                                const usernameDoc = await getDocs(userInfoCollectionRef);
-                                for (const doc of usernameDoc.docs) {
-                                    if (doc.id === 'username') {
-                                        if (doc.data().username.trim() === trimmedUsername) {
-                                            alert(t('username-taken'));
-                                            isUsernameTaken = true;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (isUsernameTaken) break;
-                            }
-                        
-                            if (isUsernameTaken) return;
-
-                            AsyncStorage.setItem(`username_${await getEmail()}`, trimmedUsername)
-
-                            if (!internetConnected) return;
-                        
-                            try {
-                                const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-                                const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-                                const userInfoCollectionRef = collection(userDocRef, 'user_info');
-                        
-                                // add a document inside userInfoCollectionRef and call that document "username"
-                                await setDoc(doc(userInfoCollectionRef, 'username'), { username: trimmedUsername, date: new Date()});
-                                setUsername(trimmedUsername);
-
-                                await changeUsernameForFriends(FIREBASE_AUTH.currentUser?.uid, trimmedUsername);
-                                
-                                setChangingUsernameRunning(false)
-
-                                //alert('Името ви успешно беше сменено на ' + trimmedUsername);
-                            } catch(err: any) {
-                                alert(t('error'));
-                            }
-
-                        }
-                        
-                        
+                        const trimmedUsername = newUsername?.trim();
+                        await changeUsername(username, String(trimmedUsername), setChangingUsernameRunning, t, setUsername); 
                     },
                 },
             ],
@@ -476,7 +343,7 @@ const SettingsAccount = ({navigation}: any) => {
                     {/* Icons */}
                     {button(t('change-username'), 'text-outline', 'yellow-300', '#eab308', 24, () => {
                         if (internetConnected) {
-                            changeUsername()
+                            changeUsernamePrompt()
                         }else{
                             Vibration.vibrate()
                         }

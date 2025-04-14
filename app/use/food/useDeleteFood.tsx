@@ -4,7 +4,7 @@ const deleteFood = async (item: any, formattedDate: any, updatedNutrients: any, 
         const response = await fetch(`http://localhost:3000/api/foodDays/${userId}/${formattedDate}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json', // Specifies the request body is JSON
+                'Content-Type': 'application/json', 
             },
             body: JSON.stringify({
                 item: item,

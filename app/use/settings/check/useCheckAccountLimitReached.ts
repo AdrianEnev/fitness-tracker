@@ -10,7 +10,7 @@ const getMissingAccounts = async (asyncStorageEmails: any) => {
         const response = await fetch(`http://localhost:3000/api/users/matchAccounts`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json', // Specifies the request body is JSON
+                'Content-Type': 'application/json', 
             },
             body: JSON.stringify({
                 asyncStorageEmails: asyncStorageEmails

@@ -209,6 +209,8 @@
     "nsfw-username": "Dieser Benutzername ist nicht erlaubt!",
     "username-taken": "Dieser Benutzername ist bereits vergeben!",
     "unstable-connection": "Instabile oder keine Internetverbindung!",
+    "username-no-emojis": "Das Username darf keine Emojis enthalten!",
+    "new-username-same-as-old": "Dieser Benutzername ist derselbe wie Ihr alter!",
     "password-no-emojis": "Das Passwort darf keine Emojis enthalten!",
     "passwords-not-match": "Die Passwörter stimmen nicht überein!",
     "username-at-least-three-symbols": "Der Benutzername muss mindestens 3 Zeichen enthalten!",

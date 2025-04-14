@@ -11,7 +11,7 @@ const deleteFriendRequest = async (userToCheck: Friend, navigation: any, transla
         const response = await fetch(`http://localhost:3000/api/friends/${currentUserUid}`, {
             method: 'DELETE',
             headers: {
-                'Content-Type': 'application/json', // Specifies the request body is JSON
+                'Content-Type': 'application/json', 
             },
             body: JSON.stringify({
                 userToCheck: userToCheck

@@ -209,6 +209,8 @@
     "nsfw-username": "This username is not allowed!",
     "username-taken": "This username is already taken!",
     "unstable-connection": "Unstable or no internet connection!",
+    "username-no-emojis": "Password cannot contain emojis!",
+    "new-username-same-as-old": "This username is the same as your old one!",
     "password-no-emojis": "Password cannot contain emojis!",
     "passwords-not-match": "Passwords do not match!",
     "username-at-least-three-symbols": "Username must be at least 3 characters!",

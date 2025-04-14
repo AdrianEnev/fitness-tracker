@@ -209,6 +209,8 @@
     "nsfw-username": "¡Este nombre de usuario no está permitido!",
     "username-taken": "¡Este nombre de usuario ya está en uso!",
     "unstable-connection": "¡Conexión a internet inestable o inexistente!",
+    "username-no-emojis": "¡La contraseña no puede contener emojis!",
+    "new-username-same-as-old": "Новото потребителско име не може да бъде същото като старото!",
     "password-no-emojis": "¡La contraseña no puede contener emojis!",
     "passwords-not-match": "¡Las contraseñas no coinciden!",
     "username-at-least-three-symbols": "¡El nombre de usuario debe contener al menos 3 caracteres!",

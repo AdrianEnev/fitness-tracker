@@ -10,7 +10,7 @@ const addWorkout = async (exercises: any, workoutTitle: string, workoutId: any, 
         const response = await fetch(`http://localhost:3000/api/workouts/${userId}`, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json', // Specifies the request body is JSON
+                'Content-Type': 'application/json', 
             },
             body: JSON.stringify({
                 language: currentLanguage,

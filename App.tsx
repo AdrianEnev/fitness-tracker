@@ -440,7 +440,9 @@ function App() {
                 setIsAuthenticated(true);
 
                 // check goal nutrients again -> prevents setup from running unnecessarily on login
+                // TODO: this check sometimes does not run on login
                 const setupHasRanLocally = await checkUserGoalNutrientsLocally();
+                console.log('daily goals found?:', setupHasRanLocally)
                 setSetupRan(setupHasRanLocally);
                 
                 setIsAccountDeleted(false);

@@ -83,7 +83,7 @@ const syncInformation = async () => {
         const response = await fetch(`http://localhost:3000/api/users/${userId}`, {
             method: 'PUT',
             headers: {
-                'Content-Type': 'application/json', // Specifies the request body is JSON
+                'Content-Type': 'application/json', 
             },
             body: JSON.stringify({
                 localWorkouts: localWorkouts,

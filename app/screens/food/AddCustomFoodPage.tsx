@@ -88,7 +88,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
                     const response = await fetch(`http://localhost:3000/api/foodDays/${userId}/${formattedDate}`, {
                         method: 'PUT',
                         headers: {
-                            'Content-Type': 'application/json', // Specifies the request body is JSON
+                            'Content-Type': 'application/json', 
                         },
                         body: JSON.stringify({
                             updatedNutrients: updatedNutrients
@@ -168,7 +168,7 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
                 const response = await fetch(`http://localhost:3000/api/foodDays/${userId}`, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json', // Specifies the request body is JSON
+                        'Content-Type': 'application/json', 
                     },
                     body: JSON.stringify({
                         itemInfo: documentInfo,
