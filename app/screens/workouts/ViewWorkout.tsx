@@ -1,8 +1,6 @@
 import { View, Text, TouchableOpacity, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput, Pressable, Button, Dimensions } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
-import { collection, deleteDoc, doc, getDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '@config/firebaseConfig';
 import BottomNavigationBar from '@components/BottomNavigationBar';
 import { Ionicons } from '@expo/vector-icons';
 import generateID from '@use/settings/add/useGenerateID';
@@ -10,10 +8,8 @@ import saveWorkoutEdits from '@use/workouts/save/useSaveWorkoutEdits';
 import startWorkout from '@use/workouts/start/useStartWorkout';
 import { BlurView } from 'expo-blur';
 import SetIntensityModal from '@modals/workouts/SetIntensityModal';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import saveWorkoutEditsLocally from '@use/workouts/save/useSaveWorkoutEditsLocally';
 import GlobalContext from '@config/GlobalContext';
-import getEmail from '@use/settings/get/useGetEmail'
 import saveWorkoutEditsFromFolderLocally from '@use/workouts/save/useSaveWorkoutEditsFromFolderLocally';
 import DeleteExerciseModal from '@modals/workouts/DeleteExerciseModal';
 import startWorkoutInFolder from '@use/workouts/start/useStartWorkoutInFolder';
@@ -35,8 +31,6 @@ const ViewWorkout = ({route, navigation}: any) => {
     })));
 
     const [saveChangesRan, setSaveChangesRan] = useState(false);
-
-    const [deleteWorkoutCalled, setDeleteWorkoutCalled] = useState(false);
 
     const addSet = () => {
         const updatedExercises = [...newExercises];
@@ -156,77 +150,6 @@ const ViewWorkout = ({route, navigation}: any) => {
             //console.log(newExercises);
         }
     };
-    
-
-    const deleteWorkoutFromFolder = async () => {
-        try {
-            const email = await getEmail();
-            if (!email) return;
-    
-            const data = await AsyncStorage.getItem(`folders_${email}`);
-            let folders = data ? JSON.parse(data) : [];
-    
-            const folderIndex = folders.findIndex((f: any) => f.id === folder.id);
-            if (folderIndex !== -1) {
-                folders[folderIndex].workouts = folders[folderIndex].workouts.filter((w: any) => w.id !== workout.id);
-                await AsyncStorage.setItem(`folders_${email}`, JSON.stringify(folders));
-            }
-        } catch (err) {
-            console.error('Error deleting workout from local storage: ', err);
-        }
-    
-        setDeleteWorkoutCalled(false);
-        navigation.navigate('Тренировки');
-    };
-
-    const deleteWorkout = async () => {
-    
-        if (deleteWorkoutCalled) {
-            return;
-        }
-
-        setDeleteWorkoutCalled(true)
-    
-        if (internetConnected) {
-            // Check if the workout document exists before deleting it
-            const usersCollectionRef = collection(FIRESTORE_DB, "users");
-            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-            const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
-            const workoutDocRef = doc(userWorkoutsCollectionRef, workout.id);
-
-            try {
-                const workoutDocSnapshot = await getDoc(workoutDocRef);
-                if (workoutDocSnapshot.exists()) {
-                    //console.log('Workout document exists, deleting from Firestore');
-                    await deleteDoc(workoutDocRef);
-                } else {
-                    console.log('Workout document does not exist in Firestore');
-                }
-            } catch (error) {
-                console.error('Error deleting workout from Firestore: ', error);
-            }
-        }
-    
-        // Delete the workout from AsyncStorage
-        try {
-            const email = await getEmail()
-
-            const workouts = await AsyncStorage.getItem(`workouts_${email}`);
-            const workoutsArray = workouts ? JSON.parse(workouts) : [];
-            //console.log('Retrieved workouts from AsyncStorage:', workoutsArray);
-    
-            const updatedWorkoutsArray = workoutsArray.filter((w: any) => w.id !== workout.id);
-            //console.log('Updated workouts array after deletion:', updatedWorkoutsArray);
-    
-            await AsyncStorage.setItem(`workouts_${email}`, JSON.stringify(updatedWorkoutsArray));
-            //console.log('Updated workouts saved to AsyncStorage');
-        } catch (err) {
-            console.error('Error deleting workout from local storage: ', err);
-        }
-        
-        setDeleteWorkoutCalled(false);
-        navigation.navigate('Тренировки');
-    }
 
     const handleContentSizeChange = (event: any) => {
         const { height } = event.nativeEvent.contentSize;
@@ -560,11 +483,9 @@ const ViewWorkout = ({route, navigation}: any) => {
                         })}
                     </View>
                     
-                    
                     <BottomNavigationBar
                         currentPage='ViewWorkout'
                         navigation={navigation}
-                        deleteSavedWorkout={folder ? deleteWorkoutFromFolder : deleteWorkout}
                         addSetButton={addSet}
                         workout={workout}
                         forwardButton={() => {

@@ -1,9 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { View, Text } from 'react-native';
 import tw from "twrnc";
-import { collection, doc, setDoc } from 'firebase/firestore';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '@config/firebaseConfig';
-import i18next from '@config/services/i18next';
+import { FIREBASE_AUTH } from '@config/firebaseConfig';
 import BottomNavigationBar from '@components/BottomNavigationBar';
 import { useTranslation } from 'react-i18next';
 import GlobalContext from '@config/GlobalContext';
@@ -17,8 +15,6 @@ interface Nutrient {
 }
 
 const Settings = ({navigation}: any) => {
-
-    
 
     const {internetConnected} = useContext(GlobalContext);
 
@@ -51,7 +47,7 @@ const Settings = ({navigation}: any) => {
 
     const saveNutrients = async () => {
 
-        const tempNutrients = {
+        const newNutrients = {
             calories: calories,
             protein: protein,
             carbs: carbs,
@@ -60,29 +56,37 @@ const Settings = ({navigation}: any) => {
         
         // save nutrients locally (nqma nujda da proverqvam dali sa razlichni ot predi shtoto taka ili inache otnema suvsem malko vreme da se savenat)
         try {
-            const jsonNutrients = JSON.stringify(tempNutrients);
-            await AsyncStorage.setItem(`goal_nutrients_${FIREBASE_AUTH.currentUser?.email}`, jsonNutrients);
+            const newNutrientsJSON = JSON.stringify(newNutrients);
+            await AsyncStorage.setItem(`goal_nutrients_${FIREBASE_AUTH.currentUser?.email}`, newNutrientsJSON);
             navigation.navigate('Настройки-Страница');
-            console.log('saved successfuly (locally)')
         } catch (error) {
             console.log('Error saving nutrients to AsyncStorage:', error);
         }
-
+ 
         if (internetConnected) {
-            // save nutrients to firestore
-            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-            const userInfoCollectionRef = collection(userDocRef, 'user_info');
-            const nutrientsDocRef = doc(userInfoCollectionRef, 'nutrients');
+
+            const userId = FIREBASE_AUTH.currentUser?.uid;
 
             try {
-                await setDoc(nutrientsDocRef, tempNutrients);
-                console.log('saved successfuly (firestore)')
+                const response = await fetch(`http://localhost:3000/api/users/${userId}/dailyGoals`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json', // Specifies the request body is JSON
+                    },
+                    body: JSON.stringify({
+                        newNutrients: newNutrients
+                    }),
+                });
+                if (!response.ok) {
+                    console.error("Updating daily macronutrient goals response ERROR: ", response);
+                    return null;
+                }
             } catch (error) {
-                console.error('Error saving nutrients to Firestore:', error);
+                console.error("Updating daily macronutrient goals ERROR: ", error);
+                return null;
             }
-        }
 
+        }
     };
 
     return (

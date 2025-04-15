@@ -16,6 +16,7 @@ import addGeneratedWorkoutLocally from '@use/workouts/add/useAddGeneratedWorkout
 import GlobalContext from '@config/GlobalContext'
 import { useTranslation } from 'react-i18next'
 import i18next from 'i18next'
+import { decrementLungeCoins } from '@app/use/settings/useHandleLungeCoins'
 
 const GenerateWorkoutPage = ({navigation, route}: any) => {
 
@@ -24,34 +25,6 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
     const {folder = null} = route.params || {};
 
     const {internetConnected, internetSpeed, setGeneratingWorkout, setGeneratingWorkoutInFolder, lungeCoinsAmount} = useContext(GlobalContext)
-
-    /*const decrementLungeCoins = async () => {
-
-        console.log('decrementLungeCoins function ran...');
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        
-        await getDoc(userDocRef).then(async (doc) => {
-            if (doc.exists()) {
-                const data = doc.data();
-                
-                if (data.lungeCoins > 0) {
-
-                    data.lungeCoins -= 1;
-                    data.lastGeneratedWorkout = new Date().toISOString();
-                    await updateDoc(userDocRef, { lungeCoins: data.lungeCoins, lastGeneratedWorkout: data.lastGeneratedWorkout });
-                    console.log('lunge coins decremented:', data.lungeCoins);
-
-                } else {
-                    console.log('No lunge coins left to decrement.');
-                }
-                
-            } else {
-                console.log('No user document found.');
-                return false;
-            }
-        })
-    }*/
 
     const setupFinished = async () => {
         
@@ -65,7 +38,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
         const levels = ['Beginner', 'Intermediate', 'Advanced', 'Elite'];
         const goals = ['muscle gain', 'fat loss', 'endurance', 'flexibility'];
         const locations = ['gym', 'home', 'outdoors', 'calisthenics park'];
-        const groups = ['no equipment', 'full gym', 'calisthenics park', 'home equipment'];
+        //const groups = ['no equipment', 'full gym', 'calisthenics park', 'home equipment'];
         const languages: { [key: string]: string } = {
             en: 'english',
             bg: 'bulgarian',
@@ -79,7 +52,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
         const level = levels[experienceLevel - 1] || 'unspecified';
         const goal = goals[primaryGoal - 1] || 'unspecified';
         const location = locations[workoutLocation - 1] || 'unspecified';
-        const group = groups[equipmentGroup - 1] || 'unspecified';
+        //const group = groups[equipmentGroup - 1] || 'unspecified';
         const language = languages[i18next.language as keyof typeof languages] || 'english';
 
         //setIsGenerateWorkoutModalVisible(true);
@@ -95,12 +68,10 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
             navigation.goBack();
         }
 
-        //decrementLungeCoins();
-
+        decrementLungeCoins(1);
         const generatedWorkout = await generateWorkout(level, goal, numberOfDays, location, specificBodyparts, equipment, language);
         await addGeneratedWorkoutLocally(generatedWorkout, setGeneratingWorkout, folder)
-
-        console.log('generated workout');
+        console.log('Finished adding generated workout');
     }
 
     const nextPage = async () => {

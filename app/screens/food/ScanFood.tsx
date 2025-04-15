@@ -5,7 +5,7 @@ import tw from 'twrnc';
 //import checkImageNutrients from '@use/usecheckImageNutrients';
 import { useTranslation } from 'react-i18next';
 
-export default function ScanFood({navigation, route}: any) {
+export default function ScanFood({route}: any) {
 
     const { date } = route.params;
 

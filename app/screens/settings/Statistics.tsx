@@ -80,7 +80,6 @@ const Statistics = () => {
                 }
             })()
         );
-
     }
 
     /*const getTotalWorkoutsDuration = async () => {

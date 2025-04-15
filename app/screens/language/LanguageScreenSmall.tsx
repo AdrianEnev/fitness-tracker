@@ -19,14 +19,12 @@ const LanguageScreenSmall = ({ setLocalLanguageSet }: { setLocalLanguageSet: (va
     }
 
     const {iphoneModel} = useContext(GlobalContext);
-    console.log(iphoneModel)
+    //console.log(iphoneModel)
+    //console.log('small screen')
 
     const iphonesWithDynamicIsland = [
         '15', '15 Plus', '16', '16 Plus', '16 Pro', '16 Pro Max'
     ]
-
-    //enevadrian@gmail.com
-    //passwordpassword
     
     return (
         <View style={tw`flex-1 flex-col bg-white`}>

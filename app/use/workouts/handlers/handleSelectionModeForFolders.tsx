@@ -6,7 +6,7 @@ import i18next from "i18next";
 import { FIREBASE_AUTH } from "@config/firebaseConfig";
 
 export const deleteSelectedWorkoutsInFolder = async (
-    selectedWorkouts: any, folderId: string, setSelectedWorkouts: any, setSelectionMode: any, internetConnected: any
+    selectedWorkouts: any, folderId: string, setSelectedWorkouts: any, setSelectionMode: any, internetConnected: boolean
 ) => {
     try {
         const email = await getEmail();
@@ -49,8 +49,7 @@ export const deleteSelectedWorkoutsInFolder = async (
                     'Content-Type': 'application/json', 
                 },
                 body: JSON.stringify({
-                    selectedWorkouts: selectedWorkouts,
-                    userId: userId
+                    workouts: selectedWorkouts
                 }),
             });
 

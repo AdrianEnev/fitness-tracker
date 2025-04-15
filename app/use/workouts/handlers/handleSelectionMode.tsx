@@ -6,7 +6,7 @@ import i18next from "i18next";
 import { FIREBASE_AUTH } from "@config/firebaseConfig";
 
 export const deleteSelectedWorkouts = async (
-    selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, internetConnected: any
+    selectedWorkouts: any, setWorkouts: any, setSelectedWorkouts: any, setSelectionMode: any, internetConnected: boolean
 ) => {
 
     // Remove workouts from  asyncstorage
@@ -46,8 +46,7 @@ export const deleteSelectedWorkouts = async (
                     'Content-Type': 'application/json', 
                 },
                 body: JSON.stringify({
-                    selectedWorkouts: selectedWorkouts,
-                    userId: userId
+                    workouts: selectedWorkouts
                 }),
             });
 

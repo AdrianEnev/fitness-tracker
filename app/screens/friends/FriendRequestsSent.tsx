@@ -1,5 +1,5 @@
 import { View, Text, FlatList, Pressable } from 'react-native'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
 import BottomNavigationBar from '@components/BottomNavigationBar';

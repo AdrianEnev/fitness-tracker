@@ -1,70 +1,36 @@
-import { View, Text, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, TextInput, Alert, ActivityIndicator, Pressable } from 'react-native'
+import { View, Text, SafeAreaView, TouchableWithoutFeedback, Keyboard, ScrollView, Pressable } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import tw from 'twrnc'
 import BottomNavigationBar from '@components/BottomNavigationBar';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '@config/firebaseConfig';
-import { collection, deleteDoc, doc, getDoc, getDocs } from 'firebase/firestore';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import GlobalContext from '@config/GlobalContext';
 import { BlurView } from 'expo-blur';
 import DeleteSavedWorkoutModal from '@modals/workouts/DeleteSavedWorkoutModal';
 import { useTranslation } from 'react-i18next';
-import getEmail from '@use/settings/get/useGetEmail'
 import { Ionicons } from '@expo/vector-icons';
 import SavedWorkoutNotes from '@modals/workouts/SavedWorkoutNotes';
+import deleteSavedWorkout from '@app/use/workouts/delete/deleteSavedWorkout';
 
 const ViewSavedWorkout = ({navigation, route}: any) => {
 
     const { exercises, workoutTitle, date, time, workout } = route.params;
 
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [isDeleteSavedWorkoutModalVisible, setIsDeleteSavedWorkoutModalVisible] = useState(false);
+    const [isSavedWorkoutNotesVisible, setIsSavedWorkoutNotesVisible] = useState(false);
+
+    const {t} = useTranslation();
 
     const {internetConnected} = useContext(GlobalContext)
 
-    const deleteSubcollections = async (docRef: any) => {
-        const subcollections = await getDocs(collection(docRef, 'info'));
-        for (const subcollectionDoc of subcollections.docs) {
-            const setsCollection = await getDocs(collection(subcollectionDoc.ref, 'sets'));
-            for (const setDoc of setsCollection.docs) {
-                await deleteDoc(setDoc.ref);
-            }
-            await deleteDoc(subcollectionDoc.ref);
-        }
-    };
-
-    const deleteSavedWorkout = async () => {
-
-        const email = await getEmail();
-
-        // Delete the workout from AsyncStorage
-        const savedWorkouts = await AsyncStorage.getItem(`savedWorkouts_${email}`);
-        const savedWorkoutsArray = savedWorkouts ? JSON.parse(savedWorkouts) : [];
-
-        const updatedWorkoutsArray = savedWorkoutsArray.filter((savedWorkout: any) => savedWorkout.id !== workout.id);
-        await AsyncStorage.setItem(`savedWorkouts_${email}`, JSON.stringify(updatedWorkoutsArray));
-
-        navigation.goBack();
-       
-        if (internetConnected) {
-            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-            const savedWorkoutsCollectionRef = collection(userDocRef, 'saved_workouts');
-
-            const workoutDocRef = doc(savedWorkoutsCollectionRef, workout.id);
-            const workoutDocSnapshot = await getDoc(workoutDocRef);
-
-            if (workoutDocSnapshot.exists()) {
-
-                // Delete all subcollections and their documents
-                await deleteSubcollections(workoutDocRef);
-
-                // Delete the workout document
-                await deleteDoc(workoutDocRef);
-            }
-        }
-    }
-
     const [startEnd, setStartEnd] = useState<any>();
+
+    const deleteSavedWorkoutFunc = async () => {
+        if (!internetConnected) {
+            return;
+        }
+
+        await deleteSavedWorkout(workout, navigation, internetConnected);
+    }
     
     const getStartEnd = () => {
 
@@ -100,11 +66,6 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
         getStartEnd();
     }, [])
 
-    const [isDeleteSavedWorkoutModalVisible, setIsDeleteSavedWorkoutModalVisible] = useState(false);
-    const [isSavedWorkoutNotesVisible, setIsSavedWorkoutNotesVisible] = useState(false);
-
-    const {t} = useTranslation();
-
     return (
         <>
             { (isDeleteSavedWorkoutModalVisible || isSavedWorkoutNotesVisible) && (
@@ -123,7 +84,7 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
                     <DeleteSavedWorkoutModal
                         isDeleteSavedWorkoutModalVisible={isDeleteSavedWorkoutModalVisible}
                         setIsDeleteSavedWorkoutModalVisible={setIsDeleteSavedWorkoutModalVisible}
-                        deleteSavedWorkout={deleteSavedWorkout}
+                        deleteSavedWorkout={deleteSavedWorkoutFunc}
                     />
 
                     <SavedWorkoutNotes 

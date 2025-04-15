@@ -1,4 +1,4 @@
-import { View, Text, Pressable, Image, Vibration } from 'react-native'
+import { View, Text, Pressable, Vibration } from 'react-native'
 import React, { useContext, useState } from 'react'
 import tw from 'twrnc'
 import { useTranslation } from 'react-i18next';
@@ -16,17 +16,6 @@ const Settings = ({navigation}: any) => {
     const { friendRequestsNumber, internetSpeed } = useContext(GlobalContext);
 
     const { t } = useTranslation();
-
-    /*const changeLanguage = async (language: string) => {
-        try {
-            await i18next.changeLanguage(language);
-            setSelectedLanguage(language);
-
-            await setDoc(doc(userInfoCollectionRef, 'language'), { language: language });
-        } catch (err) {
-            console.error(err);
-        }
-    }*/
 
     const {internetConnected} = useContext(GlobalContext);
 
