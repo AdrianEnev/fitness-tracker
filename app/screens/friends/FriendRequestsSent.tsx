@@ -24,7 +24,7 @@ const FriendRequestsSent = ({navigation}: any) => {
 
     return (
         <View style={tw`w-full h-full bg-white`}>
-            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+            <View style={tw`bg-gray-100 w-full h-[15%] flex justify-end`}>
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('sent-requests')}</Text>
             </View>
 

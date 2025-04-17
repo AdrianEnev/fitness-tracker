@@ -10,9 +10,8 @@ const getProfilePicture = async () => {
         const url = await getDownloadURL(imageRef);
         return url
     } catch (error) {
-        //console.error("Error getting document:", error);
         return null;
-  }
+    }
 };
 
 export default getProfilePicture;

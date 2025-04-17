@@ -7,17 +7,41 @@ import GlobalContext from '@config/GlobalContext';
 import BottomNavigationBar from '@components/BottomNavigationBar';
 import LanguageModal from '@modals/language/LanguageModal';
 import { BlurView } from 'expo-blur';
-import RetreiveInfoModal from '@modals/settings/RetreiveInfoModal';
-import RetreivingInfoAnimationModal from '@modals/settings/RetreivingInfoAnimationModal';
-import RetreiveInfoInformationModal from '@modals/settings/RetreiveInfoInformationModal';
+import SwitchButton from '@app/components/settings/SwitchButton';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Settings = ({navigation}: any) => {
+    
+    const { 
+        faceIdEnabled, 
+        setFaceIdEnabled, 
+        receiveFriendRequests, 
+        setReceiveFriendRequests, 
+        friendRequestsNumber, 
+        internetConnected 
+    } = useContext(GlobalContext);
 
-    const { friendRequestsNumber, internetSpeed } = useContext(GlobalContext);
+    const {t} = useTranslation();
 
-    const { t } = useTranslation();
+    const [isFaceIdEnabled, setIsFaceIdEnabled] = useState(faceIdEnabled);
+    const toggleFaceIdSwitch = async () => {
 
-    const {internetConnected} = useContext(GlobalContext);
+        setIsFaceIdEnabled(previousState => !previousState)
+        setFaceIdEnabled(!isFaceIdEnabled);
+
+        AsyncStorage.setItem(`faceIdEnabled`, String(!isFaceIdEnabled))
+        
+    };
+
+    const [isReceiveFriendRequestsEnabled, setIsReceiveFriendRequestsEnabled] = useState(receiveFriendRequests);
+    const toggleReceiveFriendRequestsSwitch = async () => {
+
+        setIsReceiveFriendRequestsEnabled(previousState => !previousState)
+        setReceiveFriendRequests(!isReceiveFriendRequestsEnabled);
+        
+        AsyncStorage.setItem(`receiveFriendRequests`, String(!isReceiveFriendRequestsEnabled))
+
+    };
 
     const button = (navigationPath: string, icon: any, iconColor: any, background: string, title: string) => {
 
@@ -64,14 +88,11 @@ const Settings = ({navigation}: any) => {
     }
 
     const [isLanguageModalVisible, setIsLanguageModalVisible] = useState(false);
-    const [isRetreiveInfoModalVisible, setIsRetreiveInfoModalVisible] = useState(false);
-    const [isRetreivingInfoAnimationModalVisible, setIsRetreivingInfoAnimationModalVisible] = useState(false);
-    const [isRetreiveInfoInformationModalVisible, setIsRetreiveInfoInformationModalVisible] = useState(false);
 
     return (
         <View style={tw`h-full`}>
             
-            { (isLanguageModalVisible || isRetreiveInfoModalVisible || isRetreivingInfoAnimationModalVisible|| isRetreiveInfoInformationModalVisible) && (
+            { (isLanguageModalVisible) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -84,28 +105,7 @@ const Settings = ({navigation}: any) => {
                 setIsLanguageModalVisible={setIsLanguageModalVisible}
             />
 
-            <RetreiveInfoModal 
-                isRetreiveInfoModalVisible={isRetreiveInfoModalVisible} 
-                setIsRetreiveInfoModalVisible={setIsRetreiveInfoModalVisible}
-                setIsRetreivingInfoAnimationModalVisible={setIsRetreivingInfoAnimationModalVisible}
-                navigation={navigation}
-                internetSpeed={internetSpeed}
-                setIsRetreiveInfoInformationModalVisible={setIsRetreiveInfoInformationModalVisible}
-            />
-
-            <RetreivingInfoAnimationModal 
-                isRetreivingInfoAnimationModalVisible={isRetreivingInfoAnimationModalVisible} 
-                setIsRetreivingInfoAnimationModalVisible={setIsRetreivingInfoAnimationModalVisible}
-                text={t('retreiving-info')}
-            /> 
-
-            <RetreiveInfoInformationModal
-                isRetreiveInfoInformationModalVisible={isRetreiveInfoInformationModalVisible}
-                setIsRetreiveInfoInformationModalVisible={setIsRetreiveInfoInformationModalVisible}
-                setIsRetreiveInfoModalVisible={setIsRetreiveInfoModalVisible}
-            />
-
-            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+            <View style={tw`bg-gray-100 w-full h-[15%] flex justify-end`}>
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('settings')}</Text>
             </View>
 
@@ -129,30 +129,6 @@ const Settings = ({navigation}: any) => {
                 {button('Настройки-Макронутриенти', 'flame-outline', '#d97706', 'orange-300', t('macronutrients'))}
                 {button('Запазени-Тренировки', 'cloud-outline', '#ef4444', 'red-300', t('saved-workouts'))}
 
-
-                <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => (
-                    //retreiveInfo()
-                    setIsRetreiveInfoModalVisible(true)
-                )}>
-                    <View style={tw`flex flex-row justify-between`}>
-
-                        <View style={tw`flex flex-row`}>
-                            <View style={tw`w-10 h-10 bg-pink-300 rounded-full flex items-center justify-center mr-2`}>
-                                <Ionicons name='reload-outline' size={28} color='#ec4899' />
-                            </View>
-                            
-                            <View style={tw`flex justify-center`}>
-                                <Text style={tw`text-lg font-medium`}>{t('retreive-info')}</Text>
-                            </View>
-                        </View>
-
-                        <View style={tw`flex justify-center`}>
-                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
-                        </View>
-
-                    </View>
-                </Pressable>
-
                 <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={() => setIsLanguageModalVisible(true)}>
                     <View style={tw`flex flex-row justify-between`}>
 
@@ -173,6 +149,9 @@ const Settings = ({navigation}: any) => {
                     </View>
                 </Pressable>
 
+                {SwitchButton(t('face-id'), 'eye-outline', 'orange-300', '#d97706', 30, isFaceIdEnabled, isReceiveFriendRequestsEnabled, toggleFaceIdSwitch, toggleReceiveFriendRequestsSwitch, t)}
+                {SwitchButton(t('receive-friend-requests'), 'notifications-outline', 'purple-300', '#8b5cf6', 24, isFaceIdEnabled, isReceiveFriendRequestsEnabled, toggleFaceIdSwitch, toggleReceiveFriendRequestsSwitch, t)}
+                                    
             </View>
 
             <BottomNavigationBar currentPage='Settings' navigation={navigation}/>

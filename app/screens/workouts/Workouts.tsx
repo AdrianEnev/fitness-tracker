@@ -344,7 +344,6 @@ const Workouts = ({navigation}: any) => {
     }
 
     const cutWorkouts = () => {
-
         cutSelectedWorkouts(selectedWorkouts, setWorkouts, setSelectedWorkouts, setSelectionMode);
         setSelectedWorkouts([]);
     }
@@ -407,7 +406,7 @@ const Workouts = ({navigation}: any) => {
                     setIsDeletingMultipleWorkoutsModalVisible={setIsDeletingMultipleWorkoutsModalVisible}
                 />
 
-                <Pressable style={tw`bg-gray-100 h-[15%] w-full flex justify-end`} onPress={() => setIsPasteWorkoutsModalVisible(true)}>
+                <Pressable style={tw`bg-gray-100 w-full h-[15%] flex justify-end`} onPress={() => setIsPasteWorkoutsModalVisible(true)}>
                     <View style={tw`flex flex-row justify-between`}>
                         <Text style={tw`text-4xl font-medium text-black m-3`}>{t('workouts')}</Text>
 

@@ -8,7 +8,7 @@ const removeFriend = async (userToCheck: Friend, navigation: any, translation: a
     console.log('Attempting to remove friend: ', userToCheck.username);
 
     try {
-        const response = await fetch(`http://localhost:3000/api/friends/${currentUserUid}/${userToCheck.id}`, {
+        const response = await fetch(`http://172.20.10.5:3000/api/friends/${currentUserUid}/${userToCheck.id}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json', 

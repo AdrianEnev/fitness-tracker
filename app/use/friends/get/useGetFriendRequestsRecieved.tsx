@@ -1,21 +1,35 @@
-import { collection, doc, getDocs } from "firebase/firestore";
-import { FIREBASE_AUTH, FIRESTORE_DB } from "@config/firebaseConfig";
+import { FIREBASE_AUTH } from "@config/firebaseConfig";
 
 const getFriendRequests = async () => {
 
-    const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-    const userInfoCollectionRef = collection(userDocRef, 'user_info');
-    const friendRequestsDocRef = doc(userInfoCollectionRef, 'friendRequests');
-    const receievedFriendRequestsColRef = collection(friendRequestsDocRef, 'received');
+    const userId = FIREBASE_AUTH.currentUser?.uid;
 
-    // get number of documents inside receievedFriendRequestsColRef
-    const receivedFriendRequests = await getDocs(receievedFriendRequestsColRef);
-    const friendRequestsNumber = receivedFriendRequests.docs.length;
-    
-    return friendRequestsNumber;
-    
+    const params = new URLSearchParams({
+        getUsers: 'false'
+   });
 
+    try {
+        const response = await fetch(`http://172.20.10.5:3000/api/friends/${userId}/received?${params.toString()}`);
+        
+        if (!response.ok) {
+            console.error("getReceivedFriendRequests: error:", response.statusText);
+            return null;
+        }
+
+        const data = await response.json();
+        if (data.length === 0) {
+            console.log("No received friend requests found.");
+            return [];
+        }
+        
+        console.log('Received friend requests: ', data);
+        return data;
+
+    } catch (error) {
+        console.error("getReceivedFriendRequests: error:", error);
+        return null;
+    }
+    
 }
 
 export default getFriendRequests;

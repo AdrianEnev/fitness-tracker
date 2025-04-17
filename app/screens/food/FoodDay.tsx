@@ -45,7 +45,9 @@ const FoodDay = ({route, navigation}: any) => {
             let filteredData: Food[] = storedFoods ? JSON.parse(storedFoods) : [];
     
             if (filteredData.length > 1) {
-                filteredData = filteredData.sort((a, b) => b.date - a.date);
+                filteredData = filteredData.sort(
+                    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+                );
             }
     
             setCurrentFoods(filteredData);

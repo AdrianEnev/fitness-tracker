@@ -59,8 +59,7 @@ const ActiveWorkout = ({route, navigation}: any) => {
         }
     }, [exercises]);
 
-    // timer - start ----------------------------------------------------------------------------------------------------
-
+    // timer - start --------------------------------------------------------------------------------------------------
     const [time, setTime] = useState(0);
     const appState = useRef<any>(AppState.currentState);
     const backgroundTime = useRef<string | null>(null);
@@ -98,7 +97,6 @@ const ActiveWorkout = ({route, navigation}: any) => {
 
         return () => clearInterval(interval);
     }, []);
-
     // timer - end ----------------------------------------------------------------------------------------------------
 
     const forwardButton = () => {

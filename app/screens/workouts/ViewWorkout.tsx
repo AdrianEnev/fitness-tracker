@@ -99,8 +99,6 @@ const ViewWorkout = ({route, navigation}: any) => {
         }
 
         if (internetConnected) {
-            console.log(workout)
-            console.log(userInputs)
             saveWorkoutEdits(workout, userInputs, newExercises, newWorkoutTitle);
         }
 

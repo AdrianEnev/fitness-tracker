@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, View, Text, TouchableOpacity } from 'react-native';
+import { StatusBar, View, Text, TouchableOpacity, Vibration } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { onAuthStateChanged, User } from 'firebase/auth';
 import { FIREBASE_AUTH } from '@config/firebaseConfig';
@@ -34,6 +34,7 @@ import * as Device from 'expo-device';
 import LanguageScreenSmall from '@screens/language/LanguageScreenSmall';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { getLungeCoins } from '@use/settings/get/useGetLungeCoins';
+import getEmail from '@app/use/settings/get/useGetEmail';
 
 const Stack = createStackNavigator();
 
@@ -128,6 +129,34 @@ function App() {
             console.error("Error clearing AsyncStorage items:", error);
         }
     };*/
+
+    /*const clearAllFoodDays = async () => {
+        try {
+            const email = await getEmail();
+            const keys = await AsyncStorage.getAllKeys();
+            const foodDayKeys = keys.filter(key => key.startsWith(`${email}-foodDay`));
+            await AsyncStorage.multiRemove(foodDayKeys);
+            console.log(`Cleared all food days for ${email}`);
+        } catch (error) {
+            console.error("Error clearing food days:", error);
+        }
+    };
+
+    const logAllFoodDays = async () => {
+        try {
+            const email = await getEmail();
+            const keys = await AsyncStorage.getAllKeys();
+            const foodDayKeys = keys.filter(key => key.startsWith(`${email}-foodDay`));
+            const foodDayData = await AsyncStorage.multiGet(foodDayKeys);
+            console.log(`All food days for ${email}:`, foodDayData);
+        } catch (error) {
+            console.error("Error logging food days:", error);
+        }
+    };
+
+    useEffect(() => {
+        logAllFoodDays();
+    }, [])*/
 
     const onAuthenticate = async () => {
 
@@ -224,7 +253,7 @@ function App() {
             const netInfo = await NetInfo.fetch();
             setIsConnected(netInfo.isConnected ?? false);
 
-            if (netInfo.isConnected) {
+            if (netInfo.isConnected && isAuthenticated) {
                 profilePic = await getProfilePicture();
                 friendRequests = await getFriendRequests();
             }
@@ -399,7 +428,7 @@ function App() {
 
                         // Adds username to the user_info collection
                         await checkUsernameDoc();
-
+                        Vibration.vibrate();
                     }
                     console.log('interval ran')
                 });

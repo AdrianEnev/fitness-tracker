@@ -25,10 +25,6 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
     const [startEnd, setStartEnd] = useState<any>();
 
     const deleteSavedWorkoutFunc = async () => {
-        if (!internetConnected) {
-            return;
-        }
-
         await deleteSavedWorkout(workout, navigation, internetConnected);
     }
     

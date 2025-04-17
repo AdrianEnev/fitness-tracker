@@ -3,20 +3,29 @@ import { FIREBASE_AUTH } from "@config/firebaseConfig";
 import getEmail from "@use/settings/get/useGetEmail";
 
 const getLocalFoodDays = async (email: string | null) => {
-
     const foodDayKeyPrefix = `${email}-foodDay-`;
-    
     const keys = await AsyncStorage.getAllKeys();
-    const foodDayKeys = keys.filter(key => key.startsWith(foodDayKeyPrefix) && !key.endsWith('-nutrients'));
+    const foodDayKeys = keys.filter(
+        key => key.startsWith(foodDayKeyPrefix) &&
+               !key.endsWith('-nutrients') &&
+               !key.endsWith('-summary')
+    );
 
     const foodDays = await Promise.all(
         foodDayKeys.map(async key => {
-            const data = await AsyncStorage.getItem(key);
-            return { key, data: data ? JSON.parse(data) : null };
+            const raw = await AsyncStorage.getItem(key);
+            let data = null;
+            try {
+                data = raw ? JSON.parse(raw) : null;
+                if (!Array.isArray(data)) return null;
+            } catch (e) {
+                console.error(`Error parsing food day for key ${key}:`, e);
+                return null;
+            }
+            return { key, data };
         })
     );
-
-    return foodDays;
+    return foodDays.filter(Boolean);
 }
 
 const getLocalNutrients = async (email: string | null) => {
@@ -80,7 +89,7 @@ const syncInformation = async () => {
 
     console.log('Syncing info...');
     try {
-        const response = await fetch(`http://localhost:3000/api/users/${userId}`, {
+        const response = await fetch(`http://172.20.10.5:3000/api/users/${userId}/sync`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json', 

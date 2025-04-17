@@ -8,10 +8,9 @@ import tw from 'twrnc'
 import ChangeNutrientModal from '@modals/food/ChangeNutrientModal';
 import { BlurView } from 'expo-blur';
 import BottomNavigationBar from '@components/BottomNavigationBar';
-import { FIREBASE_AUTH } from '@config/firebaseConfig';
-import generateID from '@use/settings/add/useGenerateID';
 import Slider from '@react-native-community/slider';
 import { useTranslation } from 'react-i18next';
+import addFood from '@app/use/food/addFood';
 
 const AddFoodPageEditFood = ({route, navigation}: any) => {
 
@@ -136,14 +135,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
         prevFatRef.current = newFat;
     }, [newCalories, newProtein, newCarbs, newFat, newTitle]);
 
-    const formatDate = (date: any) => {
-        const year = date.year;
-        const month = String(date.month).padStart(2, '0');
-        const day = String(date.day).padStart(2, '0');
-        return `${year}-${month}-${day}`;
-    };
-
-    const addItem = async (item: any) => { 
+    const addItem = async () => { 
 
         if (itemAdded) {
             return  
@@ -151,130 +143,29 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
 
         setItemAdded(true);
 
-        const email = await getEmail();
-        const foodDayKey = `${email}-foodDay-${date.day}-${date.month}-${date.year}`;
-        const storedData = await AsyncStorage.getItem(foodDayKey);
-        const data = storedData ? JSON.parse(storedData) : [];
-
-        const formattedDate = formatDate(date);
-
-        const documentInfo = {
-            id: generateID(),
-            title: item.title,
-            date: new Date().toISOString(),
-            calories: Number(newCalories),
-            protein: Number(newProtein),
-            carbs: Number(newCarbs),
-            fat: Number(newCarbs),
-            grams: Number(newGrams)
-        };
-
-        data.push(documentInfo);
-        await AsyncStorage.setItem(foodDayKey, JSON.stringify(data));
-
-        // Not sure if this was added twice on purpose. Will leave as it is until tested
-        navigation.goBack();
-        navigation.goBack();
-
-        if (internetConnected) {
-
-            const userId = FIREBASE_AUTH.currentUser?.uid;
-            
-            try {
-                const response = await fetch(`http://localhost:3000/api/foodDays/${userId}`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json', 
-                    },
-                    body: JSON.stringify({
-                        itemInfo: documentInfo,
-                        formattedDate: formattedDate
-                    }),
-                });
-                if (!response.ok) {
-                    console.error("addFoodDay: error:", response.statusText);
-                    return null;
-                }
-            } catch (error) {
-                console.error("addFoodDay: error:", error);
-                return null;
-            }
-
+        // Create foodInfo object to pass for readability
+        const foodInfo = {
+            foodName: newTitle.trim(),
+            calories: newCalories,
+            protein: newProtein,
+            carbs: newCarbs,
+            fat: newFat,
+            grams: newGrams
         }
 
-        updateCurrentNutrients();
-    }
-
-    const updateCurrentNutrients = async () => {
-        try {
-            const email = await getEmail();
-            const storedData = await AsyncStorage.getItem(`${email}-foodDay-${date.day}-${date.month}-${date.year}`);
-            const data = storedData ? JSON.parse(storedData) : [];
-
-            const formattedDate = formatDate(date);
-
-            if (data.length === 0) {
-                return;
-            }
-
-            let totalCalories = 0;
-            let totalProtein = 0;
-            let totalCarbs = 0;
-            let totalFat = 0;
-
-            data.forEach((food: any) => {
-                totalCalories += food.calories || 0;
-                totalProtein += food.protein || 0;
-                totalCarbs += food.carbs || 0;
-                totalFat += food.fat || 0;
-            });
-
-            const updatedNutrients = {
-                calories: totalCalories,
-                protein: totalProtein,
-                carbs: totalCarbs,
-                fat: totalFat
-            };
-
-            await AsyncStorage.setItem(`${email}-foodDay-${date.day}-${date.month}-${date.year}-nutrients`, JSON.stringify(updatedNutrients));
-
-            if (internetConnected) {
-                const userId = FIREBASE_AUTH.currentUser?.uid;
-            
-                try {
-                    const response = await fetch(`http://localhost:3000/api/foodDays/${userId}/${formattedDate}`, {
-                        method: 'PUT',
-                        headers: {
-                            'Content-Type': 'application/json', 
-                        },
-                        body: JSON.stringify({
-                            updatedNutrients: updatedNutrients
-                        }),
-                    });
-                    if (!response.ok) {
-                        console.error("addFoodDay: error:", response.statusText);
-                        return null;
-                    }
-                } catch (error) {
-                    console.error("addFoodDay: error:", error);
-                    return null;
-                }
-            }
-        } catch (err) {
-            console.error(err);
-        }
-    };
-
-    const addFoodFunc = () => {
-        addItem(food)
+        // Passed to addFood so it knows if the food is being added from the customFoodPage or searchFoodPage
+        // Only used to determine where to navigate
+        const isCustomFood = false
+        
+        // Add food to asyncstorage and firebase
+        await addFood(date, foodInfo, internetConnected, navigation, isCustomFood);
     }
 
     return (
 
         <View style={tw`h-full w-full bg-white`}>
             
-
-            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+            <View style={tw`bg-gray-100 w-full h-[15%] flex justify-end`}>
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('macronutrients')}</Text>
             </View>
 
@@ -309,7 +200,6 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
                     />
 
                     <View style={tw`w-[94.5%] h-[20%] mx-3 mt-2 flex flex-row justify-between flex-wrap gap-y-3`}>
-
 
                         <Pressable ref={titleRef} style={tw`w-[100%] h-[70%] bg-[#9263fa] rounded-xl`} onPress={() => {
                             handlePress('Food Name', titleRef)
@@ -369,7 +259,6 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
                             <Text style={tw`text-xl font-medium text-gray-500`}>{t('grams-2')}</Text>
                             <Text style={tw`text-xl font-medium text-gray-500 mr-1`}>{newGrams}</Text>
                         </View>
-                        
 
                         <Slider
                             style={tw`w-full h-12 mt-[-4px]`}
@@ -387,7 +276,7 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
                 </View>
             </>
             
-            <BottomNavigationBar currentPage='AddFoodPageEditFood' navigation={navigation} addFoodPageAddButton={addFoodFunc}/>
+            <BottomNavigationBar currentPage='AddFoodPageEditFood' navigation={navigation} addFoodPageAddButton={addItem}/>
         </View>
         
     )

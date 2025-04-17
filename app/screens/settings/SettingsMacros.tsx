@@ -68,7 +68,7 @@ const Settings = ({navigation}: any) => {
             const userId = FIREBASE_AUTH.currentUser?.uid;
 
             try {
-                const response = await fetch(`http://localhost:3000/api/users/${userId}/dailyGoals`, {
+                const response = await fetch(`http://172.20.10.5:3000/api/users/${userId}/dailyGoals`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json', // Specifies the request body is JSON
@@ -91,7 +91,7 @@ const Settings = ({navigation}: any) => {
 
     return (
         <View style={tw`w-full h-full bg-white`}>
-            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+            <View style={tw`bg-gray-100 w-full h-[15%] flex justify-end`}>
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('daily-goals')}</Text>
             </View>
 

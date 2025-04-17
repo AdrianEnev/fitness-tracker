@@ -9,14 +9,14 @@ import GlobalContext from '@config/GlobalContext';
 interface SyncInfoModalProps {
     isSyncInfoModalVisible: boolean;
     setIsSyncInfoModalVisible: (isVisible: boolean) => void;
-    setIsSyncingInfoInformationModalVisible: (isVisible: boolean) => void;
+    setIsSyncInfoExtraModalVisible: (isVisible: boolean) => void;
     syncInfo: () => void;
 }
 
 const SyncInfoModal: React.FC<SyncInfoModalProps> = ({ 
     isSyncInfoModalVisible, 
     setIsSyncInfoModalVisible, 
-    setIsSyncingInfoInformationModalVisible,
+    setIsSyncInfoExtraModalVisible,
     syncInfo
 }) => {
 
@@ -39,7 +39,7 @@ const SyncInfoModal: React.FC<SyncInfoModalProps> = ({
                         <View style={tw`w-full flex flex-row justify-between`}>
                             
                             <Pressable onPress={() => {
-                                setIsSyncingInfoInformationModalVisible(true)
+                                setIsSyncInfoExtraModalVisible(true)
                             }}>
                                 <Ionicons name='help' size={35} color='#3b82f6'/>
                             </Pressable>
@@ -56,7 +56,6 @@ const SyncInfoModal: React.FC<SyncInfoModalProps> = ({
 
                         <View style={tw`flex items-center mt-4`}>
                             <Pressable style={tw`bg-green-500 w-full h-16 rounded-xl flex items-center justify-center`}
-                            
                                 onPress={() => {
                                     syncInfo();
                                 }}

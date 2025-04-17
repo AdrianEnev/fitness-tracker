@@ -1,7 +1,7 @@
 const deleteFood = async (item: any, formattedDate: any, updatedNutrients: any, userId: string) => {
             
     try {
-        const response = await fetch(`http://localhost:3000/api/foodDays/${userId}/${formattedDate}`, {
+        const response = await fetch(`http://172.20.10.5:3000/api/foodDays/${userId}/${formattedDate}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json', 
@@ -15,6 +15,7 @@ const deleteFood = async (item: any, formattedDate: any, updatedNutrients: any, 
             console.error("deleteFoodDay: error:", response.statusText);
             return null;
         }
+
     } catch (error) {
         console.error("deleteFoodDay: error:", error);
         return null;

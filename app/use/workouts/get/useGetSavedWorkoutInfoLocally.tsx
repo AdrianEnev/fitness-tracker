@@ -12,7 +12,7 @@ const getSavedWorkoutInfoLocally = async (workoutId: string) => {
         }
 
         const savedWorkoutsArray = JSON.parse(savedWorkouts);
-        console.log('Saved Workouts:', savedWorkoutsArray);
+       //console.log('Saved Workouts:', savedWorkoutsArray);
 
         const workout = savedWorkoutsArray.find((workout: any) => workout.id === workoutId);
         if (!workout) {

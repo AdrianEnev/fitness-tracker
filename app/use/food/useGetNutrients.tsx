@@ -3,7 +3,7 @@ const fetchFoodData = async (search: any) => {
     console.log('Fetching food data...');
 
     try {
-        const response = await fetch(`http://localhost:3000/api/models/searchFood?searchQuery=${search}`);
+        const response = await fetch(`http://172.20.10.5:3000/api/models/searchFood?searchQuery=${search}`);
 
         if (!response.ok) {
             console.error("search food: error:", response.statusText);

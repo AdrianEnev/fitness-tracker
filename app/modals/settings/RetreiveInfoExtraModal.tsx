@@ -6,14 +6,14 @@ import { useTranslation } from 'react-i18next';
 import GlobalContext from '@config/GlobalContext';
 
 interface RetreiveInfoInformationModalProps {
-    isRetreiveInfoInformationModalVisible: boolean;
-    setIsRetreiveInfoInformationModalVisible: (isVisible: boolean) => void;
+    isRetreiveInfoExtraModalVisible: boolean;
+    setIsRetreiveInfoExtraModalVisible: (isVisible: boolean) => void;
     setIsRetreiveInfoModalVisible: (isVisible: boolean) => void;
 }
 
 const RetreiveInfoInformationModal: React.FC<RetreiveInfoInformationModalProps> = ({ 
-    isRetreiveInfoInformationModalVisible, 
-    setIsRetreiveInfoInformationModalVisible, 
+    isRetreiveInfoExtraModalVisible, 
+    setIsRetreiveInfoExtraModalVisible, 
     setIsRetreiveInfoModalVisible
 }) => {
 
@@ -25,9 +25,9 @@ const RetreiveInfoInformationModal: React.FC<RetreiveInfoInformationModalProps> 
         <Modal
             animationType="fade"
             transparent={true}
-            visible={isRetreiveInfoInformationModalVisible}
+            visible={isRetreiveInfoExtraModalVisible}
             onRequestClose={() => {
-                setIsRetreiveInfoInformationModalVisible(!isRetreiveInfoInformationModalVisible);
+                setIsRetreiveInfoExtraModalVisible(!isRetreiveInfoExtraModalVisible);
             }}
             >
                 <View style={tw`w-[85%] h-full justify-center items-center self-center`}>
@@ -37,7 +37,7 @@ const RetreiveInfoInformationModal: React.FC<RetreiveInfoInformationModalProps> 
                             
                             <Pressable onPress={() => {
                                 setIsRetreiveInfoModalVisible(true)
-                                setIsRetreiveInfoInformationModalVisible(false)
+                                setIsRetreiveInfoExtraModalVisible(false)
                             }}>
                                 <Ionicons name='return-down-back-outline' size={35} color='#3b82f6'/>
                                 

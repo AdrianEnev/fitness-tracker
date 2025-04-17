@@ -1,7 +1,7 @@
 const checkUsernameNSFW = async (username: string) => {
 
     try {
-        const response = await fetch(`http://localhost:3000/api/models/checkUsernameNSFW/${username}`);
+        const response = await fetch(`http://172.20.10.5:3000/api/models/checkUsernameNSFW/${username}`);
         if (!response.ok) {
             console.error("Error fetching data:", response.statusText);
             return null;

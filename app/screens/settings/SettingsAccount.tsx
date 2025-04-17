@@ -13,22 +13,20 @@ import { useTranslation } from 'react-i18next'
 import getEmail from '@use/settings/get/useGetEmail'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from 'expo-blur'
-import SyncingInfoModal from '@modals/loading/SyncingInfoModal'
 import syncInformation from '@use/settings/useSyncInfo'
 import DeletingAccountModal from '@modals/loading/DeletingAccountModal'
 import ChangingUsernameModal from '@modals/loading/ChangingUsernameModal'
-import SyncingInfoInformationModal from '@modals/settings/SyncInfoInformationModal'
+import SyncInfoExtraModal from '@modals/settings/SyncInfoInformationModal'
 import SyncInfoModal from '@modals/settings/SyncInfoModal'
 import reauthenticateAndDelete from '@use/settings/remove/useDeleteAccount'
 import changeUsername from '@app/use/settings/change/useChangeUsername'
+import RetreiveInfoModal from '@app/modals/settings/RetreiveInfoModal'
+import LoadingModal from '@app/modals/loading/LoadingModal'
+import RetreiveInfoExtraModal from '@app/modals/settings/RetreiveInfoExtraModal'
 
 const SettingsAccount = ({navigation}: any) => {
 
     const { 
-        receiveFriendRequests, 
-        setReceiveFriendRequests, 
-        faceIdEnabled, 
-        setFaceIdEnabled, 
         internetConnected,
         setProfilePicture, 
         setSetupRan, 
@@ -39,10 +37,14 @@ const SettingsAccount = ({navigation}: any) => {
     } = useContext(GlobalContext);
 
     const [changingUsernameRunning, setChangingUsernameRunning] = useState(false);
-    const [isSyncInfoModalVisible, setIsSyncInfoModalVisible] = useState(false)
-    const [isSyncingInfoModalVisible, setIsSyncingInfoModalVisible] = useState(false)
-    const [isSyncingInfoInformationModalVisible, setIsSyncingInfoInformationModalVisible] = useState(false)
-    const [isDeletingAccountModalVisible, setIsDeletingAccountModalVisible] = useState(false)
+    const [isSyncInfoModalVisible, setIsSyncInfoModalVisible] = useState(false);
+    const [isSyncingInfoModalVisible, setIsSyncingInfoModalVisible] = useState(false);
+    const [isSyncInfoExtraModalVisible, setIsSyncInfoExtraModalVisible] = useState(false);
+    const [isDeletingAccountModalVisible, setIsDeletingAccountModalVisible] = useState(false);
+    const [isRetreiveInfoModalVisible, setIsRetreiveInfoModalVisible] = useState(false);
+    const [isRetreivingInfoAnimationModalVisible, setIsRetreivingInfoAnimationModalVisible] = useState(false);
+    const [isRetreiveInfoExtraModalVisible, setIsRetreiveInfoExtraModalVisible] = useState(false);
+    const [isLoadingModalVisible, setIsLoadingModalVisible] = useState(false);
 
     const logOut = () => {
 
@@ -141,73 +143,6 @@ const SettingsAccount = ({navigation}: any) => {
         )
     }
 
-
-
-    const [isFaceIdEnabled, setIsFaceIdEnabled] = useState(faceIdEnabled);
-    const toggleFaceIdSwitch = async () => {
-
-        setIsFaceIdEnabled(previousState => !previousState)
-        setFaceIdEnabled(!isFaceIdEnabled);
-
-        AsyncStorage.setItem(`faceIdEnabled`, String(!isFaceIdEnabled))
-        
-    };
-
-    const [isReceiveFriendRequestsEnabled, setIsReceiveFriendRequestsEnabled] = useState(receiveFriendRequests);
-    const toggleReceiveFriendRequestsSwitch = async () => {
-
-        setIsReceiveFriendRequestsEnabled(previousState => !previousState)
-        setReceiveFriendRequests(!isReceiveFriendRequestsEnabled);
-        
-        AsyncStorage.setItem(`receiveFriendRequests`, String(!isReceiveFriendRequestsEnabled))
-
-    };
-
-    const switchButton = (title: any, icon: any, background: string, iconColor: any, iconSize: number) => {
-        return (
-            <View style={tw`w-full h-14 bg-white p-3 mb-1`}>
-                <View style={tw`flex flex-row justify-between`}>
-
-                    <View style={tw`flex flex-row`}>
-                        <View style={tw`w-10 h-10 bg-${background} rounded-full flex items-center justify-center mr-2`}>
-                            <Ionicons name={icon} size={iconSize} color={iconColor} />
-                        </View>
-                        
-                        <View style={tw`flex justify-center`}>
-                            <Text style={tw`text-lg font-medium`} numberOfLines={2}>{title === t('receive-friend-requests') ? title : title}</Text>
-                        </View>
-                    </View>
-
-                    <View style={tw`flex justify-center`}>
-                        <Switch
-                            trackColor={{ false: "#ef4444", true: "#4ade80" }}
-                            thumbColor={
-                                title === t('face-id') ? (isFaceIdEnabled ? "#ffffff" : "#f4f3f4") :
-                                title === t('receive-friend-requests') ? (isReceiveFriendRequestsEnabled ? "#ffffff" : "#f4f3f4") : 
-                                "#f4f3f4"
-                            }
-                            ios_backgroundColor="#3e3e3e"
-                            onValueChange={
-                                title === t('face-id') ? toggleFaceIdSwitch :
-                                title === t('receive-friend-requests') ? toggleReceiveFriendRequestsSwitch : 
-                                () => {
-                                    console.log('Switch button not working');
-                                }
-                            }
-                            value=
-                            {
-                                title === t('face-id') ? isFaceIdEnabled :
-                                title === t('receive-friend-requests') ? isReceiveFriendRequestsEnabled : 
-                                false
-                            }
-                        />
-                    </View>
-
-                </View>
-            </View>
-        )
-    }
-
     const {t} = useTranslation();
 
     //{switchButton('2FA', 'lock-closed-outline', 'green-300', '#22c55e', 24)}
@@ -282,7 +217,16 @@ const SettingsAccount = ({navigation}: any) => {
     return (
         <>
 
-            {(isSyncingInfoModalVisible || isDeletingAccountModalVisible || changingUsernameRunning || isSyncingInfoInformationModalVisible || isSyncInfoModalVisible) && (
+            {(
+                isSyncingInfoModalVisible || 
+                isDeletingAccountModalVisible || 
+                changingUsernameRunning || 
+                isSyncInfoExtraModalVisible || 
+                isSyncInfoModalVisible ||
+                isRetreiveInfoModalVisible ||
+                isRetreivingInfoAnimationModalVisible ||
+                isRetreiveInfoExtraModalVisible
+            ) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
                     intensity={50}
@@ -292,22 +236,9 @@ const SettingsAccount = ({navigation}: any) => {
 
             <SafeAreaView style={tw`w-full h-full bg-white`}>
 
-                <SyncInfoModal
-                    isSyncInfoModalVisible={isSyncInfoModalVisible}
-                    setIsSyncInfoModalVisible={setIsSyncInfoModalVisible}
-                    setIsSyncingInfoInformationModalVisible={setIsSyncingInfoInformationModalVisible}
-                    syncInfo={syncInfo}
-                />
-
-                <SyncingInfoInformationModal
-                    isSyncingInfoInformationModalVisible={isSyncingInfoInformationModalVisible}
-                    setIsSyncingInfoInformationModalVisible={setIsSyncingInfoInformationModalVisible}
-                    setIsSyncInfoModalVisible={setIsSyncInfoModalVisible}
-                />
-
-                <SyncingInfoModal
-                    isSyncingInfoModalVisible={isSyncingInfoModalVisible}
-                    setIsSyncingInfoModalVisible={setIsSyncingInfoModalVisible}
+                <ChangingUsernameModal
+                    isChangingUsernameModalVisible={changingUsernameRunning}
+                    setIsChangingUsernameModalVisible={setChangingUsernameRunning}
                 />
 
                 <DeletingAccountModal
@@ -315,9 +246,35 @@ const SettingsAccount = ({navigation}: any) => {
                     setIsDeletingAccountModalVisible={setIsDeletingAccountModalVisible}
                 />
 
-                <ChangingUsernameModal
-                    isChangingUsernameModalVisible={changingUsernameRunning}
-                    setIsChangingUsernameModalVisible={setChangingUsernameRunning}
+                <SyncInfoModal
+                    isSyncInfoModalVisible={isSyncInfoModalVisible}
+                    setIsSyncInfoModalVisible={setIsSyncInfoModalVisible}
+                    setIsSyncInfoExtraModalVisible={setIsSyncInfoExtraModalVisible}
+                    syncInfo={syncInfo}
+                />
+
+                <SyncInfoExtraModal
+                    isSyncInfoExtraModalVisible={isSyncInfoExtraModalVisible}
+                    setIsSyncInfoExtraModalVisible={setIsSyncInfoExtraModalVisible}
+                />
+
+                <RetreiveInfoModal
+                    isRetreiveInfoModalVisible={isRetreiveInfoModalVisible}
+                    setIsRetreiveInfoModalVisible={setIsRetreiveInfoModalVisible}
+                    setIsLoadingModalVisible={setIsLoadingModalVisible}
+                    internetSpeed={internetSpeed}
+                    setIsRetreiveInfoExtraModalVisible={setIsRetreiveInfoExtraModalVisible}
+                />
+
+                <RetreiveInfoExtraModal
+                    isRetreiveInfoExtraModalVisible={isRetreiveInfoExtraModalVisible}
+                    setIsRetreiveInfoExtraModalVisible={setIsRetreiveInfoExtraModalVisible}
+                    setIsRetreiveInfoModalVisible={setIsRetreiveInfoModalVisible}
+                />
+
+                <LoadingModal
+                    isLoadingModalVisible={isLoadingModalVisible}
+                    setIsLoadingModalVisible={setIsLoadingModalVisible}
                 />
 
                 <View style={tw`h-full pt-2`}>
@@ -380,13 +337,15 @@ const SettingsAccount = ({navigation}: any) => {
                     })}
                     {button(t('sync-info'), 'sync-outline', 'indigo-300', '#4f46e5', 34, async () => {
 
-                       setIsSyncInfoModalVisible(true)
+                        setIsSyncInfoModalVisible(true)
                         
                     })}
-
-                    {switchButton(t('face-id'), 'eye-outline', 'orange-300', '#d97706', 30)}
-                    {switchButton(t('receive-friend-requests'), 'notifications-outline', 'purple-300', '#8b5cf6', 24)}
                     
+                    {button(t('retreive-info'), 'reload-outline', 'pink-300', '#ec4899', 34, async () => {
+
+                        setIsRetreiveInfoModalVisible(true)
+                        
+                    })}
 
                 </View>
 

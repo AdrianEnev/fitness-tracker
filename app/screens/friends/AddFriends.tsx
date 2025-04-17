@@ -2,7 +2,7 @@ import { View, Text, SafeAreaView, TextInput, TouchableWithoutFeedback, Keyboard
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import searchForFriend from '@use/friends/get/useSearchForFriend'
+import searchFriend from '@app/use/friends/get/useSearchFriend'
 import { Friend } from '@config/interfaces'
 import { FlatList } from 'react-native-gesture-handler'
 import BottomNavigationBar from '@components/BottomNavigationBar'
@@ -44,8 +44,8 @@ const AddFriends = ({navigation}: any) => {
         setSearchingAnimation(true); // Start the searching animation
     
         try {
-            const results = await searchForFriend(searchQuery);
-            //setSearchResults(results);
+            const results = await searchFriend(searchQuery);
+
             if (results.length > 0) {
                 await addToSuggestions(results);
             } else {

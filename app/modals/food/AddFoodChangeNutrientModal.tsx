@@ -98,6 +98,7 @@ const AddFoodChangeNutrientModal = ({ nutrient, oldValue, setName, setCalories, 
     };
 
     const {iphoneModel} = useContext(GlobalContext)
+    const containerHeight = iphoneModel.includes('SE') ? 'h-[20%]' : 'h-[16%]';
 
     return (
         <Modal
@@ -108,7 +109,7 @@ const AddFoodChangeNutrientModal = ({ nutrient, oldValue, setName, setCalories, 
                 setIsAddFoodChangeNutrientModalVisible(!isAddFoodChangeNutrientModalVisible);
             }}
         >
-            <View style={[tw`w-full ${iphoneModel.includes('SE') ? 'h-[20%]' : 'h-[15%]'} mx-1 mt-1 absolute`, { top: position.top, left: position.left }]}>
+            <View style={[tw`w-full ${containerHeight} mx-1 mt-1 absolute`, { top: position.top, left: position.left }]}>
                 
                 {((nutrient === 'Carbs' || nutrient === 'Fat')) && (
                     <SaveAndCancelIcons />

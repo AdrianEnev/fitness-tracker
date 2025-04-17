@@ -4,18 +4,19 @@ const getReceivedFriendRequests = async () => {
 
     const userId = FIREBASE_AUTH.currentUser?.uid;
 
-    try {
-        const response = await fetch(`http://localhost:3000/api/friends/${userId}/received`);
-        
-        //console.log('Response received: ', response);
+    const params = new URLSearchParams({
+        getUsers: 'true'
+   });
 
+    try {
+        const response = await fetch(`http://172.20.10.5:3000/api/friends/${userId}/received?${params.toString()}`);
+        
         if (!response.ok) {
             console.error("getReceivedFriendRequests: error:", response.statusText);
             return null;
         }
 
         const data = await response.json();
-        //console.log('Data received: ', data);
         if (data.length === 0) {
             console.log("No received friend requests found.");
             return [];

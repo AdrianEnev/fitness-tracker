@@ -62,7 +62,7 @@ const deleteAccountDatabase = async (
     if (!user) return
     
     try {
-        const response = await fetch(`http:/localhost:3000/api/users/${user.uid}?isVerified=${isVerified}`, {
+        const response = await fetch(`http:/172.20.10.5:3000/api/users/${user.uid}?isVerified=${isVerified}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json',

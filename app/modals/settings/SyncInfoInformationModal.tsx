@@ -6,15 +6,13 @@ import { useTranslation } from 'react-i18next';
 import GlobalContext from '@config/GlobalContext';
 
 interface SyncingInfoInformationModalProps {
-    isSyncingInfoInformationModalVisible: boolean;
-    setIsSyncingInfoInformationModalVisible: (isVisible: boolean) => void;
-    setIsSyncInfoModalVisible: (isVisible: boolean) => void;
+    isSyncInfoExtraModalVisible: boolean;
+    setIsSyncInfoExtraModalVisible: (isVisible: boolean) => void;
 }
 
 const SyncingInfoInformationModal: React.FC<SyncingInfoInformationModalProps> = ({ 
-    isSyncingInfoInformationModalVisible, 
-    setIsSyncingInfoInformationModalVisible, 
-    setIsSyncInfoModalVisible
+    isSyncInfoExtraModalVisible, 
+    setIsSyncInfoExtraModalVisible
 }) => {
 
     const {t} = useTranslation();
@@ -25,9 +23,9 @@ const SyncingInfoInformationModal: React.FC<SyncingInfoInformationModalProps> = 
         <Modal
             animationType="fade"
             transparent={true}
-            visible={isSyncingInfoInformationModalVisible}
+            visible={isSyncInfoExtraModalVisible}
             onRequestClose={() => {
-                setIsSyncingInfoInformationModalVisible(!isSyncingInfoInformationModalVisible);
+                setIsSyncInfoExtraModalVisible(!isSyncInfoExtraModalVisible);
             }}
             >
                 <View style={tw`w-[85%] h-full justify-center items-center self-center`}>
@@ -36,7 +34,7 @@ const SyncingInfoInformationModal: React.FC<SyncingInfoInformationModalProps> = 
                         <View style={tw`w-full flex flex-row justify-between`}>
                             
                             <Pressable onPress={() => {
-                                setIsSyncingInfoInformationModalVisible(false)
+                                setIsSyncInfoExtraModalVisible(false)
                             }}>
                                 <Ionicons name='return-down-back-outline' size={35} color='#3b82f6'/>
                             </Pressable>

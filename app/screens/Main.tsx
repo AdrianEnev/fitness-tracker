@@ -84,6 +84,7 @@ const Main = ({navigation}: any) => {
                     const email = await getEmail();
                     const storedData = await AsyncStorage.getItem(`${email}-foodDay-${currentFormattedDate.day}-${currentFormattedDate.month}-${currentFormattedDate.year}`);
                     const data = storedData ? JSON.parse(storedData) : [];
+
     
                     //console.log(`${email}-foodDay-${currentFormattedDate.day}-${currentFormattedDate.month}-${currentFormattedDate.year}`)
     

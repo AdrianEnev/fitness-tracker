@@ -14,7 +14,7 @@ const sendFriendRequest = async (userToCheck: Friend, navigation: any, translati
     console.log('Attempting to send friend request to:', userToCheck.username);
 
     try {
-        const response = await fetch(`http://localhost:3000/api/friends/${currentUserUid}`, {
+        const response = await fetch(`http://172.20.10.5:3000/api/friends/${currentUserUid}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', 

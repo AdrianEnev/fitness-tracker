@@ -140,7 +140,7 @@ const WorkoutFolder = ({ route, navigation }: any) => {
 
                 />
 
-                <Pressable style={tw`bg-gray-100 h-[15%] w-full flex justify-end`} onPress={() => setIsPasteWorkoutsInFolderModalVisible(true)}>
+                <Pressable style={tw`bg-gray-100 w-full h-[15%] flex justify-end`} onPress={() => setIsPasteWorkoutsInFolderModalVisible(true)}>
                     <View style={tw`flex flex-row justify-between`}>
                         <Text style={tw`text-4xl font-medium text-black m-3`}>{folder?.title}</Text>
 

@@ -9,19 +9,17 @@ import GlobalContext from '@config/GlobalContext';
 interface RetreiveInfoModalProps {
     isRetreiveInfoModalVisible: boolean;
     setIsRetreiveInfoModalVisible: (isVisible: boolean) => void;
-    setIsRetreivingInfoAnimationModalVisible: (isVisible: boolean) => void;
-    navigation: any;
+    setIsLoadingModalVisible: (isVisible: boolean) => void;
     internetSpeed: number;
-    setIsRetreiveInfoInformationModalVisible: (isVisible: boolean) => void;
+    setIsRetreiveInfoExtraModalVisible: (isVisible: boolean) => void;
 }
 
 const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({ 
     isRetreiveInfoModalVisible, 
     setIsRetreiveInfoModalVisible, 
-    setIsRetreivingInfoAnimationModalVisible,
-    navigation,
+    setIsLoadingModalVisible,
     internetSpeed,
-    setIsRetreiveInfoInformationModalVisible
+    setIsRetreiveInfoExtraModalVisible
 }) => {
 
     const {t} = useTranslation();
@@ -41,10 +39,9 @@ const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({
                     <Pressable style={tw`bg-gray-50 w-full ${iphoneModel.includes('Pro') || iphoneModel.includes('Plus') ? 'h-[25%]' : iphoneModel.includes('SE') ? 'h-[35%]' : 'h-[27%]'} rounded-2xl pt-3 px-2`}>
                         
                         <View style={tw`w-full flex flex-row justify-between`}>
-                            
                             <Pressable onPress={() => {
-                                //setIsRetreiveInfoModalVisible(false)
-                                setIsRetreiveInfoInformationModalVisible(true)
+                                setIsRetreiveInfoModalVisible(false)
+                                setIsRetreiveInfoExtraModalVisible(true)
                             }}>
                                 <Ionicons name='help-outline' size={35} color='#3b82f6'/>
                                 
@@ -52,34 +49,20 @@ const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({
                             <Pressable onPress={() => setIsRetreiveInfoModalVisible(false)}>
                                 <Ionicons name='close' size={35} color='red'/>
                             </Pressable>
-                            
                         </View>
 
-                        <Text style={tw`text-xl font-medium text-center`}>{t('retreive-info')}</Text>
+                        <Text style={tw`text-xl font-medium text-center mt-4`}>{t('retreive-info-modal')}</Text>
 
                         <View style={tw`w-full h-full flex justify-center flex-row gap-x-3 mt-4`}>
-                            <Pressable style={tw`w-[44%] h-[56%] rounded-[20px] bg-green-500 flex flex-col gap-y-2 items-center justify-center`}
+                            <Pressable style={tw`bg-green-500 w-full h-16 rounded-xl flex items-center justify-center`}
                                 onPress={async () => {
                                     setIsRetreiveInfoModalVisible(false);
-                                    await retreiveInfo("workouts", navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed, t);
+                                    await retreiveInfo(setIsLoadingModalVisible, internetSpeed, t);
                                 }}
                             >
-                                <Ionicons name='accessibility-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium text-xl text-center mx-2`}>{t('workouts')}</Text>
-                            </Pressable>
-                    
-                            <Pressable style={tw`w-[44%] h-[56%] rounded-[20px] bg-blue-500 flex-col gap-y-2 items-center justify-center`}
-                                onPress={async () => {
-                                    setIsRetreiveInfoModalVisible(false);
-                                    await retreiveInfo("foods", navigation, setIsRetreivingInfoAnimationModalVisible, internetSpeed, t);
-                                }}
-                            >
-                                <Ionicons name='egg-outline' size={32} color='white'/>
-                                <Text style={tw`text-white font-medium text-xl text-center mx-2`}>{t('food-log')}</Text>
+                                <Text style={tw`text-white font-medium text-xl text-center mx-2`}>{t('retreive-info')}</Text>
                             </Pressable>
                         </View>
-                        
-                        
                     </Pressable>
                 </View>
         </Modal>

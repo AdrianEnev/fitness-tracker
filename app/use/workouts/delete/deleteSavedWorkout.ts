@@ -20,7 +20,7 @@ const deleteSavedWorkout = async (workout: any, navigation: any, internetConnect
 
         // Delete the saved workout from the server
         try {
-            const response = await fetch(`http://localhost:3000/api/savedWorkouts/${userId}/${workout.id}`, {
+            const response = await fetch(`http://172.20.10.5:3000/api/savedWorkouts/${userId}/${workout.id}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

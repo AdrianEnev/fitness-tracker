@@ -34,7 +34,8 @@ const DeleteSavedWorkoutModal: React.FC<DeleteSavedWorkoutModalProps> = ({
                         <Text style={tw`text-lg text-center text-gray-500 font-medium `}>{t('delete-workout-alert')}</Text>
 
                         <View style={tw`flex items-center mt-2`}>
-                            <Pressable style={tw`bg-[#e83d50] w-full h-10 rounded-xl flex items-center justify-center`} onPress={() => {
+                            <Pressable style={tw`bg-[#e83d50] w-full h-10 rounded-xl flex items-center justify-center`} 
+                            onPress={() => {
                                 deleteSavedWorkout();
                                 setIsDeleteSavedWorkoutModalVisible(false);
                             }}>

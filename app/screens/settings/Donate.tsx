@@ -15,7 +15,7 @@ const Donate = ({navigation}: any) => {
     return (
         <View style={tw`h-full w-full`}>
 
-            <View style={tw`bg-gray-100 h-[15%] w-full flex justify-end`}>
+            <View style={tw`bg-gray-100 w-full h-[15%] flex justify-end`}>
                 <Text style={tw`text-3xl font-bold text-black m-2`}>Support the Developer</Text>
             </View>
 
