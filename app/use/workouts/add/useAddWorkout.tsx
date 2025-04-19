@@ -7,7 +7,7 @@ const addWorkout = async (exercises: any, workoutTitle: string, workoutId: any, 
     const currentLanguage = await AsyncStorage.getItem('language');
 
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/workouts/${userId}`, {
+        const response = await fetch(`http://localhost:3000/api/workouts/${userId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', 

@@ -276,7 +276,13 @@ const AddFoodPageEditFood = ({route, navigation}: any) => {
                 </View>
             </>
             
-            <BottomNavigationBar currentPage='AddFoodPageEditFood' navigation={navigation} addFoodPageAddButton={addItem}/>
+            <BottomNavigationBar 
+                currentPage='Add-Food-Details' 
+                navigation={navigation} 
+                foodActions={{
+                    addFoodPageAddButton: addItem
+                }}
+            />
         </View>
         
     )

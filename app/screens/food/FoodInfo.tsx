@@ -41,93 +41,14 @@ const FoodInfo = ({route}: any) => {
         return `${year}-${month}-${day}`;
     };
 
-    const removeFromAsyncStorage = async () => {
-
-        // Delete from asyncstorage
-        const email = await getEmail();
-        const foodDayKey = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}`;
-        const foodDayKeyNutrients = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}-nutrients`;
-        
-        // Retrieve stored data from AsyncStorage
-        const storedData = await AsyncStorage.getItem(foodDayKey);
-        const data = storedData ? JSON.parse(storedData) : [];
-
-        // Filter out the food item to delete
-        const updatedData = data.filter((item: any) => item.id !== food.id);
-
-        if (updatedData.length === 0) {
-            
-            // If no items left, remove the entire foodDay entry
-            await AsyncStorage.removeItem(foodDayKeyNutrients);
-            await AsyncStorage.removeItem(foodDayKey);
-            console.log(foodDayKeyNutrients);
-            console.log(foodDayKey);
-            
-        } else {
-            // Save the updated data back to AsyncStorage
-            await AsyncStorage.setItem(foodDayKey, JSON.stringify(updatedData));
-        }
-    }
-
-    const recalculateNutrientsAsyncStorage = async () => {
-
-        const email = await getEmail();
-        const foodDayKey = `${email}-foodDay-${formalDate.day}-${formalDate.month}-${formalDate.year}`;
-        const nutrientsKey = `${foodDayKey}-nutrients`;
-    
-        // Retrieve stored data from AsyncStorage
-        const storedData = await AsyncStorage.getItem(foodDayKey);
-        const data = storedData ? JSON.parse(storedData) : [];
-    
-        // Initialize nutrient totals
-        let totalCalories = 0;
-        let totalProtein = 0;
-        let totalCarbs = 0;
-        let totalFat = 0;
-    
-        // Calculate total nutrients
-        data.forEach((item: any) => {
-            totalCalories += item.calories ?? 0;
-            totalProtein += item.protein ?? 0;
-            totalCarbs += item.carbs ?? 0;
-            totalFat += item.fat ?? 0;
-        });
-    
-        // Create nutrient object
-        const nutrients = {
-            calories: totalCalories,
-            protein: totalProtein,
-            carbs: totalCarbs,
-            fat: totalFat
-        };
-    
-        // Save the recalculated nutrients back to AsyncStorage
-        await AsyncStorage.setItem(nutrientsKey, JSON.stringify(nutrients));
-
-        return nutrients;
-    }
-
     const removeFood = async () => {
-        
-
-        // Remove item from asyncstorage then recalculate the total nutrients for the whole day
-        await removeFromAsyncStorage();
-        const updatedNutrients = await recalculateNutrientsAsyncStorage();
-
-        // Navigate back and execute firebase deletion in the background
-        navigation.goBack();
 
         const formattedDate = formatDate(unformattedDate);
 
-        if (internetConnected){
+        const userId = FIREBASE_AUTH.currentUser?.uid;
+        if (!userId) return;
 
-            const userId = FIREBASE_AUTH.currentUser?.uid;
-            if (!userId) return;
-
-            const item = food;
-
-            await deleteFood(item, formattedDate, updatedNutrients, userId); 
-        }
+        await deleteFood(food, formattedDate, userId, internetConnected, formalDate, navigation); 
 
     }
 
@@ -135,8 +56,6 @@ const FoodInfo = ({route}: any) => {
 
     return (
         <View style={tw`h-full w-full bg-white`}>
-            
-
             <View style={tw`bg-gray-100 w-full h-[15%] flex justify-end`}>
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('macronutrients')}</Text>
             </View>
@@ -151,7 +70,13 @@ const FoodInfo = ({route}: any) => {
                 grams={grams}
             />
             
-            <BottomNavigationBar currentPage='FoodInfo' navigation={navigation} deleteFood={removeFood}/>
+            <BottomNavigationBar 
+                currentPage='Food-Info' 
+                navigation={navigation} 
+                foodActions={{
+                    deleteFood: removeFood
+                }}
+            />
         </View>
     )
 }

@@ -133,9 +133,11 @@ const FoodDay = ({route, navigation}: any) => {
             </View>
 
             <BottomNavigationBar 
-                currentPage='FoodDay' 
+                currentPage='Food-Day' 
                 navigation={navigation} 
-                foodDayDate={date}
+                foodActions={{
+                    foodDayDate: date
+                }}
                 internetConnected={internetConnected}
             />
 

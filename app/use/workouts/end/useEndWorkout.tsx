@@ -21,7 +21,7 @@ const endWorkout = async (exercises: any, workoutTitle: string, duration: any, i
     const userId = FIREBASE_AUTH.currentUser?.uid;
 
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/savedWorkouts/${userId}/endWorkout`, {
+        const response = await fetch(`http://localhost:3000/api/savedWorkouts/${userId}/endWorkout`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Specifies the request body is JSON

@@ -410,16 +410,16 @@ const AddWorkoutPage = ({ navigation, route }: any) => {
 
             <BottomNavigationBar 
                 navigation={navigation} 
-                currentPage='AddWorkout' 
-                forwardButton={nextExercise}
-                backButton={previousExercise}
-                addWorkoutButton={() => setIsCreateWorkoutModalVisible(true)}
-                addSetButton={() => addSet(exercises[pageNumber - 1].id)}
-                addWorkoutPageCurrentExercise={pageNumber}
+                currentPage='Add-Workout' 
+                workoutActions={{
+                    forwardButton: nextExercise,
+                    backButton: previousExercise,
+                    addWorkoutButton: () => setIsCreateWorkoutModalVisible(true),
+                    addSetButton: () => addSet(exercises[pageNumber - 1].id),
+                    addWorkoutPageCurrentExercise: pageNumber
+                }}
             />
-            
         </>
-        
     );
 };
 

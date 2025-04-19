@@ -3,9 +3,8 @@ import React, { useContext, useState } from 'react'
 import tw from "twrnc"
 import { useTranslation } from 'react-i18next';
 import BottomNavigationBar from '@components/BottomNavigationBar';
-import getEmail from '@use/settings/get/useGetEmail';
 import GlobalContext from '@config/GlobalContext';
-import AddFoodNutrientsComponent from '@screens/food/AddFoodNutrientsComponent';
+import AddFoodNutrientsComponent from '@app/components/food/AddFoodNutrientsComponent';
 import addFood from '@app/use/food/addFood';
 import { formatDatePretty } from '@app/use/settings/change/useFormatDate';
 
@@ -81,7 +80,13 @@ const AddCustomFoodPage = ({navigation, route}: any) => {
                 translation={t}  
             />
 
-            <BottomNavigationBar currentPage='AddCustomFoodPage' navigation={navigation} addCustomFoodPageAddFood={saveFood}/>
+            <BottomNavigationBar 
+                currentPage='Add-Custom-Food' 
+                navigation={navigation} 
+                foodActions={{
+                    addCustomFoodPageAddFood: saveFood
+                }}
+            />
             
         </View>
     )

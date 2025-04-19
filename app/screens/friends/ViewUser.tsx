@@ -169,9 +169,7 @@ const ViewUser = ({route, navigation}: any) => {
                             </View>
                         )}
                     </View>
-
                 </View>
-
             </SafeAreaView>
         </>
     )

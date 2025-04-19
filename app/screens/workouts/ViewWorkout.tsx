@@ -103,7 +103,7 @@ const ViewWorkout = ({route, navigation}: any) => {
         }
 
         setSaveChangesRan(false);
-        navigation.navigate('Тренировки');
+        navigation.navigate('Workouts');
         
     }
     
@@ -482,20 +482,25 @@ const ViewWorkout = ({route, navigation}: any) => {
                     </View>
                     
                     <BottomNavigationBar
-                        currentPage='ViewWorkout'
+                        currentPage='View-Workout'
                         navigation={navigation}
-                        addSetButton={addSet}
-                        workout={workout}
-                        forwardButton={() => {
-                            setPageNumber((pageNumber + 1) % newExercises.length)
+                        workoutActions={{
+
+                            forwardButton: () => {
+                                setPageNumber((pageNumber + 1) % newExercises.length)
+                            },
+                            backButton: () => {
+                                setPageNumber((pageNumber - 1 + newExercises.length) % newExercises.length)
+                            },
+                            addSetButton: addSet,
+                            saveViewWorkoutChanges: saveChanges,
+                            viewWorkoutAddExercise: addExercise,
+                            startWorkout: () => startWorkoutFunction()
                         }}
-                        backButton={() => {
-                            setPageNumber((pageNumber - 1 + newExercises.length) % newExercises.length)
+                        savedWorkoutInfo={{
+                            viewSavedWorkoutNumberOfExercises: newExercises.length,
                         }}
-                        viewWorkoutNumberOfExercises={newExercises.length}
-                        saveViewWorkoutChanges={saveChanges}
-                        viewWorkoutAddExercise={addExercise}
-                        startWorkout={() => startWorkoutFunction()}
+                        
                     />
                     
                 </SafeAreaView>

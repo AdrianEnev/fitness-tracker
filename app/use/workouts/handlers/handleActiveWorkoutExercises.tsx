@@ -143,6 +143,6 @@ export const handleEndWorkoutVisibility = (
         setIsEndWorkoutModalVisible(true);
     } else {
         // If the condition is not met or all sets are empty, navigate to the main page directly
-        navigation.navigate('Главна Страница');
+        navigation.navigate('Main');
     }
 };

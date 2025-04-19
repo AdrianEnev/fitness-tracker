@@ -58,7 +58,7 @@ const Settings = ({navigation}: any) => {
         try {
             const newNutrientsJSON = JSON.stringify(newNutrients);
             await AsyncStorage.setItem(`goal_nutrients_${FIREBASE_AUTH.currentUser?.email}`, newNutrientsJSON);
-            navigation.navigate('Настройки-Страница');
+            navigation.navigate('Settings');
         } catch (error) {
             console.log('Error saving nutrients to AsyncStorage:', error);
         }
@@ -68,7 +68,7 @@ const Settings = ({navigation}: any) => {
             const userId = FIREBASE_AUTH.currentUser?.uid;
 
             try {
-                const response = await fetch(`http://172.20.10.5:3000/api/users/${userId}/dailyGoals`, {
+                const response = await fetch(`http://localhost:3000/api/users/${userId}/dailyGoals`, {
                     method: 'PUT',
                     headers: {
                         'Content-Type': 'application/json', // Specifies the request body is JSON
@@ -106,7 +106,13 @@ const Settings = ({navigation}: any) => {
                 setFat={setFat}
             />    
 
-            <BottomNavigationBar currentPage='Settings-Macronutrients' navigation={navigation} saveSettingsMacrosButton={saveNutrients}/>
+            <BottomNavigationBar 
+                currentPage='Settings-Macronutrients' 
+                navigation={navigation} 
+                settingsActions={{
+                    saveSettingsMacrosButton: saveNutrients
+                }}
+            />
         </View>
     );
 };

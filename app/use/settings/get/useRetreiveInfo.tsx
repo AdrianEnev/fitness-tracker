@@ -5,11 +5,12 @@ import addRetrievedWorkoutsLocally from "@app/use/workouts/add/useAddRetreivedWo
 import addRetrievedSavedWorkoutsLocally from "@app/use/workouts/add/useAddRetreivedSavedWorkoutsLocally";
 import addRetreivedFoodDays from "@app/use/food/addRetreivedFoodDays";
 
-const retreiveInfo = async (setIsLoadingModalVisible: any, internetConnected: number, t: any) => {
-
+const retreiveInfo = async (
+    onRetreiveInfoComplete: () => void,
+    internetConnected: boolean, t: any
+) => {
     if (!internetConnected) {
         alert(t('unstable-connection'));
-        setIsLoadingModalVisible(false);
         return;
     }
 
@@ -23,7 +24,7 @@ const retreiveInfo = async (setIsLoadingModalVisible: any, internetConnected: nu
     const userId = FIREBASE_AUTH.currentUser?.uid;
 
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/users/${userId}/retreive`, {
+        const response = await fetch(`http://localhost:3000/api/users/${userId}/retreive`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json', // Specifies the request body is JSON
@@ -40,37 +41,27 @@ const retreiveInfo = async (setIsLoadingModalVisible: any, internetConnected: nu
         }
 
         const data = await response.json();
+        console.log(data);
 
         // If no data was returned -> everything is already synced
-        if (data.missingWorkouts.length > 0) {
+        if (data.missingWorkouts && data.missingWorkouts.length > 0) {
             await addRetrievedWorkoutsLocally(data.missingWorkouts); 
         }
-        if (data.missingSavedWorkouts.length > 0) {
+        if (data.missingSavedWorkouts && data.missingSavedWorkouts.length > 0) {
             await addRetrievedSavedWorkoutsLocally(data.missingSavedWorkouts);
         }
-        if (data.missingFoodDays.length > 0) {
+        if (data.missingFoodDays && data.missingFoodDays.length > 0) {
             await addRetreivedFoodDays(data.missingFoodDays);
         }
 
-        setIsLoadingModalVisible(false);
+        // Set retreiveInfo as ran, since it should one be used once per device
+        await AsyncStorage.setItem('retreiveInfo', 'true');
+        onRetreiveInfoComplete();
+        return;
     } catch (error) {
         console.error("Retrieving info ERROR:", error);
         return null;
     }
-
-};
-
-const logAllFoodDays = async () => {
-    // Get from asyncstorage again
-    const email = await getEmail();
-    const foodDays = await AsyncStorage.getItem(`foodDays_${email}`);
-    const parsedFoodDays = foodDays ? JSON.parse(foodDays) : [];
-    console.log('All food days:', parsedFoodDays);
-};
-
-const clearAllFoodDays = async () => {
-    const email = await getEmail();
-    await AsyncStorage.removeItem(`foodDays_${email}`);
 };
 
 export default retreiveInfo;

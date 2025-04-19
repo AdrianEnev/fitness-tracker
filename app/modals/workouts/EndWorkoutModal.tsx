@@ -47,7 +47,7 @@ const EndWorkoutModal: React.FC<EndWorkoutModalProps> = ({
 
                                 endWorkoutLocally(exercises, workoutTitle, duration, id);
 
-                                navigation.navigate('Главна Страница');
+                                navigation.navigate('Main');
 
                                 if (internetConnected) {
                                     endWorkout(exercises, workoutTitle, duration, id);

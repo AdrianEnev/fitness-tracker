@@ -113,7 +113,7 @@ const AddFriends = ({navigation}: any) => {
                                 keyExtractor={(item) => item.id}
                                 renderItem={({item}) => (
                                     <Pressable onPress={async () => {
-                                        navigation.navigate('Виж-Потърсен-Потребител', {friend: item, page: "searchedUsers"})
+                                        navigation.navigate('View-User', {friend: item, page: "searchedUsers"})
                                     }}>
                                         <View style={tw`w-[96%] h-16 bg-white shadow-lg border border-gray-200 mt-3 mx-2 rounded-lg flex flex-row justify-between items-center px-2`}>
                                             

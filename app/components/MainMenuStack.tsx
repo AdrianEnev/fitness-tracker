@@ -28,14 +28,13 @@ import ViewUser from "@screens/friends/ViewUser";
 
 const Stack = createNativeStackNavigator();
 
-const MainPageComponent = () => {
+const MainMenuStack = () => {
 
     return (
       <Stack.Navigator
       >
-
           <Stack.Screen
-              name='Главна Страница'
+              name='Main'
               component={Main}
               options={() => ({
                 headerShown: false,
@@ -47,24 +46,22 @@ const MainPageComponent = () => {
           />
 
           <Stack.Screen
-              name="Тренировки"
+              name="Workouts"
               component={Workouts}
               options={{
-                  title: "Тренировки",
                   headerShown: false,
               }}
           />
           <Stack.Screen
-              name="Папка"
+              name="Workout-Folder"
               component={WorkoutFolder}
               options={{
-                  title: "Тренировки",
                   headerShown: false,
               }}
           />
 
           <Stack.Screen
-              name="Генериране-Тренировка"
+              name="Generate-Workout"
               component={GenerateWorkoutPage}
               options={{
                   headerShown: false,
@@ -72,7 +69,7 @@ const MainPageComponent = () => {
           />
 
           <Stack.Screen
-              name="Активна-Тренировка"
+              name="Active-Workout"
               component={ActiveWorkout}
               options={{
                   headerShown: false,
@@ -82,7 +79,7 @@ const MainPageComponent = () => {
           />
 
           <Stack.Screen
-              name="Тренировка-Детайли"
+              name="View-Workout"
               component={ViewWorkout}
               options={{
                   headerShown: false,
@@ -91,7 +88,7 @@ const MainPageComponent = () => {
           />
 
           <Stack.Screen
-              name="Тренировка-Добави"
+              name="Add-Workout"
               component={AddWorkoutPage}
               options={{
                 headerShown: false,
@@ -99,14 +96,14 @@ const MainPageComponent = () => {
           />
 
           <Stack.Screen
-              name="Запазени-Тренировки"
+              name="Saved-Workouts"
               component={SavedWorkouts}
               options={{
                   headerShown: false,
               }}
           />
           <Stack.Screen
-              name="Виж-Запазенa-Тренировка"
+              name="View-Saved-Workout"
               component={ViewSavedWorkout}
               options={{
                   headerShown: false,
@@ -114,23 +111,23 @@ const MainPageComponent = () => {
           />
 
           <Stack.Screen
-              name="Хранене"
+              name="Food"
               component={Food}
               options={{
-                  title: "Хранене",
+                  title: "Food",
                   headerShown: false,
               }}
           />
 
           <Stack.Screen
-              name="Хранене-Ден"
+              name="Food-Day"
               component={FoodDay}
               options={{
                   headerShown: false,
               }}
           />
           <Stack.Screen
-              name="Храна-Сканиране"
+              name="Scan-Food"
               component={ScanFood}
               options={{
                   headerShown: false,
@@ -138,7 +135,7 @@ const MainPageComponent = () => {
           />
           
           <Stack.Screen
-              name="Храна-Потърси"
+              name="Add-Food"
               component={AddFoodPage}
               options={{
                   headerShown: false,
@@ -146,14 +143,14 @@ const MainPageComponent = () => {
           />
 
           <Stack.Screen
-              name="Храна-Добави"
+              name="Add-Custom-Food"
               component={AddCustomFoodPage}
               options={{
                   headerShown: false,
               }}
           />
           <Stack.Screen
-              name="Храна-Добави-Подробности"
+              name="Add-Food-Details"
               component={AddFoodPageEditFood}
               options={{
                   headerShown: false,
@@ -161,7 +158,7 @@ const MainPageComponent = () => {
           />
 
           <Stack.Screen
-              name="Храна-Подробности"
+              name="Food-Info"
               component={FoodInfo}
               options={{
                   headerShown: false,
@@ -169,32 +166,32 @@ const MainPageComponent = () => {
           />
 
           <Stack.Screen
-              name="Настройки-Страница"
+              name="Settings"
               component={Settings}
               options={{
-                  title: "Настройки",
+                  title: "Settings",
                   headerShown: false,
               }}
           />
 
           <Stack.Screen
-              name="Настройки-Макронутриенти"
+              name="Settings-Macros"
               component={SettingsMacros}
               options={{
-                  title: "Макронутриенти",
+                  title: "Macronutrients",
                   headerShown: false,
               }}
           />
           
           <Stack.Screen
-              name="Настройки-Акаунт"
+              name="Settings-Account"
               component={SettingsAccount}
               options={{
                   headerShown: false,
               }}
           />
           <Stack.Screen
-              name="Настройки-Статистика"
+              name="Settings-Statistics"
               component={Statistics}
               options={{
                   headerShown: false,
@@ -202,14 +199,14 @@ const MainPageComponent = () => {
           />
           
           <Stack.Screen
-              name="Приятели"
+              name="Friends"
               component={FriendsList}
               options={{
                   headerShown: false,
               }}
           />
           <Stack.Screen
-              name="Приятели-Добави"
+              name="Add-Friends"
               component={AddFriends}
               options={{
                   headerShown: false,
@@ -217,7 +214,7 @@ const MainPageComponent = () => {
           />
 
           <Stack.Screen
-              name="Приятел-Акаунт"
+              name="View-Friend-Profile"
               component={ViewFriendProfile}
               options={{
                   headerShown: false,
@@ -225,31 +222,29 @@ const MainPageComponent = () => {
           />
 
           <Stack.Screen
-              name="Приятели-Покани-Изпратени"
+              name="Friend-Requests-Sent"
               component={FriendRequestsSent}
               options={{
                   headerShown: false,
               }}
           />
           <Stack.Screen
-              name="Приятели-Покани-Получени"
+              name="Friend-Requests-Recieved"
               component={FriendRequestsRecieved}
               options={{
                   headerShown: false,
               }}
           />
           <Stack.Screen
-              name="Виж-Потърсен-Потребител"
+              name="View-User"
               component={ViewUser}
               options={{
                   headerShown: false,
               }}
           />
 
-          
-
       </Stack.Navigator>
     );
   };
 
-export default MainPageComponent;
+export default MainMenuStack;

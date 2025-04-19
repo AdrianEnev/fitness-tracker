@@ -12,7 +12,7 @@ const declineFriendRequest = async (userToCheck: Friend, navigation: any, transl
     console.log('Attempting to decline friend request from:', userToCheck.username);
 
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/friends/${currentUserUid}/decline`, {
+        const response = await fetch(`http://localhost:3000/api/friends/${currentUserUid}/decline`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json', 
@@ -34,7 +34,7 @@ const declineFriendRequest = async (userToCheck: Friend, navigation: any, transl
         setFriendRequestsNumber((Number(friendRequestsNumber) - 1).toString());
 
         console.log('Friend request declined successfully!');
-        navigation.navigate('Настройки-Страница');
+        navigation.navigate('Settings');
         alert(translation('friend-request-declined'))
 
     } catch (error) {

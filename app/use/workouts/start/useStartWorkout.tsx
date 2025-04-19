@@ -7,7 +7,7 @@ const startWorkout = async (workout: Workout, navigation: any) => {
     if (workoutInfo) {
 
         const { exercisesData, workoutTitle } = workoutInfo;
-        navigation.navigate("Активна-Тренировка", {exercises: exercisesData, workoutTitle: workoutTitle, workout: workout});
+        navigation.navigate("Active-Workout", {exercises: exercisesData, workoutTitle: workoutTitle, workout: workout});
 
     }
 }

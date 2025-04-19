@@ -9,7 +9,7 @@ const getFriendRequests = async () => {
    });
 
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/friends/${userId}/received?${params.toString()}`);
+        const response = await fetch(`http://localhost:3000/api/friends/${userId}/received?${params.toString()}`);
         
         if (!response.ok) {
             console.error("getReceivedFriendRequests: error:", response.statusText);

@@ -99,7 +99,6 @@ const LanguageScreen = ({ setLocalLanguageSet }: { setLocalLanguageSet: (value: 
 
                 </TouchableOpacity>
             </View>
-
         </View>
     )
 }

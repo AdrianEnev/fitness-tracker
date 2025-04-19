@@ -41,7 +41,6 @@ export default function ScanFood({route}: any) {
 
     return (
         <>
-
             <View style={tw`flex-1 justify-center`}>
                
                 <CameraView ref={cameraRef} style={tw`flex-1`} facing='back' onBarcodeScanned={({data}: any) => {

@@ -1,12 +1,15 @@
-import { EmailAuthProvider, reauthenticateWithCredential, sendPasswordResetEmail, updatePassword } from "firebase/auth";
+import { EmailAuthProvider, getAuth, reauthenticateWithCredential, sendPasswordResetEmail, updatePassword } from "firebase/auth";
 import { Alert } from "react-native";
 
-const changePassword = (email: any, user: any, auth: any, t: any) => {
+const promptChangePassword = (email: any, t: any, internetConnected: boolean) => {
 
-    // prompt the user to enter their old password
-    // if the old password is correct, prompt the user to enter their new password
-    // update the password with the new password
+    if (!internetConnected) {
+        alert(t('unstable-connection'))
+        return
+    }
 
+    const auth = getAuth();
+    const user = auth.currentUser;
 
     Alert.prompt(
         t('change-password'),
@@ -95,4 +98,4 @@ const changePassword = (email: any, user: any, auth: any, t: any) => {
     );
 
 }
-export default changePassword;
+export default promptChangePassword;

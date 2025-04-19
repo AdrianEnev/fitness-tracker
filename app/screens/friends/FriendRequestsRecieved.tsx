@@ -35,7 +35,7 @@ const FriendRequestsRecieved = ({navigation}: any) => {
                     keyExtractor={(item) => item.id}
                     renderItem={({item}) => (
                         <Pressable style={tw`w-full h-14 bg-white shadow-md border border-gray-200 rounded-xl mb-[2px] px-2 py-3 flex flex-row justify-between`}
-                            onPress={() => navigation.navigate('Виж-Потърсен-Потребител', {friend: item, page: "receivedRequests"})}
+                            onPress={() => navigation.navigate('View-User', {friend: item, page: "receivedRequests"})}
                         >
                             <Text style={tw`text-lg font-medium max-w-[100%]`} ellipsizeMode='tail' numberOfLines={1}>
                                 {item.username}

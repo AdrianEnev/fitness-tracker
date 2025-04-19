@@ -72,7 +72,7 @@ const addFood = async (
     const userId = FIREBASE_AUTH.currentUser?.uid;
                 
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/foodDays/${userId}`, {
+        const response = await fetch(`http://localhost:3000/api/foodDays/${userId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', 
@@ -126,7 +126,7 @@ const updateCurrentNutrients = async (formattedDate: string, newTotalNutrients: 
     const userId = FIREBASE_AUTH.currentUser?.uid;
         
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/foodDays/${userId}/${formattedDate}`, {
+        const response = await fetch(`http://localhost:3000/api/foodDays/${userId}/${formattedDate}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json', 

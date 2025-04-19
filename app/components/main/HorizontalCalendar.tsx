@@ -94,7 +94,7 @@ const HorizontalCalendar = ({navigation}: any) => {
                         const timestamp = date.getTime();
                         const year = date.getFullYear();
 
-                        navigation.navigate('Хранене-Ден', {
+                        navigation.navigate('Food-Day', {
                             date: {
                                 dateString,
                                 day,

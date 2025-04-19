@@ -6,7 +6,6 @@ import { FIREBASE_AUTH } from '@config/firebaseConfig';
 import Login from '@screens/Login';
 import Register from '@screens/Register';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import MainPageComponent from '@components/main/MainPageComponent';
 import Setup from '@screens/Setup';
 import { createStackNavigator } from '@react-navigation/stack';
 import Welcome from '@screens/Welcome';
@@ -34,7 +33,7 @@ import * as Device from 'expo-device';
 import LanguageScreenSmall from '@screens/language/LanguageScreenSmall';
 import { StripeProvider } from '@stripe/stripe-react-native';
 import { getLungeCoins } from '@use/settings/get/useGetLungeCoins';
-import getEmail from '@app/use/settings/get/useGetEmail';
+import MainMenuStack from '@app/components/MainMenuStack';
 
 const Stack = createStackNavigator();
 
@@ -43,7 +42,7 @@ const SetupPage = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen
-                name='Първоначални-Настройки'
+                name='Setup'
                 component={Setup}
                 options={() => ({
                     headerShown: false,
@@ -56,10 +55,10 @@ const SetupPage = () => {
 const AuthenticatedTabNavigator = ({ setupRan }: any) => {
     
     return (
-        <Stack.Navigator initialRouteName={setupRan ? "Главна-Страница" : "Първоначални-Настройки"}>
+        <Stack.Navigator initialRouteName={setupRan ? "Main-Menu" : "Setup"}>
             <Stack.Screen
-                name="Главна-Страница"
-                component={MainPageComponent}
+                name="Main-Menu"
+                component={MainMenuStack}
                 options={{
                     headerShown: false,
                     gestureEnabled: false,
@@ -74,42 +73,41 @@ const UnauthenticatedTabNavigator = () => (
     <Stack.Navigator>
 
         <Stack.Screen
-            name="Добре-Дошъл"
+            name="Welcome"
             component={Welcome}
             options={{
                 headerShown: false,
             }}
         />
         <Stack.Screen
-            name="Регистрация"
+            name="Register"
             component={Register}
             options={{
                 headerShown: false,
             }}
         />
         <Stack.Screen
-            name="Вход"
+            name="Login"
             component={Login}
             options={{
                 headerShown: false,
             }}
         />
         <Stack.Screen
-            name="Парола-Смяна"
+            name="Change-Password"
             component={ChangePassword}
             options={{
                 headerShown: false,
             }}
         />
         <Stack.Screen
-            name="Непотвърден-Имейл"
+            name="Email-Not-Verified"
             component={EmailNotVerified}
             options={{
                 headerShown: false,
                 gestureEnabled: false,
             }}
         />
-
 
     </Stack.Navigator>
 );
@@ -155,7 +153,8 @@ function App() {
     };
 
     useEffect(() => {
-        logAllFoodDays();
+        //logAllFoodDays();
+        //AsyncStorage.setItem('retreiveInfo', 'false');
     }, [])*/
 
     const onAuthenticate = async () => {

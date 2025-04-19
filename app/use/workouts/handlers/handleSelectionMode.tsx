@@ -40,7 +40,7 @@ export const deleteSelectedWorkouts = async (
     if (internetConnected) {
         // Request workout deletion by sending userId and workouts to delete
         try {
-            const response = await fetch(`http://172.20.10.5:3000/api/workouts/${userId}`, {
+            const response = await fetch(`http://localhost:3000/api/workouts/${userId}`, {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json', 

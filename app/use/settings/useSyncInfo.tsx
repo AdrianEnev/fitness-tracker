@@ -89,7 +89,7 @@ const syncInformation = async () => {
 
     console.log('Syncing info...');
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/users/${userId}/sync`, {
+        const response = await fetch(`http://localhost:3000/api/users/${userId}/sync`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json', 

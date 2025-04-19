@@ -4,7 +4,7 @@ const userId = FIREBASE_AUTH.currentUser?.uid
 
 export const getLungeCoins = async () => {
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/users/${userId}/lungeCoins`, {
+        const response = await fetch(`http://localhost:3000/api/users/${userId}/lungeCoins`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json', // Specifies the request body is JSON
@@ -30,7 +30,7 @@ export const decrementLungeCoins = async (amount: number) => {
    });
 
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/users/${userId}/lungeCoins?${params.toString()}`, {
+        const response = await fetch(`http://localhost:3000/api/users/${userId}/lungeCoins?${params.toString()}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json', // Specifies the request body is JSON
@@ -53,7 +53,7 @@ export const addLungeCoins = async (amount: number) => {
    });
 
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/users/${userId}/lungeCoins?${params.toString()}`, {
+        const response = await fetch(`http://localhost:3000/api/users/${userId}/lungeCoins?${params.toString()}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json', // Specifies the request body is JSON

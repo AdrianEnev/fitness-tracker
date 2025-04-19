@@ -1,6 +1,6 @@
 const checkImage = async (uri: any) => {
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/models/checkImageNSFW/${uri}`);
+        const response = await fetch(`http://localhost:3000/api/models/checkImageNSFW/${uri}`);
         if (!response.ok) {
             console.error("Error fetching data:", response.statusText);
             return null;

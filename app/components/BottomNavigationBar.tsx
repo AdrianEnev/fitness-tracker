@@ -22,216 +22,241 @@ const Button = ({currentPage, goalPage, navigation, icon, navigationPage}: any) 
     )
 }
 
-const BottomNavigationBar = (
-    {
-        navigation, 
-        currentPage, 
-        internetConnected,
-        forwardButton, backButton,
-        deleteSavedWorkout, toggleEndWorkoutModal,
-        foodDayDate, clearDay,
-        displayFoods,
-        startWorkout,
-        viewWorkoutNumberOfExercises,
-        friendsListUsername,
-        removeFriend,
-        addSetButton, addWorkoutButton,
-        deleteFood,
-        clearSearchFoodSuggestionList,
-        saveSettingsMacrosButton,
-        viewWorkoutAddExercise,
-        saveViewWorkoutChanges,
-        addWorkoutPageCurrentExercise,
-        addActiveWorkoutSet,
-        addActiveWorkoutExercise,
-        addEmptyFolder, folder, deleteFolder,
-        selectionMode, deleteSelectedWorkouts, cutSelectedWorkouts, copySelectedWorkouts,
-        copySelectedWorkoutsInFolder, cutSelectedWorkoutsInFolder, deleteSelectedWorkoutsInFolder,
-        viewSavedWorkoutDate, viewSavedWorkoutStartEnd, viewSavedWorkoutNumberOfExercises,
-        addCustomFoodPageAddFood, addFoodPageAddButton,
-        activeWorkoutNumberOfExercises, currentlyGeneratingWorkout
+// --- Grouped Prop Types ---
+interface WorkoutActions {
+    forwardButton?: any;
+    backButton?: any;
+    addSetButton?: () => void;
+    addWorkoutButton?: () => void;
+    addActiveWorkoutSet?: () => void;
+    addActiveWorkoutExercise?: () => void;
+    addWorkoutPageCurrentExercise?: number;
+    activeWorkoutNumberOfExercises?: number;
+    startWorkout?: () => void;
+    viewWorkoutAddExercise?: () => void;
+    saveViewWorkoutChanges?: () => void;
+    viewWorkoutNumberOfExercises?: number;
+    currentlyGeneratingWorkout?: boolean;
+    activeWorkoutToggleEndWorkoutModal?: () => void;
+}
 
-    }: 
-    {
-        currentPage: string, navigation?: any, internetConnected?: boolean,
-        forwardButton?: any, backButton?: any,
-        deleteSavedWorkout?: () => void, toggleEndWorkoutModal?: () => void,
-        foodDayDate?: any, clearDay?: () => void, 
-        displayFoods?: () => void,
-        workout?: any,
-        viewWorkoutNumberOfExercises?: number,
-        friendsListUsername?: string,
-        removeFriend?: () => void,
-        addSetButton?: () => void, addWorkoutButton?: () => void,
-        deleteFood?: () => void,
-        clearSearchFoodSuggestionList?: () => void,
-        saveSettingsMacrosButton?: () => void,
-        viewWorkoutAddExercise?: () => void,
-        saveViewWorkoutChanges?: () => void,
-        addWorkoutPageCurrentExercise?: number,
-        addActiveWorkoutSet?: () => void,
-        addActiveWorkoutExercise?: () => void,
-        startWorkout?: () => void,
-        addEmptyFolder?: () => void,
-        folder?: any, deleteFolder?: () => void,
-        selectionMode?: boolean, deleteSelectedWorkouts?: () => void, cutSelectedWorkouts?: () => void, copySelectedWorkouts?: () => void,
-        copySelectedWorkoutsInFolder?: () => void, cutSelectedWorkoutsInFolder?: () => void, deleteSelectedWorkoutsInFolder?: () => void,
-        viewSavedWorkoutDate?: any, viewSavedWorkoutStartEnd?: any, viewSavedWorkoutNumberOfExercises?: any,
-        addCustomFoodPageAddFood?: () => void, addFoodPageAddButton?: () => void,
-        activeWorkoutNumberOfExercises?: any, currentlyGeneratingWorkout?: boolean
-    }
-) => {
+interface FoodActions {
+    foodDayDate?: any;
+    clearDay?: () => void;
+    displayFoods?: () => void;
+    deleteFood?: () => void;
+    clearSearchFoodSuggestionList?: () => void;
+    addCustomFoodPageAddFood?: () => void;
+    addFoodPageAddButton?: () => void;
+}
+
+interface FolderActions {
+    addEmptyFolder?: () => void;
+    folder?: any;
+    deleteFolder?: () => void;
+}
+
+interface SelectionActions {
+    selectionMode?: boolean;
+    deleteSelectedWorkouts?: () => void;
+    cutSelectedWorkouts?: () => void;
+    copySelectedWorkouts?: () => void;
+    copySelectedWorkoutsInFolder?: () => void;
+    cutSelectedWorkoutsInFolder?: () => void;
+    deleteSelectedWorkoutsInFolder?: () => void;
+}
+
+interface FriendActions {
+    friendsListUsername?: string;
+    removeFriend?: () => void;
+}
+
+interface SettingsActions {
+    saveSettingsMacrosButton?: () => void;
+}
+
+interface SavedWorkoutInfo {
+    viewSavedWorkoutDate?: any;
+    viewSavedWorkoutStartEnd?: any;
+    viewSavedWorkoutNumberOfExercises?: any;
+    deleteSavedWorkout?: () => void;
+}
+
+interface BottomNavigationBarProps {
+    navigation?: any;
+    currentPage: string;
+    internetConnected?: boolean;
+    workoutActions?: Partial<WorkoutActions>;
+    foodActions?: Partial<FoodActions>;
+    folderActions?: Partial<FolderActions>;
+    selectionActions?: Partial<SelectionActions>;
+    friendActions?: Partial<FriendActions>;
+    settingsActions?: Partial<SettingsActions>;
+    savedWorkoutInfo?: Partial<SavedWorkoutInfo>;
+}
+
+const BottomNavigationBar = ({
+    navigation,
+    currentPage,
+    internetConnected,
+    workoutActions = {},
+    foodActions = {},
+    folderActions = {},
+    selectionActions = {},
+    friendActions = {},
+    settingsActions = {},
+    savedWorkoutInfo = {},
+}: BottomNavigationBarProps) => {
     
     const {t} = useTranslation();
 
     const {iphoneModel} = useContext(GlobalContext);
     
+    // --- Workout-related Navigation ---
     return (
         <View style={tw`
             absolute w-[96.5%] h-20 shadow-lg mx-2 rounded-2xl flex flex-row justify-around items-center bg-white
             ${iphoneModel.includes('SE') ? 'bottom-4' : 'bottom-8'}
         `}>
-        
-            {currentPage === 'ActiveWorkout' ? (
+            {/* Workout: ActiveWorkout */}
+            {currentPage === 'Active-Workout' ? (
                 <View style={tw`flex flex-col w-full`}>
+                    <View style={tw`w-full h-16 flex gap-y-2 flex-row justify-between absolute bottom-18`}>
+                        <Pressable style={tw`w-[49%] bg-blue-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={workoutActions.addActiveWorkoutSet}>
+                            <Text style={tw`text-white font-medium text-xl`}>+ {t(`set`)}</Text>
+                        </Pressable>
+                        <Pressable style={tw`w-[49%] bg-yellow-400 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={workoutActions.addActiveWorkoutExercise}>
+                            <Text style={tw`text-white font-medium text-xl`}>+ {t('exercise')}</Text>
+                        </Pressable>
+                    </View>
 
-                <View style={tw`w-full h-16 flex gap-y-2 flex-row justify-between absolute bottom-18`}>
-                    <Pressable style={tw`w-[49%] bg-blue-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addActiveWorkoutSet}>
-                        <Text style={tw`text-white font-medium text-xl`}>+ {t(`set`)}</Text>
-                    </Pressable>
-                    <Pressable style={tw`w-[49%] bg-yellow-400 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addActiveWorkoutExercise}>
-                        <Text style={tw`text-white font-medium text-xl`}>+ {t('exercise')}</Text>
-                    </Pressable>
-                    
-                </View>
+                    <View style={tw`flex flex-row ${workoutActions.activeWorkoutNumberOfExercises === 1 ? 'justify-center' : 'justify-between'} w-full`}>
+                        <Pressable onPress={workoutActions.backButton} style={tw`${workoutActions.activeWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
+                            <Ionicons name='chevron-back-circle-outline' color='#3b82f6' size={72}/>
+                        </Pressable>
 
-                <View style={tw`flex flex-row ${activeWorkoutNumberOfExercises === 1 ? 'justify-center' : 'justify-between'} w-full`}>
-
-                    <Pressable onPress={backButton} style={tw`${activeWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
-                        <Ionicons name='chevron-back-circle-outline' color='#3b82f6' size={72}/>
-                    </Pressable>
-
-                        <Pressable onPress={toggleEndWorkoutModal}>
+                        <Pressable onPress={workoutActions.activeWorkoutToggleEndWorkoutModal}>
                             <Ionicons name='stop-circle-outline' color='#fd1c47' size={72}/>
                         </Pressable>
 
-                    <Pressable onPress={forwardButton} style={tw`${activeWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
-                        <Ionicons name='chevron-forward-circle-outline' color='#3b82f6' size={72}/>
-                    </Pressable>
+                        <Pressable onPress={workoutActions.forwardButton} style={tw`${workoutActions.activeWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
+                            <Ionicons name='chevron-forward-circle-outline' color='#3b82f6' size={72}/>
+                        </Pressable>
+                    </View>
                 </View>
-            </View>
-            ) : currentPage === 'SavedWorkout' ? (
+            ) : 
+            /* Workout: SavedWorkout */
+            currentPage === 'Saved-Workout' ? (
                 <View style={tw`flex-1`}>
                     <View style={tw`w-full h-16 flex gap-y-2 flex-row justify-between absolute bottom-18`}>
                         <View style={tw`w-[49%] bg-green-500 h-13 rounded-lg shadow-md flex items-center justify-center`}>
-                            <Text style={tw`text-white font-medium text-xl`}>{viewSavedWorkoutDate}</Text>
+                            <Text style={tw`text-white font-medium text-xl`}>{savedWorkoutInfo.viewSavedWorkoutDate}</Text>
                         </View>
                     
                         <View style={tw`w-[49%] bg-yellow-400 h-13 rounded-lg shadow-md flex items-center justify-center`}>
                             <Text style={tw`text-white font-medium text-xl`}>
-                                {viewSavedWorkoutStartEnd}
+                                {savedWorkoutInfo.viewSavedWorkoutStartEnd}
                             </Text>
                         </View>
                     </View>
 
-                    <View style={tw`w-full ${viewSavedWorkoutNumberOfExercises === 1 ? 'flex items-center' : 'flex flex-row justify-between'}`}>
-                        
-                            <Pressable onPress={() => {
-                                backButton();
-                                console.log(viewSavedWorkoutNumberOfExercises)
-                            }} style={tw`${viewSavedWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
-                                <Ionicons name='chevron-back-circle-outline' color='#3b82f6' size={72}/>
-                            </Pressable>
+                    <View style={tw`w-full ${savedWorkoutInfo.viewSavedWorkoutNumberOfExercises === 1 ? 'flex items-center' : 'flex flex-row justify-between'}`}>
+                        <Pressable onPress={workoutActions.backButton} style={tw`${savedWorkoutInfo.viewSavedWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
+                            <Ionicons name='chevron-back-circle-outline' color='#3b82f6' size={72}/>
+                        </Pressable>
 
-                            <View style={tw``}>
-                                <Pressable onPress={deleteSavedWorkout} >
-                                    <Ionicons name='close-circle-outline' color='#fd1c47' size={72}/>
-                                </Pressable>
-                            </View>
-
-                            <Pressable onPress={forwardButton} style={tw`${viewSavedWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
-                                <Ionicons name='chevron-forward-circle-outline' color='#3b82f6' size={72}/>
+                        <View style={tw``}>
+                            <Pressable onPress={savedWorkoutInfo.deleteSavedWorkout} >
+                                <Ionicons name='close-circle-outline' color='#fd1c47' size={72}/>
                             </Pressable>
-                        
-                        
+                        </View>
+
+                        <Pressable onPress={workoutActions.forwardButton} style={tw`${savedWorkoutInfo.viewSavedWorkoutNumberOfExercises === 1 ? 'hidden' : ''}`}>
+                            <Ionicons name='chevron-forward-circle-outline' color='#3b82f6' size={72}/>
+                        </Pressable>
                     </View>
                 </View>
-            ) : currentPage === 'AddWorkout' ? (
-
+            ) : 
+            /* Workout: AddWorkout */
+            currentPage === 'Add-Workout' ? (
                 <View style={tw`flex flex-col w-full`}>
-
                     <View style={tw`w-full h-16 flex gap-y-2 flex-row justify-between absolute bottom-18`}>
-                        <Pressable style={tw`w-[49%] bg-blue-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addSetButton}>
+                        <Pressable style={tw`w-[49%] bg-blue-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={workoutActions.addSetButton}>
                             <Text style={tw`text-white font-medium text-xl`}>+ {t(`set`)}</Text>
                         </Pressable>
-                        <Pressable style={tw`w-[49%] bg-green-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addWorkoutButton}>
+                        <Pressable style={tw`w-[49%] bg-green-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={workoutActions.addWorkoutButton}>
                             <Text style={tw`text-white font-medium text-xl`}>{t(`done`)}</Text>
                         </Pressable>
-                        
                     </View>
 
                     <View style={tw`w-full flex flex-row justify-around`}>
-
-                        <Pressable onPress={backButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
+                        <Pressable onPress={workoutActions.backButton} style={tw`${workoutActions.viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
                             <Ionicons name='chevron-back-circle-outline' color='#fd1c47' size={72}/>
                         </Pressable>
 
                         <View style={tw`mt-[6px] w-[60px] h-[60px] border-[5px] border-[#fd1c47] rounded-[30px] flex items-center justify-center`}>
-
-                            <Text style={tw`text-[#fd1c47] font-bold text-2xl`}>{addWorkoutPageCurrentExercise}</Text>
-
+                            <Text style={tw`text-[#fd1c47] font-bold text-2xl`}>{workoutActions.addWorkoutPageCurrentExercise}</Text>
                         </View>
                         
-                        <Pressable onPress={forwardButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
+                        <Pressable onPress={workoutActions.forwardButton} style={tw`${workoutActions.viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
                             <Ionicons name='chevron-forward-circle-outline' color='#fd1c47' size={72}/>
                         </Pressable>
                     </View>
                 </View>
-               
-                
-                
-            ) : currentPage === "FoodDay" ? (
+            ) : 
+            // --- Food-related Navigation ---
+            /* Food: FoodDay */
+            currentPage === "Food-Day" ? (
                 <View style={tw`flex flex-row justify-around w-full items-center`}>
-                    <Pressable onPress={() => navigation.navigate("Храна-Добави", { date: foodDayDate })}>
+                    <Pressable onPress={() => navigation.navigate("Add-Custom-Food", { date: foodActions.foodDayDate })}>
                         <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
-                    <Pressable onPress={() => navigation.navigate("Храна-Сканиране", { date: foodDayDate })}>
+                    <Pressable onPress={() => navigation.navigate("Scan-Food", { date: foodActions.foodDayDate })}>
                         <Ionicons name="scan-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
                     <Pressable onPress={() => {
                         if (!internetConnected) {return;}
-                        navigation.navigate("Храна-Потърси", { date: foodDayDate })
+                        navigation.navigate("Add-Food", { date: foodActions.foodDayDate })
                     }}>
                         <Ionicons name="search-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
                 </View>
-            ) : currentPage === "AddCustomFoodPage" ? (
+            ) : 
+            /* Food: AddCustomFoodPage */
+            currentPage === "Add-Custom-Food" ? (
                 <View style={tw`flex items-center justify-center`}>
-                    <Pressable onPress={addCustomFoodPageAddFood}>
+                    <Pressable onPress={foodActions.addCustomFoodPageAddFood}>
                         <Text style={tw`text-4xl font-semibold text-red-500`}>{t('add')}</Text>
                     </Pressable>
                 </View>
-            ) : currentPage === "AddFoodPage" ? (
+            ) : 
+            /* Food: AddFoodPage */
+            currentPage === "Add-Food" ? (
                 <View style={tw`flex flex-row justify-around w-full`}>
-                    <Pressable onPress={clearSearchFoodSuggestionList}>
+                    <Pressable onPress={foodActions.clearSearchFoodSuggestionList}>
                         <Ionicons name="refresh-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
-                    <Pressable onPress={displayFoods}>
+                    <Pressable onPress={foodActions.displayFoods}>
                         <Ionicons name="search-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>  
                 </View>
-            ) : currentPage === "AddFoodPageEditFood" ? (
+            ) : 
+            /* Food: AddFoodPageEditFood */
+            currentPage === "Add-Food-Details" ? (
                 <View style={tw`flex flex-row justify-around w-full`}>
-                    <Pressable onPress={addFoodPageAddButton}>
+                    <Pressable onPress={foodActions.addFoodPageAddButton}>
                         <Text style={tw`text-red-500 font-semibold text-4xl`}>{t('add-food')}</Text>
                     </Pressable> 
                 </View>
-            ) : currentPage === 'Workouts' ? (
+            ) : 
+            // --- Workouts List & Selection Navigation ---
+            /* Workouts: Workouts List */
+            currentPage === 'Workouts' ? (
                 <View>
-                    {selectionMode === false ? (
+                    {selectionActions.selectionMode === false ? (
                         <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
 
                             <Pressable onPress={async () => {
@@ -242,118 +267,127 @@ const BottomNavigationBar = (
                                     return;
                                 }
 
-                                navigation.navigate('Тренировка-Добави', {folder: undefined});
+                                navigation.navigate('Add-Workout', {folder: undefined});
                             }}>
                                 <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
                             </Pressable>
         
-                            <Pressable onPress={addEmptyFolder}>
+                            <Pressable onPress={folderActions.addEmptyFolder}>
                                 <Ionicons name="folder-open-outline" size={72} color="#fd1c47"/>
                             </Pressable>
                             
                             <Pressable style={tw`w-15 h-15 border-4 border-[#fd1c47] rounded-full flex items-center justify-center`}
                                 onPress={() => {
 
-                                    if (currentlyGeneratingWorkout) {
+                                    if (workoutActions.currentlyGeneratingWorkout) {
                                         return;
                                     }
 
                                     if (internetConnected) {
-                                        navigation.navigate('Генериране-Тренировка');
+                                        navigation.navigate('Generate-Workout');
                                     }
                                 }}
                             >
                                 <Ionicons name="flash-outline" size={40} color="#fd1c47"/>
                             </Pressable>
-    
                         </View>
                     ) : (
                         <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
-                            
-                            <Pressable onPress={cutSelectedWorkouts}>
+                            <Pressable onPress={selectionActions.cutSelectedWorkouts}>
                                 <Ionicons name="cut-outline" size={72} color="#fd1c47"/>
                             </Pressable>
 
-                            <Pressable onPress={deleteSelectedWorkouts}>
+                            <Pressable onPress={selectionActions.deleteSelectedWorkouts}>
                                 <Ionicons name="trash-outline" size={72} color="#fd1c47"/>
                             </Pressable>
 
-                            <Pressable onPress={copySelectedWorkouts}>
+                            <Pressable onPress={selectionActions.copySelectedWorkouts}>
                                 <Ionicons name="copy-outline" size={72} color="#fd1c47"/>
                             </Pressable>
                         </View>
                     )}
                 </View>
-            ) : currentPage === 'ViewWorkout' ? (
+            ) : 
+            /* Workouts: ViewWorkout */
+            currentPage === 'View-Workout' ? (
                 <View style={tw`flex flex-col w-full`}>
-
                     <View style={tw`w-full h-16 flex gap-y-2 flex-row justify-between absolute bottom-18`}>
-                        <Pressable style={tw`w-[49%] bg-blue-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={addSetButton}>
+                        <Pressable style={tw`w-[49%] bg-blue-500 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={workoutActions.addSetButton}>
                             <Text style={tw`text-white font-medium text-xl`}>+ {t(`set`)}</Text>
                         </Pressable>
                        
-                        <Pressable style={tw`w-[49%] bg-yellow-400 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={viewWorkoutAddExercise}>
+                        <Pressable style={tw`w-[49%] bg-yellow-400 h-12 rounded-lg shadow-md flex items-center justify-center`} onPress={workoutActions.viewWorkoutAddExercise}>
                             <Text style={tw`text-white font-medium text-xl`}>+ {t('exercise')}</Text>
                         </Pressable>
-                        
                     </View>
 
-                    <View style={tw`w-full flex flex-row ${viewWorkoutNumberOfExercises === 1 ? 'justify-around' : 'justify-around'}`}>
-
-                        <Pressable onPress={backButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
+                    <View style={tw`w-full flex flex-row ${workoutActions.viewWorkoutNumberOfExercises === 1 ? 'justify-around' : 'justify-around'}`}>
+                        <Pressable onPress={workoutActions.backButton} style={tw`${workoutActions.viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
                             <Ionicons name='chevron-back-circle-outline' color='#3b82f6' size={72}/>
                         </Pressable>
-                        <Pressable onPress={startWorkout} style={tw``}>
+                        <Pressable onPress={workoutActions.startWorkout} style={tw``}>
                             <Ionicons name='play-circle-outline' color='#22c55e' size={72}/>
                         </Pressable>
-                        <Pressable onPress={saveViewWorkoutChanges} style={tw``}>
+                        <Pressable onPress={workoutActions.saveViewWorkoutChanges} style={tw``}>
                             <Ionicons name='checkmark-circle-outline' color='#fbbf24' size={72}/>
                         </Pressable>
                         
-                        <Pressable onPress={forwardButton} style={tw`${viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
+                        <Pressable onPress={workoutActions.forwardButton} style={tw`${workoutActions.viewWorkoutNumberOfExercises === 1 ? 'hidden' : 'flex'}`}>
                             <Ionicons name='chevron-forward-circle-outline' color='#3b82f6' size={72}/>
                         </Pressable>
                     </View>
                 </View>
-            ) : currentPage === 'FriendsList' ? (
+            ) : 
+            // --- Friends-related Navigation ---
+            /* Friends: FriendsList */
+            currentPage === 'Friends' ? (
                 <View style={tw`flex flex-row justify-around w-full items-center`}>
-                    <Pressable onPress={() => navigation.navigate('Приятели-Покани-Изпратени', {username: friendsListUsername})}>
+                    <Pressable onPress={() => navigation.navigate('Friend-Requests-Sent', {username: friendActions.friendsListUsername})}>
                         <Ionicons name="navigate-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
-                    <Pressable onPress={() => navigation.navigate('Приятели-Добави', {username: friendsListUsername})}>
+                    <Pressable onPress={() => navigation.navigate('Add-Friends', {username: friendActions.friendsListUsername})}>
                         <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
 
-                    <Pressable onPress={() => navigation.navigate('Приятели-Покани-Получени', {username: friendsListUsername})}>
+                    <Pressable onPress={() => navigation.navigate('Friend-Requests-Recieved', {username: friendActions.friendsListUsername})}>
                         <Ionicons name="notifications-circle-outline" size={72} color="#fd1c47"/>
                     </Pressable>
                 </View>
-            ) : currentPage === "ViewFriendProfile" ? (
+            ) : 
+            /* Friends: ViewFriendProfile */
+            /*currentPage === "View-Friend-Profile" ? (
                 <View>
-                    <Pressable onPress={removeFriend}>
+                    <Pressable onPress={friendActions.removeFriend}>
                         <Ionicons name='trash-outline' color='#fd1c47' size={64}/>
                     </Pressable>
                 </View>
-            ) : currentPage === "FoodInfo" ? (
+            ) : */
+            // --- Food Info Navigation ---
+            currentPage === "Food-Info" ? (
                 <View>
-                    <Pressable onPress={deleteFood}>
+                    <Pressable onPress={foodActions.deleteFood}>
                         <Ionicons name='trash-outline' color='#fd1c47' size={64}/>
                     </Pressable>
                 </View>
-            ) : currentPage === "Settings-Macronutrients" ? (
+            ) : 
+            // --- Settings-related Navigation ---
+            /* Settings: Macronutrients */
+            currentPage === "Settings-Macronutrients" ? (
                 <View>
-                    <Pressable onPress={saveSettingsMacrosButton}>
+                    <Pressable onPress={settingsActions.saveSettingsMacrosButton}>
                         <Text style={tw`text-red-500 font-semibold text-4xl`}>{t('save')}</Text>
                     </Pressable>
                 </View>
-            ) : currentPage === "Folder" ? (
+            ) : 
+            // --- Folder-related Navigation ---
+            /* Folder: Folder View */
+            currentPage === "Workout-Folder" ? (
                 <View>
-                    {selectionMode === false ? (
+                    {selectionActions.selectionMode === false ? (
                         <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
-
                             <Pressable onPress={async () => {
-                                const limitReachedFolder = await checkWorkoutsCountFolder(folder.id)
+                                const limitReachedFolder = await checkWorkoutsCountFolder(folderActions.folder?.id)
                                 const limitReachedTotal = await checkWorkoutsCountTotal();
                                 
                                 if (limitReachedFolder) {
@@ -364,34 +398,32 @@ const BottomNavigationBar = (
                                     return;
                                 }
 
-                                navigation.navigate("Тренировка-Добави", {folder: folder})
+                                navigation.navigate("Add-Workout", {folder: folderActions.folder})
                             }}>
                                 <Ionicons name="add-circle-outline" size={72} color="#fd1c47"/>
                             </Pressable>
 
-                            <Pressable onPress={deleteFolder}>
+                            <Pressable onPress={folderActions.deleteFolder}>
                                 <Ionicons name="trash-bin-outline" size={72} color="#fd1c47"/>
                             </Pressable>
                             
                             <Pressable style={tw`w-15 h-15 border-4 border-[#fd1c47] rounded-full flex items-center justify-center`}
-                                onPress={() => navigation.navigate('Генериране-Тренировка', {folder: folder})}
+                                onPress={() => navigation.navigate('Generate-Workout', {folder: folderActions.folder})}
                             >
                                 <Ionicons name="flash-outline" size={40} color="#fd1c47"/>
                             </Pressable>
-
                         </View>
                     ) : (
                         <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
-                            
-                            <Pressable onPress={cutSelectedWorkoutsInFolder}>
+                            <Pressable onPress={selectionActions.cutSelectedWorkoutsInFolder}>
                                 <Ionicons name="cut-outline" size={72} color="#fd1c47"/>
                             </Pressable>
 
-                            <Pressable onPress={deleteSelectedWorkoutsInFolder}>
+                            <Pressable onPress={selectionActions.deleteSelectedWorkoutsInFolder}>
                                 <Ionicons name="trash-outline" size={72} color="#fd1c47"/>
                             </Pressable>
 
-                            <Pressable onPress={copySelectedWorkoutsInFolder}>
+                            <Pressable onPress={selectionActions.copySelectedWorkoutsInFolder}>
                                 <Ionicons name="copy-outline" size={72} color="#fd1c47"/>
                             </Pressable>
                         </View>
@@ -399,14 +431,12 @@ const BottomNavigationBar = (
                 </View>
             ) : (
                 <View style={tw`flex flex-row justify-around items-center w-full h-full`}>
-                    {Button({currentPage, navigation, icon: 'home-outline', navigationPage: 'Главна Страница', goalPage: 'Main'})}
-                    {Button({currentPage, navigation, icon: 'fitness-outline', navigationPage: 'Тренировки', goalPage: 'Workouts'})}
-                    {Button({currentPage, navigation, icon: 'calendar-clear-outline', navigationPage: 'Хранене', goalPage: 'Food'})}
-                    {Button({currentPage, navigation, icon: 'settings-outline', navigationPage: 'Настройки-Страница', goalPage: 'Settings'})}
+                    {Button({currentPage, navigation, icon: 'home-outline', navigationPage: 'Main', goalPage: 'Main'})}
+                    {Button({currentPage, navigation, icon: 'fitness-outline', navigationPage: 'Workouts', goalPage: 'Workouts'})}
+                    {Button({currentPage, navigation, icon: 'calendar-clear-outline', navigationPage: 'Food', goalPage: 'Food'})}
+                    {Button({currentPage, navigation, icon: 'settings-outline', navigationPage: 'Settings', goalPage: 'Settings'})}
                 </View>
             )}
-            
-            
         </View>
     )
 }

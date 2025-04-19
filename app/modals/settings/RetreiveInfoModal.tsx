@@ -9,17 +9,15 @@ import GlobalContext from '@config/GlobalContext';
 interface RetreiveInfoModalProps {
     isRetreiveInfoModalVisible: boolean;
     setIsRetreiveInfoModalVisible: (isVisible: boolean) => void;
-    setIsLoadingModalVisible: (isVisible: boolean) => void;
-    internetSpeed: number;
     setIsRetreiveInfoExtraModalVisible: (isVisible: boolean) => void;
+    retreiveInfoFunc: () => void;
 }
 
-const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({ 
+const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({
     isRetreiveInfoModalVisible, 
     setIsRetreiveInfoModalVisible, 
-    setIsLoadingModalVisible,
-    internetSpeed,
-    setIsRetreiveInfoExtraModalVisible
+    setIsRetreiveInfoExtraModalVisible,
+    retreiveInfoFunc
 }) => {
 
     const {t} = useTranslation();
@@ -55,9 +53,8 @@ const RetreiveInfoModal: React.FC<RetreiveInfoModalProps> = ({
 
                         <View style={tw`w-full h-full flex justify-center flex-row gap-x-3 mt-4`}>
                             <Pressable style={tw`bg-green-500 w-full h-16 rounded-xl flex items-center justify-center`}
-                                onPress={async () => {
-                                    setIsRetreiveInfoModalVisible(false);
-                                    await retreiveInfo(setIsLoadingModalVisible, internetSpeed, t);
+                                onPress={() => {
+                                    retreiveInfoFunc();
                                 }}
                             >
                                 <Text style={tw`text-white font-medium text-xl text-center mx-2`}>{t('retreive-info')}</Text>

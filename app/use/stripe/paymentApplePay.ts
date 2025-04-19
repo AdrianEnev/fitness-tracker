@@ -3,7 +3,7 @@ import { confirmPlatformPayPayment } from '@stripe/stripe-react-native';
 import { Alert } from 'react-native';
 import { addLungeCoins } from '@useAddLungeCoins';
 
-const API_URL = 'http://172.20.10.5:3000/api/stripe';
+const API_URL = 'http://localhost:3000/api/stripe';
 
 const fetchPaymentIntentClientSecret = async (price: number) => {
 

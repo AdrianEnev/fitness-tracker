@@ -63,7 +63,7 @@ const GenerateWorkoutPage = ({navigation, route}: any) => {
         }
         
         if (folder) {
-            navigation.navigate('Тренировки');
+            navigation.navigate('Workouts');
         }else{
             navigation.goBack();
         }

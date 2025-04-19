@@ -121,7 +121,7 @@ const Workouts = ({navigation}: any) => {
         const workoutInfo = await getWorkoutInfoLocally(workout.id);
         if (workoutInfo) {
             const { exercisesData, workoutTitle } = workoutInfo;
-            navigation.navigate('Тренировка-Детайли', {exercises: exercisesData, workoutTitle: workoutTitle, workout: workout});
+            navigation.navigate('View-Workout', {exercises: exercisesData, workoutTitle: workoutTitle, workout: workout});
         }
 
         setTimeout(() => {
@@ -299,7 +299,7 @@ const Workouts = ({navigation}: any) => {
             <Pressable style={tw`w-full h-24 bg-white border border-gray-200 shadow-sm rounded-2xl mr-2 mb-2 py-2 px-3`} 
                 onPress={() => {
                     if (!selectionMode) {
-                        navigation.navigate('Папка', {folderId: folder.id});
+                        navigation.navigate('Workout-Folder', {folderId: folder.id});
                     }
                 }} 
                 onLongPress={() => {

@@ -63,7 +63,6 @@ const LanguageScreenSmall = ({ setLocalLanguageSet }: { setLocalLanguageSet: (va
 
                 </TouchableOpacity>
             </View>
-
         </View>
     )
 }

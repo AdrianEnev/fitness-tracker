@@ -5,7 +5,6 @@ import { View, Text, Alert } from 'react-native';
 import tw from 'twrnc';
 import GlobalContext from '@config/GlobalContext';
 import { useTranslation } from 'react-i18next';
-import deleteAccount from '@app/use/settings/remove/useDeleteAccount';
 import reauthenticateAndDelete from '@app/use/settings/remove/useDeleteAccount';
 
 const EmailNotVerified = () => {

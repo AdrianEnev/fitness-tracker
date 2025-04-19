@@ -153,7 +153,7 @@ const Main = ({navigation}: any) => {
                         </View>
 
                         <View style={tw`absolute top-0 right-2`}>
-                            <TouchableWithoutFeedback onPress={() => navigation.navigate("Настройки-Страница")} 
+                            <TouchableWithoutFeedback onPress={() => navigation.navigate("Settings")} 
                                     style={tw`bg-white w-16 h-16 rounded-full flex items-center justify-center border-2 border-gray-200 ml-2`}>
                                 <View>
                                     <Ionicons name='settings-outline' 

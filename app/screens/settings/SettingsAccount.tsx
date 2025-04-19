@@ -1,11 +1,7 @@
-import { View, Text, Pressable, Alert, Switch, Vibration, ActivityIndicator } from 'react-native'
+import { View, Text } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
-import { FIREBASE_AUTH } from '@config/firebaseConfig'
 import tw from 'twrnc'
-import { getAuth } from 'firebase/auth'
-import changePassword from '@use/settings/change/useChangePassword'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import Ionicons from '@expo/vector-icons/Ionicons';
 import GlobalContext from '@config/GlobalContext'
 import ProfilePicture from '@app/components/settings/ProfilePicture'
 import BottomNavigationBar from '@components/BottomNavigationBar'
@@ -15,14 +11,17 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { BlurView } from 'expo-blur'
 import syncInformation from '@use/settings/useSyncInfo'
 import DeletingAccountModal from '@modals/loading/DeletingAccountModal'
-import ChangingUsernameModal from '@modals/loading/ChangingUsernameModal'
 import SyncInfoExtraModal from '@modals/settings/SyncInfoInformationModal'
 import SyncInfoModal from '@modals/settings/SyncInfoModal'
-import reauthenticateAndDelete from '@use/settings/remove/useDeleteAccount'
-import changeUsername from '@app/use/settings/change/useChangeUsername'
 import RetreiveInfoModal from '@app/modals/settings/RetreiveInfoModal'
 import LoadingModal from '@app/modals/loading/LoadingModal'
 import RetreiveInfoExtraModal from '@app/modals/settings/RetreiveInfoExtraModal'
+import promptLogOut from '@app/components/prompts/promptLogOut'
+import promptChangeUsername from '@app/components/prompts/promptChangeUsername'
+import promptDeleteAccount from '@app/components/prompts/promptDeleteAccount'
+import promptChangePassword from '@app/components/prompts/promptChangePassword'
+import SettingsAccountButton from '@app/components/settings/SettingsAccountButton'
+import retreiveInfo from '@app/use/settings/get/useRetreiveInfo'
 
 const SettingsAccount = ({navigation}: any) => {
 
@@ -32,123 +31,22 @@ const SettingsAccount = ({navigation}: any) => {
         setSetupRan, 
         setIsAccountDeleted, 
         syncingInfoRunning, 
-        setSyncingInfoRunning,
-        internetSpeed
+        setSyncingInfoRunning
     } = useContext(GlobalContext);
 
-    const [changingUsernameRunning, setChangingUsernameRunning] = useState(false);
     const [isSyncInfoModalVisible, setIsSyncInfoModalVisible] = useState(false);
     const [isSyncingInfoModalVisible, setIsSyncingInfoModalVisible] = useState(false);
     const [isSyncInfoExtraModalVisible, setIsSyncInfoExtraModalVisible] = useState(false);
     const [isDeletingAccountModalVisible, setIsDeletingAccountModalVisible] = useState(false);
     const [isRetreiveInfoModalVisible, setIsRetreiveInfoModalVisible] = useState(false);
-    const [isRetreivingInfoAnimationModalVisible, setIsRetreivingInfoAnimationModalVisible] = useState(false);
     const [isRetreiveInfoExtraModalVisible, setIsRetreiveInfoExtraModalVisible] = useState(false);
     const [isLoadingModalVisible, setIsLoadingModalVisible] = useState(false);
-
-    const logOut = () => {
-
-        // add confirmation alert before logging out
-        Alert.alert(
-            t('account-logout'),
-            t('account-logout-prompt'),
-            [
-                {
-                    text: t(('cancel')),
-                    style: 'cancel',
-                },
-                {
-                    text: t('next'),
-                    style: 'destructive',
-                    onPress: () => {
-                        FIREBASE_AUTH.signOut();
-                    },
-                },
-            ],
-        );
-
-    }
-
-    const changeUsernamePrompt = async () => {
-
-        Alert.prompt(
-            t('change-username'),
-            t('change-username-prompt'),
-            [
-                {
-                    text: t('cancel'),
-                    style: 'destructive',
-                },
-                {
-                    text: t('change-short'),
-                    style: 'default',
-                    onPress: async (newUsername: string | undefined) => {
-
-                        if (!internetConnected) {
-                            alert(t('unstable-connection'))
-                            return
-                        };
-                        if (!username){
-                            alert(t('error'))
-                            return
-                        };
-
-                        const trimmedUsername = newUsername?.trim();
-                        await changeUsername(username, String(trimmedUsername), setChangingUsernameRunning, t, setUsername); 
-                    },
-                },
-            ],
-            'plain-text',
-        );
-    }
-
-    const button = (title: any, icon: any, background: string, iconColor: any, iconSize: number, action: any) => {
-        return (
-            <Pressable style={tw`w-full h-14 bg-white p-3 mb-1`} onPress={action}>
-                <View style={tw`flex flex-row justify-between`}>
-
-                    <View style={tw`flex flex-row`}>
-                        <View style={tw`w-10 h-10 bg-${background} rounded-full flex items-center justify-center mr-2`}>
-                            <Ionicons name={icon} size={iconSize} color={iconColor} />
-                        </View>
-                        
-                        <View style={tw`flex justify-center`}>
-                            <Text style={tw`text-lg font-medium`}>{title}</Text>
-                            {(
-                                title === t('change-username') && !internetConnected || 
-                                title === t('change-password') && !internetConnected || 
-                                title === t('delete-account') && !internetConnected || 
-                                title === t(`log-out`) && !internetConnected
-                            ) && (
-                                <Text style={tw`text-gray-500 mb-[8px]`}>{t('stable-internet-required')}</Text>
-                            )}
-                        </View>
-                    </View>
-                    
-                    {(title != t(`sync-info`) || !syncingInfoRunning) && (
-                        <View style={tw`flex justify-center`}>
-                            <Ionicons name='chevron-forward' size={24} color='#6b7280' />
-                        </View>
-                    )}
-
-                    {(title == t(`sync-info`) && syncingInfoRunning) && (
-                        <View style={tw`flex justify-center`}>
-                            <ActivityIndicator size="small" color="#6b7280"/>
-                        </View>
-                    )}
-                    
-
-                </View>
-            </Pressable>
-        )
-    }
+    const [isRetreiveInfoRan, setIsRetreiveInfoRan] = useState(false);
 
     const {t} = useTranslation();
 
-    //{switchButton('2FA', 'lock-closed-outline', 'green-300', '#22c55e', 24)}
-
     const [username, setUsername] = useState<string | null>(null);
-    const [email, setEmail] = useState<string | null>(null)
+    const [email, setEmail] = useState<string | null>(null);
 
     const getUsernameLocally = async () => {
         const email = await getEmail();
@@ -157,21 +55,29 @@ const SettingsAccount = ({navigation}: any) => {
         setUsername(AsyncStorageUsername);
     }
 
+    const getIsRetreiveInfoRan = async () => {
+        const isRetreiveInfoRan = await AsyncStorage.getItem('retreiveInfo');
+        setIsRetreiveInfoRan(isRetreiveInfoRan === 'true');
+    }
+
+    const refreshRetreiveInfoRan = () => {
+        getIsRetreiveInfoRan();
+    }
+
     useEffect(()=> {
         getUsernameLocally();
         
         const fetch = async () => {
             const AsyncStorageEmail = await getEmail();
-            setEmail(AsyncStorageEmail)
+            setEmail(AsyncStorageEmail);
         }
 
         fetch();
-
+        getIsRetreiveInfoRan();
     }, [])
 
     const syncInfo = async () => {
-        if (syncingInfoRunning) return;
-    
+        
         setSyncingInfoRunning(true);
         setIsSyncingInfoModalVisible(true);
     
@@ -184,48 +90,32 @@ const SettingsAccount = ({navigation}: any) => {
             setTimeout(() => {
                 setIsSyncInfoModalVisible(false);
                 setSyncingInfoRunning(false);
-            }, 10); // 100 milliseconds delay
+            }, 10);
         }
     };
 
-    const deleteAccountPrompt = async () => {
-        // Prompt the user to enter their password for account deletion
-        Alert.prompt(
-            'Изтриване на акаунт',
-            'Въведи паролата за този акаунт, за да го изтриеш',
-            [
-                {
-                    text: t('cancel'),
-                    style: 'cancel',
-                },
-                {
-                    text: t('delete'),
-                    style: 'destructive',
-                    onPress: async (password: string | undefined) => {
+    const retreiveInfoFunc = async () => {
+        setIsRetreiveInfoModalVisible(false);
+        setIsLoadingModalVisible(true);
 
-                        const isVerified = true;
-                        setIsDeletingAccountModalVisible(true)
-                        await reauthenticateAndDelete(setProfilePicture, setSetupRan, setIsAccountDeleted, isVerified, password);                    
-                        setIsAccountDeleted(true)
-                    },
-                },
-            ],
-            'secure-text'
-        );
+        // Set timeout to prevent App freeze in case loading modal closes too early
+        // 100+ ms should be safe, likely a react native issue that can't be prevented otherwise
+        setTimeout(async () => {
+            await retreiveInfo(refreshRetreiveInfoRan, internetConnected, t);
+            setIsLoadingModalVisible(false);
+        }, 120);
     }
 
     return (
         <>
-
             {(
                 isSyncingInfoModalVisible || 
                 isDeletingAccountModalVisible || 
-                changingUsernameRunning || 
                 isSyncInfoExtraModalVisible || 
                 isSyncInfoModalVisible ||
                 isRetreiveInfoModalVisible ||
-                isRetreivingInfoAnimationModalVisible ||
-                isRetreiveInfoExtraModalVisible
+                isRetreiveInfoExtraModalVisible ||
+                isLoadingModalVisible
             ) && (
                 <BlurView
                     style={tw`absolute w-full h-full z-10`}
@@ -235,11 +125,6 @@ const SettingsAccount = ({navigation}: any) => {
             )}
 
             <SafeAreaView style={tw`w-full h-full bg-white`}>
-
-                <ChangingUsernameModal
-                    isChangingUsernameModalVisible={changingUsernameRunning}
-                    setIsChangingUsernameModalVisible={setChangingUsernameRunning}
-                />
 
                 <DeletingAccountModal
                     isDeletingAccountModalVisible={isDeletingAccountModalVisible}
@@ -261,9 +146,8 @@ const SettingsAccount = ({navigation}: any) => {
                 <RetreiveInfoModal
                     isRetreiveInfoModalVisible={isRetreiveInfoModalVisible}
                     setIsRetreiveInfoModalVisible={setIsRetreiveInfoModalVisible}
-                    setIsLoadingModalVisible={setIsLoadingModalVisible}
-                    internetSpeed={internetSpeed}
                     setIsRetreiveInfoExtraModalVisible={setIsRetreiveInfoExtraModalVisible}
+                    retreiveInfoFunc={retreiveInfoFunc}
                 />
 
                 <RetreiveInfoExtraModal
@@ -296,57 +180,90 @@ const SettingsAccount = ({navigation}: any) => {
                     {/* Seperator */}
                     <View style={tw`h-[2px] w-[94%] bg-gray-300 rounded-full mx-2`}></View>
 
-                    {/* Icons */}
-                    {button(t('change-username'), 'text-outline', 'yellow-300', '#eab308', 24, () => {
-                        if (internetConnected) {
-                            changeUsernamePrompt()
-                        }else{
-                            Vibration.vibrate()
-                        }
-                    })}
+                    {/* Buttons */}
+                    <SettingsAccountButton
+                        title={t('change-username')}
+                        iconName='text-outline'
+                        backgroundColor='yellow-300'
+                        iconColor='#eab308'
+                        iconSize={24}
+                        action={() => promptChangeUsername(t, username, setIsLoadingModalVisible, setUsername, internetConnected)}
+                        t={t}
+                        internetConnected={internetConnected}
+                        syncingInfoRunning={syncingInfoRunning}
+                    />
 
+                    <SettingsAccountButton
+                        title={t('change-password')}
+                        iconName='create-outline'
+                        backgroundColor='green-300'
+                        iconColor='#22c55e'
+                        iconSize={26}
+                        action={() => promptChangePassword(email, t, internetConnected)}
+                        t={t}
+                        internetConnected={internetConnected}
+                        syncingInfoRunning={syncingInfoRunning}
+                    />
 
+                    <SettingsAccountButton
+                        title={t('log-out')}
+                        iconName='log-out-outline'
+                        backgroundColor='blue-300'
+                        iconColor='#3b82f6'
+                        iconSize={28}
+                        action={() => promptLogOut(t, internetConnected)}
+                        t={t}
+                        internetConnected={internetConnected}
+                        syncingInfoRunning={syncingInfoRunning}
+                    />
 
-                    {button(t('change-password'), 'create-outline', 'green-300', '#22c55e', 26, () => {
-                        
-                        if (internetConnected) {
-                            const auth = getAuth();
-                            const user = auth.currentUser;
-                            changePassword(email, user, auth, t)
-                        }else{
-                            Vibration.vibrate()
-                        }
-                        
-                    })}
-                    {button(t('log-out'), 'log-out-outline', 'blue-300', '#3b82f6', 28, () => {
-                        if (internetConnected) {
-                            logOut()
-                        }else{
-                            Vibration.vibrate()
-                        }
-                    })}
-                    {button(t('delete-account'), 'close-outline', 'red-300', '#ef4444', 34, async () => {
+                    <SettingsAccountButton
+                        title={t('delete-account')}
+                        iconName='close-outline'
+                        backgroundColor='red-300'
+                        iconColor='#ef4444'
+                        iconSize={34}
+                        action={async () => {
+                            setIsDeletingAccountModalVisible(true)
+                            promptDeleteAccount(t, setProfilePicture, setSetupRan, setIsAccountDeleted, internetConnected);
+                            setIsAccountDeleted(true)
+                        }}
+                        t={t}
+                        internetConnected={internetConnected}
+                        syncingInfoRunning={syncingInfoRunning}
+                    />
 
-                        if (internetConnected && internetSpeed > 32) {
-                            deleteAccountPrompt();
-                        }else{
-                            alert(t('unstable-connection'))
-                            Vibration.vibrate()
-                        }
-                        
-                    })}
-                    {button(t('sync-info'), 'sync-outline', 'indigo-300', '#4f46e5', 34, async () => {
-
-                        setIsSyncInfoModalVisible(true)
-                        
-                    })}
+                    <SettingsAccountButton
+                        title={t('sync-info')}
+                        iconName='sync-outline'
+                        backgroundColor='indigo-300'
+                        iconColor='#4f46e5'
+                        iconSize={34}
+                        action={async () => {
+                            if (syncingInfoRunning) return;
+                            setIsSyncInfoModalVisible(true)
+                        }}
+                        t={t}
+                        internetConnected={internetConnected}
+                        syncingInfoRunning={syncingInfoRunning}
+                    />
                     
-                    {button(t('retreive-info'), 'reload-outline', 'pink-300', '#ec4899', 34, async () => {
-
-                        setIsRetreiveInfoModalVisible(true)
-                        
-                    })}
-
+                    {isRetreiveInfoRan ? null : (
+                        <SettingsAccountButton
+                            title={t('retreive-info')}
+                            iconName='reload-outline'
+                            backgroundColor='pink-300'
+                            iconColor='#ec4899'
+                            iconSize={34}
+                            action={async () => {
+                                if (syncingInfoRunning) return;
+                                setIsRetreiveInfoModalVisible(true)
+                            }}
+                            t={t}
+                            internetConnected={internetConnected}
+                            syncingInfoRunning={syncingInfoRunning}
+                    />
+                    )}
                 </View>
 
                 <BottomNavigationBar currentPage='Settings' navigation={navigation}/>

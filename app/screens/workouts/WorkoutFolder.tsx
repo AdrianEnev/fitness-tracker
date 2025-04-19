@@ -60,7 +60,7 @@ const WorkoutFolder = ({ route, navigation }: any) => {
 
         if (workoutInfo) {
             const { exercisesData, workoutTitle } = workoutInfo;
-            navigation.navigate('Тренировка-Детайли', { exercises: exercisesData, workoutTitle: workoutTitle, workout: workout, folder: folder });
+            navigation.navigate('View-Workout', { exercises: exercisesData, workoutTitle: workoutTitle, workout: workout, folder: folder });
         }
 
         setTimeout(() => {
@@ -170,14 +170,19 @@ const WorkoutFolder = ({ route, navigation }: any) => {
                 </View>
 
                 <BottomNavigationBar
+                    currentPage='Workout-Folder'
                     navigation={navigation}
-                    folder={folder}
-                    currentPage='Folder'
-                    deleteFolder={deleteFolderFunc}
-                    selectionMode={selectionMode}
-                    copySelectedWorkoutsInFolder={copyWorkouts}
-                    cutSelectedWorkoutsInFolder={cutWorkouts}
-                    deleteSelectedWorkoutsInFolder={deleteWorkouts}
+                    folderActions={{
+                        folder: folder,
+                        deleteFolder: deleteFolderFunc
+                    }}
+                    selectionActions={{
+                        selectionMode: selectionMode,
+                        copySelectedWorkoutsInFolder: copyWorkouts,
+                        cutSelectedWorkoutsInFolder: cutWorkouts,
+                        deleteSelectedWorkoutsInFolder: deleteWorkouts
+                    }}
+                    
                 />
             </View>
         </>

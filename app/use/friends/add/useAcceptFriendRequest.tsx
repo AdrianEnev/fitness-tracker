@@ -17,7 +17,7 @@ const acceptFriendRequest = async (userToCheck: Friend, navigation: any, transla
     console.log('Attempting to accept friend request from:', userToCheck.username);
 
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/friends/${currentUserUid}/accept`, {
+        const response = await fetch(`http://localhost:3000/api/friends/${currentUserUid}/accept`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json', 
@@ -40,7 +40,7 @@ const acceptFriendRequest = async (userToCheck: Friend, navigation: any, transla
         setFriendRequestsNumber((Number(friendRequestsNumber) - 1).toString());
 
         console.log('Friend request accepted successfully!');
-        navigation.navigate('Настройки-Страница');
+        navigation.navigate('Settings');
         alert(translation('friend-request-accepted'))
 
     } catch (error) {

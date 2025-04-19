@@ -8,7 +8,7 @@ const deleteFriendRequest = async (userToCheck: Friend, navigation: any, transla
     console.log('Attempting to delete friend request to:', userToCheck.username);
 
     try {
-        const response = await fetch(`http://172.20.10.5:3000/api/friends/${currentUserUid}`, {
+        const response = await fetch(`http://localhost:3000/api/friends/${currentUserUid}`, {
             method: 'DELETE',
             headers: {
                 'Content-Type': 'application/json', 
@@ -27,7 +27,7 @@ const deleteFriendRequest = async (userToCheck: Friend, navigation: any, transla
         }
 
         console.log('Friend request deleted successfully!');
-        navigation.navigate('Настройки-Страница');
+        navigation.navigate('Settings');
         alert(translation('friend-request-deleted'))
 
     } catch (error) {

@@ -99,7 +99,6 @@ const Food = ({navigation}: any) => {
    
     return (
         <View style={tw`bg-white`}>
-
             <View style={tw`bg-white`}>
 
                 <CalendarList 
@@ -110,7 +109,7 @@ const Food = ({navigation}: any) => {
                     futureScrollRange={6}
                     scrollEnabled={true}
                     onDayPress={(day: any) => {
-                        navigation.navigate("Хранене-Ден", {date: day});
+                        navigation.navigate("Food-Day", {date: day});
                     }}
                     markedDates={{
                         ...markedDates,
@@ -121,9 +120,7 @@ const Food = ({navigation}: any) => {
                     }}
                 />
                 
-
             </View>
-            
         </View>
     )
 }

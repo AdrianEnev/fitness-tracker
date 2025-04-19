@@ -80,7 +80,7 @@ const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate, g
     return (
         <Pressable style={tw`mt-3 mx-2 w-full h-66`} onPress={() => {
             
-            navigation.navigate("Хранене-Ден", {date: formattedDate});
+            navigation.navigate("Food-Day", {date: formattedDate});
            
         }}>
 

@@ -54,13 +54,13 @@ const FriendsList = ({navigation}: any) => {
                     keyExtractor={(item) => item.id}
                     renderItem={({item}) => (
                         <Pressable style={tw`flex flex-row justify-between items-center bg-white shadow-lg rounded-xl p-3 my-2`}
-                            onPress={() => navigation.navigate('Приятел-Акаунт', {friend_info: item})}
+                            onPress={() => navigation.navigate('View-Friend-Profile', {friend_info: item})}
                         >
 
                             <Text style={tw`text-lg text-black font-medium`}>{item.username}</Text>
 
                             <View style={tw`flex flex-row gap-x-3`}>
-                                <Pressable style={tw`w-24 h-12 bg-blue-500 rounded-2xl flex items-center justify-center shadow-md`} onPress={() => navigation.navigate('Приятел-Акаунт', {friend_info: item})}>
+                                <Pressable style={tw`w-24 h-12 bg-blue-500 rounded-2xl flex items-center justify-center shadow-md`} onPress={() => navigation.navigate('View-Friend-Profile', {friend_info: item})}>
                                     <Text style={tw`text-xl text-white font-semibold`}>{t('view-friend')}</Text>
                                 </Pressable>
                             </View>
@@ -73,7 +73,13 @@ const FriendsList = ({navigation}: any) => {
                 />
             </View>
 
-            <BottomNavigationBar currentPage='FriendsList' navigation={navigation} friendsListUsername={username}/>
+            <BottomNavigationBar 
+                currentPage='Friends' 
+                navigation={navigation} 
+                friendActions={{
+                    friendsListUsername: username
+                }}
+            />
             
         </View>
     )

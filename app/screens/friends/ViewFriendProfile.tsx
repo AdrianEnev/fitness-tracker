@@ -115,16 +115,16 @@ const ViewFriendProfile = ({route, navigation}: any) => {
 
                     <View style={tw`flex-1 justify-end items-center mb-3`}>
 
-                    <TouchableOpacity style={tw`w-64 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md`}
-                                onPress={async () => {
-                                    setRemovingFriend(true);
-                                    await removeFriend(friend_info, navigation, t);
-                                    setRemovingFriend(false);
-                                }}
-                                disabled={removingFriend}
-                            >
-                                <Text style={tw`text-xl font-medium text-red-500`}>{removingFriend ? t('removing-friend') : t('remove-friend')}</Text>
-                            </TouchableOpacity>
+                        <TouchableOpacity style={tw`w-64 h-12 bg-white shadow-lg rounded-2xl flex items-center justify-center shadow-md`}
+                            onPress={async () => {
+                                setRemovingFriend(true);
+                                await removeFriend(friend_info, navigation, t);
+                                setRemovingFriend(false);
+                            }}
+                            disabled={removingFriend}
+                        >
+                            <Text style={tw`text-xl font-medium text-red-500`}>{removingFriend ? t('removing-friend') : t('remove-friend')}</Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </SafeAreaView>

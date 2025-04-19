@@ -135,7 +135,14 @@ const AddFoodPage = ({route, navigation}: any) => {
                      
             </Pressable>
            
-            <BottomNavigationBar currentPage='AddFoodPage' navigation={navigation} displayFoods={displayFoods} clearSearchFoodSuggestionList={clearSearchList}/>
+            <BottomNavigationBar 
+                currentPage='Add-Food' 
+                navigation={navigation} 
+                foodActions={{
+                    displayFoods: displayFoods,
+                    clearSearchFoodSuggestionList: clearSearchList
+                }}
+            />
 
         </View>
     )

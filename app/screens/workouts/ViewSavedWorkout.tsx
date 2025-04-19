@@ -62,6 +62,25 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
         getStartEnd();
     }, [])
 
+    const forwardButton = () => {
+        setCurrentIndex((prevIndex) => {
+            const newIndex = (prevIndex + 1) % exercises.length;
+            
+            return newIndex;
+        });
+    };
+
+    const backButton = () => {
+        return exercises.length === 1
+            ? null
+            : () => {
+                setCurrentIndex((prevIndex) => {
+                    const newIndex = (prevIndex - 1 + exercises.length) % exercises.length;
+                    return newIndex;
+                });
+            };
+    };
+
     return (
         <>
             { (isDeleteSavedWorkoutModalVisible || isSavedWorkoutNotesVisible) && (
@@ -178,34 +197,22 @@ const ViewSavedWorkout = ({navigation, route}: any) => {
                     </View>
 
                     <BottomNavigationBar
-                        currentPage='SavedWorkout'
+                        currentPage='Saved-Workout'
                         navigation={navigation}
-                        forwardButton={() => {
-                            
-                            setCurrentIndex((prevIndex) => {
-                                const newIndex = (prevIndex + 1) % exercises.length;
-                                
-                                return newIndex;
-                            });
+                        workoutActions={{
+                            forwardButton,
+                            backButton
                         }}
-                        backButton={exercises.length === 1 ? null : () => {
-                            
-                            setCurrentIndex((prevIndex) => {
-                                const newIndex = (prevIndex - 1 + exercises.length) % exercises.length;
-                                
-                                return newIndex;
-                            });
+                        savedWorkoutInfo={{
+                            viewSavedWorkoutDate: date,
+                            viewSavedWorkoutStartEnd: startEnd,
+                            viewSavedWorkoutNumberOfExercises: exercises.length,
+                            deleteSavedWorkout: () => setIsDeleteSavedWorkoutModalVisible(true)
                         }}
-                        deleteSavedWorkout={() => setIsDeleteSavedWorkoutModalVisible(true)}
-                        viewSavedWorkoutNumberOfExercises={exercises.length}
-                        viewSavedWorkoutDate={date}
-                        viewSavedWorkoutStartEnd={startEnd}
                     />
 
                 </SafeAreaView>
-                
             </TouchableWithoutFeedback>
-
         </>
     );
 }

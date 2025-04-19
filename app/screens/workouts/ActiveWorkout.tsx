@@ -333,14 +333,16 @@ const ActiveWorkout = ({route, navigation}: any) => {
                     </View>
 
                     <BottomNavigationBar
-                        currentPage='ActiveWorkout'
+                        currentPage='Active-Workout'
                         navigation={navigation}
-                        toggleEndWorkoutModal={handleEndWorkoutVisibilityFunc}
-                        forwardButton={forwardButton}
-                        backButton={backButton}
-                        addActiveWorkoutSet={addSetFunc}
-                        addActiveWorkoutExercise={addExerciseFunc}
-                        activeWorkoutNumberOfExercises={workout.numberOfExercises + exercisesAdded - 1}
+                        workoutActions={{
+                            activeWorkoutToggleEndWorkoutModal: handleEndWorkoutVisibilityFunc,
+                            forwardButton: forwardButton,
+                            backButton: backButton,
+                            addActiveWorkoutSet: addSetFunc,
+                            addActiveWorkoutExercise: addExerciseFunc,
+                            activeWorkoutNumberOfExercises: workout.numberOfExercises + exercisesAdded - 1
+                        }}
                     />
 
                 </SafeAreaView>

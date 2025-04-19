@@ -64,13 +64,13 @@ const Workouts = ({navigation}: any) => {
         if (workoutInfo) {
 
             const { exercisesData, workoutTitle } = workoutInfo;
-            navigation.navigate('Виж-Запазенa-Тренировка', {
+            navigation.navigate('View-Saved-Workout', {
                 exercises: exercisesData, workoutTitle: workoutTitle, date: date, time: time, workout: workout
             });
 
         }
         
-        //await navigation.navigate('Виж-Запазенa-Тренировка', { workout: workout, date: date, time: time });
+        //await navigation.navigate('View-Saved-Workout', { workout: workout, date: date, time: time });
 
         setTimeout(() => {
             setViewWorkoutButtonDisabled(false);

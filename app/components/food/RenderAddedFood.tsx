@@ -9,7 +9,7 @@ const RenderAddedFood = ({item, navigation, date}: any) => {
     const time = item?.date ? new Date(item.date).toLocaleTimeString([], dateOptions) : ''; // Convert date string to Date object
 
     return (
-        <Pressable style={tw`w-full h-14 bg-white py-1`} onPress={() => navigation.navigate("Храна-Подробности", {food: item, time: time, unformattedDate: date})}>
+        <Pressable style={tw`w-full h-14 bg-white py-1`} onPress={() => navigation.navigate("Food-Info", {food: item, time: time, unformattedDate: date})}>
             <View style={tw`flex flex-row justify-between`}>
 
                 <View style={tw`flex flex-row`}>

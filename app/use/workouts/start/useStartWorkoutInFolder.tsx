@@ -10,7 +10,7 @@ const startWorkoutInFolder = async (workout: any, folder: any, navigation: any) 
         const exercisesData = workoutInfo.info;
         const workoutTitle = workoutInfo.title;
 
-        navigation.navigate("Активна-Тренировка", {exercises: exercisesData, workoutTitle: workoutTitle, workout: workout});
+        navigation.navigate("Active-Workout", {exercises: exercisesData, workoutTitle: workoutTitle, workout: workout});
     } else {
         console.log("Workout not found in the folder");
     }

@@ -23,6 +23,8 @@ const Login = ({navigation}: any) => {
 
     const signIn = async() => {
 
+        if (isLoginButtonDisabled) return;
+
         setIsLoginButtonDisabled(true)
 
         if (!internetConnected || internetSpeed < 56) {
