@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { confirmPlatformPayPayment } from '@stripe/stripe-react-native';
 import { Alert } from 'react-native';
-import { addLungeCoins } from '@useAddLungeCoins';
+import { addLungeCoins } from "@use/settings/useHandleLungeCoins";
+
 
 const API_URL = 'http://localhost:3000/api/stripe';
 

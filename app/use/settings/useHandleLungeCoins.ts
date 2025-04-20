@@ -1,8 +1,9 @@
 import { FIREBASE_AUTH } from "@config/firebaseConfig"
 
-const userId = FIREBASE_AUTH.currentUser?.uid
-
 export const getLungeCoins = async () => {
+
+    const userId = FIREBASE_AUTH.currentUser?.uid
+
     try {
         const response = await fetch(`http://localhost:3000/api/users/${userId}/lungeCoins`, {
             method: 'GET',
@@ -24,6 +25,8 @@ export const getLungeCoins = async () => {
 }
 
 export const decrementLungeCoins = async (amount: number) => {
+
+    const userId = FIREBASE_AUTH.currentUser?.uid
 
     const params = new URLSearchParams({
         amount: amount.toString(),
@@ -47,6 +50,8 @@ export const decrementLungeCoins = async (amount: number) => {
 }
 
 export const addLungeCoins = async (amount: number) => {
+
+    const userId = FIREBASE_AUTH.currentUser?.uid
 
     const params = new URLSearchParams({
         amount: amount.toString(),

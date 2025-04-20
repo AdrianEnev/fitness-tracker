@@ -7,7 +7,8 @@ const promptDeleteAccount = async (
     setProfilePicture: any, 
     setSetupRan: any, 
     setIsAccountDeleted: any, 
-    internetConnected: boolean
+    internetConnected: boolean,
+    setIsDeletingAccountModalVisible: any
 ) => {
 
     if (!internetConnected) {
@@ -28,8 +29,9 @@ const promptDeleteAccount = async (
                 style: 'destructive',
                 onPress: async (password: string | undefined) => {
 
+                    setIsDeletingAccountModalVisible(true);
                     const isVerified = true;
-                    await reauthenticateAndDelete(setProfilePicture, setSetupRan, setIsAccountDeleted, isVerified, password);                    
+                    await reauthenticateAndDelete(setSetupRan, setIsAccountDeleted, isVerified, password, setProfilePicture);                    
                 },
             },
         ],

@@ -5,22 +5,22 @@ import getEmail from '@use/settings/get/useGetEmail';
 
 // Function to reauthenticate the user and delete the account
 const reauthenticateAndDelete = async (
-    setProfilePicture: any, 
     setSetupRan: any, 
     setIsAccountDeleted: any, 
     isVerified: boolean,
     password?: string | undefined, 
+    setProfilePicture?: any | undefined, 
 ) => {
 
     const email = await getEmail();
     const user = FIREBASE_AUTH.currentUser;
 
     if (!email || !user) {
+        console.log('No email or user found, returning')
         return
     }
 
     if (password && isVerified) {
-
         // Reauthenticate user before deleting account
         // Required by firebase
         const credentials = EmailAuthProvider.credential(email, password);
@@ -29,10 +29,10 @@ const reauthenticateAndDelete = async (
                 await deleteAccountDatabase(
                     user, 
                     email, 
-                    setProfilePicture, 
                     setSetupRan, 
                     setIsAccountDeleted, 
-                    isVerified
+                    isVerified,
+                    setProfilePicture
                 );
             }
         }).catch((error) => {
@@ -42,10 +42,10 @@ const reauthenticateAndDelete = async (
         await deleteAccountDatabase(
             user, 
             email, 
-            setProfilePicture, 
             setSetupRan, 
             setIsAccountDeleted, 
-            isVerified
+            isVerified,
+            setProfilePicture
         );
     }
 }
@@ -53,10 +53,10 @@ const reauthenticateAndDelete = async (
 const deleteAccountDatabase = async (
     user: any, 
     email: string, 
-    setProfilePicture: any, 
     setSetupRan: any, 
     setIsAccountDeleted: any, 
-    isVerified: boolean
+    isVerified: boolean,
+    setProfilePicture?: any, 
 ) => {
 
     if (!user) return
@@ -85,7 +85,10 @@ const deleteAccountDatabase = async (
         FIREBASE_AUTH.signOut();
 
         // Reset GlobalContext to default values
-        setProfilePicture('');
+        if (setProfilePicture) {
+            // Not passed if deleting an unverified account
+            setProfilePicture('');
+        }
         setSetupRan(false);
         setIsAccountDeleted(true)
 

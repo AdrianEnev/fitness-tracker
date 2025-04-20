@@ -33,14 +33,14 @@ const Welcome = ({navigation}: any) => {
                 <Text style={tw`text-lg font-medium ml-2 mb-3`}>{t('slogan')}</Text>
 
                 <TouchableOpacity style={tw`w-full h-20 bg-[#fd1c47] rounded-2xl flex justify-center items-center shadow-md`} 
-                    onPress={() => navigation.navigate("Вход")}>
+                    onPress={() => navigation.navigate("Login")}>
 
                     <Text style={tw`text-3xl text-white`}>{t('login')}</Text>
 
                 </TouchableOpacity>
 
                 <TouchableOpacity style={tw`w-full h-20 bg-white rounded-2xl flex justify-center items-center shadow-md border border-gray-200 mb-4`}
-                    onPress={() => navigation.navigate("Регистрация")}>
+                    onPress={() => navigation.navigate("Register")}>
 
                     <Text style={tw`text-3xl`}>{t('register')}</Text>
 

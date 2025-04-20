@@ -32,8 +32,8 @@ import checkInternetSpeed from '@use/settings/check/useCheckInternetSpeed';
 import * as Device from 'expo-device';
 import LanguageScreenSmall from '@screens/language/LanguageScreenSmall';
 import { StripeProvider } from '@stripe/stripe-react-native';
-import { getLungeCoins } from '@use/settings/get/useGetLungeCoins';
 import MainMenuStack from '@app/components/MainMenuStack';
+import { getLungeCoins } from '@app/use/settings/useHandleLungeCoins';
 
 const Stack = createStackNavigator();
 
@@ -152,9 +152,19 @@ function App() {
         }
     };
 
+    const clearAsyncStorage = async () => {
+        try {
+            await AsyncStorage.clear();
+            console.log('Cleared AsyncStorage');
+        } catch (error) {
+            console.error("Error clearing AsyncStorage:", error);
+        }
+    };
+
     useEffect(() => {
         //logAllFoodDays();
         //AsyncStorage.setItem('retreiveInfo', 'false');
+        //clearAsyncStorage();
     }, [])*/
 
     const onAuthenticate = async () => {
@@ -235,16 +245,16 @@ function App() {
         } 
     };
 
+    // Ensure setupRan is loaded from persistent storage on every app start
     const fetchData = async () => {
         try {
             const setupHasRanLocally = await checkUserGoalNutrientsLocally();
             setSetupRan(setupHasRanLocally);
 
-            const lungeCoins = await getLungeCoins();
+            const lungeCoins = (await getLungeCoins()) || 0;
             setLungeCoinsAmount(lungeCoins);
             
             checkLanguageDocumentLocally();
-            checkUsernamesMatch();
             
             let profilePic = null;
             let friendRequests = 0;
@@ -252,9 +262,10 @@ function App() {
             const netInfo = await NetInfo.fetch();
             setIsConnected(netInfo.isConnected ?? false);
 
-            if (netInfo.isConnected && isAuthenticated) {
+            if (netInfo.isConnected && isAuthenticated && setupRan) {
                 profilePic = await getProfilePicture();
                 friendRequests = await getFriendRequests();
+                await checkUsernamesMatch();
             }
             
             const receiveFriendRequests = await checkReceiveFriendRequestsLocally();
@@ -292,8 +303,8 @@ function App() {
 
     const userLoggedIn = async (user: any) => {
         try {
-            if (user) {
-                setIsEmailVerified(user.emailVerified);
+            if (user && user.emailVerified) {
+                setIsEmailVerified(true);
     
                 if (await checkForBiometricsLocally()) {
                     const compatible = await LocalAuthentication.hasHardwareAsync();
@@ -305,13 +316,8 @@ function App() {
                     setIsAuthenticated(true);
                 }
     
-                if (user.emailVerified) {
-                    setLoading(true);
-                    await fetchData();
-                } else {
-                    setLoading(false);
-                    setCheckingSetup(false);
-                }
+                setLoading(true);
+                await fetchData();
             } else {
                 setLoading(false);
                 setCheckingSetup(false);
@@ -417,9 +423,11 @@ function App() {
     useEffect(() => {
         const interval = setInterval(async () => {
 
-            if (user && !isEmailVerified) {
+            if (user && !isEmailVerified && !isAccountDeleted && accountJustRegistered) {
                 await user.reload().then(async () => {
                     if (user.emailVerified) {
+
+                        console.log('setting email verified to true')
                         setIsEmailVerified(true);
                         setEmailVerifiedChanged(true);
                         setAccountJustRegistered(false);
@@ -429,7 +437,6 @@ function App() {
                         await checkUsernameDoc();
                         Vibration.vibrate();
                     }
-                    console.log('interval ran')
                 });
             }
         }, 1000); 
@@ -448,7 +455,7 @@ function App() {
     // Only runs once per log in if the user is connected to the internet and authenticated
     useEffect(() => {
 
-        if (isConnected && isAuthenticated && !hasSynced && user && internetSpeed > 32) {
+        if (isEmailVerified && setupRan && isConnected && isAuthenticated && !hasSynced && user && internetSpeed > 32) {
             setHasSynced(true);
 
             const query = async () => {
@@ -464,14 +471,16 @@ function App() {
     useEffect(() => {
 
         const unsubscribe = FIREBASE_AUTH.onAuthStateChanged(async (user) => {
-            if (user && isConnected) {
+            if (user && isConnected && isEmailVerified && !isAccountDeleted) {
                 setIsAuthenticated(true);
 
                 // check goal nutrients again -> prevents setup from running unnecessarily on login
-                // TODO: this check sometimes does not run on login
                 const setupHasRanLocally = await checkUserGoalNutrientsLocally();
-                console.log('daily goals found?:', setupHasRanLocally)
                 setSetupRan(setupHasRanLocally);
+
+                if (!setupHasRanLocally){
+                    console.log('Setup has not been run yet!');
+                }
                 
                 setIsAccountDeleted(false);
             } else if (!user && isConnected) {
@@ -501,10 +510,11 @@ function App() {
             ) : setupRan && isAuthenticated && user && !accountJustRegistered  ? (
                 <AuthenticatedTabNavigator setupRan={setupRan} />
             ) : !isEmailVerified && user && accountJustRegistered ? (
+                // Show EmailNotVerified page after registration until email is verified
                 <EmailNotVerified />
-            ) : setupRan && !isAuthenticated && user ? (
+            ) : setupRan && !isAuthenticated && user && isAccountDeleted ? (
                 <BiometricsFailed />
-            )  : user && !setupRan ?  (
+            )  : user && !setupRan && isEmailVerified ?  (
                 <SetupPage />
             ): (
                 <UnauthenticatedTabNavigator />
@@ -547,7 +557,8 @@ function App() {
             receiveFriendRequests, setReceiveFriendRequests, faceIdEnabled, setFaceIdEnabled,
             internetConnected: isConnected, isAccountDeleted, setIsAccountDeleted, generatingWorkout, setGeneratingWorkout,
             generatingWorkoutInFolder, setGeneratingWorkoutInFolder, syncingInfoRunning, setSyncingInfoRunning, internetSpeed, setAccountJustRegistered,
-            iphoneModel, setLoggingIn, lungeCoinsAmount, setLungeCoinsAmount
+            iphoneModel, setLoggingIn, lungeCoinsAmount, setLungeCoinsAmount,
+            setIsEmailVerified, setEmailVerifiedChanged
         }}>
 
             <StripeProvider 

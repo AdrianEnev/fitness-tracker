@@ -26,6 +26,8 @@ interface GlobalContextType {
     setAccountJustRegistered: (value: any) => void;
     setLoggingIn: (value: boolean) => void;
     setLungeCoinsAmount: (value: number) => void;
+    setIsEmailVerified: (value: boolean) => void;
+    setEmailVerifiedChanged: (value: boolean) => void;
 }
 
 const defaultValues: GlobalContextType = {
@@ -53,7 +55,9 @@ const defaultValues: GlobalContextType = {
     setGeneratingWorkoutInFolder: () => {},
     setAccountJustRegistered: () => {},
     setLoggingIn: () => {},
-    setLungeCoinsAmount: () => {}
+    setLungeCoinsAmount: () => {},
+    setIsEmailVerified: () => {},
+    setEmailVerifiedChanged: () => {},
 
 };
 

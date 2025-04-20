@@ -224,8 +224,7 @@ const SettingsAccount = ({navigation}: any) => {
                         iconColor='#ef4444'
                         iconSize={34}
                         action={async () => {
-                            setIsDeletingAccountModalVisible(true)
-                            promptDeleteAccount(t, setProfilePicture, setSetupRan, setIsAccountDeleted, internetConnected);
+                            promptDeleteAccount(t, setProfilePicture, setSetupRan, setIsAccountDeleted, internetConnected, setIsDeletingAccountModalVisible);
                             setIsAccountDeleted(true)
                         }}
                         t={t}

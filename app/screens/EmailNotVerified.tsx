@@ -10,8 +10,23 @@ import reauthenticateAndDelete from '@app/use/settings/remove/useDeleteAccount';
 const EmailNotVerified = () => {
     
     const [countDown, setCountDown] = useState(60);
+    const { setIsAccountDeleted, setProfilePicture, setSetupRan, setIsEmailVerified, setEmailVerifiedChanged, setAccountJustRegistered } = useContext(GlobalContext);
 
-    const { setIsAccountDeleted, setProfilePicture, setSetupRan } = useContext(GlobalContext);
+    // Check email verification status every second while this page is open
+    useEffect(() => {
+        const interval = setInterval(async () => {
+            const user = FIREBASE_AUTH.currentUser;
+            if (user) {
+                await user.reload();
+                if (user.emailVerified) {
+                    setIsEmailVerified(true);
+                    setEmailVerifiedChanged(true);
+                    setAccountJustRegistered(false);
+                }
+            }
+        }, 1000);
+        return () => clearInterval(interval);
+    }, []);
 
     useEffect(() => {
         const timer = setTimeout(() => {
@@ -53,9 +68,9 @@ const EmailNotVerified = () => {
                 onPress: async () => {
                     // email not verified => account not verified => pass false for isVerified
                     const isVerified = false
+                    const password = undefined;
 
-                    reauthenticateAndDelete(setProfilePicture, setSetupRan, setIsAccountDeleted, isVerified);                    
-                    setIsAccountDeleted(true)
+                    await reauthenticateAndDelete(setSetupRan, setIsAccountDeleted, isVerified, password, setProfilePicture);                    
                 }
             }
         ]);

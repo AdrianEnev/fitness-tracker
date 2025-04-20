@@ -439,16 +439,21 @@ const Workouts = ({navigation}: any) => {
 
                 <BottomNavigationBar 
                     currentPage='Workouts' 
-                    copySelectedWorkouts={copyWorkouts} 
-                    deleteSelectedWorkouts={deleteWorkouts} 
-                    cutSelectedWorkouts={cutWorkouts} 
-                    selectionMode={selectionMode} 
-                    internetConnected={internetConnected} 
-                    addEmptyFolder={addEmptyFolder} 
+                    internetConnected={internetConnected}
                     navigation={navigation}
-                    currentlyGeneratingWorkout={generatingWorkout}
+                    selectionActions={{
+                        selectionMode: selectionMode,
+                        copySelectedWorkouts: copyWorkouts,
+                        deleteSelectedWorkouts: deleteWorkouts,
+                        cutSelectedWorkouts: cutWorkouts
+                    }}
+                    workoutActions={{
+                        currentlyGeneratingWorkout: generatingWorkout
+                    }}
+                    folderActions={{
+                        addEmptyFolder: addEmptyFolder
+                    }}
                 />
-
             </View>
         </>
     )

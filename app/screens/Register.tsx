@@ -1,23 +1,22 @@
-import { View, TextInput, Button, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity } from 'react-native'
+import { View, TextInput, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity } from 'react-native'
 import React, { useContext, useEffect, useState } from 'react'
 import { createUserWithEmailAndPassword, sendEmailVerification } from 'firebase/auth';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '@config/firebaseConfig';
+import { FIREBASE_AUTH } from '@config/firebaseConfig';
 import tw from "twrnc";
 import { useTranslation } from 'react-i18next';
-import { collection, doc, getDoc, getDocs, setDoc } from 'firebase/firestore';
 import GlobalContext from '@config/GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import checkUsernameNSFW from '@use/settings/check/useCheckUsernameNSFW';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import checkIsAccountLimitReached from '@use/settings/check/useCheckAccountLimitReached';
 import { BlurView } from 'expo-blur';
 import LoadingModal from '@modals/loading/LoadingModal';
+import validateCredentials from '@app/use/settings/useValidateCredentials';
+import reauthenticateAndDelete from '@app/use/settings/remove/useDeleteAccount';
 
 const Register = ({navigation}: any) => {
 
     const { t } = useTranslation();
 
-    const {internetConnected, setIsAccountDeleted, internetSpeed, setAccountJustRegistered} = useContext(GlobalContext);
+    const {internetConnected, setIsAccountDeleted, internetSpeed, setAccountJustRegistered, setSetupRan} = useContext(GlobalContext);
 
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
@@ -34,105 +33,140 @@ const Register = ({navigation}: any) => {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
     const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false)
 
-    const auth = FIREBASE_AUTH;
+    // Used to check if the username is taken and set all neccessary documents once the user is registered
+    // Returns 'success' if everything went smoothly
+    // Returns 'username-taken' if the username is taken
+    // Returns 'error' if there were any errors
+    const fetchRegistration = async(newUser: any) => {
+        try {
+            const response = await fetch(`http://localhost:3000/api/users/registerUser`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json', // Specifies the request body is JSON
+                },
+                body: JSON.stringify({
+                    username: username,
+                    newUser: newUser
+                }),
+            });
 
+            if (!response.ok) {
+                console.error("Error fetching data:", response.statusText);
+                return null;
+            }
+
+            const data = await response.json();
+
+            if (data.message == 'username-taken') {
+                return 'username-taken';
+            }
+
+            if (data.message == 'error') {
+                return 'error';
+            }
+
+            if (data.message != 'success'){
+                return 'error';
+            }
+
+            return 'success';
+        } catch (error) {
+            console.error("Error fetching data:", error);
+            return 'error';
+        }
+    }
+
+    // After fetching to database, unverified account is deleted if any error is returned;
+    const deleteUnverifiedAccount = async () => {
+        const isVerified = false
+
+        await reauthenticateAndDelete(setSetupRan, setIsAccountDeleted, isVerified, undefined, undefined);                    
+    }
+
+    const createUnverifiedUser = async (trimmedEmail: string) => {
+        try {
+
+            const newUser = await createUserWithEmailAndPassword(FIREBASE_AUTH, trimmedEmail, password);
+            return newUser;
+
+        }catch (error: any){
+            console.log('Error creating unverified user, user probably already exists', error)
+        }
+    }
+
+    // Sign up user by first validating credentials, then fetching to the database to finish registration
     const signUp = async() => {
 
         if (!internetConnected || internetSpeed < 16) {
             alert(t('unstable-connection'));
             return;
         }
-        
+
         const trimmedUsername = username.trim();
         const trimmedEmail = email.trim();
-    
-        if (trimmedEmail.length == 0 || password.length == 0 || confirmPassword.length == 0 || trimmedUsername.length == 0) {    
+
+        console.log('Validating credentials...')
+        await validateCredentials(trimmedUsername, trimmedEmail, password, confirmPassword, t, setRegisterButtonDisabled);
+
+        // Credentials are stored early on purpose since deleting an account requires reauthentication
+        console.log('Storing credentials...')
+        await AsyncStorage.setItem(`email`, trimmedEmail);
+        await AsyncStorage.setItem(`username_${email}`, trimmedUsername);
+
+        console.log('Creating unverified user...')
+        const newUser = await createUnverifiedUser(trimmedEmail);
+        if (!newUser) {
+            alert(t('error'));
             setRegisterButtonDisabled(false)
             return;
         }
 
-        const weirdCharPattern = /[^a-zA-Z0-9@#$£€%^&*()"'-/|.,?![]{}+=_~<>¥]/;
-        if (weirdCharPattern.test(password)) {
-            alert(t('password-no-emojis'));
-            setRegisterButtonDisabled(false)
-            return;
-        }
-        if (password !== confirmPassword) {
-            alert(t('passwords-not-match'));
-            setRegisterButtonDisabled(false)
-            return;
-        }
-        if (trimmedUsername.length <= 2) {
-            alert(t('username-at-least-three-symbols'));
-            setRegisterButtonDisabled(false)
-            return;
-        } 
-        if (password.length <= 8) {
-            alert(t('password-at-least-eight-symbols'));
-            setRegisterButtonDisabled(false)
-            return;
-        }
-        if (password === trimmedUsername) {
-            alert(t('password-not-same-as-username'));
-            setRegisterButtonDisabled(false)
-            return;
-        }
+        console.log('Fetching registration...')
+        // Fecth registration to backend
+        const result = await fetchRegistration(newUser.user);
 
-        if (await checkIsAccountLimitReached()) {
-            alert(t('max-number-accounts-device'));
-            setRegisterButtonDisabled(false)
-            return;
-        }    
-        
-        if (await checkUsernameNSFW(trimmedUsername)) {
-            alert(t('nsfw-username'));
-            setRegisterButtonDisabled(false)
-            return;
-        }
-    
-        if (await isUsernameTaken(trimmedUsername)) {
+        console.log('Checking registration result...')
+
+        if (result == 'username-taken') {
+
+            console.log('Username taken')
+            await deleteUnverifiedAccount();
+            
             alert(t('username-taken'));
-            setRegisterButtonDisabled(false)
+            setRegisterButtonDisabled(false);
+            
             return;
         }
-    
-        try {
-            const after = await createUserWithEmailAndPassword(auth, trimmedEmail, password);
-            setIsAccountDeleted(false);
 
-            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-            const userDocRef = doc(usersCollectionRef, after.user.uid);
+        if (result == 'error') {
+            
+            console.log('Registration failed')
+            await deleteUnverifiedAccount();
 
-            await setDoc(userDocRef, { lungeCoins: 1, lastGeneratedWorkout: null }, { merge: false });
+            alert(t('error'));
+            setRegisterButtonDisabled(false);
 
-            await AsyncStorage.setItem(`email`, trimmedEmail);
-            await AsyncStorage.setItem(`username_${email}`, trimmedUsername);
-
-            // send email verification
-            await sendEmailVerification(after.user);
-            setAccountJustRegistered(true)
-            navigation.navigate('Непотвърден-Имейл')
-
-        } catch(err: any) {
-            console.log('error', err)
-        }
-    }
-
-    const isUsernameTaken = async (trimmedUsername: any) => {
-        const usersSnapshot = await getDocs(collection(FIRESTORE_DB, 'users'));
-
-        for (const doc of usersSnapshot.docs) {
-            const userInfoCollectionRef = collection(doc.ref, 'user_info');
-            const usernameDoc = await getDocs(userInfoCollectionRef);
-
-            for (const user of usernameDoc.docs) {
-                if (user.id === 'username' && user.data().username.trim() === trimmedUsername) {
-                    return true; // Username is taken
-                }
-            }
+            return;
         }
 
-        return false; 
+        if (result != 'success') {
+
+            console.log('Registration failed')
+            await deleteUnverifiedAccount();
+            
+            alert(t('error'));
+            setRegisterButtonDisabled(false);
+
+            return;
+        }
+
+        // send email verification
+        await sendEmailVerification(newUser.user);
+        setIsAccountDeleted(false);
+        setAccountJustRegistered(true);
+
+        navigation.navigate('Email-Not-Verified')
+
     }
 
     const checkPasswordStrength = (password: string): string => {
@@ -166,7 +200,6 @@ const Register = ({navigation}: any) => {
     }
 
     useEffect(() => {
-
         setPasswordCharacters(65 - password.length);
         setConfirmPasswordCharacters(65 - confirmPassword.length);
 
@@ -175,7 +208,6 @@ const Register = ({navigation}: any) => {
         
         const confirmStrenght = checkPasswordStrength(confirmPassword);
         setConfirmPasswordStrength(confirmStrenght)
-
     }, [password, confirmPassword])
     
     return (
