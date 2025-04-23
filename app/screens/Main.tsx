@@ -16,6 +16,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '@use/settings/get/useGetEmail';
 import getCurrentDate from '@use/settings/get/useGetCurrentDate';
 import { getLanguageLocally } from '@use/settings/get/useGetLanguageLocally';
+import getGoalNutrientslocally from '@app/use/settings/get/useGetGoalNutrientsLocally';
+import getCurrentNutrientsLocally from '@app/use/settings/get/useGetCurrentNutrientsLocally';
 
 //bg-[#fd3e6b]
 //bg-[#3d5875]
@@ -25,6 +27,19 @@ const Main = ({navigation}: any) => {
     const { t } = useTranslation();
 
     const { internetConnected, iphoneModel, friendRequestsNumber, internetSpeed } = useContext(GlobalContext);
+
+    const [currentNutrients, setCurrentNutrients] = useState<any>(null);
+    const [goalNutrients, setGoalNutrients] = useState<any>({
+        protein: 0,
+        carbs: 0,
+        fat: 0,
+        calories: 0
+    });
+
+    const [goalCalories, setGoalCalories] = useState(0)
+    const [goalProtein, setGoalProtein] = useState(0)
+    const [goalCarbs, setGoalCarbs] = useState(0)
+    const [goalFat, setGoalFat] = useState(0)
 
     const [currentFormattedDate, setCurrentFormattedDate] = useState<any>();
 
@@ -38,7 +53,6 @@ const Main = ({navigation}: any) => {
         if (AsyncStorageUsername) {
             setUsername(AsyncStorageUsername);
         }
-       
     }
 
     useFocusEffect(
@@ -59,61 +73,23 @@ const Main = ({navigation}: any) => {
         }, [internetConnected])
     );
 
-    let [currentNutrients, setCurrentNutrients] = useState<any>(null);
-    const [goalNutrients, setGoalNutrients] = useState<any>(null);
-
     useFocusEffect(
         React.useCallback(() => {
             if (!currentFormattedDate) return;
     
-            const getGoalNutrientslocally = async () => {
-                try {
-                    const localNutrients = await AsyncStorage.getItem(`goal_nutrients_${await getEmail()}`);
-                    if (localNutrients) {
-                        const parsedLocalNutrients = JSON.parse(localNutrients);
-                        setGoalNutrients(parsedLocalNutrients);
-                    }
-                } catch (error) {
-                    console.error('Error getting nutrients from AsyncStorage:', error);
-                }
-            }
-            getGoalNutrientslocally();
-    
-            const getCurrentNutrientsLocally = async () => {
-                try {
-                    const email = await getEmail();
-                    const storedData = await AsyncStorage.getItem(`${email}-foodDay-${currentFormattedDate.day}-${currentFormattedDate.month}-${currentFormattedDate.year}`);
-                    const data = storedData ? JSON.parse(storedData) : [];
+            const fetch = async () => {
+                let goalNutrients = await getGoalNutrientslocally();
+                const currentNutrients = await getCurrentNutrientsLocally(currentFormattedDate);
 
-    
-                    //console.log(`${email}-foodDay-${currentFormattedDate.day}-${currentFormattedDate.month}-${currentFormattedDate.year}`)
-    
-                    let totalCalories = 0;
-                    let totalProtein = 0;
-                    let totalCarbs = 0;
-                    let totalFat = 0;
-    
-                    data.forEach((food: any) => {
-                        totalCalories += food.calories || 0;
-                        totalProtein += food.protein || 0;
-                        totalCarbs += food.carbs || 0;
-                        totalFat += food.fat || 0;
-                    });
-    
-                    const updatedNutrients = {
-                        calories: totalCalories,
-                        protein: totalProtein,
-                        carbs: totalCarbs,
-                        fat: totalFat
-                    };
-    
-                    setCurrentNutrients(updatedNutrients);
-                } catch (err) {
-                    console.error(err);
-                }
+                setGoalCalories(Number(goalNutrients?.calories) || 0);
+                setGoalProtein(Number(goalNutrients?.protein) || 0);
+                setGoalCarbs(Number(goalNutrients?.carbs) || 0);
+                setGoalFat(Number(goalNutrients?.fat) || 0);
+
+                setCurrentNutrients(currentNutrients);
             }
-            getCurrentNutrientsLocally();
-    
+            
+            fetch();
         }, [internetConnected, currentFormattedDate])
     );
 
@@ -133,9 +109,7 @@ const Main = ({navigation}: any) => {
     return (
         <>
             <SafeAreaView style={tw`h-full`}>
-
                 <ScrollView style={tw`h-full w-full`} contentContainerStyle={tw`pb-24`} showsVerticalScrollIndicator={false} scrollEnabled={iphoneModel.includes('SE') ? false : true}>
-
                     <View style={tw`flex flex-row justify-between mt-2 mx-1`}>
 
                         <View style={tw`flex flex-row`}>
@@ -182,7 +156,10 @@ const Main = ({navigation}: any) => {
                             navigation={navigation} 
                             formattedDate={currentFormattedDate} 
                             regularDate={getCurrentDate(true)} 
-                            goalNutrients={goalNutrients}
+                            goalCalories={goalCalories}
+                            goalProtein={goalProtein}
+                            goalCarbs={goalCarbs}
+                            goalFat={goalFat}
                         /> 
 
                     </View>

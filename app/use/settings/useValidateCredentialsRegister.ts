@@ -1,7 +1,7 @@
 import checkIsAccountLimitReached from "@use/settings/check/useCheckAccountLimitReached";
 import checkUsernameNSFW from "@use/settings/check/useCheckUsernameNSFW";
 
-const validateCredentials = async (
+const validateCredentialsRegister = async (
     username: string, email: string, password: string, 
     confirmPassword: string, t: any, setRegisterButtonDisabled: any
 ) => {
@@ -53,11 +53,8 @@ const validateCredentials = async (
         return;
     }
 
-    
-    
-
     return true;
 
 }
 
-export default validateCredentials;
+export default validateCredentialsRegister;

@@ -261,5 +261,6 @@
     "decent": "Decent",
     "good": "Good",
     "strong": "Strong",
-    "very-strong": "Very Strong"
+    "very-strong": "Very Strong",
+    "invalid-credentials": "Invalid email/password!"
 }

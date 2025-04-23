@@ -258,5 +258,6 @@
     "decent": "Достойный",
     "good": "Хороший",
     "strong": "Сильный",
-    "very-strong": "Очень сильный"
+    "very-strong": "Очень сильный",
+    "invalid-credentials": "Email или пароль не валидны!"
 }

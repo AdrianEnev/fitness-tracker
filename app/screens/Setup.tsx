@@ -175,19 +175,6 @@ const Setup = () => {
         }
 
         //await AsyncStorage.setItem(`gender_${email}`, gender)
-
-        /*if (includeInBio && internetConnected) {
-            // users -> user -> user_info -> gender -> date + gender
-            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-            const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-            const userInfoCollectionRef = collection(userDocRef, 'user_info');
-            const genderDocRef = doc(userInfoCollectionRef, 'gender');
-
-            setDoc(genderDocRef, {
-                gender: gender,
-                date: Date.now()
-            })
-        }*/
         
         console.log('setup ran successfuly')
         

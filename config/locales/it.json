@@ -258,5 +258,6 @@
     "decent": "Decente",
     "good": "Buono",
     "strong": "Forte",
-    "very-strong": "Molto forte"
+    "very-strong": "Molto forte",
+    "invalid-credentials": "Email o password non validi!"
 }

@@ -8,20 +8,18 @@ type RenderNutrientsProps = {
     navigation: any;
     formattedDate: any;
     regularDate: any;
-    goalNutrients: any;
+    goalCalories: number;
+    goalProtein: number;
+    goalCarbs: number;
+    goalFat: number;
 };
 
-const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate, goalNutrients}: RenderNutrientsProps) => {
+const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate, goalCalories, goalProtein, goalCarbs, goalFat}: RenderNutrientsProps) => {
     
     const currentCalories = currentNutrients?.calories || 0;
     const currentProtein = currentNutrients?.protein || 0;
     const currentCarbs = currentNutrients?.carbs || 0;
     const currentFat = currentNutrients?.fat || 0;
-
-    const goalCalories = parseInt(String(goalNutrients?.calories)) || 0;
-    const goalProtein = parseInt(String(goalNutrients?.protein)) || 0;
-    const goalCarbs = parseInt(String(goalNutrients?.carbs)) || 0;
-    const goalFat = parseInt(String(goalNutrients?.fat)) || 0;
 
     const progressElement = (currentProgress: number, goalProgress: number, title: string) => {
 
@@ -41,8 +39,6 @@ const Nutrients = ({ currentNutrients, navigation, formattedDate, regularDate, g
                 redWidthPercentage = 3; // min value for redWidthPercentage
             }
             blueWidthPercentage = 100 - redWidthPercentage;
-
-
         }
         
         if (redWidthPercentage) {

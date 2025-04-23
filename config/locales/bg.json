@@ -259,5 +259,6 @@
     "decent": "Средна",
     "good": "Добра",
     "strong": "Силна",
-    "very-strong": "Много силна"
+    "very-strong": "Много силна",
+    "invalid-credentials": "Невалидна парола/имейл!"
 }

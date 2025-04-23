@@ -9,11 +9,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '@use/settings/get/useGetEmail';
 import SettingsMacrosComponent from '@app/components/settings/SettingsMacrosComponent';
 
-interface Nutrient {
-    key: string;
-    value: number;
-}
-
 const Settings = ({navigation}: any) => {
 
     const {internetConnected} = useContext(GlobalContext);
@@ -28,9 +23,14 @@ const Settings = ({navigation}: any) => {
     useEffect(() => {
         const fetchInitialNutrients = async () => {
             try {
-                const localNutrients = await AsyncStorage.getItem(`goal_nutrients_${await getEmail()}`);
+                const email = (await getEmail() || '').toLowerCase();
+                const key = `goal_nutrients_${email}`;
+                console.log('SettingsMacros: loading from key', key);
+                const localNutrients = await AsyncStorage.getItem(key);
+                console.log('SettingsMacros: retrieved value', localNutrients);
                 if (localNutrients) {
                     const parsedLocalNutrients = JSON.parse(localNutrients);
+                    console.log('SettingsMacros: parsed nutrients', parsedLocalNutrients);
 
                     setCalories(parsedLocalNutrients.calories || 0);
                     setProtein(parsedLocalNutrients.protein || 0);

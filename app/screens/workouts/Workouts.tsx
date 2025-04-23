@@ -460,31 +460,3 @@ const Workouts = ({navigation}: any) => {
 }
 
 export default Workouts
-
- /*const changeWorkoutName = async (workoutID: string, workoutTitle: string) => {
-        Alert.prompt(
-            t('new-name-alert'),
-            '',
-            (newName) => {
-                if (newName && newName.length <= 50) {
-                    const usersCollectionRef = collection(FIRESTORE_DB, "users");
-                    const userDocRef = doc(usersCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-                    const userWorkoutsCollectionRef = collection(userDocRef, "workouts");
-
-                    updateDoc(doc(userWorkoutsCollectionRef, workoutID), {
-                        title: newName,
-                    });
-                    
-                    } else {
-                    Alert.alert(t('workout-characters-alert'), '', [
-                        {
-                        text: 'OK',
-                        style: 'cancel',
-                        },
-                    ]);
-                }
-            },
-            'plain-text',
-            workoutTitle
-        );
-    }*/

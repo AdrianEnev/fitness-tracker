@@ -48,21 +48,3 @@ export const validateFriendSearch = async (userToCheck: any) => {
         return null;
     }
 }
-
-// ako user 1 e pratil pokana na user 2 i posle user 2 prati na user 1, stavat priqteli
-    /*const hasUserSentRequest = async (checkUser: any) => {
-        const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-        const userDocRef = doc(usersCollectionRef, checkUser.id);
-        const userInfoCollectionRef = collection(userDocRef, 'user_info');
-        const friendRequestsCollectionRef = doc(userInfoCollectionRef, 'friendRequests');
-        const receivedCollectionRef = collection(friendRequestsCollectionRef, 'sent');
-    
-        const requestDocRef = doc(receivedCollectionRef, FIREBASE_AUTH.currentUser?.uid);
-        const requestDoc = await getDoc(requestDocRef);
-    
-        if (requestDoc.data()) {
-            return true
-        } else {
-            return false
-        }
-    }*/

@@ -9,7 +9,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
 import { BlurView } from 'expo-blur';
 import LoadingModal from '@modals/loading/LoadingModal';
-import validateCredentials from '@app/use/settings/useValidateCredentials';
+import validateCredentialsRegister from '@app/use/settings/useValidateCredentialsRegister';
 import reauthenticateAndDelete from '@app/use/settings/remove/useDeleteAccount';
 
 const Register = ({navigation}: any) => {
@@ -106,7 +106,9 @@ const Register = ({navigation}: any) => {
         const trimmedEmail = email.trim();
 
         console.log('Validating credentials...')
-        await validateCredentials(trimmedUsername, trimmedEmail, password, confirmPassword, t, setRegisterButtonDisabled);
+        if (!await validateCredentialsRegister(trimmedUsername, trimmedEmail, password, confirmPassword, t, setRegisterButtonDisabled)) {
+            return;
+        }
 
         // Credentials are stored early on purpose since deleting an account requires reauthentication
         console.log('Storing credentials...')
@@ -116,7 +118,7 @@ const Register = ({navigation}: any) => {
         console.log('Creating unverified user...')
         const newUser = await createUnverifiedUser(trimmedEmail);
         if (!newUser) {
-            alert(t('error'));
+            alert(t('user-already-exists'));
             setRegisterButtonDisabled(false)
             return;
         }

@@ -376,8 +376,10 @@ function App() {
             
             if (netInfo.isConnected) {
                 const unsubscribe = onAuthStateChanged(FIREBASE_AUTH, async (user) => {
-                    setUser(user);
-                    userLoggedIn(user);
+                    if (!loggingIn) {
+                        setUser(user);
+                        userLoggedIn(user);
+                    }
                 });
     
                 return () => unsubscribe();
@@ -423,7 +425,7 @@ function App() {
     useEffect(() => {
         const interval = setInterval(async () => {
 
-            if (user && !isEmailVerified && !isAccountDeleted && accountJustRegistered) {
+            if (user && !isEmailVerified && !isAccountDeleted && accountJustRegistered && !loggingIn) {
                 await user.reload().then(async () => {
                     if (user.emailVerified) {
 
@@ -445,7 +447,7 @@ function App() {
     }, [user, isEmailVerified, isConnected]);
 
     useEffect(() => {
-        if (emailVerifiedChanged) {
+        if (emailVerifiedChanged && !loggingIn) {
             setLoading(true);
             fetchData();
         }
@@ -455,7 +457,7 @@ function App() {
     // Only runs once per log in if the user is connected to the internet and authenticated
     useEffect(() => {
 
-        if (isEmailVerified && setupRan && isConnected && isAuthenticated && !hasSynced && user && internetSpeed > 32) {
+        if (isEmailVerified && !loggingIn && setupRan && isConnected && isAuthenticated && !hasSynced && user && internetSpeed > 32) {
             setHasSynced(true);
 
             const query = async () => {
@@ -471,7 +473,7 @@ function App() {
     useEffect(() => {
 
         const unsubscribe = FIREBASE_AUTH.onAuthStateChanged(async (user) => {
-            if (user && isConnected && isEmailVerified && !isAccountDeleted) {
+            if (user && isConnected && isEmailVerified && !isAccountDeleted && !loggingIn) {
                 setIsAuthenticated(true);
 
                 // check goal nutrients again -> prevents setup from running unnecessarily on login
@@ -507,7 +509,7 @@ function App() {
         } else {
             return isAccountDeleted && setupRan && !user ? (
                 <UnauthenticatedTabNavigator />
-            ) : setupRan && isAuthenticated && user && !accountJustRegistered  ? (
+            ) : setupRan && isAuthenticated && user && !accountJustRegistered && !loggingIn  ? (
                 <AuthenticatedTabNavigator setupRan={setupRan} />
             ) : !isEmailVerified && user && accountJustRegistered ? (
                 // Show EmailNotVerified page after registration until email is verified

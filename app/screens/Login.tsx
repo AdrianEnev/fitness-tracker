@@ -1,13 +1,15 @@
 import { View, TextInput, KeyboardAvoidingView, Text, TouchableWithoutFeedback, Keyboard, SafeAreaView, TouchableOpacity, Pressable } from 'react-native'
 import React, { useContext, useState } from 'react'
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { FIREBASE_AUTH, FIRESTORE_DB } from '@config/firebaseConfig';
+import { FIREBASE_AUTH } from '@config/firebaseConfig';
 import tw from "twrnc";
 import { useTranslation } from 'react-i18next';
 import GlobalContext from '@config/GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Ionicons from '@expo/vector-icons/Ionicons';
-import { collection, doc, getDoc } from 'firebase/firestore';
+import validateCredentialsLogin from '@app/use/settings/useValidateCredentialsLogin';
+import { BlurView } from 'expo-blur';
+import LoadingModal from '@app/modals/loading/LoadingModal';
 
 const Login = ({navigation}: any) => {
 
@@ -15,225 +17,203 @@ const Login = ({navigation}: any) => {
     const [password, setPassword] = useState('');
     const [isPasswordVisible, setIsPasswordVisible] = useState(false)
 
-    const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(true)
+    const [isLoginButtonDisabled, setIsLoginButtonDisabled] = useState(false)
 
     const {internetConnected, setLoggingIn, setSetupRan, internetSpeed} = useContext(GlobalContext);
+    const { t } = useTranslation();
 
     const auth = FIREBASE_AUTH;
 
+    const signInUser = async (trimmedEmail: string, trimmedPassword: string) => {
+        try {
+            const user = await signInWithEmailAndPassword(auth, trimmedEmail, trimmedPassword);
+            return user;
+        }catch (error: any) {
+            console.log('error signing user in with firebase');
+            return null;
+        }
+    }
+
+    const fetchLogin = async (user: any, trimmedEmail: string) => {
+
+        const userId = user.user.uid;
+
+        const response = await fetch(`http://localhost:3000/api/users/${userId}/loginUser`);
+
+        if (!response.ok) {
+            console.error("response ERROR retreiving username and nutrients:", response);
+
+            // Unlog user if firebase fetching failed
+            await auth.signOut();
+
+            alert(t('error'));
+            setIsLoginButtonDisabled(false);
+            setLoggingIn(false);
+            return null;
+
+        }
+
+        const data = await response.json();
+        const firebaseNutrients = data.nutrients;
+        const firebaseUsername = data.username;
+
+        if (firebaseNutrients) {
+            if (typeof firebaseNutrients === 'string') {
+                await AsyncStorage.setItem(`goal_nutrients_${trimmedEmail}`, firebaseNutrients);
+            } else {
+                await AsyncStorage.setItem(`goal_nutrients_${trimmedEmail}`, JSON.stringify(firebaseNutrients));
+            }
+        }else{
+            setSetupRan(false);
+        }
+
+        if (firebaseUsername) {
+            await AsyncStorage.setItem(`username_${trimmedEmail}`, firebaseUsername);
+        }
+
+    }
+
     const signIn = async() => {
+        //console.log('Signing in...')
 
         if (isLoginButtonDisabled) return;
-
-        setIsLoginButtonDisabled(true)
-
+        
         if (!internetConnected || internetSpeed < 56) {
             alert(t('unstable-connection'));
-            setIsLoginButtonDisabled(false)
+            setIsLoginButtonDisabled(false);
             return
         }
 
-        if (email.length <= 0 || password.length <= 0) {
-            setIsLoginButtonDisabled(false)
+        setLoggingIn(true);
+        setIsLoginButtonDisabled(true);
+
+        const trimmedEmail = email.trim().toLowerCase();
+        const trimmedPassword = password.trim();
+
+        //console.log('Validating credentials...')
+        if (!(await validateCredentialsLogin(trimmedEmail, trimmedPassword, t, setIsLoginButtonDisabled, setIsLoginButtonDisabled))) {
+            setLoggingIn(false);
+            setIsLoginButtonDisabled(false);
             return;
         }
 
-        const weirdCharPattern = /[^a-zA-Z0-9@#$£€%^&*()"'-/|.,?![]{}+=_~<>¥]/;
-        if (weirdCharPattern.test(password)) {
-            alert(t('password-no-emojis'));
-            setIsLoginButtonDisabled(false)
-            return;
-        }
+        // save email locally, instead of calling firebase every time it's needed
+        await AsyncStorage.setItem(`email`, trimmedEmail);
 
-        const trimmedEmail = email.trim();
-
-        try{
-
-            const user = await signInWithEmailAndPassword(auth, trimmedEmail, password);
-            setLoggingIn(true)
-
-            const usersCollectionRef = collection(FIRESTORE_DB, 'users');
-            const userDocRef = doc(usersCollectionRef, user.user.uid);
-            const userInfoCollectionRef = collection(userDocRef, 'user_info');
-
-            await checkForNutrients(trimmedEmail, userInfoCollectionRef);
-            await checkForUsername(trimmedEmail, userInfoCollectionRef);
-
-            // save username locally using AsyncStorage
-            await AsyncStorage.setItem(`email`, trimmedEmail);
-
-            setLoggingIn(false)
-            setIsLoginButtonDisabled(false)
-
-        }catch(err: any){
-            alert(t('error'));
-        }
+        // Authenticate user using firebase auth
+        //console.log('Signing in user using firebase auth')
+        const user = await signInUser(trimmedEmail, trimmedPassword)
         
-    }
-
-    // Check asyncstorage for username. This function is used for checkFireBaseForUsername
-    const checkForUsername = async (email: any, userInfoCollectionRef: any) => {
-        const username = await AsyncStorage.getItem(`username_${email}`)
-
-        if (username) {
-            console.log('username already exists')
-            return true;
-        } else if (!username) {
-
-            console.log('username doesnt exist, checking documents')
-            const firebaseUsername = await checkFireBaseForUsername(userInfoCollectionRef);
-
-            if (firebaseUsername) {
-                console.log('found firebase username: ', firebaseUsername)
-
-                const usernameToStore = firebaseUsername.username
-
-                if (!usernameToStore) return;
-                
-                await AsyncStorage.setItem(`username_${email}`, usernameToStore);
-                console.log('set username to: ', usernameToStore)
-                return true;
-            }
-
-            console.log('no firebase username found')
+        if (!user) {
+            alert(t('invalid-credentials'));
+            setIsLoginButtonDisabled(false);
+            setLoggingIn(false);
+            return;
         }
 
-        return false;
-    }
+        // Fetch login, if signUserIn did not return an error
+        // Executes any neccessary actions in the database
+        //console.log('Fetching login request')
+        try{
+            await fetchLogin(user, trimmedEmail);
+        }catch(err: any){
 
-    // Check if firebase contains a username, only if asyncstorage doesn't. This is used to retreive the username from firebase if the user is logging in from another device
-    const checkFireBaseForUsername = async (userInfoCollectionRef: any) => {
-        const usernameDocRef = doc(userInfoCollectionRef, 'username');
-        const docSnapshot = await getDoc(usernameDocRef);
-    
-        console.log('Document Snapshot:', docSnapshot);
-        console.log('Document Snapshot Data:', docSnapshot.data());
-        console.log('Document Exists:', docSnapshot.exists());
-    
-        if (docSnapshot.exists()) {
-            console.log('Firebase username document found:', docSnapshot.data());
+            //console.log('error fetching login request')
 
-            setSetupRan(true);
-            return docSnapshot.data();
-        } else {
-            console.log('Firebase username document does not exist');
-        }
-    
-        return null;
-    }   
+            // Unlog user if firebase fetching failed
+            await auth.signOut();
 
-    // Check asyncstorage for nutrients. This function is used for checkFirebaseForNutrients
-    const checkForNutrients = async (email: any, userInfoCollectionRef: any) => {
-        const nutrients = await AsyncStorage.getItem(`goal_nutrients_${email}`);
-
-        console.log('Checking for nutrients -> Step 1')
-
-        if (nutrients) {
-
-            console.log('Nutrients already found, proceeding...')
-
-            return true;
-        } else if (!nutrients) {
-
-            console.log('Nutrients not found locally, checking database...')
-
-            const firebaseNutrients = await checkFirebaseForNutrients(userInfoCollectionRef);
-
-            if (firebaseNutrients) {
-                console.log('nutrients found in database')
-
-                await AsyncStorage.setItem(`goal_nutrients_${email}`, JSON.stringify(firebaseNutrients));
-                console.log("set goal nutrients to: ",  JSON.stringify(firebaseNutrients))
-                return true;
-            }
-
-            console.log('nutrients not found in database')
+            alert(t('error'));
+            setIsLoginButtonDisabled(false);
+            setLoggingIn(false);
+            return;
         }
 
-        return false;
+        setIsLoginButtonDisabled(false);
+        setLoggingIn(false);
     }
-
-    // Check if firebase contains nutrients, only if asyncstorage doesn't. This is used to retreive the nutrients from firebase if the user is logging in from another device
-    const checkFirebaseForNutrients = async (userInfoCollectionRef: any) => {
-        const nutrientsDocRef = doc(userInfoCollectionRef, 'nutrients');
-
-        const docSnapshot = await getDoc(nutrientsDocRef);
-
-        if (docSnapshot.exists()) {
-            return docSnapshot.data();
-        }
-
-        return null;
-    }
-
-    const { t } = useTranslation();
 
     return (
-        <SafeAreaView style={tw`flex-1 bg-white`}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-                <View style={tw`p-5`}>
+        <>
 
-                    <Text style={tw`text-4xl text-center text-[#fd1c47] font-bold my-2`}>{t('login')}</Text>
+            { isLoginButtonDisabled && (
+                <BlurView
+                    style={tw`absolute w-full h-full z-10`}
+                    intensity={50}
+                    tint='dark'
+                />
+            )}
 
-                    <KeyboardAvoidingView behavior='padding'>
-                        
-                        <View style={tw`flex-col gap-y-2 my-5`}>
-                        
-                            <View style={tw`mb-2`}>
-                                <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('email')}</Text>
-                                <TextInput 
-                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2 font-medium`} 
-                                    placeholder={t('example-email')}
-                                    onChangeText={(text: string) => setEmail(text)} 
-                                    value={email} 
-                                    autoCapitalize='none'
-                                    maxLength={50}
-                                />
-                            </View>
+            <LoadingModal
+                isLoadingModalVisible={isLoginButtonDisabled}
+                setIsLoadingModalVisible={setIsLoginButtonDisabled}
+            />
+
+            <SafeAreaView style={tw`flex-1 bg-white`}>
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                    <View style={tw`p-5`}>
+
+                        <Text style={tw`text-4xl text-center text-[#fd1c47] font-bold my-2`}>{t('login')}</Text>
+
+                        <KeyboardAvoidingView behavior='padding'>
                             
-                            <View style={tw`mb-2`}>
-                                
-                                <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('password')}</Text>
-                                    
-                                <TextInput 
-                                    style={tw`h-14 border-2 rounded-lg border-gray-200 px-2 font-medium`} 
-                                    placeholder={t('enter-password')}
-                                    onChangeText={(text: string) => setPassword(text)} 
-                                    value={password} 
-                                    autoCapitalize='none'
-                                    maxLength={65}
-                                    secureTextEntry={!isPasswordVisible}
-                                />
-
-                                <View style={tw`absolute right-2 top-8`}>
-                                    {isPasswordVisible ? 
-                                        (
-                                            <Ionicons name='eye-outline' size={32} color="#fd3e6b" onPress={() => setIsPasswordVisible(false)}/>
-                                        ) : 
-                                        (
-                                            <Ionicons name='eye-off-outline' size={32} color="#fd3e6b" onPress={() => setIsPasswordVisible(true)}/>
-
-                                        )
-                                    }
+                            <View style={tw`flex-col gap-y-2 my-5`}>
+                            
+                                <View style={tw`mb-2`}>
+                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('email')}</Text>
+                                    <TextInput 
+                                        style={tw`h-14 border-2 rounded-lg border-gray-200 px-2 font-medium`} 
+                                        placeholder={t('example-email')}
+                                        onChangeText={(text: string) => setEmail(text)} 
+                                        value={email} 
+                                        autoCapitalize='none'
+                                        maxLength={50}
+                                    />
                                 </View>
-
-                                <Pressable style={tw`flex items-end w-full mt-1 mb-2`} onPress={() => navigation.navigate('Парола-Смяна')}>
-                                    <Text style={tw`font-semibold text-gray-500`}>{t('forgot-password')}</Text>
-                                </Pressable>
-                            </View>
-                            
-                            <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-lg flex justify-center items-center shadow-md`}
-                                onPress={signIn}>
-                                <Text style={tw`text-2xl text-white font-semibold`}>{t('login')}</Text>
-                            </TouchableOpacity>
                                 
-                        </View>
-                    
-                    </KeyboardAvoidingView>
-                </View>
-            </TouchableWithoutFeedback>
-        </SafeAreaView>
+                                <View style={tw`mb-2`}>
+                                    
+                                    <Text style={tw`font-medium text-gray-600 mb-1 ml-1`}>{t('password')}</Text>
+                                        
+                                    <TextInput 
+                                        style={tw`h-14 border-2 rounded-lg border-gray-200 px-2 font-medium`} 
+                                        placeholder={t('enter-password')}
+                                        onChangeText={(text: string) => setPassword(text)} 
+                                        value={password} 
+                                        autoCapitalize='none'
+                                        maxLength={65}
+                                        secureTextEntry={!isPasswordVisible}
+                                    />
 
+                                    <View style={tw`absolute right-2 top-8`}>
+                                        {isPasswordVisible ? 
+                                            (
+                                                <Ionicons name='eye-outline' size={32} color="#fd3e6b" onPress={() => setIsPasswordVisible(false)}/>
+                                            ) : 
+                                            (
+                                                <Ionicons name='eye-off-outline' size={32} color="#fd3e6b" onPress={() => setIsPasswordVisible(true)}/>
+
+                                            )
+                                        }
+                                    </View>
+
+                                    <Pressable style={tw`flex items-end w-full mt-1 mb-2`} onPress={() => navigation.navigate('Парола-Смяна')}>
+                                        <Text style={tw`font-semibold text-gray-500`}>{t('forgot-password')}</Text>
+                                    </Pressable>
+                                </View>
+                                
+                                <TouchableOpacity style={tw`w-full h-14 bg-[#fd1c47] rounded-lg flex justify-center items-center shadow-md`}
+                                    onPress={signIn}>
+                                    <Text style={tw`text-2xl text-white font-semibold`}>{t('login')}</Text>
+                                </TouchableOpacity>
+                                    
+                            </View>
+                        
+                        </KeyboardAvoidingView>
+                    </View>
+                </TouchableWithoutFeedback>
+            </SafeAreaView>
+        </>
     )
 }
 
