@@ -15,7 +15,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import getEmail from '@use/settings/get/useGetEmail';
 import { getLanguageLocally } from '@use/settings/get/useGetLanguageLocally';
 
-const Setup = () => {
+const Setup = ({navigation}: any) => {
 
     const { setSetupRan, internetConnected, internetSpeed, iphoneModel } = useContext(GlobalContext);
 
@@ -182,16 +182,24 @@ const Setup = () => {
 
     }
 
-    const previousPage = () => {
+    const previousPage = async () => {
         if (currentPage > 1) {
             setCurrentPage(currentPage - 1)
             console.log('set current page to', currentPage)
         }else{
-            console.log('limit exceeded')
+            // check if setup is being run for the second time
+            // meaning if this is the first time the setup is being run, don't allow navigating elsewhere
+            const email = await getEmail();
+            
+            const asyncStorageNutrients = await AsyncStorage.getItem(`goal_nutrients_${email}`);
+            if (asyncStorageNutrients) {
+                setSetupRan(true);
+                return;
+            }
         }
     }
     
-    const [includeInBio, setIncludeInBio] = useState(false);
+    //const [includeInBio, setIncludeInBio] = useState(false);
     const [gender, setGender] = useState('');
 
     const [age, setAge] = useState(1);

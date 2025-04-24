@@ -6,12 +6,13 @@ import BottomNavigationBar from '@components/BottomNavigationBar';
 import { useTranslation } from 'react-i18next';
 import GlobalContext from '@config/GlobalContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import getEmail from '@use/settings/get/useGetEmail';
 import SettingsMacrosComponent from '@app/components/settings/SettingsMacrosComponent';
+import { Ionicons } from '@expo/vector-icons';
+import getGoalNutrientslocally from '@app/use/settings/get/useGetGoalNutrientsLocally';
 
 const Settings = ({navigation}: any) => {
 
-    const {internetConnected} = useContext(GlobalContext);
+    const {internetConnected, setSetupRan} = useContext(GlobalContext);
 
     const { t } = useTranslation();
 
@@ -23,19 +24,13 @@ const Settings = ({navigation}: any) => {
     useEffect(() => {
         const fetchInitialNutrients = async () => {
             try {
-                const email = (await getEmail() || '').toLowerCase();
-                const key = `goal_nutrients_${email}`;
-                console.log('SettingsMacros: loading from key', key);
-                const localNutrients = await AsyncStorage.getItem(key);
-                console.log('SettingsMacros: retrieved value', localNutrients);
-                if (localNutrients) {
-                    const parsedLocalNutrients = JSON.parse(localNutrients);
-                    console.log('SettingsMacros: parsed nutrients', parsedLocalNutrients);
+                const goalNutrients = await getGoalNutrientslocally();
 
-                    setCalories(parsedLocalNutrients.calories || 0);
-                    setProtein(parsedLocalNutrients.protein || 0);
-                    setCarbs(parsedLocalNutrients.carbs || 0);
-                    setFat(parsedLocalNutrients.fat || 0);
+                if (goalNutrients) {
+                    setCalories(goalNutrients.calories || 0);
+                    setProtein(goalNutrients.protein || 0);
+                    setCarbs(goalNutrients.carbs || 0);
+                    setFat(goalNutrients.fat || 0);
                 }
             } catch (error) {
                 console.error('Error getting nutrients from AsyncStorage:', error);
@@ -64,7 +59,6 @@ const Settings = ({navigation}: any) => {
         }
  
         if (internetConnected) {
-
             const userId = FIREBASE_AUTH.currentUser?.uid;
 
             try {
@@ -85,14 +79,22 @@ const Settings = ({navigation}: any) => {
                 console.error("Updating daily macronutrient goals ERROR: ", error);
                 return null;
             }
-
         }
+    };
+
+    const runSetup = async () => {
+        setSetupRan(false);
     };
 
     return (
         <View style={tw`w-full h-full bg-white`}>
-            <View style={tw`bg-gray-100 w-full h-[15%] flex justify-end`}>
+            <View style={tw`bg-gray-100 w-full h-[15%] flex flex-row justify-between items-end`}>
+
                 <Text style={tw`text-4xl font-medium text-black m-3`}>{t('daily-goals')}</Text>
+
+                <View style={tw`m-3`}>
+                    <Ionicons name="settings-outline" size={42} color="black" onPress={() => runSetup()} />
+                </View>
             </View>
 
             <SettingsMacrosComponent
